@@ -15,10 +15,10 @@ rt {
 
    StatementBlock = "{" Statement+ "}"
 
-   Definit = kw<"definit"> "(" kw<"self"> ":" ident ("," Formal)*")" "{" InitStatement+ "}"
-   
+   Definit = kw<"definit"> "(" kw<"self"> ":" ident CommaFormal* ")" "{" InitStatement+ "}"
+
    Statement =
-     | kw<"global"> ident ("," ident)* -- globals
+     | kw<"global"> ident CommaIdent* -- globals
      | IfStatement -- if
      | kw<"pass"> -- pass
      | kw<"return"> ReturnExp -- return
@@ -27,6 +27,7 @@ rt {
      | TryStatement -- try
      | Assignment -- assignment
      | Lval  -- call
+   CommaIdent = "," ident
 
    InitStatement = kw<"self"> "." ident "=" Exp
 
@@ -44,14 +45,17 @@ rt {
    
    Assignment = 
      | Lval "+=" Exp -- pluseq
-     | "[" Lval ("," Lval)+ "]" "=" Exp -- multiple
+     | "[" Lval CommaLval+ "]" "=" Exp -- multiple
      | Lval "=" Exp -- single
 
+   CommaLval = "," Lval
 
     ReturnExp =
-      | "[" Exp ("," Exp)+ "]" -- multiple
+      | "[" Exp CommaExp+ "]" -- multiple
       | Exp -- single
 
+    CommaExp = "," Exp
+    
     Exp =  BooleanExp
 
     BooleanExp =
@@ -82,7 +86,7 @@ rt {
       | "[" PriExpComma+ "]" -- listconst
       | "{" "}" -- emptydict
       | "{" PairComma+ "}" -- dict
-      | "λ" Formals? ":" Exp -- lambda
+      | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
       | "+" PriExp   -- pos
       | "-" PriExp   -- neg
@@ -134,6 +138,9 @@ rt {
     identTail = ( alnum | identHead )
 
     Formals =
+      | "(" ")" -- noformals
+      | "(" Formal CommaFormal* ")" -- withformals
+    LambdaFormals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
 

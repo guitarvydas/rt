@@ -12,7 +12,7 @@
                 "id": 10
             },
             {
-                "name": "Scrub",
+                "name": "PYIndent",
                 "id": 17
             },
             {
@@ -68,7 +68,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "Scrub",
+                    "name": "PYIndent",
                     "id": 17
                 },
                 "target_port": ""
@@ -115,7 +115,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "Scrub",
+                    "name": "PYIndent",
                     "id": 17
                 },
                 "source_port": "",
@@ -128,7 +128,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "Scrub",
+                    "name": "PYIndent",
                     "id": 17
                 },
                 "source_port": "\u2717",
