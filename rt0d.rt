@@ -1001,9 +1001,9 @@ defclass Template {
 defn read_and_convert_json_file (filename) {
     try {
         fil = open(filename, 'r')
-            json_data = file.read()
+            json_data = fil.read()
             routings = json.loads(json_data)
-	    close (fil)
+	    fil.close ()
             return routings }
     except FileNotFoundError {
         print (f"File not found: {filename}")

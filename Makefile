@@ -2,6 +2,10 @@
 
 SRC=rt0d.rt
 D2J=./das2json/mac/das2json-x86_64
+
+test:
+	(make -s all >rtpy0d.py ; python3 rtpy0d.py)
+
 all:
 	${D2J} t2t.drawio
 	${D2J} 0D/python/std/transpile.drawio
