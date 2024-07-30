@@ -303,22 +303,22 @@ defn format_message (m) {
         return "ϕ" }
     else {
         return f'⟪"{m.port}"⦂"{m.datum.srepr ()}"⟫' }
+}
 
 # dynamic routing descriptors
 
-drInject = "inject"
-drSend = "send"
-drInOut = "inout"
-drForward = "forward"
-drDown = "down"
-drUp = "up"
-drAcross = "across"
-drThrough = "through"
+defvar drInject = "inject"
+defvar drSend = "send"
+defvar drInOut = "inout"
+defvar drForward = "forward"
+defvar drDown = "down"
+defvar drUp = "up"
+defvar drAcross = "across"
+defvar drThrough = "through"
 
 # See "class_free programming" starting at 45:01 of https://www.youtube.com/watch?v=XFTOG895C7c
 
 
-}
 defn make_Routing_Descriptor (action=ϕ, component=ϕ, port=ϕ, message=ϕ) {
 
     return {
