@@ -1,9 +1,10 @@
 #	'ensure that formatted text option in draw.io is disabled everywhere'
 
 SRC=rt0d.rt
-D2J=./das2json/mac/das2json-x86_64
+#SRC=test.rt
+D2J=./das2json/mac/das2json
 
-test:
+test_python:
 	(make -s all >rtpy0d.py ; python3 rtpy0d.py)
 
 all:
@@ -16,3 +17,6 @@ all:
 # to install required libs, do this once
 install-js-requires:
 	npm install ohm-js yargs prompt-sync
+
+clean:
+	rm *.json

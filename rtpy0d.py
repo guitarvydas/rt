@@ -1,6 +1,5 @@
 
 counter = 0
-
 digits = ["₀","₁","₂","₃","₄","₅","₆","₇","₈","₉","₁₀","₁₁","₁₂","₁₃","₁₄","₁₅","₁₆","₁₇","₁₈","₁₉","₂₀","₂₁","₂₂","₂₃","₂₄","₂₅","₂₆","₂₇","₂₈","₂₉"]
 def gensym (s):
     global counter
@@ -173,21 +172,13 @@ def format_message (m):
         return f'⟪"{m.port}"⦂"{m.datum.srepr ()}"⟫'
     
 
-
 drInject = "inject"
-
 drSend = "send"
-
 drInOut = "inout"
-
 drForward = "forward"
-
 drDown = "down"
-
 drUp = "up"
-
 drAcross = "across"
-
 drThrough = "through"
 def make_Routing_Descriptor (action= None,component= None,port= None,message= None):
     return {"action":action,"component":component,"port":port,"message":message}
@@ -326,13 +317,9 @@ def recursive_routing_trace (container,lis,indent):
         return formatted+recursive_routing_trace(container,rest(lis),indent+'  ')
     
 
-
 enumDown = 0
-
 enumAcross = 1
-
 enumUp = 2
-
 enumThrough = 3
 def container_instantiator (reg,owner,container_name,desc):
     global enumDown, enumUp, enumAcross, enumThrough
@@ -837,9 +824,7 @@ import sys
 import re
 import subprocess
 import shlex
-
 root_project = ""
-
 root_0D = ""
 def set_environment (rproject,r0D):
     global root_project
@@ -1159,9 +1144,7 @@ def trimws (s):
 def clone_string (s):
     return s
 
-
 load_errors =  False
-
 runtime_errors =  False
 def load_error (s):
     global load_errors
@@ -1178,7 +1161,6 @@ def runtime_error (s):
 def fakepipename_instantiate (reg,owner,name,template_data):
     instance_name = gensym("fakepipe")
     return make_leaf(instance_name,owner, None,fakepipename_handler)
-
 
 rand = 0
 def fakepipename_handler (eh,msg):

@@ -8,13 +8,15 @@ rt {
 
    kw<s> = s ~identTail
 
-   Defvar = kw<"defvar"> Assignment
+   Defvar = kw<"defvar"> Lval "=" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
    Defclass = kw<"defclass"> ident "{" Definit "}"
    Import = kw<"import"> ident
 
-   StatementBlock = "{" Statement+ "}"
+   StatementBlock = "{" Rec_Statement "}"
 
+   Rec_Statement = Statement Rec_Statement?
+   
    Definit = kw<"definit"> "(" kw<"self"> ":" ident CommaFormal* ")" "{" InitStatement+ "}"
 
    Statement =
