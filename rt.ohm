@@ -15,20 +15,18 @@ rt {
 
    StatementBlock = "{" Rec_Statement "}"
 
-   Rec_Statement = Statement Rec_Statement?
-   
    Definit = kw<"definit"> "(" kw<"self"> ":" ident CommaFormal* ")" "{" InitStatement+ "}"
 
-   Statement =
-     | kw<"global"> ident CommaIdent* -- globals
-     | IfStatement -- if
-     | kw<"pass"> -- pass
-     | kw<"return"> ReturnExp -- return
-     | ForStatement -- for
-     | WhileStatement -- while
-     | TryStatement -- try
-     | Assignment -- assignment
-     | Lval  -- call
+   Rec_Statement =
+     | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
+     | IfStatement Rec_Statement? -- if
+     | kw<"pass"> Rec_Statement? -- pass
+     | kw<"return"> ReturnExp Rec_Statement? -- return
+     | ForStatement Rec_Statement? -- for
+     | WhileStatement Rec_Statement? -- while
+     | TryStatement Rec_Statement? -- try
+     | Assignment Rec_Statement? -- assignment
+     | Lval Rec_Statement? -- call
    CommaIdent = "," ident
 
    InitStatement = kw<"self"> "." ident "=" Exp
