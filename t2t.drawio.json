@@ -505,6 +505,57 @@
     },
     {
         "file": "t2t.drawio",
+        "name": "Scrub Lisp",
+        "children": [
+            {
+                "name": "$ node lispscrubber.js",
+                "id": 7
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "$ node lispscrubber.js",
+                    "id": 7
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ node lispscrubber.js",
+                    "id": 7
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ node lispscrubber.js",
+                    "id": 7
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            }
+        ]
+    },
+    {
+        "file": "t2t.drawio",
         "name": "PYIndent",
         "children": [
             {
@@ -543,6 +594,57 @@
                 "dir": 2,
                 "source": {
                     "name": "$ node indenter.js",
+                    "id": 7
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            }
+        ]
+    },
+    {
+        "file": "t2t.drawio",
+        "name": "LispIndent",
+        "children": [
+            {
+                "name": "$ node lispindenter.js",
+                "id": 7
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "$ node lispindenter.js",
+                    "id": 7
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ node lispindenter.js",
+                    "id": 7
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ node lispindenter.js",
                     "id": 7
                 },
                 "source_port": "\u2717",
@@ -670,7 +772,7 @@
         "name": "Common Lisp",
         "children": [
             {
-                "name": "PYIndent",
+                "name": "LispIndent",
                 "id": 3
             },
             {
@@ -678,7 +780,7 @@
                 "id": 7
             },
             {
-                "name": "Scrub",
+                "name": "Scrub Lisp",
                 "id": 12
             }
         ],
@@ -704,7 +806,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "Scrub",
+                    "name": "Scrub Lisp",
                     "id": 12
                 },
                 "target_port": ""
@@ -712,12 +814,12 @@
             {
                 "dir": 1,
                 "source": {
-                    "name": "Scrub",
+                    "name": "Scrub Lisp",
                     "id": 12
                 },
                 "source_port": "",
                 "target": {
-                    "name": "PYIndent",
+                    "name": "LispIndent",
                     "id": 3
                 },
                 "target_port": ""
@@ -725,7 +827,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "Scrub",
+                    "name": "Scrub Lisp",
                     "id": 12
                 },
                 "source_port": "\u2717",
@@ -751,7 +853,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "PYIndent",
+                    "name": "LispIndent",
                     "id": 3
                 },
                 "source_port": "",
@@ -764,7 +866,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "PYIndent",
+                    "name": "LispIndent",
                     "id": 3
                 },
                 "source_port": "\u2717",
