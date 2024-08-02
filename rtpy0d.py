@@ -222,7 +222,7 @@ def log_inject (receiver,port,msg):
     append_routing_descriptor(container=receiver,desc=inject_desc)
 
 def fmt_inject (desc,indent):
-    return f'\n{indent}⟹  {desc ["component"].name}."{desc ["port"]}" {format_message (desc ["message"])}'
+    return f'\n{indent}⟹  {desc@component.name}."{desc@port}" {format_message (desc@message)}'
 
 def make_Down_Descriptor (container= None,source_port= None,source_message= None,target= None,target_port= None,target_message= None):
     return {"action":drDown,"container":container,"source_port":source_port,"source_message":source_message,"target":target,"target_port":target_port,"target_message":target_message,"fmt":fmt_down}
@@ -232,7 +232,7 @@ def log_down (container= None,source_port= None,source_message= None,target= Non
     append_routing_descriptor(container,rdesc)
 
 def fmt_down (desc,indent):
-    return f'\n{indent}↓ {desc ["container"].name}."{desc ["source_port"]}" ➔ {desc ["target"].name}."{desc ["target_port"]}" {format_message (desc ["target_message"])}'
+    return f'\n{indent}↓ {desc@container.name}."{desc@source_port}" ➔ {desc@target.name}."{desc@target_port}" {format_message (desc@target_message)}'
 
 def make_Up_Descriptor (source= None,source_port= None,source_message= None,container= None,container_port= None,container_message= None):
     return {"action":drUp,"source":source,"source_port":source_port,"source_message":source_message,"container":container,"container_port":container_port,"container_message":container_message,"fmt":fmt_up}
@@ -242,7 +242,7 @@ def log_up (source= None,source_port= None,source_message= None,container= None,
     append_routing_descriptor(container,rdesc)
 
 def fmt_up (desc,indent):
-    return f'\n{indent}↑ {desc ["source"].name}."{desc ["source_port"]}" ➔ {desc ["container"].name}."{desc ["container_port"]}" {format_message (desc ["container_message"])}'
+    return f'\n{indent}↑ {desc@source.name}."{desc@source_port}" ➔ {desc@container.name}."{desc@container_port}" {format_message (desc@container_message)}'
 
 def make_Across_Descriptor (container= None,source= None,source_port= None,source_message= None,target= None,target_port= None,target_message= None):
     return {"action":drAcross,"container":container,"source":source,"source_port":source_port,"source_message":source_message,"target":target,"target_port":target_port,"target_message":target_message,"fmt":fmt_across}
@@ -252,7 +252,7 @@ def log_across (container= None,source= None,source_port= None,source_message= N
     append_routing_descriptor(container,rdesc)
 
 def fmt_across (desc,indent):
-    return f'\n{indent}→ {desc["source"].name}."{desc ["source_port"]}" ➔ {desc ["target"].name}."{desc ["target_port"]}"  {format_message (desc ["target_message"])}'
+    return f'\n{indent}→ {desc@source.name}."{desc@source_port}" ➔ {desc@target.name}."{desc@target_port}"  {format_message (desc@target_message)}'
 
 def make_Through_Descriptor (container= None,source_port= None,source_message= None,target_port= None,message= None):
     return {"action":drThrough,"container":container,"source_port":source_port,"source_message":source_message,"target_port":target_port,"message":message,"fmt":fmt_through}
@@ -262,7 +262,7 @@ def log_through (container= None,source_port= None,source_message= None,target_p
     append_routing_descriptor(container,rdesc)
 
 def fmt_through (desc,indent):
-    return f'\n{indent}⇶ {desc  ["container"].name}."{desc ["source_port"]}" ➔ {desc ["container"].name}."{desc ["target_port"]}" {format_message (desc ["message"])}'
+    return f'\n{indent}⇶ {desc @container.name}."{desc@source_port}" ➔ {desc@container.name}."{desc@target_port}" {format_message (desc@message)}'
 
 def make_InOut_Descriptor (container= None,component= None,in_message= None,out_port= None,out_message= None):
     return {"action":drInOut,"container":container,"component":component,"in_message":in_message,"out_message":out_message,"fmt":fmt_inout}
@@ -297,7 +297,7 @@ def fmt_inout (desc,indent):
     if  None == outm:
         return f'\n{indent}  ⊥'
     else:
-        return f'\n{indent}  ∴ {desc ["component"].name} {format_message (outm)}'
+        return f'\n{indent}  ∴ {desc@component.name} {format_message (outm)}'
     
 
 def log_tick (container= None,component= None,in_message= None):
@@ -338,45 +338,45 @@ def container_instantiator (reg,owner,container_name,desc):
         source_component =  None
         target_component =  None
         connector = Connector()
-        if proto_conn['dir'] == enumDown:
+        if proto_conn["dir"] == enumDown:
             connector.direction = "down"
-            connector.sender = Sender(me.name,me,proto_conn['source_port'])
-            target_component = children_by_id[proto_conn['target']['id']]
+            connector.sender = Sender(me.name,me,proto_conn["source_port"])
+            target_component = children_by_id[proto_conn["target"]["id"]]
             if (target_component ==  None):
-                load_error(f"internal error: .Down connection target internal error {proto_conn['target']}")
+                load_error(f"internal error: .Down connection target internal error {proto_conn@target}")
             else:
-                connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn['target_port'],target_component)
+                connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn["target_port"],target_component)
                 connectors.append(connector)
             
         elif proto_conn["dir"] == enumAcross:
             connector.direction = "across"
-            source_component = children_by_id[proto_conn['source']['id']]
-            target_component = children_by_id[proto_conn['target']['id']]
+            source_component = children_by_id[proto_conn["source"]["id"]]
+            target_component = children_by_id[proto_conn["target"]["id"]]
             if source_component ==  None:
-                load_error(f"internal error: .Across connection source not ok {proto_conn ['source']}")
+                load_error(f"internal error: .Across connection source not ok {proto_conn@source}")
             else:
-                connector.sender = Sender(source_component.name,source_component,proto_conn['source_port'])
+                connector.sender = Sender(source_component.name,source_component,proto_conn["source_port"])
                 if target_component ==  None:
                     load_error(f"internal error: .Across connection target not ok {proto_conn.target}")
                 else:
-                    connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn['target_port'],target_component)
+                    connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn["target_port"],target_component)
                     connectors.append(connector)
                 
             
-        elif proto_conn['dir'] == enumUp:
+        elif proto_conn["dir"] == enumUp:
             connector.direction = "up"
-            source_component = children_by_id[proto_conn['source']['id']]
+            source_component = children_by_id[proto_conn["source"]["id"]]
             if source_component ==  None:
-                print(f"internal error: .Up connection source not ok {proto_conn ['source']}")
+                print(f"internal error: .Up connection source not ok {proto_conn@source}")
             else:
-                connector.sender = Sender(source_component.name,source_component,proto_conn['source_port'])
-                connector.receiver = Receiver(me.name,container.outq,proto_conn['target_port'],me)
+                connector.sender = Sender(source_component.name,source_component,proto_conn["source_port"])
+                connector.receiver = Receiver(me.name,container.outq,proto_conn["target_port"],me)
                 connectors.append(connector)
             
-        elif proto_conn['dir'] == enumThrough:
+        elif proto_conn["dir"] == enumThrough:
             connector.direction = "through"
-            connector.sender = Sender(me.name,me,proto_conn['source_port'])
-            connector.receiver = Receiver(me.name,container.outq,proto_conn['target_port'],me)
+            connector.sender = Sender(me.name,me,proto_conn["source_port"])
+            connector.receiver = Receiver(me.name,container.outq,proto_conn["target_port"],me)
             connectors.append(connector)
         
     
@@ -391,45 +391,45 @@ def container_instantiator (reg,owner,container_name,desc):
         source_component =  None
         target_component =  None
         connector = Connector()
-        if proto_conn['dir'] == enumDown:
+        if proto_conn["dir"] == enumDown:
             connector.direction = "down"
-            connector.sender = Sender(me.name,me,proto_conn['source_port'])
-            target_component = children_by_id[proto_conn['target']['id']]
+            connector.sender = Sender(me.name,me,proto_conn["source_port"])
+            target_component = children_by_id[proto_conn["target"]["id"]]
             if (target_component ==  None):
-                load_error(f"internal error: .Down connection target internal error {proto_conn['target']}")
+                load_error(f"internal error: .Down connection target internal error {proto_conn@target}")
             else:
-                connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn['target_port'],target_component)
+                connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn["target_port"],target_component)
                 connectors.append(connector)
             
         elif proto_conn["dir"] == enumAcross:
             connector.direction = "across"
-            source_component = children_by_id[proto_conn['source']['id']]
-            target_component = children_by_id[proto_conn['target']['id']]
+            source_component = children_by_id[proto_conn["source"]["id"]]
+            target_component = children_by_id[proto_conn["target"]["id"]]
             if source_component ==  None:
-                load_error(f"internal error: .Across connection source not ok {proto_conn ['source']}")
+                load_error(f"internal error: .Across connection source not ok {proto_conn@source}")
             else:
-                connector.sender = Sender(source_component.name,source_component,proto_conn['source_port'])
+                connector.sender = Sender(source_component.name,source_component,proto_conn["source_port"])
                 if target_component ==  None:
                     load_error(f"internal error: .Across connection target not ok {proto_conn.target}")
                 else:
-                    connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn['target_port'],target_component)
+                    connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn["target_port"],target_component)
                     connectors.append(connector)
                 
             
-        elif proto_conn['dir'] == enumUp:
+        elif proto_conn["dir"] == enumUp:
             connector.direction = "up"
-            source_component = children_by_id[proto_conn['source']['id']]
+            source_component = children_by_id[proto_conn["source"]["id"]]
             if source_component ==  None:
-                print(f"internal error: .Up connection source not ok {proto_conn ['source']}")
+                print(f"internal error: .Up connection source not ok {proto_conn@source}")
             else:
-                connector.sender = Sender(source_component.name,source_component,proto_conn['source_port'])
-                connector.receiver = Receiver(me.name,container.outq,proto_conn['target_port'],me)
+                connector.sender = Sender(source_component.name,source_component,proto_conn["source_port"])
+                connector.receiver = Receiver(me.name,container.outq,proto_conn["target_port"],me)
                 connectors.append(connector)
             
-        elif proto_conn['dir'] == enumThrough:
+        elif proto_conn["dir"] == enumThrough:
             connector.direction = "through"
-            connector.sender = Sender(me.name,me,proto_conn['source_port'])
-            connector.receiver = Receiver(me.name,container.outq,proto_conn['target_port'],me)
+            connector.sender = Sender(me.name,me,proto_conn["source_port"])
+            connector.receiver = Receiver(me.name,container.outq,proto_conn["target_port"],me)
             connectors.append(connector)
         
     
@@ -736,7 +736,7 @@ import subprocess
 def generate_shell_components (reg,container_list):
     if  None != container_list:
         for diagram in container_list:
-            for child_descriptor in diagram['children']:
+            for child_descriptor in diagram["children"]:
                 if first_char_is(child_descriptor["name"],"$"):
                     name = child_descriptor["name"]
                     cmd = name[1:].strip()
