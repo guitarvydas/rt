@@ -163,6 +163,7 @@ rt {
     Pair = string ":" Exp ","?
 
   PrimaryTail =
+    | "@" string PrimaryTail? -- dictlookup
     | MethodCall PrimaryTail? -- methodcall
     | OffsetRef PrimaryTail? -- offsetref
     | FieldLookup PrimaryTail? -- lookup

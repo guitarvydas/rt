@@ -67,8 +67,11 @@ PriExp_emptylistconst [ _72 _73] =‛«_72»«_73»’
 PriExp_listconst [ _74 PriExpComma+ _75] =‛«_74»«PriExpComma»«_75»’
 PriExp_emptydict [ _76 _77] =‛«_76»«_77»’
 PriExp_dict [ _78 PairComma+ _79] =‛«_78»«PairComma»«_79»’
-PriExp_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
+PriExp_lambda [ _80 Formals _81 Exp] =‛ lambda «Formals»: «Exp»’
+PriExp_lambdanoformals [ _80  _81 Exp] =‛ lambda : «Exp»’
 PriExp_fresh [ _83 _84 ident _85] =‛ «ident» ()’
+PriExp_listfirst [ _83 _84 ident _85] =‛ «ident» [0]’
+PriExp_listrest [ _83 _84 ident _85] =‛ «ident» [1:]’
 PriExp_pos [ _86 PriExp] =‛ +«PriExp»’
 PriExp_neg [ _87 PriExp] =‛ -«PriExp»’
 PriExp_phi [ phi] =‛ None’
@@ -102,21 +105,19 @@ ParamName [ ident _159] = ‛«ident»«_159»’
 
 number_fract [ digit* _160 digit+] =‛«digit»«_160»«digit»’
 number_whole [ digit+] =‛«digit»’
-Pair [ string _161 Exp _162?] = ‛«string»«_161»«Exp»«_162»’
+Pair [ string _161 Exp _162?] = ‛«string»«_161»«Exp»«_162»’ // https://stackoverflow.com/questions/10706024/common-lisp-shorthand-to-initialize-a-hash-table-with-many-entries
 
-PrimaryTail_dictlookup [ _eyes key PrimaryTail?] =‛[«key»]«PrimaryTail»’
-PrimaryTail_methodcall [ MethodCall PrimaryTail?] =‛«MethodCall»«PrimaryTail»’
+PrimaryTail_methodcall [ _dot mname actuals PrimaryTail?] =‛.«mname»«actuals»«PrimaryTail»’
+
 PrimaryTail_offsetref [ OffsetRef PrimaryTail?] =‛«OffsetRef»«PrimaryTail»’
 PrimaryTail_lookup [ FieldLookup PrimaryTail?] =‛«FieldLookup»«PrimaryTail»’
 PrimaryTail_slice [ Slice PrimaryTail?] =‛«Slice»«PrimaryTail»’
 MethodCall [ Actuals] = ‛«Actuals»’
 OffsetRef [ _163 ident] = ‛«_163»«ident»’
 
-FieldLookup_slicefirst [ _164 _165 _166] =‛«_164»«_165»«_166»’
 FieldLookup_lookup [ _167 Exp _168] =‛«_167»«Exp»«_168»’
 
 Slice_slicewhole [ _169 _170 _171] =‛«_169»«_170»«_171»’
-Slice_slicerest [ _172 _173 _174 _175] =‛«_172»«_173»«_174»«_175»’
 Slice_nthslice [ _176 digit+ _177 _178] =‛«_176»«digit»«_177»«_178»’
 boolOp [ _191] = ‛ «_191» ’
 phi [ _192] = ‛ None’
