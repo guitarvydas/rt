@@ -1,994 +1,1342 @@
---- !!! ERRORS !!! ---
-while loading operation rwr: (_ = {
-    fname_stack : [],
-    fname : function () { return _.fname_stack [0]; },
-    push_fname : function (s) { _.fname_stack.push (s); },
-    pop_fname : function () { _.fname_stack.pop (); return ""; }
-}
-,
-{
-Main: function (TopLevel) {
-_ruleEnter ("Main");
-TopLevel = TopLevel.rwr ().join ('');
-
-_ruleExit ("Main");
-return `${TopLevel}`;
-},
-TopLevel_defvar: function (Defvar) {
-_ruleEnter ("TopLevel_defvar");
-Defvar = Defvar.rwr ();
-
-_ruleExit ("TopLevel_defvar");
-return `${Defvar}`;
-},
-TopLevel_defn: function (Defn) {
-_ruleEnter ("TopLevel_defn");
-Defn = Defn.rwr ();
-
-_ruleExit ("TopLevel_defn");
-return `${Defn}`;
-},
-TopLevel_defclass: function (Defclass) {
-_ruleEnter ("TopLevel_defclass");
-Defclass = Defclass.rwr ();
-
-_ruleExit ("TopLevel_defclass");
-return `${Defclass}`;
-},
-TopLevel_import: function (Import) {
-_ruleEnter ("TopLevel_import");
-Import = Import.rwr ();
-
-_ruleExit ("TopLevel_import");
-return `${Import}`;
-},
-kw: function (s) {
-_ruleEnter ("kw");
-s = s.rwr ();
-
-_ruleExit ("kw");
-return `${s}`;
-},
-Defvar: function (_,lval,_eq,e) {
-_ruleEnter ("Defvar");
-_ = _.rwr ();
-lval = lval.rwr ();
-_eq = _eq.rwr ();
-e = e.rwr ();
-
-_ruleExit ("Defvar");
-return `
-(defparameter ${lval} ${e})`;
-},
-Defn: function (_4,ident,Formals,StatementBlock) {
-_ruleEnter ("Defn");
-var _0 = `${_.push_fname (ident.rwr ())}`;
-
-_4 = _4.rwr ();
-ident = ident.rwr ();
-Formals = Formals.rwr ();
-StatementBlock = StatementBlock.rwr ();
-
-_ruleExit ("Defn");
-return `
-(defun ${ident} ${Formals} ${StatementBlock})${_.pop_fname ()}`;
-},
-Defclass: function (_6,ident,_7,Definit,_8) {
-_ruleEnter ("Defclass");
-_6 = _6.rwr ();
-ident = ident.rwr ();
-_7 = _7.rwr ();
-Definit = Definit.rwr ();
-_8 = _8.rwr ();
-
-_ruleExit ("Defclass");
-return `
-class ${ident}:⤷
-${Definit}⤶
-`;
-},
-Import: function (_10,ident) {
-_ruleEnter ("Import");
-_10 = _10.rwr ();
-ident = ident.rwr ();
-
-_ruleExit ("Import");
-return `
-import ${ident}`;
-},
-StatementBlock: function (_11,Statement,_12) {
-_ruleEnter ("StatementBlock");
-_11 = _11.rwr ();
-Statement = Statement.rwr ();
-_12 = _12.rwr ();
-
-_ruleExit ("StatementBlock");
-return `⤷${Statement}⤶
-`;
-},
-Rec_Statement: function (stmt,rec) {
-_ruleEnter ("Rec_Statement");
-stmt = stmt.rwr ();
-rec = rec.rwr ().join ('');
-
-_ruleExit ("Rec_Statement");
-return `${stmt}${rec}`;
-},
-Definit: function (_14,_15,_17,_18,ident,formals,_20,_21,InitStatement,_22) {
-_ruleEnter ("Definit");
-_14 = _14.rwr ();
-_15 = _15.rwr ();
-_17 = _17.rwr ();
-_18 = _18.rwr ();
-ident = ident.rwr ();
-formals = formals.rwr ().join ('');
-_20 = _20.rwr ();
-_21 = _21.rwr ();
-InitStatement = InitStatement.rwr ().join ('');
-_22 = _22.rwr ();
-
-_ruleExit ("Definit");
-return `def __init__ (self${formals}):⤷
-${InitStatement}⤶
-`;
-},
-Statement_globals: function (_24,ident1,cidents) {
-_ruleEnter ("Statement_globals");
-_24 = _24.rwr ();
-ident1 = ident1.rwr ();
-cidents = cidents.rwr ().join ('');
-
-_ruleExit ("Statement_globals");
-return ``;
-},
-CommaIdent: function (_comma,ident) {
-_ruleEnter ("CommaIdent");
-_comma = _comma.rwr ();
-ident = ident.rwr ();
-
-_ruleExit ("CommaIdent");
-return ` ${ident}`;
-},
-Statement_if: function (IfStatement) {
-_ruleEnter ("Statement_if");
-IfStatement = IfStatement.rwr ();
-
-_ruleExit ("Statement_if");
-return `${IfStatement}`;
-},
-Statement_pass: function (_27) {
-_ruleEnter ("Statement_pass");
-_27 = _27.rwr ();
-
-_ruleExit ("Statement_pass");
-return `
-pass`;
-},
-Statement_return: function (_29,ReturnExp) {
-_ruleEnter ("Statement_return");
-_29 = _29.rwr ();
-ReturnExp = ReturnExp.rwr ();
-
-_ruleExit ("Statement_return");
-return `
-${ReturnExp}`;
-},
-Statement_for: function (ForStatement) {
-_ruleEnter ("Statement_for");
-ForStatement = ForStatement.rwr ();
-
-_ruleExit ("Statement_for");
-return `${ForStatement}`;
-},
-Statement_while: function (WhileStatement) {
-_ruleEnter ("Statement_while");
-WhileStatement = WhileStatement.rwr ();
-
-_ruleExit ("Statement_while");
-return `${WhileStatement}`;
-},
-Statement_try: function (TryStatement) {
-_ruleEnter ("Statement_try");
-TryStatement = TryStatement.rwr ();
-
-_ruleExit ("Statement_try");
-return `${TryStatement}`;
-},
-Statement_assignment: function (Assignment) {
-_ruleEnter ("Statement_assignment");
-Assignment = Assignment.rwr ();
-
-_ruleExit ("Statement_assignment");
-return `${Assignment}`;
-},
-Statement_call: function (Lval) {
-_ruleEnter ("Statement_call");
-Lval = Lval.rwr ();
-
-_ruleExit ("Statement_call");
-return `
-${Lval}`;
-},
-InitStatement: function (_31,_32,ident,_33,Exp) {
-_ruleEnter ("InitStatement");
-_31 = _31.rwr ();
-_32 = _32.rwr ();
-ident = ident.rwr ();
-_33 = _33.rwr ();
-Exp = Exp.rwr ();
-
-_ruleExit ("InitStatement");
-return `
-self.${ident} = ${Exp}`;
-},
-IfStatement: function (_35,Exp,StatementBlock,ElifStatement,ElseStatement) {
-_ruleEnter ("IfStatement");
-_35 = _35.rwr ();
-Exp = Exp.rwr ();
-StatementBlock = StatementBlock.rwr ();
-ElifStatement = ElifStatement.rwr ().join ('');
-ElseStatement = ElseStatement.rwr ().join ('');
-
-_ruleExit ("IfStatement");
-return `
-if ${Exp}:${StatementBlock}${ElifStatement}${ElseStatement}`;
-},
-ElifStatement: function (_37,Exp,StatementBlock) {
-_ruleEnter ("ElifStatement");
-_37 = _37.rwr ();
-Exp = Exp.rwr ();
-StatementBlock = StatementBlock.rwr ();
-
-_ruleExit ("ElifStatement");
-return `elif ${Exp}:${StatementBlock}`;
-},
-ElseStatement: function (_39,StatementBlock) {
-_ruleEnter ("ElseStatement");
-_39 = _39.rwr ();
-StatementBlock = StatementBlock.rwr ();
-
-_ruleExit ("ElseStatement");
-return `else:${StatementBlock}`;
-},
-ForStatement: function (_41,ident,_43,Exp,StatementBlock) {
-_ruleEnter ("ForStatement");
-_41 = _41.rwr ();
-ident = ident.rwr ();
-_43 = _43.rwr ();
-Exp = Exp.rwr ();
-StatementBlock = StatementBlock.rwr ();
-
-_ruleExit ("ForStatement");
-return `
-for ${ident} in ${Exp}:${StatementBlock}`;
-},
-WhileStatement: function (_45,Exp,StatementBlock) {
-_ruleEnter ("WhileStatement");
-_45 = _45.rwr ();
-Exp = Exp.rwr ();
-StatementBlock = StatementBlock.rwr ();
-
-_ruleExit ("WhileStatement");
-return `
-while ${Exp}:${StatementBlock}`;
-},
-TryStatement: function (_47,StatementBlock,ExceptBlock) {
-_ruleEnter ("TryStatement");
-_47 = _47.rwr ();
-StatementBlock = StatementBlock.rwr ();
-ExceptBlock = ExceptBlock.rwr ().join ('');
-
-_ruleExit ("TryStatement");
-return `
-try:
-${StatementBlock}${ExceptBlock}`;
-},
-ExceptBlock_as: function (_49,Exp,_51,ident,StatementBlock) {
-_ruleEnter ("ExceptBlock_as");
-_49 = _49.rwr ();
-Exp = Exp.rwr ();
-_51 = _51.rwr ();
-ident = ident.rwr ();
-StatementBlock = StatementBlock.rwr ();
-
-_ruleExit ("ExceptBlock_as");
-return `except ${Exp} as ${ident}:${StatementBlock}`;
-},
-ExceptBlock_basic: function (_53,ident,StatementBlock) {
-_ruleEnter ("ExceptBlock_basic");
-_53 = _53.rwr ();
-ident = ident.rwr ();
-StatementBlock = StatementBlock.rwr ();
-
-_ruleExit ("ExceptBlock_basic");
-return `except ${ident}:${StatementBlock}`;
-},
-Assignment_pluseq: function (Lval,_54,Exp) {
-_ruleEnter ("Assignment_pluseq");
-Lval = Lval.rwr ();
-_54 = _54.rwr ();
-Exp = Exp.rwr ();
-
-_ruleExit ("Assignment_pluseq");
-return `
-(incf ${Lval} ${Exp})`;
-},
-Assignment_multiple: function (_55,Lval1,Lval2,_57,_58,Exp) {
-_ruleEnter ("Assignment_multiple");
-_55 = _55.rwr ();
-Lval1 = Lval1.rwr ();
-Lval2 = Lval2.rwr ().join ('');
-_57 = _57.rwr ();
-_58 = _58.rwr ();
-Exp = Exp.rwr ();
-
-_ruleExit ("Assignment_multiple");
-return `
-[${Lval1}${Lval2}] = ${Exp}`;
-},
-Assignment_single: function (Lval,_59,Exp) {
-_ruleEnter ("Assignment_single");
-Lval = Lval.rwr ();
-_59 = _59.rwr ();
-Exp = Exp.rwr ();
-
-_ruleExit ("Assignment_single");
-return `
-(setf ${Lval} ${Exp})`;
-},
-CommaLval: function (_comma,Lval) {
-_ruleEnter ("CommaLval");
-_comma = _comma.rwr ();
-Lval = Lval.rwr ();
-
-_ruleExit ("CommaLval");
-return `, ${Lval}`;
-},
-ReturnExp_multiple: function (_60,Exp1,Exp2,_62) {
-_ruleEnter ("ReturnExp_multiple");
-_60 = _60.rwr ();
-Exp1 = Exp1.rwr ();
-Exp2 = Exp2.rwr ().join ('');
-_62 = _62.rwr ();
-
-_ruleExit ("ReturnExp_multiple");
-return `[${Exp1}${Exp2}]`;
-},
-ReturnExp_single: function (Exp) {
-_ruleEnter ("ReturnExp_single");
-Exp = Exp.rwr ();
-
-_ruleExit ("ReturnExp_single");
-return `(return-from ${_.fname ()} ${Exp})`;
-},
-CommaExp: function (_comma,e) {
-_ruleEnter ("CommaExp");
-_comma = _comma.rwr ();
-e = e.rwr ();
-
-_ruleExit ("CommaExp");
-return `, ${e}`;
-},
-Exp: function (BooleanExp) {
-_ruleEnter ("Exp");
-BooleanExp = BooleanExp.rwr ();
-
-_ruleExit ("Exp");
-return `${BooleanExp}`;
-},
-BooleanExp_boolop: function (BooleanExp,boolOp,BooleanNot) {
-_ruleEnter ("BooleanExp_boolop");
-BooleanExp = BooleanExp.rwr ();
-boolOp = boolOp.rwr ();
-BooleanNot = BooleanNot.rwr ();
-
-_ruleExit ("BooleanExp_boolop");
-return `${BooleanExp}${boolOp}${BooleanNot}`;
-},
-BooleanExp_basic: function (BooleanNot) {
-_ruleEnter ("BooleanExp_basic");
-BooleanNot = BooleanNot.rwr ();
-
-_ruleExit ("BooleanExp_basic");
-return `${BooleanNot}`;
-},
-BooleanNot_not: function (_64,BooleanExp) {
-_ruleEnter ("BooleanNot_not");
-_64 = _64.rwr ();
-BooleanExp = BooleanExp.rwr ();
-
-_ruleExit ("BooleanNot_not");
-return `not ${BooleanExp}`;
-},
-BooleanNot_basic: function (AddExp) {
-_ruleEnter ("BooleanNot_basic");
-AddExp = AddExp.rwr ();
-
-_ruleExit ("BooleanNot_basic");
-return `${AddExp}`;
-},
-AddExp_plus: function (AddExp,_65,MulExp) {
-_ruleEnter ("AddExp_plus");
-AddExp = AddExp.rwr ();
-_65 = _65.rwr ();
-MulExp = MulExp.rwr ();
-
-_ruleExit ("AddExp_plus");
-return `${AddExp}${_65}${MulExp}`;
-},
-AddExp_minus: function (AddExp,_66,MulExp) {
-_ruleEnter ("AddExp_minus");
-AddExp = AddExp.rwr ();
-_66 = _66.rwr ();
-MulExp = MulExp.rwr ();
-
-_ruleExit ("AddExp_minus");
-return `${AddExp}${_66}${MulExp}`;
-},
-AddExp_basic: function (MulExp) {
-_ruleEnter ("AddExp_basic");
-MulExp = MulExp.rwr ();
-
-_ruleExit ("AddExp_basic");
-return `${MulExp}`;
-},
-MulExp_times: function (MulExp,_67,ExpExp) {
-_ruleEnter ("MulExp_times");
-MulExp = MulExp.rwr ();
-_67 = _67.rwr ();
-ExpExp = ExpExp.rwr ();
-
-_ruleExit ("MulExp_times");
-return `${MulExp}${_67}${ExpExp}`;
-},
-MulExp_divide: function (MulExp,_68,ExpExp) {
-_ruleEnter ("MulExp_divide");
-MulExp = MulExp.rwr ();
-_68 = _68.rwr ();
-ExpExp = ExpExp.rwr ();
-
-_ruleExit ("MulExp_divide");
-return `${MulExp}${_68}${ExpExp}`;
-},
-MulExp_basic: function (ExpExp) {
-_ruleEnter ("MulExp_basic");
-ExpExp = ExpExp.rwr ();
-
-_ruleExit ("MulExp_basic");
-return `${ExpExp}`;
-},
-ExpExp_power: function (PriExp,_69,ExpExp) {
-_ruleEnter ("ExpExp_power");
-PriExp = PriExp.rwr ();
-_69 = _69.rwr ();
-ExpExp = ExpExp.rwr ();
-
-_ruleExit ("ExpExp_power");
-return `${PriExp}${_69}${ExpExp}`;
-},
-ExpExp_basic: function (PriExp) {
-_ruleEnter ("ExpExp_basic");
-PriExp = PriExp.rwr ();
-
-_ruleExit ("ExpExp_basic");
-return `${PriExp}`;
-},
-PriExp_paren: function (_70,Exp,_71) {
-_ruleEnter ("PriExp_paren");
-_70 = _70.rwr ();
-Exp = Exp.rwr ();
-_71 = _71.rwr ();
-
-_ruleExit ("PriExp_paren");
-return `${_70}${Exp}${_71}`;
-},
-PriExp_emptylistconst: function (_72,_73) {
-_ruleEnter ("PriExp_emptylistconst");
-_72 = _72.rwr ();
-_73 = _73.rwr ();
-
-_ruleExit ("PriExp_emptylistconst");
-return ` nil`;
-},
-PriExp_listconst: function (_74,PriExpComma,_75) {
-_ruleEnter ("PriExp_listconst");
-_74 = _74.rwr ();
-PriExpComma = PriExpComma.rwr ().join ('');
-_75 = _75.rwr ();
-
-_ruleExit ("PriExp_listconst");
-return `'(${PriExpComma} )`;
-},
-PriExp_emptydict: function (_76,_77) {
-_ruleEnter ("PriExp_emptydict");
-_76 = _76.rwr ();
-_77 = _77.rwr ();
-
-_ruleExit ("PriExp_emptydict");
-return `${_76}${_77}`;
-},
-PriExp_dict: function (_78,PairComma,_79) {
-_ruleEnter ("PriExp_dict");
-_78 = _78.rwr ();
-PairComma = PairComma.rwr ().join ('');
-_79 = _79.rwr ();
-
-_ruleExit ("PriExp_dict");
-return `${_78}${PairComma}${_79}`;
-},
-PriExp_lambda: function (_80,Formals,_81,Exp) {
-_ruleEnter ("PriExp_lambda");
-_80 = _80.rwr ();
-Formals = Formals.rwr ().join ('');
-_81 = _81.rwr ();
-Exp = Exp.rwr ();
-
-_ruleExit ("PriExp_lambda");
-return ` lambda ${Formals}: ${Exp}`;
-},
-PriExp_fresh: function (_83,_84,ident,_85) {
-_ruleEnter ("PriExp_fresh");
-_83 = _83.rwr ();
-_84 = _84.rwr ();
-ident = ident.rwr ();
-_85 = _85.rwr ();
-
-_ruleExit ("PriExp_fresh");
-return ` ${ident} ()`;
-},
-PriExp_pos: function (_86,PriExp) {
-_ruleEnter ("PriExp_pos");
-_86 = _86.rwr ();
-PriExp = PriExp.rwr ();
-
-_ruleExit ("PriExp_pos");
-return ` +${PriExp}`;
-},
-PriExp_neg: function (_87,PriExp) {
-_ruleEnter ("PriExp_neg");
-_87 = _87.rwr ();
-PriExp = PriExp.rwr ();
-
-_ruleExit ("PriExp_neg");
-return ` -${PriExp}`;
-},
-PriExp_phi: function (phi) {
-_ruleEnter ("PriExp_phi");
-phi = phi.rwr ();
-
-_ruleExit ("PriExp_phi");
-return ` None`;
-},
-PriExp_true: function (_88) {
-_ruleEnter ("PriExp_true");
-_88 = _88.rwr ();
-
-_ruleExit ("PriExp_true");
-return ` True`;
-},
-PriExp_false: function (_89) {
-_ruleEnter ("PriExp_false");
-_89 = _89.rwr ();
-
-_ruleExit ("PriExp_false");
-return ` False`;
-},
-PriExp_range: function (_91,_92,Exp,_93) {
-_ruleEnter ("PriExp_range");
-_91 = _91.rwr ();
-_92 = _92.rwr ();
-Exp = Exp.rwr ();
-_93 = _93.rwr ();
-
-_ruleExit ("PriExp_range");
-return `${_91}${_92}${Exp}${_93}`;
-},
-PriExp_string: function (string) {
-_ruleEnter ("PriExp_string");
-string = string.rwr ();
-
-_ruleExit ("PriExp_string");
-return `${string}`;
-},
-PriExp_number: function (number) {
-_ruleEnter ("PriExp_number");
-number = number.rwr ();
-
-_ruleExit ("PriExp_number");
-return `${number}`;
-},
-PriExp_identwithtail: function (ident,PrimaryTail) {
-_ruleEnter ("PriExp_identwithtail");
-ident = ident.rwr ();
-PrimaryTail = PrimaryTail.rwr ();
-
-_ruleExit ("PriExp_identwithtail");
-return `${ident}${PrimaryTail}`;
-},
-PriExp_ident: function (ident) {
-_ruleEnter ("PriExp_ident");
-ident = ident.rwr ();
-
-_ruleExit ("PriExp_ident");
-return `${ident}`;
-},
-PriExpComma: function (PriExp,_94) {
-_ruleEnter ("PriExpComma");
-PriExp = PriExp.rwr ();
-_94 = _94.rwr ().join ('');
-
-_ruleExit ("PriExpComma");
-return `${PriExp} `;
-},
-PairComma: function (Pair,_95) {
-_ruleEnter ("PairComma");
-Pair = Pair.rwr ();
-_95 = _95.rwr ().join ('');
-
-_ruleExit ("PairComma");
-return `${Pair}${_95}`;
-},
-Lval: function (Exp,PrimaryTail) {
-_ruleEnter ("Lval");
-Exp = Exp.rwr ();
-PrimaryTail = PrimaryTail.rwr ().join ('');
-
-_ruleExit ("Lval");
-return `${Exp}${PrimaryTail}`;
-},
-keyword: function (_144) {
-_ruleEnter ("keyword");
-_144 = _144.rwr ();
-
-_ruleExit ("keyword");
-return `${_144}`;
-},
-ident: function (identHead,identTail) {
-_ruleEnter ("ident");
-identHead = identHead.rwr ();
-identTail = identTail.rwr ().join ('');
-
-_ruleExit ("ident");
-return `${identHead}${identTail}`;
-},
-identHead: function (_146) {
-_ruleEnter ("identHead");
-_146 = _146.rwr ();
-
-_ruleExit ("identHead");
-return `${_146}`;
-},
-identTail: function (_147) {
-_ruleEnter ("identTail");
-_147 = _147.rwr ();
-
-_ruleExit ("identTail");
-return `${_147}`;
-},
-Formals_noformals: function (_148,_149) {
-_ruleEnter ("Formals_noformals");
-_148 = _148.rwr ();
-_149 = _149.rwr ();
-
-_ruleExit ("Formals_noformals");
-return `${_148}${_149}`;
-},
-Formals_withformals: function (_150,Formal,CommaFormal,_151) {
-_ruleEnter ("Formals_withformals");
-_150 = _150.rwr ();
-Formal = Formal.rwr ();
-CommaFormal = CommaFormal.rwr ().join ('');
-_151 = _151.rwr ();
-
-_ruleExit ("Formals_withformals");
-return `${_150}${Formal}${CommaFormal}${_151}`;
-},
-LambdaFormals_noformals: function (_148,_149) {
-_ruleEnter ("LambdaFormals_noformals");
-_148 = _148.rwr ();
-_149 = _149.rwr ();
-
-_ruleExit ("LambdaFormals_noformals");
-return ``;
-},
-LambdaFormals_withformals: function (_150,Formal,CommaFormal,_151) {
-_ruleEnter ("LambdaFormals_withformals");
-_150 = _150.rwr ();
-Formal = Formal.rwr ();
-CommaFormal = CommaFormal.rwr ().join ('');
-_151 = _151.rwr ();
-
-_ruleExit ("LambdaFormals_withformals");
-return `${Formal}${CommaFormal}`;
-},
-Formal: function (ident,_152,Exp) {
-_ruleEnter ("Formal");
-ident = ident.rwr ();
-_152 = _152.rwr ();
-Exp = Exp.rwr ().join ('');
-
-_ruleExit ("Formal");
-return `${ident}${_152}${Exp}`;
-},
-CommaFormal: function (_153,Formal) {
-_ruleEnter ("CommaFormal");
-_153 = _153.rwr ();
-Formal = Formal.rwr ();
-
-_ruleExit ("CommaFormal");
-return `${_153}${Formal}`;
-},
-Actuals_noactuals: function (_154,_155) {
-_ruleEnter ("Actuals_noactuals");
-_154 = _154.rwr ();
-_155 = _155.rwr ();
-
-_ruleExit ("Actuals_noactuals");
-return `${_154}${_155}`;
-},
-Actuals_actuals: function (_156,Actual,CommaActual,_157) {
-_ruleEnter ("Actuals_actuals");
-_156 = _156.rwr ();
-Actual = Actual.rwr ();
-CommaActual = CommaActual.rwr ().join ('');
-_157 = _157.rwr ();
-
-_ruleExit ("Actuals_actuals");
-return `${_156}${Actual}${CommaActual}${_157}`;
-},
-Actual: function (ParamName,Exp) {
-_ruleEnter ("Actual");
-ParamName = ParamName.rwr ().join ('');
-Exp = Exp.rwr ();
-
-_ruleExit ("Actual");
-return `${ParamName}${Exp}`;
-},
-CommaActual: function (_158,Actual) {
-_ruleEnter ("CommaActual");
-_158 = _158.rwr ();
-Actual = Actual.rwr ();
-
-_ruleExit ("CommaActual");
-return `${_158}${Actual}`;
-},
-ParamName: function (ident,_159) {
-_ruleEnter ("ParamName");
-ident = ident.rwr ();
-_159 = _159.rwr ();
-
-_ruleExit ("ParamName");
-return `${ident}${_159}`;
-},
-number_fract: function (digit,_160,digit) {
-_ruleEnter ("number_fract");
-digit = digit.rwr ().join ('');
-_160 = _160.rwr ();
-digit = digit.rwr ().join ('');
-
-_ruleExit ("number_fract");
-return `${digit}${_160}${digit}`;
-},
-number_whole: function (digit) {
-_ruleEnter ("number_whole");
-digit = digit.rwr ().join ('');
-
-_ruleExit ("number_whole");
-return `${digit}`;
-},
-Pair: function (string,_161,Exp,_162) {
-_ruleEnter ("Pair");
-string = string.rwr ();
-_161 = _161.rwr ();
-Exp = Exp.rwr ();
-_162 = _162.rwr ().join ('');
-
-_ruleExit ("Pair");
-return `${string}${_161}${Exp}${_162}`;
-},
-PrimaryTail_methodcall: function (MethodCall,PrimaryTail) {
-_ruleEnter ("PrimaryTail_methodcall");
-MethodCall = MethodCall.rwr ();
-PrimaryTail = PrimaryTail.rwr ().join ('');
-
-_ruleExit ("PrimaryTail_methodcall");
-return `${MethodCall}${PrimaryTail}`;
-},
-PrimaryTail_offsetref: function (OffsetRef,PrimaryTail) {
-_ruleEnter ("PrimaryTail_offsetref");
-OffsetRef = OffsetRef.rwr ();
-PrimaryTail = PrimaryTail.rwr ().join ('');
-
-_ruleExit ("PrimaryTail_offsetref");
-return `${OffsetRef}${PrimaryTail}`;
-},
-PrimaryTail_lookup: function (FieldLookup,PrimaryTail) {
-_ruleEnter ("PrimaryTail_lookup");
-FieldLookup = FieldLookup.rwr ();
-PrimaryTail = PrimaryTail.rwr ().join ('');
-
-_ruleExit ("PrimaryTail_lookup");
-return `${FieldLookup}${PrimaryTail}`;
-},
-PrimaryTail_slice: function (Slice,PrimaryTail) {
-_ruleEnter ("PrimaryTail_slice");
-Slice = Slice.rwr ();
-PrimaryTail = PrimaryTail.rwr ().join ('');
-
-_ruleExit ("PrimaryTail_slice");
-return `${Slice}${PrimaryTail}`;
-},
-MethodCall: function (Actuals) {
-_ruleEnter ("MethodCall");
-Actuals = Actuals.rwr ();
-
-_ruleExit ("MethodCall");
-return `${Actuals}`;
-},
-OffsetRef: function (_163,ident) {
-_ruleEnter ("OffsetRef");
-_163 = _163.rwr ();
-ident = ident.rwr ();
-
-_ruleExit ("OffsetRef");
-return `${_163}${ident}`;
-},
-FieldLookup_slicefirst: function (_164,_165,_166) {
-_ruleEnter ("FieldLookup_slicefirst");
-_164 = _164.rwr ();
-_165 = _165.rwr ();
-_166 = _166.rwr ();
-
-_ruleExit ("FieldLookup_slicefirst");
-return `${_164}${_165}${_166}`;
-},
-FieldLookup_lookup: function (_167,Exp,_168) {
-_ruleEnter ("FieldLookup_lookup");
-_167 = _167.rwr ();
-Exp = Exp.rwr ();
-_168 = _168.rwr ();
-
-_ruleExit ("FieldLookup_lookup");
-return `${_167}${Exp}${_168}`;
-},
-Slice_slicewhole: function (_169,_170,_171) {
-_ruleEnter ("Slice_slicewhole");
-_169 = _169.rwr ();
-_170 = _170.rwr ();
-_171 = _171.rwr ();
-
-_ruleExit ("Slice_slicewhole");
-return `${_169}${_170}${_171}`;
-},
-Slice_slicerest: function (_172,_173,_174,_175) {
-_ruleEnter ("Slice_slicerest");
-_172 = _172.rwr ();
-_173 = _173.rwr ();
-_174 = _174.rwr ();
-_175 = _175.rwr ();
-
-_ruleExit ("Slice_slicerest");
-return `${_172}${_173}${_174}${_175}`;
-},
-Slice_nthslice: function (_176,digit,_177,_178) {
-_ruleEnter ("Slice_nthslice");
-_176 = _176.rwr ();
-digit = digit.rwr ().join ('');
-_177 = _177.rwr ();
-_178 = _178.rwr ();
-
-_ruleExit ("Slice_nthslice");
-return `${_176}${digit}${_177}${_178}`;
-},
-boolOp: function (_191) {
-_ruleEnter ("boolOp");
-_191 = _191.rwr ();
-
-_ruleExit ("boolOp");
-return ` ${_191} `;
-},
-phi: function (_192) {
-_ruleEnter ("phi");
-_192 = _192.rwr ();
-
-_ruleExit ("phi");
-return ` None`;
-},
-string_fdqstring: function (_193,notdq,_194) {
-_ruleEnter ("string_fdqstring");
-_193 = _193.rwr ();
-notdq = notdq.rwr ().join ('');
-_194 = _194.rwr ();
-
-_ruleExit ("string_fdqstring");
-return `${_193}${notdq}${_194}`;
-},
-string_fsqstring: function (_195,notsq,_196) {
-_ruleEnter ("string_fsqstring");
-_195 = _195.rwr ();
-notsq = notsq.rwr ().join ('');
-_196 = _196.rwr ();
-
-_ruleExit ("string_fsqstring");
-return `${_195}${notsq}${_196}`;
-},
-string_dqstring: function (_197,notdq,_198) {
-_ruleEnter ("string_dqstring");
-_197 = _197.rwr ();
-notdq = notdq.rwr ().join ('');
-_198 = _198.rwr ();
-
-_ruleExit ("string_dqstring");
-return `${_197}${notdq}${_198}`;
-},
-string_sqstring: function (_199,notsq,_200) {
-_ruleEnter ("string_sqstring");
-_199 = _199.rwr ();
-notsq = notsq.rwr ().join ('');
-_200 = _200.rwr ();
-
-_ruleExit ("string_sqstring");
-return `${_199}${notsq}${_200}`;
-},
-notdq: function (any) {
-_ruleEnter ("notdq");
-any = any.rwr ();
-
-_ruleExit ("notdq");
-return `${any}`;
-},
-notsq: function (any) {
-_ruleEnter ("notsq");
-any = any.rwr ();
-
-_ruleExit ("notsq");
-return `${any}`;
-},
-comment: function (_203,notnl,nl) {
-_ruleEnter ("comment");
-_203 = _203.rwr ();
-notnl = notnl.rwr ().join ('');
-nl = nl.rwr ();
-
-_ruleExit ("comment");
-return `${_203}${notnl}${nl}`;
-},
-nl: function (_204) {
-_ruleEnter ("nl");
-_204 = _204.rwr ();
-
-_ruleExit ("nl");
-return `${_204}`;
-},
-notnl: function (any) {
-_ruleEnter ("notnl");
-any = any.rwr ();
-
-_ruleExit ("notnl");
-return `${any}`;
-},
-space: function (comment) {
-_ruleEnter ("space");
-comment = comment.rwr ();
-
-_ruleExit ("space");
-return `${comment}`;
-},
-
-    _terminal: function () { _ruleEnter ("_terminal"); _ruleExit ("_terminal"); return this.sourceString; },
-    _iter: function (...children) {_ruleEnter ("_iter"); _ruleExit ("_iter");  return children.map(c => c.rwr ()); },
-    spaces: function (x) {_ruleEnter ("spaces"); _ruleExit ("spaces");  return this.sourceString; },
-    space: function (x) {_ruleEnter ("space"); _ruleExit ("space");  return this.sourceString; }
-}): Found errors in the action dictionary of the 'rwr' operation:
-- Semantic action 'Rec_Statement' has the wrong arity: expected 1, got 2
-- 'Statement_globals' is not a valid semantic action for 'rt'
-- 'Statement_if' is not a valid semantic action for 'rt'
-- 'Statement_pass' is not a valid semantic action for 'rt'
-- 'Statement_return' is not a valid semantic action for 'rt'
-- 'Statement_for' is not a valid semantic action for 'rt'
-- 'Statement_while' is not a valid semantic action for 'rt'
-- 'Statement_try' is not a valid semantic action for 'rt'
-- 'Statement_assignment' is not a valid semantic action for 'rt'
-- 'Statement_call' is not a valid semantic action for 'rt'
-$grammarName="{grammarName}" grammFilename="/tmp/fakepipe2" rwrFilename="/tmp/fakepipe1"
-[try using "node /tmp/fakepipe1", to get better error reporting]
+
+counter = 0
+digits = ["₀","₁","₂","₃","₄","₅","₆","₇","₈","₉","₁₀","₁₁","₁₂","₁₃","₁₄","₁₅","₁₆","₁₇","₁₈","₁₉","₂₀","₂₁","₂₂","₂₃","₂₄","₂₅","₂₆","₂₇","₂₈","₂₉"]
+def gensym (s):
+    global counter
+    name_with_id = f"{s}{subscripted_digit (counter)}"
+    counter += 1
+    return name_with_id
+
+def subscripted_digit (n):
+    global digits
+    if (n >= 0 and n <= 29):
+        return digits[n]
+    else:
+        return f"₊{n}"
+    
+
+class Datum:
+    def __init__ (self):
+        
+        self.data =  None
+        self.clone =  None
+        self.reclaim =  None
+        self.srepr =  None
+        self.kind =  None
+        self.raw =  None
+    
+
+def new_datum_string (s):
+    d =  Datum ()
+    d.data = s
+    d.clone =  lambda : clone_datum_string(d)
+    d.reclaim =  lambda : reclaim_datum_string(d)
+    d.srepr =  lambda : srepr_datum_string(d)
+    d.raw =  lambda : raw_datum_string(d)
+    d.kind =  lambda : "string"
+    return d
+
+def clone_datum_string (d):
+    d = new_datum_string(d.data)
+    return d
+
+def reclaim_datum_string (src):
+    pass
+
+def srepr_datum_string (d):
+    return d.data
+
+def raw_datum_string (d):
+    return bytearray(d.data,'UTF_8')
+
+def new_datum_bang ():
+    p = Datum()
+    p.data =  True
+    p.clone =  lambda : clone_datum_bang(p)
+    p.reclaim =  lambda : reclaim_datum_bang(p)
+    p.srepr =  lambda : srepr_datum_bang()
+    p.raw =  lambda : raw_datum_bang()
+    p.kind =  lambda : "bang"
+    return p
+
+def clone_datum_bang (d):
+    return new_datum_bang()
+
+def reclaim_datum_bang (d):
+    pass
+
+def srepr_datum_bang ():
+    return "!"
+
+def raw_datum_bang ():
+    return []
+
+def new_datum_tick ():
+    p = new_datum_bang()
+    p.kind =  lambda : "tick"
+    p.clone =  lambda : new_datum_tick()
+    p.srepr =  lambda : srepr_datum_tick()
+    p.raw =  lambda : raw_datum_tick()
+    return p
+
+def srepr_datum_tick ():
+    return "."
+
+def raw_datum_tick ():
+    return []
+
+def new_datum_bytes (b):
+    p = Datum()
+    p.data = b[:]
+    p.clone = clone_datum_bytes
+    p.reclaim =  lambda : reclaim_datum_bytes(p)
+    p.srepr =  lambda : srepr_datum_bytes(b)
+    p.raw =  lambda : raw_datum_bytes(b)
+    p.kind =  lambda : "bytes"
+    return p
+
+def clone_datum_bytes (src):
+    p = Datum()
+    p = src
+    p.data = src.clone()
+    return p
+
+def reclaim_datum_bytes (src):
+    pass
+
+def srepr_datum_bytes (d):
+    return d.data.decode('utf_8')
+
+def raw_datum_bytes (d):
+    return d.data
+
+def new_datum_handle (h):
+    return new_datum_int(h)
+
+def new_datum_int (i):
+    p = Datum()
+    p.data = i
+    p.clone =  lambda : clone_int(i)
+    p.reclaim =  lambda : reclaim_int(i)
+    p.srepr =  lambda : srepr_datum_int(i)
+    p.raw =  lambda : raw_datum_int(i)
+    p.kind =  lambda : "int"
+    return p
+
+def clone_int (i):
+    p = Datum()
+    p = new_datum_int(i)
+    return p
+
+def reclaim_int (src):
+    pass
+
+def srepr_datum_int (i):
+    return str(i)
+
+def raw_datum_int (i):
+    return i
+
+class Message:
+    def __init__ (self,port,datum):
+        
+        self.port = port
+        self.datum = datum
+    
+
+def clone_port (s):
+    return clone_string(s)
+
+def make_message (port,datum):
+    p = clone_string(port)
+    m = Message(port=p,datum=datum.clone())
+    return m
+
+def message_clone (message):
+    m = Message(port=clone_port(message.port),datum=message.datum.clone())
+    return m
+
+def destroy_message (msg):
+    pass
+
+def destroy_datum (msg):
+    pass
+
+def destroy_port (msg):
+    pass
+
+def format_message (m):
+    if m ==  None:
+        return "ϕ"
+    else:
+        return f'⟪"{m.port}"⦂"{m.datum.srepr ()}"⟫'
+    
+
+drInject = "inject"
+drSend = "send"
+drInOut = "inout"
+drForward = "forward"
+drDown = "down"
+drUp = "up"
+drAcross = "across"
+drThrough = "through"
+def make_Routing_Descriptor (action= None,component= None,port= None,message= None):
+    return {"action":action,"component":component,"port":port,"message":message}
+
+def make_Send_Descriptor (component= None,port= None,message= None,cause_port= None,cause_message= None):
+    rdesc = make_Routing_Descriptor(action=drSend,component=component,port=port,message=message)
+    return {"action":drSend,"component":rdesc["component"],"port":rdesc["port"],"message":rdesc["message"],"cause_port":cause_port,"cause_message":cause_message,"fmt":fmt_send}
+
+def log_send (sender,sender_port,msg,cause_msg):
+    send_desc = make_Send_Descriptor(component=sender,port=sender_port,message=msg,cause_port=cause_msg.port,cause_message=cause_msg)
+    append_routing_descriptor(container=sender.owner,desc=send_desc)
+
+def log_send_string (sender,sender_port,msg,cause_msg):
+    send_desc = make_Send_Descriptor(sender,sender_port,msg,cause_msg.port,cause_msg)
+    append_routing_descriptor(container=sender.owner,desc=send_desc)
+
+def fmt_send (desc,indent):
+    return ""
+
+def fmt_send_string (desc,indent):
+    return fmt_send(desc,indent)
+
+def make_Forward_Descriptor (component= None,port= None,message= None,cause_port= None,cause_message= None):
+    rdesc = make_Routing_Descriptor(action=drSend,component=component,port=port,message=message)
+    fmt_forward =  lambda desc: ''
+    return {"action":drForward,"component":rdesc["component"],"port":rdesc["port"],"message":rdesc["message"],"cause_port":cause_port,"cause_message":cause_message,"fmt":fmt_forward}
+
+def log_forward (sender,sender_port,msg,cause_msg):
+    pass
+
+def fmt_forward (desc):
+    print(f"*** Error fmt_forward {desc}")
+    quit()
+
+def make_Inject_Descriptor (receiver= None,port= None,message= None):
+    rdesc = make_Routing_Descriptor(action=drInject,component=receiver,port=port,message=message)
+    return {"action":drInject,"component":rdesc["component"],"port":rdesc["port"],"message":rdesc["message"],"fmt":fmt_inject}
+
+def log_inject (receiver,port,msg):
+    inject_desc = make_Inject_Descriptor(receiver=receiver,port=port,message=msg)
+    append_routing_descriptor(container=receiver,desc=inject_desc)
+
+def fmt_inject (desc,indent):
+    return f'\n{indent}⟹  {desc ["component"].name}."{desc ["port"]}" {format_message (desc ["message"])}'
+
+def make_Down_Descriptor (container= None,source_port= None,source_message= None,target= None,target_port= None,target_message= None):
+    return {"action":drDown,"container":container,"source_port":source_port,"source_message":source_message,"target":target,"target_port":target_port,"target_message":target_message,"fmt":fmt_down}
+
+def log_down (container= None,source_port= None,source_message= None,target= None,target_port= None,target_message= None):
+    rdesc = make_Down_Descriptor(container,source_port,source_message,target,target_port,target_message)
+    append_routing_descriptor(container,rdesc)
+
+def fmt_down (desc,indent):
+    return f'\n{indent}↓ {desc ["container"].name}."{desc ["source_port"]}" ➔ {desc ["target"].name}."{desc ["target_port"]}" {format_message (desc ["target_message"])}'
+
+def make_Up_Descriptor (source= None,source_port= None,source_message= None,container= None,container_port= None,container_message= None):
+    return {"action":drUp,"source":source,"source_port":source_port,"source_message":source_message,"container":container,"container_port":container_port,"container_message":container_message,"fmt":fmt_up}
+
+def log_up (source= None,source_port= None,source_message= None,container= None,target_port= None,target_message= None):
+    rdesc = make_Up_Descriptor(source,source_port,source_message,container,target_port,target_message)
+    append_routing_descriptor(container,rdesc)
+
+def fmt_up (desc,indent):
+    return f'\n{indent}↑ {desc ["source"].name}."{desc ["source_port"]}" ➔ {desc ["container"].name}."{desc ["container_port"]}" {format_message (desc ["container_message"])}'
+
+def make_Across_Descriptor (container= None,source= None,source_port= None,source_message= None,target= None,target_port= None,target_message= None):
+    return {"action":drAcross,"container":container,"source":source,"source_port":source_port,"source_message":source_message,"target":target,"target_port":target_port,"target_message":target_message,"fmt":fmt_across}
+
+def log_across (container= None,source= None,source_port= None,source_message= None,target= None,target_port= None,target_message= None):
+    rdesc = make_Across_Descriptor(container,source,source_port,source_message,target,target_port,target_message)
+    append_routing_descriptor(container,rdesc)
+
+def fmt_across (desc,indent):
+    return f'\n{indent}→ {desc["source"].name}."{desc ["source_port"]}" ➔ {desc ["target"].name}."{desc ["target_port"]}"  {format_message (desc ["target_message"])}'
+
+def make_Through_Descriptor (container= None,source_port= None,source_message= None,target_port= None,message= None):
+    return {"action":drThrough,"container":container,"source_port":source_port,"source_message":source_message,"target_port":target_port,"message":message,"fmt":fmt_through}
+
+def log_through (container= None,source_port= None,source_message= None,target_port= None,message= None):
+    rdesc = make_Through_Descriptor(container,source_port,source_message,target_port,message)
+    append_routing_descriptor(container,rdesc)
+
+def fmt_through (desc,indent):
+    return f'\n{indent}⇶ {desc  ["container"].name}."{desc ["source_port"]}" ➔ {desc ["container"].name}."{desc ["target_port"]}" {format_message (desc ["message"])}'
+
+def make_InOut_Descriptor (container= None,component= None,in_message= None,out_port= None,out_message= None):
+    return {"action":drInOut,"container":container,"component":component,"in_message":in_message,"out_message":out_message,"fmt":fmt_inout}
+
+def log_inout (container= None,component= None,in_message= None):
+    if component.outq.empty():
+        log_inout_no_output(container=container,component=component,in_message=in_message)
+    else:
+        log_inout_recursively(container=container,component=component,in_message=in_message,out_messages=list(component.outq.queue))
+    
+
+def log_inout_no_output (container= None,component= None,in_message= None):
+    rdesc = make_InOut_Descriptor(container=container,component=component,in_message=in_message)
+    append_routing_descriptor(container,rdesc)
+
+def log_inout_single (container= None,component= None,in_message= None,out_message= None):
+    rdesc = make_InOut_Descriptor(container=container,component=component,in_message=in_message,out_message=out_message)
+    append_routing_descriptor(container,rdesc)
+
+def log_inout_recursively (container= None,component= None,in_message= None,out_messages=[]):
+    if [] == out_messages:
+        pass
+    else:
+        m = out_messages[0]
+        rest = out_messages[1:]
+        log_inout_single(container=container,component=component,in_message=in_message,out_message=m)
+        log_inout_recursively(container=container,component=component,in_message=in_message,out_messages=rest)
+    
+
+def fmt_inout (desc,indent):
+    outm = desc["out_message"]
+    if  None == outm:
+        return f'\n{indent}  ⊥'
+    else:
+        return f'\n{indent}  ∴ {desc ["component"].name} {format_message (outm)}'
+    
+
+def log_tick (container= None,component= None,in_message= None):
+    pass
+
+def routing_trace_all (container):
+    indent = ""
+    lis = list(container.routings.queue)
+    return recursive_routing_trace(container,lis,indent)
+
+def recursive_routing_trace (container,lis,indent):
+    if [] == lis:
+        return ''
+    else:
+        desc = first(lis)
+        formatted = desc["fmt"](desc,indent)
+        return formatted+recursive_routing_trace(container,rest(lis),indent+'  ')
+    
+
+enumDown = 0
+enumAcross = 1
+enumUp = 2
+enumThrough = 3
+def container_instantiator (reg,owner,container_name,desc):
+    global enumDown, enumUp, enumAcross, enumThrough
+    container = make_container(container_name,owner)
+    children = []
+    children_by_id = {}
+    for child_desc in desc["children"]:
+        child_instance = get_component_instance(reg,child_desc["name"],container)
+        children.append(child_instance)
+        children_by_id[child_desc["id"]] = child_instance
+    
+    container.children = children
+    me = container
+    connectors = []
+    for proto_conn in desc["connections"]:
+        source_component =  None
+        target_component =  None
+        connector = Connector()
+        if proto_conn['dir'] == enumDown:
+            connector.direction = "down"
+            connector.sender = Sender(me.name,me,proto_conn['source_port'])
+            target_component = children_by_id[proto_conn['target']['id']]
+            if (target_component ==  None):
+                load_error(f"internal error: .Down connection target internal error {proto_conn['target']}")
+            else:
+                connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn['target_port'],target_component)
+                connectors.append(connector)
+            
+        elif proto_conn["dir"] == enumAcross:
+            connector.direction = "across"
+            source_component = children_by_id[proto_conn['source']['id']]
+            target_component = children_by_id[proto_conn['target']['id']]
+            if source_component ==  None:
+                load_error(f"internal error: .Across connection source not ok {proto_conn ['source']}")
+            else:
+                connector.sender = Sender(source_component.name,source_component,proto_conn['source_port'])
+                if target_component ==  None:
+                    load_error(f"internal error: .Across connection target not ok {proto_conn.target}")
+                else:
+                    connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn['target_port'],target_component)
+                    connectors.append(connector)
+                
+            
+        elif proto_conn['dir'] == enumUp:
+            connector.direction = "up"
+            source_component = children_by_id[proto_conn['source']['id']]
+            if source_component ==  None:
+                print(f"internal error: .Up connection source not ok {proto_conn ['source']}")
+            else:
+                connector.sender = Sender(source_component.name,source_component,proto_conn['source_port'])
+                connector.receiver = Receiver(me.name,container.outq,proto_conn['target_port'],me)
+                connectors.append(connector)
+            
+        elif proto_conn['dir'] == enumThrough:
+            connector.direction = "through"
+            connector.sender = Sender(me.name,me,proto_conn['source_port'])
+            connector.receiver = Receiver(me.name,container.outq,proto_conn['target_port'],me)
+            connectors.append(connector)
+        
+    
+    container.connections = connectors
+    return container
+    container.connections = connectors
+    return container
+    container.children = children
+    me = container
+    connectors = []
+    for proto_conn in desc["connections"]:
+        source_component =  None
+        target_component =  None
+        connector = Connector()
+        if proto_conn['dir'] == enumDown:
+            connector.direction = "down"
+            connector.sender = Sender(me.name,me,proto_conn['source_port'])
+            target_component = children_by_id[proto_conn['target']['id']]
+            if (target_component ==  None):
+                load_error(f"internal error: .Down connection target internal error {proto_conn['target']}")
+            else:
+                connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn['target_port'],target_component)
+                connectors.append(connector)
+            
+        elif proto_conn["dir"] == enumAcross:
+            connector.direction = "across"
+            source_component = children_by_id[proto_conn['source']['id']]
+            target_component = children_by_id[proto_conn['target']['id']]
+            if source_component ==  None:
+                load_error(f"internal error: .Across connection source not ok {proto_conn ['source']}")
+            else:
+                connector.sender = Sender(source_component.name,source_component,proto_conn['source_port'])
+                if target_component ==  None:
+                    load_error(f"internal error: .Across connection target not ok {proto_conn.target}")
+                else:
+                    connector.receiver = Receiver(target_component.name,target_component.inq,proto_conn['target_port'],target_component)
+                    connectors.append(connector)
+                
+            
+        elif proto_conn['dir'] == enumUp:
+            connector.direction = "up"
+            source_component = children_by_id[proto_conn['source']['id']]
+            if source_component ==  None:
+                print(f"internal error: .Up connection source not ok {proto_conn ['source']}")
+            else:
+                connector.sender = Sender(source_component.name,source_component,proto_conn['source_port'])
+                connector.receiver = Receiver(me.name,container.outq,proto_conn['target_port'],me)
+                connectors.append(connector)
+            
+        elif proto_conn['dir'] == enumThrough:
+            connector.direction = "through"
+            connector.sender = Sender(me.name,me,proto_conn['source_port'])
+            connector.receiver = Receiver(me.name,container.outq,proto_conn['target_port'],me)
+            connectors.append(connector)
+        
+    
+    container.connections = connectors
+    return container
+    container.connections = connectors
+    return container
+
+def container_handler (container,message):
+    route(container=container,from_component=container,message=message)
+    while any_child_ready(container):
+        step_children(container,message)
+    
+
+def destroy_container (eh):
+    pass
+
+def fifo_is_empty (fifo):
+    return fifo.empty()
+
+class Connector:
+    def __init__ (self):
+        
+        self.direction =  None
+        self.sender =  None
+        self.receiver =  None
+    
+
+class Sender:
+    def __init__ (self,name,component,port):
+        
+        self.name = name
+        self.component = component
+        self.port = port
+    
+
+class Receiver:
+    def __init__ (self,name,queue,port,component):
+        
+        self.name = name
+        self.queue = queue
+        self.port = port
+        self.component = component
+    
+
+def sender_eq (s1,s2):
+    same_components = (s1.component == s2.component)
+    same_ports = (s1.port == s2.port)
+    return same_components and same_ports
+
+def deposit (parent,conn,message):
+    new_message = make_message(port=conn.receiver.port,datum=message.datum)
+    log_connection(parent,conn,new_message)
+    push_message(parent,conn.receiver.component,conn.receiver.queue,new_message)
+
+def force_tick (parent,eh):
+    tick_msg = make_message(".",new_datum_tick())
+    push_message(parent,eh,eh.inq,tick_msg)
+    return tick_msg
+
+def push_message (parent,receiver,inq,m):
+    inq.put(m)
+    parent.visit_ordering.put(receiver)
+
+def is_self (child,container):
+    return child == container
+
+def step_child (child,msg):
+    before_state = child.state
+    child.handler(child,msg)
+    after_state = child.state
+    return [before_state == "idle" and after_state != "idle", before_state != "idle" and after_state != "idle", before_state != "idle" and after_state == "idle"]
+
+def save_message (eh,msg):
+    eh.saved_messages.put(msg)
+
+def fetch_saved_message_and_clear (eh):
+    return eh.saved_messages.get()
+
+def step_children (container,causingMessage):
+    container.state = "idle"
+    for child in list(container.visit_ordering.queue):
+        if (not (is_self(child,container))):
+            if (not (child.inq.empty())):
+                msg = child.inq.get()
+                [began_long_run, continued_long_run, ended_long_run] = step_child(child,msg)
+                if began_long_run:
+                    save_message(child,msg)
+                elif continued_long_run:
+                    pass
+                elif ended_long_run:
+                    log_inout(container=container,component=child,in_message=fetch_saved_message_and_clear(child))
+                else:
+                    log_inout(container=container,component=child,in_message=msg)
+                
+                destroy_message(msg)
+            else:
+                if (child.state != "idle"):
+                    msg = force_tick(container,child)
+                    child.handler(child,msg)
+                    log_tick(container=container,component=child,in_message=msg)
+                    destroy_message(msg)
+                
+            
+            if (child.state == "active"):
+                container.state = "active"
+            
+            while (not (child.outq.empty())):
+                msg = child.outq.get()
+                route(container,child,msg)
+                destroy_message(msg)
+            
+        
+    
+
+def attempt_tick (parent,eh):
+    if eh.state != "idle":
+        force_tick(parent,eh)
+    
+
+def is_tick (msg):
+    return "tick" == msg.datum.kind()
+
+def route (container,from_component,message):
+    was_sent =  False
+    if is_tick(message):
+        for child in container.children:
+            attempt_tick(container,child,message)
+        
+        was_sent =  True
+        was_sent =  True
+    else:
+        fromname = ""
+        if (not (is_self(from_component,container))):
+            fromname = from_component.name
+        
+        from_sender = Sender(name=fromname,component=from_component,port=message.port)
+        for connector in container.connections:
+            if sender_eq(from_sender,connector.sender):
+                deposit(container,connector,message)
+                was_sent =  True
+            
+        
+    
+    if not (was_sent):
+        print("\n\n*** Error: ***")
+        dump_possible_connections(container)
+        print_routing_trace(container)
+        print("***")
+        print(f"{container.name}: message '{message.port}' from {fromname} dropped on floor...")
+        print("***")
+        exit()
+    
+
+def dump_possible_connections (container):
+    print(f"*** possible connections for {container.name}:")
+    for connector in container.connections:
+        print(f"{connector.direction} {connector.sender.name}.{connector.sender.port} _> {connector.receiver.name}.{connector.receiver.port}")
+    
+
+def any_child_ready (container):
+    for child in container.children:
+        if child_is_ready(child):
+            return  True
+        
+    
+    return  False
+    return  False
+
+def child_is_ready (eh):
+    return (not (eh.outq.empty())) or (not (eh.inq.empty())) or (eh.state != "idle") or (any_child_ready(eh))
+
+def print_routing_trace (eh):
+    print(routing_trace_all(eh))
+
+def append_routing_descriptor (container,desc):
+    container.routings.put(desc)
+
+def log_connection (container,connector,message):
+    if "down" == connector.direction:
+        log_down(container=container,source_port=connector.sender.port,target=connector.receiver.component,target_port=connector.receiver.port,target_message=message)
+    elif "up" == connector.direction:
+        log_up(source=connector.sender.component,source_port=connector.sender.port,container=container,target_port=connector.receiver.port,target_message=message)
+    elif "across" == connector.direction:
+        log_across(container=container,source=connector.sender.component,source_port=connector.sender.port,target=connector.receiver.component,target_port=connector.receiver.port,target_message=message)
+    elif "through" == connector.direction:
+        log_through(container=container,source_port=connector.sender.port,source_message= None,target_port=connector.receiver.port,message=message)
+    else:
+        print(f"*** FATAL error: in log_connection /{connector.direction}/ /{message.port}/ /{message.datum.srepr ()}/")
+        exit()
+    
+
+def container_injector (container,message):
+    log_inject(receiver=container,port=message.port,msg=message)
+    container_handler(container,message)
+
+import os
+import json
+import sys
+class Component_Registry:
+    def __init__ (self):
+        
+        self.templates = {}
+    
+
+class Template:
+    def __init__ (self,name="",template_data= None,instantiator= None):
+        
+        self.name = name
+        self.template_data = template_data
+        self.instantiator = instantiator
+    
+
+def read_and_convert_json_file (filename):
+    try:
+    
+        fil = open(filename,'r')
+        json_data = fil.read()
+        routings = json.loads(json_data)
+        fil.close()
+        return routings
+    except FileNotFoundError:
+        print(f"File not found: {filename}")
+        return  None
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON in file: {e}")
+        return  None
+    
+
+def json2internal (container_xml):
+    fname = os.path.basename(container_xml)
+    routings = read_and_convert_json_file(fname)
+    return routings
+
+def delete_decls (d):
+    pass
+
+def make_component_registry ():
+    return Component_Registry()
+
+def register_component (reg,template,ok_to_overwrite= False):
+    name = mangle_name(template.name)
+    if name in reg.templates and not ok_to_overwrite:
+        load_error(f"Component {template.name} already declared")
+    
+    reg.templates[name] = template
+    return reg
+
+def register_multiple_components (reg,templates):
+    for template in templates:
+        register_component(reg,template)
+    
+
+def get_component_instance (reg,full_name,owner):
+    template_name = mangle_name(full_name)
+    if template_name in reg.templates:
+        template = reg.templates[template_name]
+        if (template ==  None):
+            load_error(f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
+            return  None
+        else:
+            owner_name = ""
+            instance_name = f"{template_name}"
+            if  None != owner:
+                owner_name = owner.name
+                instance_name = f"{owner_name}.{template_name}"
+            else:
+                instance_name = f"{template_name}"
+            
+            instance = template.instantiator(reg,owner,instance_name,template.template_data)
+            instance.depth = calculate_depth(instance)
+            return instance
+        
+    else:
+        load_error(f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
+        return  None
+    
+
+def calculate_depth (eh):
+    if eh.owner ==  None:
+        return 0
+    else:
+        return 1+calculate_depth(eh.owner)
+    
+
+def dump_registry (reg):
+    print()
+    print("*** PALETTE ***")
+    for c in reg.templates:
+        print(c.name)
+    
+    print("***************")
+    print()
+    print("***************")
+    print()
+
+def print_stats (reg):
+    print(f"registry statistics: {reg.stats}")
+
+def mangle_name (s):
+    return s
+
+import subprocess
+def generate_shell_components (reg,container_list):
+    if  None != container_list:
+        for diagram in container_list:
+            for child_descriptor in diagram['children']:
+                if first_char_is(child_descriptor["name"],"$"):
+                    name = child_descriptor["name"]
+                    cmd = name[1:].strip()
+                    generated_leaf = Template(name=name,instantiator=shell_out_instantiate,template_data=cmd)
+                    register_component(reg,generated_leaf)
+                elif first_char_is(child_descriptor["name"],"'"):
+                    name = child_descriptor["name"]
+                    s = name[1:]
+                    generated_leaf = Template(name=name,instantiator=string_constant_instantiate,template_data=s)
+                    register_component(reg,generated_leaf,ok_to_overwrite= True)
+                
+            
+        
+    
+
+def first_char (s):
+    return s[0]
+
+def first_char_is (s,c):
+    return c == first_char(s)
+
+def run_command (eh,cmd,s):
+    ret = subprocess.run(cmd,capture_output= True,input=s,encoding='utf_8')
+    if not (ret.returncode == 0):
+        if ret.stderr !=  None:
+            return ["", ret.stderr]
+        else:
+            return ["", f"error in shell_out {ret.returncode}"]
+        
+    else:
+        return [ret.stdout,  None]
+    
+
+import queue
+import sys
+class Eh:
+    def __init__ (self):
+        
+        self.name = ""
+        self.inq = queue.Queue()
+        self.outq = queue.Queue()
+        self.owner =  None
+        self.saved_messages = queue.LifoQueue()
+        self.inject = injector_NIY
+        self.children = []
+        self.visit_ordering = queue.Queue()
+        self.connections = []
+        self.routings = queue.Queue()
+        self.handler =  None
+        self.instance_data =  None
+        self.state = "idle"
+        self.kind =  None
+        self.trace =  False
+        self.depth = 0
+    
+
+def make_container (name,owner):
+    eh = Eh()
+    eh.name = name
+    eh.owner = owner
+    eh.handler = container_handler
+    eh.inject = container_injector
+    eh.state = "idle"
+    eh.kind = "container"
+    return eh
+
+def make_leaf (name,owner,instance_data,handler):
+    eh = Eh()
+    eh.name = f"{owner.name}.{name}"
+    eh.owner = owner
+    eh.handler = handler
+    eh.instance_data = instance_data
+    eh.state = "idle"
+    eh.kind = "leaf"
+    return eh
+
+def send (eh,port,datum,causingMessage):
+    msg = make_message(port,datum)
+    log_send(sender=eh,sender_port=port,msg=msg,cause_msg=causingMessage)
+    put_output(eh,msg)
+
+def send_string (eh,port,s,causingMessage):
+    datum = new_datum_string(s)
+    msg = make_message(port=port,datum=datum)
+    log_send_string(sender=eh,sender_port=port,msg=msg,cause_msg=causingMessage)
+    put_output(eh,msg)
+
+def forward (eh,port,msg):
+    fwdmsg = make_message(port,msg.datum)
+    log_forward(sender=eh,sender_port=port,msg=msg,cause_msg=msg)
+    put_output(eh,msg)
+
+def inject (eh,msg):
+    eh.inject(eh,msg)
+
+def output_list (eh):
+    return eh.outq
+
+def print_output_list (eh):
+    for m in list(eh.outq.queue):
+        print(format_message(m))
+    
+
+def spaces (n):
+    s = ""
+    for i in range(n):
+        s = s+" "
+    
+    return s
+    return s
+
+def set_active (eh):
+    eh.state = "active"
+
+def set_idle (eh):
+    eh.state = "idle"
+
+def fetch_first_output (eh,port):
+    for msg in list(eh.outq.queue):
+        if (msg.port == port):
+            return msg.datum
+        
+    
+    return  None
+    return  None
+
+def print_specific_output (eh,port="",stderr= False):
+    datum = fetch_first_output(eh,port)
+    if datum !=  None:
+        if stderr:
+            outf = sys.stderr
+        else:
+            outf = sys.stdout
+        
+        print(datum.srepr(),file=outf)
+    
+
+def put_output (eh,msg):
+    eh.outq.put(msg)
+
+def injector_NIY (eh,msg):
+    print(f'Injector not implemented for this component "{eh.name}" kind={eh.kind} port="{msg.port}"')
+    exit()
+
+import sys
+import re
+import subprocess
+import shlex
+root_project = ""
+root_0D = ""
+def set_environment (rproject,r0D):
+    global root_project
+    global root_0D
+    root_project = rproject
+    root_0D = r0D
+
+def probe_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("?")
+    return make_leaf(name=name_with_id,owner=owner,instance_data= None,handler=probe_handler)
+
+def probeA_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("?A")
+    return make_leaf(name=name_with_id,owner=owner,instance_data= None,handler=probe_handler)
+
+def probeB_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("?B")
+    return make_leaf(name=name_with_id,owner=owner,instance_data= None,handler=probe_handler)
+
+def probeC_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("?C")
+    return make_leaf(name=name_with_id,owner=owner,instance_data= None,handler=probe_handler)
+
+def probe_handler (eh,msg):
+    s = msg.datum.srepr()
+    print(f"... probe {eh.name}: {s}",file=sys.stderr)
+
+def trash_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("trash")
+    return make_leaf(name=name_with_id,owner=owner,instance_data= None,handler=trash_handler)
+
+def trash_handler (eh,msg):
+    pass
+
+class TwoMessages:
+    def __init__ (self,first= None,second= None):
+        
+        self.first = first
+        self.second = second
+    
+
+class Deracer_Instance_Data:
+    def __init__ (self,state="idle",buffer= None):
+        
+        self.state = state
+        self.buffer = buffer
+    
+
+def reclaim_Buffers_from_heap (inst):
+    pass
+
+def deracer_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("deracer")
+    inst = Deracer_Instance_Data(buffer=TwoMessages())
+    inst.state = "idle"
+    eh = make_leaf(name=name_with_id,owner=owner,instance_data=inst,handler=deracer_handler)
+    return eh
+
+def send_first_then_second (eh,inst):
+    forward(eh,"1",inst.buffer.first)
+    forward(eh,"2",inst.buffer.second)
+    reclaim_Buffers_from_heap(inst)
+
+def deracer_handler (eh,msg):
+    inst = eh.instance_data
+    if inst.state == "idle":
+        if "1" == msg.port:
+            inst.buffer.first = msg
+            inst.state = "waitingForSecond"
+        elif "2" == msg.port:
+            inst.buffer.second = msg
+            inst.state = "waitingForFirst"
+        else:
+            runtime_error(f"bad msg.port (case A) for deracer {msg.port}")
+        
+    elif inst.state == "waitingForFirst":
+        if "1" == msg.port:
+            inst.buffer.first = msg
+            send_first_then_second(eh,inst)
+            inst.state = "idle"
+        else:
+            runtime_error(f"bad msg.port (case B) for deracer {msg.port}")
+        
+    elif inst.state == "waitingForSecond":
+        if "2" == msg.port:
+            inst.buffer.second = msg
+            send_first_then_second(eh,inst)
+            inst.state = "idle"
+        else:
+            runtime_error(f"bad msg.port (case C) for deracer {msg.port}")
+        
+    else:
+        runtime_error("bad state for deracer {eh.state}")
+    
+
+def low_level_read_text_file_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("Low Level Read Text File")
+    return make_leaf(name_with_id,owner, None,low_level_read_text_file_handler)
+
+def low_level_read_text_file_handler (eh,msg):
+    fname = msg.datum.srepr()
+    try:
+    
+        f = open(fname)
+    except Exception as e:
+        f =  None
+    
+    if f !=  None:
+        data = f.read()
+        if data !=  None:
+            send_string(eh,"",data,msg)
+        else:
+            emsg = f"read error on file {fname}"
+            send_string(eh,"✗",emsg,msg)
+        
+        f.close()
+    else:
+        emsg = f"open error on file {fname}"
+        send_string(eh,"✗",emsg,msg)
+    
+
+def ensure_string_datum_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("Ensure String Datum")
+    return make_leaf(name_with_id,owner, None,ensure_string_datum_handler)
+
+def ensure_string_datum_handler (eh,msg):
+    if "string" == msg.datum.kind():
+        forward(eh,"",msg)
+    else:
+        emsg = f"*** ensure: type error (expected a string datum) but got {msg.datum}"
+        send_string(eh,"✗",emsg,msg)
+    
+
+class Syncfilewrite_Data:
+    def __init__ (self):
+        
+        self.filename = ""
+    
+
+def syncfilewrite_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("syncfilewrite")
+    inst = Syncfilewrite_Data()
+    return make_leaf(name_with_id,owner,inst,syncfilewrite_handler)
+
+def syncfilewrite_handler (eh,msg):
+    inst = eh.instance_data
+    if "filename" == msg.port:
+        inst.filename = msg.datum.srepr()
+    elif "input" == msg.port:
+        contents = msg.datum.srepr()
+        f = open(inst.filename,"w")
+        if f !=  None:
+            f.write(msg.datum.srepr())
+            f.close()
+            send(eh,"done",new_datum_bang(),msg)
+        else:
+            send_string(eh,"✗",f"open error on file {inst.filename}",msg)
+        
+    
+
+class StringConcat_Instance_Data:
+    def __init__ (self):
+        
+        self.buffer1 =  None
+        self.buffer2 =  None
+        self.count = 0
+    
+
+def stringconcat_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("stringconcat")
+    instp = StringConcat_Instance_Data()
+    return make_leaf(name_with_id,owner,instp,stringconcat_handler)
+
+def stringconcat_handler (eh,msg):
+    inst = eh.instance_data
+    if "1" == msg.port:
+        inst.buffer1 = clone_string(msg.datum.srepr())
+        inst.count += 1
+        maybe_stringconcat(eh,inst,msg)
+    elif "2" == msg.port:
+        inst.buffer2 = clone_string(msg.datum.srepr())
+        inst.count += 1
+        maybe_stringconcat(eh,inst,msg)
+    else:
+        runtime_error(f"bad msg.port for stringconcat: {msg.port}")
+    
+
+def maybe_stringconcat (eh,inst,msg):
+    if (0 == len(inst.buffer1)) and (0 == len(inst.buffer2)):
+        runtime_error("something is wrong in stringconcat, both strings are 0 length")
+    
+    if inst.count >= 2:
+        concatenated_string = ""
+        if 0 == len(inst.buffer1):
+            concatenated_string = inst.buffer2
+        elif 0 == len(inst.buffer2):
+            concatenated_string = inst.buffer1
+        else:
+            concatenated_string = inst.buffer1+inst.buffer2
+        
+        send_string(eh,"",concatenated_string,msg)
+        inst.buffer1 =  None
+        inst.buffer2 =  None
+        inst.count = 0
+    
+
+def shell_out_instantiate (reg,owner,name,template_data):
+    name_with_id = gensym("shell_out")
+    cmd = shlex.split(template_data)
+    return make_leaf(name_with_id,owner,cmd,shell_out_handler)
+
+def shell_out_handler (eh,msg):
+    cmd = eh.instance_data
+    s = msg.datum.srepr()
+    [stdout, stderr] = run_command(eh,cmd,s)
+    if stderr !=  None:
+        send_string(eh,"✗",stderr,msg)
+    else:
+        send_string(eh,"",stdout,msg)
+    
+
+def string_constant_instantiate (reg,owner,name,template_data):
+    global root_project
+    global root_0D
+    name_with_id = gensym("strconst")
+    s = template_data
+    if root_project != "":
+        s = re.sub("_00_",root_project,s)
+    
+    if root_0D != "":
+        s = re.sub("_0D_",root_0D,s)
+    
+    return make_leaf(name_with_id,owner,s,string_constant_handler)
+
+def string_constant_handler (eh,msg):
+    s = eh.instance_data
+    send_string(eh,"",s,msg)
+
+def string_make_persistent (s):
+    return s
+
+def string_clone (s):
+    return s
+
+import sys
+def parse_command_line_args ():
+    if (len(sys.argv) < (5+1)):
+        load_error("usage: ${_00_} ${_0D_} app <arg> <main tab name> <diagram file name 1> ...")
+        return  None
+    else:
+        root_project = sys.argv[1]
+        root_0D = sys.argv[2]
+        arg = sys.argv[3]
+        main_container_name = sys.argv[4]
+        diagram_source_files = sys.argv[5:]
+        return [root_project, root_0D, arg, main_container_name, diagram_source_files]
+    
+
+def initialize_component_palette (root_project,root_0D,diagram_source_files,project_specific_components_subroutine):
+    reg = make_component_registry()
+    for diagram_source in diagram_source_files:
+        all_containers_within_single_file = json2internal(diagram_source)
+        generate_shell_components(reg,all_containers_within_single_file)
+        for container in all_containers_within_single_file:
+            register_component(reg,Template(name=container['name'],template_data=container,instantiator=container_instantiator))
+        
+    
+    initialize_stock_components(reg)
+    project_specific_components_subroutine(root_project,root_0D,reg)
+    return reg
+    initialize_stock_components(reg)
+    project_specific_components_subroutine(root_project,root_0D,reg)
+    return reg
+
+def print_error_maybe (main_container):
+    error_port = "✗"
+    err = fetch_first_output(main_container,error_port)
+    if (err !=  None) and (0 < len(trimws(err.srepr()))):
+        print("___ !!! ERRORS !!! ___")
+        print_specific_output(main_container,error_port, False)
+    
+
+def dump_outputs (main_container):
+    print()
+    print("___ Outputs ___")
+    print_output_list(main_container)
+
+def trace_outputs (main_container):
+    print()
+    print("___ Message Traces ___")
+    print_routing_trace(main_container)
+
+def dump_hierarchy (main_container):
+    print()
+    print(f"___ Hierarchy ___{(build_hierarchy (main_container))}")
+
+def build_hierarchy (c):
+    s = ""
+    for child in c.children:
+        s = f"{s}{build_hierarchy (child)}"
+    
+    indent = ""
+    for i in range(c.depth):
+        indent = indent+"  "
+    
+    return f"\n{indent}({c.name}{s})"
+    return f"\n{indent}({c.name}{s})"
+    indent = ""
+    for i in range(c.depth):
+        indent = indent+"  "
+    
+    return f"\n{indent}({c.name}{s})"
+    return f"\n{indent}({c.name}{s})"
+
+def dump_connections (c):
+    print()
+    print(f"___ connections ___")
+    dump_possible_connections(c)
+    for child in c.children:
+        print()
+        dump_possible_connections(child)
+    
+
+def trimws (s):
+    return s.strip()
+
+def clone_string (s):
+    return s
+
+load_errors =  False
+runtime_errors =  False
+def load_error (s):
+    global load_errors
+    print(s)
+    quit()
+    load_errors =  True
+
+def runtime_error (s):
+    global runtime_errors
+    print(s)
+    quit()
+    runtime_errors =  True
+
+def fakepipename_instantiate (reg,owner,name,template_data):
+    instance_name = gensym("fakepipe")
+    return make_leaf(instance_name,owner, None,fakepipename_handler)
+
+rand = 0
+def fakepipename_handler (eh,msg):
+    global rand
+    rand += 1
+    send_string(eh,"",f"/tmp/fakepipe{rand}",msg)
+
+class OhmJS_Instance_Data:
+    def __init__ (self):
+        
+        self.pathname_0D_ =  None
+        self.grammar_name =  None
+        self.grammar_filename =  None
+        self.semantics_filename =  None
+        self.s =  None
+    
+
+def ohmjs_instantiate (reg,owner,name,template_data):
+    instance_name = gensym("OhmJS")
+    inst = OhmJS_Instance_Data()
+    return make_leaf(instance_name,owner,inst,ohmjs_handle)
+
+def ohmjs_maybe (eh,inst,causingMsg):
+    if  None != inst.pathname_0D_ and  None != inst.grammar_name and  None != inst.grammar_filename and  None != inst.semantics_filename and  None != inst.s:
+        cmd = [f"{inst.pathname_0D_}/std/ohmjs.js",f"{inst.grammar_name}",f"{inst.grammar_filename}",f"{inst.semantics_filename}"]
+        [captured_output, err] = run_command(eh,cmd,inst.s)
+        if err ==  None:
+            err = ""
+        
+        errstring = trimws(err)
+        if len(errstring) == 0:
+            send_string(eh,"",trimws(captured_output),causingMsg)
+        else:
+            send_string(eh,"✗",errstring,causingMsg)
+        
+        inst.pathname_0D_ =  None
+        inst.grammar_name =  None
+        inst.grammar_filename =  None
+        inst.semantics_filename =  None
+        inst.s =  None
+    
+
+def ohmjs_handle (eh,msg):
+    inst = eh.instance_data
+    if msg.port == "0D path":
+        inst.pathname_0D_ = clone_string(msg.datum.srepr())
+        ohmjs_maybe(eh,inst,msg)
+    elif msg.port == "grammar name":
+        inst.grammar_name = clone_string(msg.datum.srepr())
+        ohmjs_maybe(eh,inst,msg)
+    elif msg.port == "grammar":
+        inst.grammar_filename = clone_string(msg.datum.srepr())
+        ohmjs_maybe(eh,inst,msg)
+    elif msg.port == "semantics":
+        inst.semantics_filename = clone_string(msg.datum.srepr())
+        ohmjs_maybe(eh,inst,msg)
+    elif msg.port == "input":
+        inst.s = clone_string(msg.datum.srepr())
+        ohmjs_maybe(eh,inst,msg)
+    else:
+        emsg = f"!!! ERROR: OhmJS got an illegal message port {msg.port}"
+        send_string(eh,"✗",emsg,msg)
+    
+
+def initialize_stock_components (reg):
+    register_component(reg,Template(name="1then2",instantiator=deracer_instantiate))
+    register_component(reg,Template(name="?",instantiator=probe_instantiate))
+    register_component(reg,Template(name="?A",instantiator=probeA_instantiate))
+    register_component(reg,Template(name="?B",instantiator=probeB_instantiate))
+    register_component(reg,Template(name="?C",instantiator=probeC_instantiate))
+    register_component(reg,Template(name="trash",instantiator=trash_instantiate))
+    register_component(reg,Template(name="Low Level Read Text File",instantiator=low_level_read_text_file_instantiate))
+    register_component(reg,Template(name="Ensure String Datum",instantiator=ensure_string_datum_instantiate))
+    register_component(reg,Template(name="syncfilewrite",instantiator=syncfilewrite_instantiate))
+    register_component(reg,Template(name="stringconcat",instantiator=stringconcat_instantiate))
+    register_component(reg,Template(name="fakepipename",instantiator=fakepipename_instantiate))
+    register_component(reg,Template(name="OhmJS",instantiator=ohmjs_instantiate))
+
+def run (pregistry,root_project,root_0D,arg,main_container_name,diagram_source_files,injectfn,show_hierarchy= True,show_connections= True,show_traces= True,show_all_outputs= True):
+    set_environment(root_project,root_0D)
+    main_container = get_component_instance(pregistry,main_container_name,owner= None)
+    if  None == main_container:
+        load_error(f"Couldn't find container with page name {main_container_name} in files {diagram_source_files} (check tab names, or disable compression?)")
+    
+    if show_hierarchy:
+        dump_hierarchy(main_container)
+    
+    if show_connections:
+        dump_connections(main_container)
+    
+    if not load_errors:
+        injectfn(root_project,root_0D,arg,main_container)
+    
+    if show_all_outputs:
+        dump_outputs(main_container)
+    else:
+        print_error_maybe(main_container)
+        print_specific_output(main_container,port="",stderr= False)
+    
+    if show_traces:
+        print("___ routing traces ___")
+        print(routing_trace_all(main_container))
+    
+    if show_all_outputs:
+        print("___ done ___")
+    
+
+
