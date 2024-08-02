@@ -278,7 +278,7 @@ defn message_clone (message) {
 }
 defn destroy_message (msg) {
 
-    # during debug, don't destroy any message, since we want to trace messages, thus, we need to persist ancestor messages
+    # during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages
     pass
 
 
@@ -338,9 +338,9 @@ defn make_Send_Descriptor (component=ϕ, port=ϕ, message=ϕ, cause_port=ϕ, cau
     rdesc = make_Routing_Descriptor (action=drSend, component=component, port=port, message=message)
     return {
         "action": drSend,
-        "component": rdesc@"component",
-        "port": rdesc@"port",
-        "message": rdesc@"message",
+        "component": rdesc@component,
+        "port": rdesc@port,
+        "message": rdesc@message,
         "cause_port": cause_port,
         "cause_message": cause_message,
         "fmt": fmt_send
@@ -367,7 +367,7 @@ defn log_send_string (sender, sender_port, msg, cause_msg) {
 defn fmt_send (desc, indent) {
 
     return ""
-    #return f'\n{indent}⋯ {desc@"component".name}."{desc@"cause_port"}" ∴ {desc@"component".name}."{desc@"port"}" {format_message (desc@"message")}'
+    #return f'\n{indent}⋯ {desc@component.name}."{desc@cause_port}" ∴ {desc@component.name}."{desc@port}" {format_message (desc@message)}'
 
 }
 defn fmt_send_string (desc, indent) {
@@ -384,9 +384,9 @@ defn make_Forward_Descriptor (component=ϕ, port=ϕ, message=ϕ, cause_port=ϕ, 
     fmt_forward = λ (desc) : ''
     return {
         "action": drForward,
-        "component": rdesc@"component",
-        "port": rdesc@"port",
-        "message": rdesc@"message",
+        "component": rdesc@component,
+        "port": rdesc@port,
+        "message": rdesc@message,
         "cause_port": cause_port,
         "cause_message": cause_message,
         "fmt": fmt_forward
@@ -413,9 +413,9 @@ defn make_Inject_Descriptor (receiver=ϕ, port=ϕ, message=ϕ) {
     rdesc = make_Routing_Descriptor (action=drInject, component=receiver, port=port, message=message)
     return {
         "action": drInject,
-        "component": rdesc@"component",
-        "port": rdesc@"port",
-        "message": rdesc@"message",
+        "component": rdesc@component,
+        "port": rdesc@port,
+        "message": rdesc@message,
         "fmt" : fmt_inject
         }
 
@@ -430,7 +430,7 @@ defn log_inject (receiver, port, msg) {
 }
 defn fmt_inject (desc, indent) {
 
-    return f'\n{indent}⟹  {desc@"component".name}."{desc@"port"}" {format_message (desc@"message")}'
+    return f'\n{indent}⟹  {desc@component.name}."{desc@port}" {format_message (desc@message)}'
 
 
 ####
@@ -460,7 +460,7 @@ defn log_down (container=ϕ, source_port=ϕ, source_message=ϕ, target=ϕ, targe
 }
 defn fmt_down (desc, indent) {
 
-    return f'\n{indent}↓ {desc@"container".name}."{desc@"source_port"}" ➔ {desc@"target".name}."{desc@"target_port"}" {format_message (desc@"target_message")}'
+    return f'\n{indent}↓ {desc@container.name}."{desc@source_port}" ➔ {desc@target.name}."{desc@target_port}" {format_message (desc@target_message)}'
 
 
 ####
@@ -490,7 +490,7 @@ defn log_up (source=ϕ, source_port=ϕ, source_message=ϕ, container=ϕ, target_
 }
 defn fmt_up (desc, indent) {
 
-    return f'\n{indent}↑ {desc@"source".name}."{desc@"source_port"}" ➔ {desc@"container".name}."{desc@"container_port"}" {format_message (desc@"container_message")}'
+    return f'\n{indent}↑ {desc@source.name}."{desc@source_port}" ➔ {desc@container.name}."{desc@container_port}" {format_message (desc@container_message)}'
 
 
 ####
@@ -521,7 +521,7 @@ defn log_across (container=ϕ, source=ϕ, source_port=ϕ, source_message=ϕ, tar
 }
 defn fmt_across (desc, indent) {
 
-    return f'\n{indent}→ {desc@"source".name}."{desc@"source_port"}" ➔ {desc@"target".name}."{desc@"target_port"}"  {format_message (desc@"target_message")}'
+    return f'\n{indent}→ {desc@source.name}."{desc@source_port}" ➔ {desc@target.name}."{desc@target_port}"  {format_message (desc@target_message)}'
 
 
 ####
@@ -550,7 +550,7 @@ defn log_through (container=ϕ, source_port=ϕ, source_message=ϕ, target_port=�
 }
 defn fmt_through (desc, indent) {
 
-    return f'\n{indent}⇶ {desc @"container".name}."{desc@"source_port"}" ➔ {desc@"container".name}."{desc@"target_port"}" {format_message (desc@"message")}'
+    return f'\n{indent}⇶ {desc @container.name}."{desc@source_port}" ➔ {desc@container.name}."{desc@target_port}" {format_message (desc@message)}'
 
 ####
 
@@ -605,11 +605,11 @@ defn log_inout_recursively (container=ϕ, component=ϕ, in_message=ϕ, out_messa
 }
 defn fmt_inout (desc, indent) {
 
-    outm = desc@"out_message"
+    outm = desc@out_message
     if ϕ == outm {
         return f'\n{indent}  ⊥'}
     else {
-        return f'\n{indent}  ∴ {desc@"component".name} {format_message (outm)}'}
+        return f'\n{indent}  ∴ {desc@component.name} {format_message (outm)}'}
 
 
 }
@@ -635,7 +635,7 @@ defn recursive_routing_trace (container, lis, indent) {
         return ''}
     else {
         desc = first (lis)
-        formatted = desc@"fmt" (desc, indent)
+        formatted = desc@fmt (desc, indent)
         return formatted + recursive_routing_trace (container, rest (lis), indent + '  ')}
 
 ####
@@ -654,54 +654,54 @@ defn container_instantiator (reg, owner, container_name, desc) {
     children = []
     children_by_id = {} # not strictly necessary, but, we can remove 1 runtime lookup by "compiling it out" here
     # collect children
-    for child_desc in desc@"children" {
-        child_instance = get_component_instance (reg, child_desc@"name", container)
+    for child_desc in desc@children {
+        child_instance = get_component_instance (reg, child_desc@name, container)
         children.append (child_instance)
-        children_by_id [child_desc@"id"] = child_instance }
+        children_by_id [child_desc@id] = child_instance }
     container.children = children
     me = container
     
     connectors = []
-    for proto_conn in desc@"connections" {
+    for proto_conn in desc@connections {
         source_component = ϕ
         target_component = ϕ
         connector = Connector ()
-        if proto_conn@'dir' == enumDown {
+        if proto_conn@dir == enumDown {
             # JSON: {'dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},
             connector.direction = "down"
-            connector.sender = Sender (me.name, me, proto_conn@'source_port')
-            target_component = children_by_id [proto_conn@'target'@'id']
+            connector.sender = Sender (me.name, me, proto_conn@source_port)
+            target_component = children_by_id [proto_conn@target@id]
             if (target_component == ϕ) {
-                load_error (f"internal error: .Down connection target internal error {proto_conn@'target'}")}
+                load_error (f"internal error: .Down connection target internal error {proto_conn@target}")}
             else{
-                connector.receiver = Receiver (target_component.name, target_component.inq, proto_conn@'target_port', target_component)
+                connector.receiver = Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
                 connectors.append (connector) }}
-        elif proto_conn@"dir" == enumAcross {
+        elif proto_conn@dir == enumAcross {
             connector.direction = "across"
-            source_component = children_by_id [proto_conn@'source'@'id']
-            target_component = children_by_id [proto_conn@'target'@'id']
+            source_component = children_by_id [proto_conn@source@id]
+            target_component = children_by_id [proto_conn@target@id]
             if source_component == ϕ {
-                load_error (f"internal error: .Across connection source not ok {proto_conn@'source'}") }
+                load_error (f"internal error: .Across connection source not ok {proto_conn@source}") }
             else {
-                connector.sender = Sender (source_component.name, source_component, proto_conn@'source_port')
+                connector.sender = Sender (source_component.name, source_component, proto_conn@source_port)
                 if target_component == ϕ {
                     load_error (f"internal error: .Across connection target not ok {proto_conn.target}") }
                 else {
-                    connector.receiver = Receiver (target_component.name, target_component.inq, proto_conn@'target_port', target_component)
+                    connector.receiver = Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
                     connectors.append (connector)}}}
-        elif proto_conn@'dir' == enumUp {
+        elif proto_conn@dir == enumUp {
             connector.direction = "up"
-            source_component = children_by_id [proto_conn@'source'@'id']
+            source_component = children_by_id [proto_conn@source@id]
             if source_component == ϕ {
-                print (f"internal error: .Up connection source not ok {proto_conn@'source'}") }
+                print (f"internal error: .Up connection source not ok {proto_conn@source}") }
             else {
-                connector.sender = Sender (source_component.name, source_component, proto_conn@'source_port')
-                connector.receiver = Receiver (me.name, container.outq, proto_conn@'target_port', me)
+                connector.sender = Sender (source_component.name, source_component, proto_conn@source_port)
+                connector.receiver = Receiver (me.name, container.outq, proto_conn@target_port, me)
                 connectors.append (connector) }}
-        elif proto_conn@'dir' == enumThrough {
+        elif proto_conn@dir == enumThrough {
             connector.direction = "through"
-            connector.sender = Sender (me.name, me, proto_conn@'source_port')
-            connector.receiver = Receiver (me.name, container.outq, proto_conn@'target_port', me)
+            connector.sender = Sender (me.name, me, proto_conn@source_port)
+            connector.receiver = Receiver (me.name, container.outq, proto_conn@target_port, me)
             connectors.append (connector) }}
             
     container.connections = connectors
@@ -1097,14 +1097,14 @@ defn generate_shell_components (reg, container_list) {
         for diagram in container_list{
             # loop through every component in the diagram and look for names that start with "$"
             # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},
-            for child_descriptor in diagram@'children'{
-                if first_char_is (child_descriptor@"name", "$"){
-                    name = child_descriptor@"name"
+            for child_descriptor in diagram@children{
+                if first_char_is (child_descriptor@name, "$"){
+                    name = child_descriptor@name
                     cmd = name [1:].strip ()
                     generated_leaf = Template (name=name, instantiator=shell_out_instantiate, template_data=cmd)
                     register_component (reg, generated_leaf)}
-                elif first_char_is (child_descriptor@"name", "'"){
-                    name = child_descriptor@"name"
+                elif first_char_is (child_descriptor@name, "'"){
+                    name = child_descriptor@name
                     s = name [1:]
                     generated_leaf = Template (name=name, instantiator=string_constant_instantiate, template_data=s)
                     register_component (reg, generated_leaf, ok_to_overwrite=⊤)}}}}

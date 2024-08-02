@@ -104,7 +104,7 @@ number_fract [ digit* _160 digit+] =‛«digit»«_160»«digit»’
 number_whole [ digit+] =‛«digit»’
 Pair [ string _161 Exp _162?] = ‛«string»«_161»«Exp»«_162»’
 
-PrimaryTail_dictlookup [ _eyes key PrimaryTail?] =‛[«key»]«PrimaryTail»’
+PrimaryTail_dictlookup [ _eyes key PrimaryTail?] =‛["«key»"]«PrimaryTail»’
 PrimaryTail_methodcall [ MethodCall PrimaryTail?] =‛«MethodCall»«PrimaryTail»’
 PrimaryTail_offsetref [ OffsetRef PrimaryTail?] =‛«OffsetRef»«PrimaryTail»’
 PrimaryTail_lookup [ FieldLookup PrimaryTail?] =‛«FieldLookup»«PrimaryTail»’
