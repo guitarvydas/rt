@@ -2,7 +2,6 @@
 // replace developer indents with actual indents
 // replace developer newlines with actual newlines
 function scrubber (s) {
-    console.error (s);
     return decodeURI (s.replace (/❲/g, '').replace (/\?❳/g, '_Q').replace (/❳/g, ''))
 	.replace (/☞/g,' ')
 	.replace (/☜/g,'')

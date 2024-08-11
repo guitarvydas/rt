@@ -9,8 +9,9 @@ let rule_name_stack = [];
 
 
 const grammar = String.raw`
-Main {
- = TopLevel+
+rtpy {
+
+  Main = TopLevel+
   TopLevel =
     | Defvar -- defvar
     | Defn -- defn
@@ -295,12 +296,12 @@ _.set_top (return_value_stack, `${s}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Defvar : function (_, lval, _eq, e, ) {
+Defvar : function (__, lval, _eq, e, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Defvar");
 
-_ = _.rwr ()
+__ = __.rwr ()
 lval = lval.rwr ()
 _eq = _eq.rwr ()
 e = e.rwr ()
