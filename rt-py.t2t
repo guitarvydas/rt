@@ -1,4 +1,5 @@
-% grammar rtpy
+% grammar rt
+
   Main = TopLevel+
   TopLevel =
     | Defvar -- defvar
@@ -77,19 +78,20 @@
       | ExpExp -- basic
 
     ExpExp =
-      | PriExp "^" ExpExp  -- power
-      | PriExp -- basic
+      | Primary "^" ExpExp  -- power
+      | Primary -- basic
 
-    PriExp =
+
+    Primary =
       | "(" Exp ")"  -- paren
       | "[" "]" -- emptylistconst
-      | "[" PriExpComma+ "]" -- listconst
+      | "[" PrimaryComma+ "]" -- listconst
       | "{" "}" -- emptydict
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
-      | "+" PriExp   -- pos
-      | "-" PriExp   -- neg
+      | "+" Primary   -- pos
+      | "-" Primary   -- neg
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
@@ -99,10 +101,31 @@
       | ident PrimaryTail -- identwithtail
       | ident -- ident
 
-    PriExpComma = PriExp ","?
+
+  PrimaryTail =
+    | "@" ident PrimaryTail? -- dictlookup
+    | MethodCall PrimaryTail? -- methodcall
+    | OffsetRef PrimaryTail? -- offsetref
+    | FieldLookup PrimaryTail? -- lookup
+    | Slice PrimaryTail? -- slice
+
+  FieldLookup =
+    | "[" "0" "]" -- slicefirst
+    | "[" Exp "]" -- lookup
+
+  Slice =
+    | "[" ":" "]" -- slicewhole
+    | "[" "1" ":" "]" -- slicerest
+    | "[" digit+ ":" "]" -- nthslice
+
+
+    PrimaryComma = Primary ","?
     PairComma = Pair ","?
     
     Lval = Exp PrimaryTail?
+
+
+
 
 
     keyword = (
@@ -130,6 +153,7 @@
       | kw<"try">
       | kw<"except">
       | kw<"as">
+      | kw<"λ">
       )
       
     ident  = ~keyword identHead identTail*
@@ -162,25 +186,10 @@
 
     Pair = string ":" Exp ","?
 
-  PrimaryTail =
-    | "@" ident PrimaryTail? -- dictlookup
-    | MethodCall PrimaryTail? -- methodcall
-    | OffsetRef PrimaryTail? -- offsetref
-    | FieldLookup PrimaryTail? -- lookup
-    | Slice PrimaryTail? -- slice
-
   MethodCall = Actuals
   
   OffsetRef = "." ident
 
-  FieldLookup =
-    | "[" "0" "]" -- slicefirst
-    | "[" Exp "]" -- lookup
-
-  Slice =
-    | "[" ":" "]" -- slicewhole
-    | "[" "1" ":" "]" -- slicerest
-    | "[" digit+ ":" "]" -- nthslice
 
   boolOp = ("==" | "!=" | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">) 
   phi = "ϕ"
@@ -262,27 +271,27 @@ MulExp_times [ MulExp _67 ExpExp] =‛«MulExp»«_67»«ExpExp»’
 MulExp_divide [ MulExp _68 ExpExp] =‛«MulExp»«_68»«ExpExp»’
 MulExp_basic [ ExpExp] =‛«ExpExp»’
 
-ExpExp_power [ PriExp _69 ExpExp] =‛«PriExp»«_69»«ExpExp»’
-ExpExp_basic [ PriExp] =‛«PriExp»’
+ExpExp_power [ Primary _69 ExpExp] =‛«Primary»«_69»«ExpExp»’
+ExpExp_basic [ Primary] =‛«Primary»’
 
-PriExp_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’
-PriExp_emptylistconst [ _72 _73] =‛«_72»«_73»’
-PriExp_listconst [ _74 PriExpComma+ _75] =‛«_74»«PriExpComma»«_75»’
-PriExp_emptydict [ _76 _77] =‛«_76»«_77»’
-PriExp_dict [ _78 PairComma+ _79] =‛«_78»«PairComma»«_79»’
-PriExp_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
-PriExp_fresh [ _83 _84 ident _85] =‛ «ident» ()’
-PriExp_pos [ _86 PriExp] =‛ +«PriExp»’
-PriExp_neg [ _87 PriExp] =‛ -«PriExp»’
-PriExp_phi [ phi] =‛ None’
-PriExp_true [ _88] =‛ True’
-PriExp_false [ _89] =‛ False’
-PriExp_range [ _91 _92 Exp _93] =‛«_91»«_92»«Exp»«_93»’
-PriExp_string [ string] =‛«string»’
-PriExp_number [ number] =‛«number»’
-PriExp_identwithtail [ ident PrimaryTail] =‛«ident»«PrimaryTail»’
-PriExp_ident [ ident] =‛«ident»’
-PriExpComma [ PriExp _94?] = ‛«PriExp»«_94»’
+Primary_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’
+Primary_emptylistconst [ _72 _73] =‛«_72»«_73»’
+Primary_listconst [ _74 PrimaryComma+ _75] =‛«_74»«PrimaryComma»«_75»’
+Primary_emptydict [ _76 _77] =‛«_76»«_77»’
+Primary_dict [ _78 PairComma+ _79] =‛«_78»«PairComma»«_79»’
+Primary_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
+Primary_fresh [ _83 _84 ident _85] =‛ «ident» ()’
+Primary_pos [ _86 Primary] =‛ +«Primary»’
+Primary_neg [ _87 Primary] =‛ -«Primary»’
+Primary_phi [ phi] =‛ None’
+Primary_true [ _88] =‛ True’
+Primary_false [ _89] =‛ False’
+Primary_range [ _91 _92 Exp _93] =‛«_91»«_92»«Exp»«_93»’
+Primary_string [ string] =‛«string»’
+Primary_number [ number] =‛«number»’
+Primary_identwithtail [ ident PrimaryTail] =‛«ident»«PrimaryTail»’
+Primary_ident [ ident] =‛«ident»’
+PrimaryComma [ Primary _94?] = ‛«Primary»«_94»’
 PairComma [ Pair _95?] = ‛«Pair»«_95»’
 Lval [ Exp PrimaryTail?] = ‛«Exp»«PrimaryTail»’
 keyword [ _144] = ‛«_144»’

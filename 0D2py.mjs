@@ -9,7 +9,8 @@ let rule_name_stack = [];
 
 
 const grammar = String.raw`
-rtpy {
+rt {
+
 
   Main = TopLevel+
   TopLevel =
@@ -89,19 +90,20 @@ rtpy {
       | ExpExp -- basic
 
     ExpExp =
-      | PriExp "^" ExpExp  -- power
-      | PriExp -- basic
+      | Primary "^" ExpExp  -- power
+      | Primary -- basic
 
-    PriExp =
+
+    Primary =
       | "(" Exp ")"  -- paren
       | "[" "]" -- emptylistconst
-      | "[" PriExpComma+ "]" -- listconst
+      | "[" PrimaryComma+ "]" -- listconst
       | "{" "}" -- emptydict
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
-      | "+" PriExp   -- pos
-      | "-" PriExp   -- neg
+      | "+" Primary   -- pos
+      | "-" Primary   -- neg
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
@@ -111,10 +113,31 @@ rtpy {
       | ident PrimaryTail -- identwithtail
       | ident -- ident
 
-    PriExpComma = PriExp ","?
+
+  PrimaryTail =
+    | "@" ident PrimaryTail? -- dictlookup
+    | MethodCall PrimaryTail? -- methodcall
+    | OffsetRef PrimaryTail? -- offsetref
+    | FieldLookup PrimaryTail? -- lookup
+    | Slice PrimaryTail? -- slice
+
+  FieldLookup =
+    | "[" "0" "]" -- slicefirst
+    | "[" Exp "]" -- lookup
+
+  Slice =
+    | "[" ":" "]" -- slicewhole
+    | "[" "1" ":" "]" -- slicerest
+    | "[" digit+ ":" "]" -- nthslice
+
+
+    PrimaryComma = Primary ","?
     PairComma = Pair ","?
     
     Lval = Exp PrimaryTail?
+
+
+
 
 
     keyword = (
@@ -142,6 +165,7 @@ rtpy {
       | kw<"try">
       | kw<"except">
       | kw<"as">
+      | kw<"λ">
       )
       
     ident  = ~keyword identHead identTail*
@@ -174,25 +198,10 @@ rtpy {
 
     Pair = string ":" Exp ","?
 
-  PrimaryTail =
-    | "@" ident PrimaryTail? -- dictlookup
-    | MethodCall PrimaryTail? -- methodcall
-    | OffsetRef PrimaryTail? -- offsetref
-    | FieldLookup PrimaryTail? -- lookup
-    | Slice PrimaryTail? -- slice
-
   MethodCall = Actuals
   
   OffsetRef = "." ident
 
-  FieldLookup =
-    | "[" "0" "]" -- slicefirst
-    | "[" Exp "]" -- lookup
-
-  Slice =
-    | "[" ":" "]" -- slicewhole
-    | "[" "1" ":" "]" -- slicerest
-    | "[" digit+ ":" "]" -- nthslice
 
   boolOp = ("==" | "!=" | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">) 
   phi = "ϕ"
@@ -940,38 +949,38 @@ _.set_top (return_value_stack, `${ExpExp}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-ExpExp_power : function (PriExp, _69, ExpExp, ) {
+ExpExp_power : function (Primary, _69, ExpExp, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ExpExp_power");
 
-PriExp = PriExp.rwr ()
+Primary = Primary.rwr ()
 _69 = _69.rwr ()
 ExpExp = ExpExp.rwr ()
 
-_.set_top (return_value_stack, `${PriExp}${_69}${ExpExp}`);
+_.set_top (return_value_stack, `${Primary}${_69}${ExpExp}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-ExpExp_basic : function (PriExp, ) {
+ExpExp_basic : function (Primary, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ExpExp_basic");
 
-PriExp = PriExp.rwr ()
+Primary = Primary.rwr ()
 
-_.set_top (return_value_stack, `${PriExp}`);
+_.set_top (return_value_stack, `${Primary}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_paren : function (_70, Exp, _71, ) {
+Primary_paren : function (_70, Exp, _71, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_paren");
+_.set_top (rule_name_stack, "Primary_paren");
 
 _70 = _70.rwr ()
 Exp = Exp.rwr ()
@@ -983,10 +992,10 @@ _.set_top (return_value_stack, `${_70}${Exp}${_71}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_emptylistconst : function (_72, _73, ) {
+Primary_emptylistconst : function (_72, _73, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_emptylistconst");
+_.set_top (rule_name_stack, "Primary_emptylistconst");
 
 _72 = _72.rwr ()
 _73 = _73.rwr ()
@@ -997,25 +1006,25 @@ _.set_top (return_value_stack, `${_72}${_73}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_listconst : function (_74, PriExpComma, _75, ) {
+Primary_listconst : function (_74, PrimaryComma, _75, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_listconst");
+_.set_top (rule_name_stack, "Primary_listconst");
 
 _74 = _74.rwr ()
-PriExpComma = PriExpComma.rwr ().join ('')
+PrimaryComma = PrimaryComma.rwr ().join ('')
 _75 = _75.rwr ()
 
-_.set_top (return_value_stack, `${_74}${PriExpComma}${_75}`);
+_.set_top (return_value_stack, `${_74}${PrimaryComma}${_75}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_emptydict : function (_76, _77, ) {
+Primary_emptydict : function (_76, _77, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_emptydict");
+_.set_top (rule_name_stack, "Primary_emptydict");
 
 _76 = _76.rwr ()
 _77 = _77.rwr ()
@@ -1026,10 +1035,10 @@ _.set_top (return_value_stack, `${_76}${_77}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_dict : function (_78, PairComma, _79, ) {
+Primary_dict : function (_78, PairComma, _79, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_dict");
+_.set_top (rule_name_stack, "Primary_dict");
 
 _78 = _78.rwr ()
 PairComma = PairComma.rwr ().join ('')
@@ -1041,10 +1050,10 @@ _.set_top (return_value_stack, `${_78}${PairComma}${_79}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_lambda : function (_80, Formals, _81, Exp, ) {
+Primary_lambda : function (_80, Formals, _81, Exp, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_lambda");
+_.set_top (rule_name_stack, "Primary_lambda");
 
 _80 = _80.rwr ()
 Formals = Formals.rwr ().join ('')
@@ -1057,10 +1066,10 @@ _.set_top (return_value_stack, ` lambda ${Formals}: ${Exp}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_fresh : function (_83, _84, ident, _85, ) {
+Primary_fresh : function (_83, _84, ident, _85, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_fresh");
+_.set_top (rule_name_stack, "Primary_fresh");
 
 _83 = _83.rwr ()
 _84 = _84.rwr ()
@@ -1073,38 +1082,38 @@ _.set_top (return_value_stack, ` ${ident} ()`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_pos : function (_86, PriExp, ) {
+Primary_pos : function (_86, Primary, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_pos");
+_.set_top (rule_name_stack, "Primary_pos");
 
 _86 = _86.rwr ()
-PriExp = PriExp.rwr ()
+Primary = Primary.rwr ()
 
-_.set_top (return_value_stack, ` +${PriExp}`);
+_.set_top (return_value_stack, ` +${Primary}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_neg : function (_87, PriExp, ) {
+Primary_neg : function (_87, Primary, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_neg");
+_.set_top (rule_name_stack, "Primary_neg");
 
 _87 = _87.rwr ()
-PriExp = PriExp.rwr ()
+Primary = Primary.rwr ()
 
-_.set_top (return_value_stack, ` -${PriExp}`);
+_.set_top (return_value_stack, ` -${Primary}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_phi : function (phi, ) {
+Primary_phi : function (phi, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_phi");
+_.set_top (rule_name_stack, "Primary_phi");
 
 phi = phi.rwr ()
 
@@ -1114,10 +1123,10 @@ _.set_top (return_value_stack, ` None`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_true : function (_88, ) {
+Primary_true : function (_88, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_true");
+_.set_top (rule_name_stack, "Primary_true");
 
 _88 = _88.rwr ()
 
@@ -1127,10 +1136,10 @@ _.set_top (return_value_stack, ` True`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_false : function (_89, ) {
+Primary_false : function (_89, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_false");
+_.set_top (rule_name_stack, "Primary_false");
 
 _89 = _89.rwr ()
 
@@ -1140,10 +1149,10 @@ _.set_top (return_value_stack, ` False`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_range : function (_91, _92, Exp, _93, ) {
+Primary_range : function (_91, _92, Exp, _93, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_range");
+_.set_top (rule_name_stack, "Primary_range");
 
 _91 = _91.rwr ()
 _92 = _92.rwr ()
@@ -1156,10 +1165,10 @@ _.set_top (return_value_stack, `${_91}${_92}${Exp}${_93}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_string : function (string, ) {
+Primary_string : function (string, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_string");
+_.set_top (rule_name_stack, "Primary_string");
 
 string = string.rwr ()
 
@@ -1169,10 +1178,10 @@ _.set_top (return_value_stack, `${string}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_number : function (number, ) {
+Primary_number : function (number, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_number");
+_.set_top (rule_name_stack, "Primary_number");
 
 number = number.rwr ()
 
@@ -1182,10 +1191,10 @@ _.set_top (return_value_stack, `${number}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_identwithtail : function (ident, PrimaryTail, ) {
+Primary_identwithtail : function (ident, PrimaryTail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_identwithtail");
+_.set_top (rule_name_stack, "Primary_identwithtail");
 
 ident = ident.rwr ()
 PrimaryTail = PrimaryTail.rwr ()
@@ -1196,10 +1205,10 @@ _.set_top (return_value_stack, `${ident}${PrimaryTail}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExp_ident : function (ident, ) {
+Primary_ident : function (ident, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExp_ident");
+_.set_top (rule_name_stack, "Primary_ident");
 
 ident = ident.rwr ()
 
@@ -1209,15 +1218,15 @@ _.set_top (return_value_stack, `${ident}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PriExpComma : function (PriExp, _94, ) {
+PrimaryComma : function (Primary, _94, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PriExpComma");
+_.set_top (rule_name_stack, "PrimaryComma");
 
-PriExp = PriExp.rwr ()
+Primary = Primary.rwr ()
 _94 = _94.rwr ().join ('')
 
-_.set_top (return_value_stack, `${PriExp}${_94}`);
+_.set_top (return_value_stack, `${Primary}${_94}`);
 
 
 rule_name_stack.pop ();
