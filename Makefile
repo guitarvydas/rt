@@ -22,7 +22,8 @@ basic: 0D2py.mjs
 	node scrubber.js <rtpy0d.raw.py >rtpy0d.scrubbed.py
 	node indenter.js <rtpy0d.scrubbed.py >rtpy0d.py
 
-0D2py.mjs: rt-py.t2t
+0D2py.mjs: rt.ohm.part rt-py.t2t.part
+	cat rt.ohm.part rt-py.t2t.part >rt-py.t2t
 	node t2t.mjs <rt-py.t2t >0D2py.mjs
 
 #########

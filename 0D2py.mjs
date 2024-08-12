@@ -11,7 +11,6 @@ let rule_name_stack = [];
 const grammar = String.raw`
 rt {
 
-
   Main = TopLevel+
   TopLevel =
     | Defvar -- defvar
@@ -218,7 +217,6 @@ rt {
   nl = "\n"
   notnl = ~nl any
   space += comment
-
 
 
 
