@@ -591,7 +591,7 @@ defn log_inout_recursively (container=ϕ, component=ϕ, in_message=ϕ, out_messa
         pass }
     else {
         m = car (out_messages)
-        rest = out_messages [1:]
+        rest = cdr (out_messages)
         log_inout_single (container=container, component=component, in_message=in_message, out_message=m)
         log_inout_recursively (container=container, component=component, in_message=in_message, out_messages=rest) }
 
