@@ -111,12 +111,10 @@
     | Slice PrimaryTail? -- slice
 
   FieldLookup =
-    | "[" "0" "]" -- slicefirst
     | "[" Exp "]" -- lookup
 
   Slice =
     | "[" ":" "]" -- slicewhole
-    | "[" "1" ":" "]" -- slicerest
     | "[" digit+ ":" "]" -- nthslice
 
 

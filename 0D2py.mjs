@@ -123,12 +123,10 @@ rt {
     | Slice PrimaryTail? -- slice
 
   FieldLookup =
-    | "[" "0" "]" -- slicefirst
     | "[" Exp "]" -- lookup
 
   Slice =
     | "[" ":" "]" -- slicewhole
-    | "[" "1" ":" "]" -- slicerest
     | "[" digit+ ":" "]" -- nthslice
 
 
@@ -1650,21 +1648,6 @@ _.set_top (return_value_stack, `${_163}${ident}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-FieldLookup_slicefirst : function (_164, _165, _166, ) {
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "FieldLookup_slicefirst");
-
-_164 = _164.rwr ()
-_165 = _165.rwr ()
-_166 = _166.rwr ()
-
-_.set_top (return_value_stack, `${_164}${_165}${_166}`);
-
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
 FieldLookup_lookup : function (_167, Exp, _168, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
@@ -1690,22 +1673,6 @@ _170 = _170.rwr ()
 _171 = _171.rwr ()
 
 _.set_top (return_value_stack, `${_169}${_170}${_171}`);
-
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-Slice_slicerest : function (_172, _173, _174, _175, ) {
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Slice_slicerest");
-
-_172 = _172.rwr ()
-_173 = _173.rwr ()
-_174 = _174.rwr ()
-_175 = _175.rwr ()
-
-_.set_top (return_value_stack, `${_172}${_173}${_174}${_175}`);
 
 
 rule_name_stack.pop ();

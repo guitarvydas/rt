@@ -111,12 +111,10 @@
     | Slice PrimaryTail? -- slice
 
   FieldLookup =
-    | "[" "0" "]" -- slicefirst
     | "[" Exp "]" -- lookup
 
   Slice =
     | "[" ":" "]" -- slicewhole
-    | "[" "1" ":" "]" -- slicerest
     | "[" digit+ ":" "]" -- nthslice
 
 
@@ -328,11 +326,9 @@ PrimaryTail_slice [ Slice PrimaryTail?] =‛«Slice»«PrimaryTail»’
 MethodCall [ Actuals] = ‛«Actuals»’
 OffsetRef [ _163 ident] = ‛«_163»«ident»’
 
-FieldLookup_slicefirst [ _164 _165 _166] =‛«_164»«_165»«_166»’
 FieldLookup_lookup [ _167 Exp _168] =‛«_167»«Exp»«_168»’
 
 Slice_slicewhole [ _169 _170 _171] =‛«_169»«_170»«_171»’
-Slice_slicerest [ _172 _173 _174 _175] =‛«_172»«_173»«_174»«_175»’
 Slice_nthslice [ _176 digit+ _177 _178] =‛«_176»«digit»«_177»«_178»’
 boolOp [ _191] = ‛ «_191» ’
 phi [ _192] = ‛ None’
