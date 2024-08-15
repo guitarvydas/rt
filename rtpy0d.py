@@ -745,7 +745,7 @@ def generate_shell_components (reg,container_list):
                     register_component(reg,generated_leaf)
                 elif first_char_is(child_descriptor["name"],"'"):
                     name = child_descriptor["name"]
-                    s = name[1:]
+                    s =  name[1:]
                     generated_leaf = Template(name=name,instantiator=string_constant_instantiate,template_data=s)
                     register_component(reg,generated_leaf,ok_to_overwrite= True)
                 
