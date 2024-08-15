@@ -91,6 +91,7 @@
       | kw<"fresh"> "(" ident ")" -- fresh
       | kw<"car"> "(" Exp ")" -- car
       | kw<"cdr"> "(" Exp ")" -- cdr
+      | kw<"stringcdr"> "(" Exp ")" -- stringcdr
       | "+" Primary   -- pos
       | "-" Primary   -- neg
       | phi -- phi

@@ -1,3 +1,215 @@
+% grammar rt
+  Main = TopLevel+
+  TopLevel =
+    | Defvar -- defvar
+    | Defn -- defn
+    | Defclass -- defclass
+    | Import -- import
+
+   kw<s> = s ~identTail
+
+   Defvar = kw<"defvar"> Lval "=" Exp
+   Defn = kw<"defn"> ident Formals StatementBlock
+   Defclass = kw<"defclass"> ident "{" Definit "}"
+   Import = kw<"import"> ident
+
+   StatementBlock = "{" Rec_Statement "}"
+
+   Definit = kw<"definit"> "(" kw<"self"> ":" ident CommaFormal* ")" "{" InitStatement+ "}"
+
+   Rec_Statement =
+     | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
+     | IfStatement Rec_Statement? -- if
+     | kw<"pass"> Rec_Statement? -- pass
+     | kw<"return"> ReturnExp Rec_Statement? -- return
+     | ForStatement Rec_Statement? -- for
+     | WhileStatement Rec_Statement? -- while
+     | TryStatement Rec_Statement? -- try
+     | Assignment Rec_Statement? -- assignment
+     | Lval Rec_Statement? -- call
+   CommaIdent = "," ident
+
+   InitStatement = kw<"self"> "." ident "=" Exp
+
+   IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement?
+   ElifStatement = kw<"elif"> Exp StatementBlock
+   ElseStatement = kw<"else"> StatementBlock
+
+   ForStatement = kw<"for"> ident kw<"in"> Exp StatementBlock
+   WhileStatement = kw<"while"> Exp StatementBlock
+
+   TryStatement = kw<"try"> StatementBlock ExceptBlock+
+   ExceptBlock =
+     | kw<"except"> Exp kw<"as"> ident StatementBlock -- as
+     | kw<"except"> ident StatementBlock -- basic
+   
+   Assignment = 
+     | Lval "+=" Exp -- pluseq
+     | "[" Lval CommaLval+ "]" "=" Exp -- multiple
+     | Lval "=" Exp -- single
+
+   CommaLval = "," Lval
+
+    ReturnExp =
+      | "[" Exp CommaExp+ "]" -- multiple
+      | Exp -- single
+
+    CommaExp = "," Exp
+    
+    Exp =  BooleanExp
+
+    BooleanExp =
+      | BooleanExp boolOp BooleanNot -- boolop
+      | BooleanNot -- basic
+
+    BooleanNot =
+      | kw<"not"> BooleanExp -- not
+      | AddExp -- basic
+
+    AddExp =
+      | AddExp "+" MulExp  -- plus
+      | AddExp "-" MulExp  -- minus
+      | MulExp -- basic
+
+    MulExp =
+      | MulExp "*" ExpExp  -- times
+      | MulExp "/" ExpExp  -- divide
+      | ExpExp -- basic
+
+    ExpExp =
+      | Primary "^" ExpExp  -- power
+      | Primary -- basic
+
+
+    Primary =
+      | "(" Exp ")"  -- paren
+      | "[" "]" -- emptylistconst
+      | "[" PrimaryComma+ "]" -- listconst
+      | "{" "}" -- emptydict
+      | "{" PairComma+ "}" -- dict
+      | "λ" LambdaFormals? ":" Exp -- lambda
+      | kw<"fresh"> "(" ident ")" -- fresh
+      | kw<"car"> "(" Exp ")" -- car
+      | kw<"cdr"> "(" Exp ")" -- cdr
+      | kw<"stringcdr"> "(" Exp ")" -- stringcdr
+      | "+" Primary   -- pos
+      | "-" Primary   -- neg
+      | phi -- phi
+      | "⊤" -- true
+      | "⊥" -- false
+      | kw<"range"> "(" Exp ")" -- range
+      | string -- string
+      | number -- number
+      | ident PrimaryTail -- identwithtail
+      | ident -- ident
+
+
+  PrimaryTail =
+    | "@" ident PrimaryTail? -- dictlookup
+    | MethodCall PrimaryTail? -- methodcall
+    | OffsetRef PrimaryTail? -- offsetref
+    | FieldLookup PrimaryTail? -- lookup
+    | Slice PrimaryTail? -- slice
+
+  FieldLookup =
+    | "[" Exp "]" -- lookup
+
+  Slice =
+    | "[" digit+ ":" "]" -- nthslice
+
+
+    PrimaryComma = Primary ","?
+    PairComma = Pair ","?
+    
+    Lval = Exp PrimaryTail?
+
+
+
+
+
+    keyword = (
+        kw<"fresh">
+      | kw<"defvar">
+      | kw<"defn">
+      | kw<"defclass">
+      | kw<"definit">
+      | kw<"self">
+      | kw<"useglobal">
+      | kw<"pass">
+      | kw<"return">
+      | kw<"if">
+      | kw<"elif">
+      | kw<"else">
+      | kw<"and">
+      | kw<"or">
+      | kw<"in">
+      | kw<"not">
+      | kw<"range">
+      | kw<"while">
+      | kw<"f\"">
+      | kw<"f'">
+      | kw<"import">
+      | kw<"try">
+      | kw<"except">
+      | kw<"as">
+      | kw<"λ">
+      | kw<"car">
+      | kw<"cdr">
+      )
+      
+    ident  = ~keyword identHead identTail*
+
+    identHead = ( "_" | letter )
+    identTail = ( alnum | identHead )
+
+    Formals =
+      | "(" ")" -- noformals
+      | "(" Formal CommaFormal* ")" -- withformals
+    LambdaFormals =
+      | "(" ")" -- noformals
+      | "(" Formal CommaFormal* ")" -- withformals
+
+    Formal = ident ("=" Exp)?
+    CommaFormal = "," Formal
+    
+    Actuals = 
+      | "(" ")" -- noactuals
+      | "(" Actual CommaActual* ")" -- actuals
+
+   Actual = ParamName? Exp
+   CommaActual = "," Actual
+
+   ParamName = ident "="
+
+    number =
+      | digit* "." digit+  -- fract
+      | digit+             -- whole
+
+    Pair = string ":" Exp ","?
+
+  MethodCall = Actuals
+  
+  OffsetRef = "." ident
+
+
+  boolOp = ("==" | "!=" | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">) 
+  phi = "ϕ"
+  string =
+    | "f\"" notdq* "\"" -- fdqstring
+    | "f'" notsq* "'" -- fsqstring
+    | "\"" notdq* "\"" -- dqstring
+    | "'" notsq* "'" -- sqstring
+  notdq = ~"\"" any
+  notsq = ~"'" any
+
+
+  comment = "#" notnl* nl
+  nl = "\n"
+  notnl = ~nl any
+  space += comment
+
+
+
 % rewrite
 
 Main [ TopLevel+] = ‛«TopLevel»’
@@ -71,6 +283,7 @@ Primary_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
 Primary_fresh [ _83 _84 ident _85] =‛ «ident» ()’
 Primary_car [ _83 _84 e _85] =‛ «e»[0] ’
 Primary_cdr [ _83 _84 e _85] =‛ «e»[1:] ’
+Primary_stringcdr [ _83 _84 e _85] =‛ «e»[1:] ’
 Primary_pos [ _86 Primary] =‛ +«Primary»’
 Primary_neg [ _87 Primary] =‛ -«Primary»’
 Primary_phi [ phi] =‛ None’

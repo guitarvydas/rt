@@ -103,6 +103,7 @@ rt {
       | kw<"fresh"> "(" ident ")" -- fresh
       | kw<"car"> "(" Exp ")" -- car
       | kw<"cdr"> "(" Exp ")" -- cdr
+      | kw<"stringcdr"> "(" Exp ")" -- stringcdr
       | "+" Primary   -- pos
       | "-" Primary   -- neg
       | phi -- phi
@@ -1101,6 +1102,22 @@ Primary_cdr : function (_83, _84, e, _85, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_cdr");
+
+_83 = _83.rwr ()
+_84 = _84.rwr ()
+e = e.rwr ()
+_85 = _85.rwr ()
+
+_.set_top (return_value_stack, ` ${e}[1:] `);
+
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Primary_stringcdr : function (_83, _84, e, _85, ) {
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Primary_stringcdr");
 
 _83 = _83.rwr ()
 _84 = _84.rwr ()
