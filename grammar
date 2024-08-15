@@ -1,4 +1,5 @@
-% grammar rt
+% grammar rt 
+
   Main = TopLevel+
   TopLevel =
     | Defvar -- defvar
@@ -80,36 +81,35 @@
       | Primary "^" ExpExp  -- power
       | Primary -- basic
 
-
     Primary =
-      | "(" Exp ")"  -- paren
+      | "(" Exp ")"  Tail? -- paren
       | "[" "]" -- emptylistconst
       | "[" PrimaryComma+ "]" -- listconst
       | "{" "}" -- emptydict
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
-      | kw<"car"> "(" Exp ")" -- car
-      | kw<"cdr"> "(" Exp ")" -- cdr
-      | kw<"stringcdr"> "(" Exp ")" -- stringcdr
-      | "+" Primary   -- pos
-      | "-" Primary   -- neg
+      | kw<"car"> "(" Exp ")" Tail? -- car
+      | kw<"cdr"> "(" Exp ")" Tail? -- cdr
+      | kw<"stringcdr"> "(" Exp ")" Tail? -- stringcdr
+      | "+" Primary Tail?  -- pos
+      | "-" Primary Tail?  -- neg
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
       | kw<"range"> "(" Exp ")" -- range
       | string -- string
       | number -- number
-      | ident PrimaryTail -- identwithtail
-      | ident -- ident
+      | ident Tail? -- ident
 
 
-  PrimaryTail =
-    | "@" ident PrimaryTail? -- dictlookup
-    | MethodCall PrimaryTail? -- methodcall
-    | OffsetRef PrimaryTail? -- offsetref
-    | FieldLookup PrimaryTail? -- lookup
-    | Slice PrimaryTail? -- slice
+  Tail =
+    | "." ident Tail? -- methodcall
+    | "@" ident Tail? -- dictlookup
+    | Actuals Tail? -- actuals
+    | OffsetRef Tail? -- offsetref
+    | FieldLookup Tail? -- lookup
+    | Slice Tail? -- slice
 
   FieldLookup =
     | "[" Exp "]" -- lookup
@@ -121,7 +121,7 @@
     PrimaryComma = Primary ","?
     PairComma = Pair ","?
     
-    Lval = Exp PrimaryTail?
+    Lval = Exp Tail?
 
 
 
@@ -155,6 +155,7 @@
       | kw<"λ">
       | kw<"car">
       | kw<"cdr">
+      | kw<"stringcdr">
       )
       
     ident  = ~keyword identHead identTail*
@@ -186,8 +187,6 @@
       | digit+             -- whole
 
     Pair = string ":" Exp ","?
-
-  MethodCall = Actuals
   
   OffsetRef = "." ident
 
@@ -207,6 +206,3 @@
   nl = "\n"
   notnl = ~nl any
   space += comment
-
-
-
