@@ -126,7 +126,6 @@ rt {
     | "[" Exp "]" -- lookup
 
   Slice =
-    | "[" ":" "]" -- slicewhole
     | "[" digit+ ":" "]" -- nthslice
 
 
@@ -1658,21 +1657,6 @@ Exp = Exp.rwr ()
 _168 = _168.rwr ()
 
 _.set_top (return_value_stack, `${_167}${Exp}${_168}`);
-
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-Slice_slicewhole : function (_169, _170, _171, ) {
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Slice_slicewhole");
-
-_169 = _169.rwr ()
-_170 = _170.rwr ()
-_171 = _171.rwr ()
-
-_.set_top (return_value_stack, `${_169}${_170}${_171}`);
 
 
 rule_name_stack.pop ();

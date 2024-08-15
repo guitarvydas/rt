@@ -142,29 +142,23 @@ defn raw_datum_tick () {
 
 }
 defn new_datum_bytes (b) {
-      
     p = Datum ()
-    p.data = b[:]
+    p.data = b
     p.clone = clone_datum_bytes
     p.reclaim = λ: reclaim_datum_bytes (p)
     p.srepr = λ: srepr_datum_bytes (b)
     p.raw = λ: raw_datum_bytes (b)
     p.kind = λ: "bytes"
     return p
-
-
-
 }
+
 defn clone_datum_bytes (src) {
-      
     p = Datum ()
     p = src
     p.data = src.clone ()
     return p
-
-
-
 }
+
 defn reclaim_datum_bytes (src) {
       
     pass

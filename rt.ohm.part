@@ -114,7 +114,6 @@
     | "[" Exp "]" -- lookup
 
   Slice =
-    | "[" ":" "]" -- slicewhole
     | "[" digit+ ":" "]" -- nthslice
 
 

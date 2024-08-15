@@ -88,7 +88,7 @@ def raw_datum_tick ():
 
 def new_datum_bytes (b):
     p = Datum()
-    p.data = b[:]
+    p.data = b
     p.clone = clone_datum_bytes
     p.reclaim =  lambda : reclaim_datum_bytes(p)
     p.srepr =  lambda : srepr_datum_bytes(b)

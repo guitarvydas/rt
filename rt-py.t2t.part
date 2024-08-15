@@ -116,7 +116,6 @@ OffsetRef [ _163 ident] = ‛«_163»«ident»’
 
 FieldLookup_lookup [ _167 Exp _168] =‛«_167»«Exp»«_168»’
 
-Slice_slicewhole [ _169 _170 _171] =‛«_169»«_170»«_171»’
 Slice_nthslice [ _176 digit+ _177 _178] =‛«_176»«digit»«_177»«_178»’
 boolOp [ _191] = ‛ «_191» ’
 phi [ _192] = ‛ None’
