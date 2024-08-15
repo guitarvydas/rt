@@ -89,6 +89,8 @@
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
+      | kw<"car"> "(" Exp ")" -- car
+      | kw<"cdr"> "(" Exp ")" -- cdr
       | "+" Primary   -- pos
       | "-" Primary   -- neg
       | phi -- phi
@@ -153,6 +155,8 @@
       | kw<"except">
       | kw<"as">
       | kw<"λ">
+      | kw<"car">
+      | kw<"cdr">
       )
       
     ident  = ~keyword identHead identTail*

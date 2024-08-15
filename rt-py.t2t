@@ -89,6 +89,8 @@
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
+      | kw<"car"> "(" Exp ")" -- car
+      | kw<"cdr"> "(" Exp ")" -- cdr
       | "+" Primary   -- pos
       | "-" Primary   -- neg
       | phi -- phi
@@ -153,6 +155,8 @@
       | kw<"except">
       | kw<"as">
       | kw<"λ">
+      | kw<"car">
+      | kw<"cdr">
       )
       
     ident  = ~keyword identHead identTail*
@@ -279,6 +283,8 @@ Primary_emptydict [ _76 _77] =‛«_76»«_77»’
 Primary_dict [ _78 PairComma+ _79] =‛«_78»«PairComma»«_79»’
 Primary_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
 Primary_fresh [ _83 _84 ident _85] =‛ «ident» ()’
+Primary_car [ _83 _84 e _85] =‛ «e»[0] ’
+Primary_cdr [ _83 _84 e _85] =‛ «e»[1:] ’
 Primary_pos [ _86 Primary] =‛ +«Primary»’
 Primary_neg [ _87 Primary] =‛ -«Primary»’
 Primary_phi [ phi] =‛ None’

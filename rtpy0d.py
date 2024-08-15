@@ -287,7 +287,7 @@ def log_inout_recursively (container= None,component= None,in_message= None,out_
     if [] == out_messages:
         pass
     else:
-        m = out_messages[0]
+        m =  out_messages[0]
         rest = out_messages[1:]
         log_inout_single(container=container,component=component,in_message=in_message,out_message=m)
         log_inout_recursively(container=container,component=component,in_message=in_message,out_messages=rest)
@@ -754,7 +754,7 @@ def generate_shell_components (reg,container_list):
     
 
 def first_char (s):
-    return s[0]
+    return  s[0] 
 
 def first_char_is (s,c):
     return c == first_char(s)
