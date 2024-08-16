@@ -10,6 +10,7 @@ let rule_name_stack = [];
 
 const grammar = String.raw`
 rt {
+ 
 
   Main = TopLevel+
   TopLevel =
@@ -92,36 +93,35 @@ rt {
       | Primary "^" ExpExp  -- power
       | Primary -- basic
 
-
     Primary =
-      | "(" Exp ")"  -- paren
+      | "(" Exp ")"  Tail? -- paren
       | "[" "]" -- emptylistconst
       | "[" PrimaryComma+ "]" -- listconst
       | "{" "}" -- emptydict
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
-      | kw<"car"> "(" Exp ")" -- car
-      | kw<"cdr"> "(" Exp ")" -- cdr
-      | kw<"stringcdr"> "(" Exp ")" -- stringcdr
-      | "+" Primary   -- pos
-      | "-" Primary   -- neg
+      | kw<"car"> "(" Exp ")" Tail? -- car
+      | kw<"cdr"> "(" Exp ")" Tail? -- cdr
+      | kw<"stringcdr"> "(" Exp ")" Tail? -- stringcdr
+      | "+" Primary Tail?  -- pos
+      | "-" Primary Tail?  -- neg
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
       | kw<"range"> "(" Exp ")" -- range
       | string -- string
       | number -- number
-      | ident PrimaryTail -- identwithtail
-      | ident -- ident
+      | ident Tail? -- ident
 
 
-  PrimaryTail =
-    | "@" ident PrimaryTail? -- dictlookup
-    | MethodCall PrimaryTail? -- methodcall
-    | OffsetRef PrimaryTail? -- offsetref
-    | FieldLookup PrimaryTail? -- lookup
-    | Slice PrimaryTail? -- slice
+  Tail =
+    | "." ident Tail? -- methodcall
+    | "@" ident Tail? -- dictlookup
+    | Actuals Tail? -- actuals
+    | OffsetRef Tail? -- offsetref
+    | FieldLookup Tail? -- lookup
+    | Slice Tail? -- slice
 
   FieldLookup =
     | "[" Exp "]" -- lookup
@@ -133,7 +133,7 @@ rt {
     PrimaryComma = Primary ","?
     PairComma = Pair ","?
     
-    Lval = Exp PrimaryTail?
+    Lval = Exp Tail?
 
 
 
@@ -167,6 +167,7 @@ rt {
       | kw<"λ">
       | kw<"car">
       | kw<"cdr">
+      | kw<"stringcdr">
       )
       
     ident  = ~keyword identHead identTail*
@@ -198,8 +199,6 @@ rt {
       | digit+             -- whole
 
     Pair = string ":" Exp ","?
-
-  MethodCall = Actuals
   
   OffsetRef = "." ident
 
@@ -219,9 +218,6 @@ rt {
   nl = "\n"
   notnl = ~nl any
   space += comment
-
-
-
 
 }
 `;
@@ -977,7 +973,7 @@ _.set_top (return_value_stack, `${Primary}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_paren : function (_70, Exp, _71, ) {
+Primary_paren : function (_70, Exp, _71, Tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_paren");
@@ -985,8 +981,9 @@ _.set_top (rule_name_stack, "Primary_paren");
 _70 = _70.rwr ()
 Exp = Exp.rwr ()
 _71 = _71.rwr ()
+Tail = Tail.rwr ().join ('')
 
-_.set_top (return_value_stack, `${_70}${Exp}${_71}`);
+_.set_top (return_value_stack, `${_70}${Exp}${_71}${Tail}`);
 
 
 rule_name_stack.pop ();
@@ -1082,7 +1079,7 @@ _.set_top (return_value_stack, ` ${ident} ()`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_car : function (_83, _84, e, _85, ) {
+Primary_car : function (_83, _84, e, _85, Tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_car");
@@ -1091,14 +1088,15 @@ _83 = _83.rwr ()
 _84 = _84.rwr ()
 e = e.rwr ()
 _85 = _85.rwr ()
+Tail = Tail.rwr ().join ('')
 
-_.set_top (return_value_stack, ` ${e}[0] `);
+_.set_top (return_value_stack, ` ${e}[0] ${Tail}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_cdr : function (_83, _84, e, _85, ) {
+Primary_cdr : function (_83, _84, e, _85, Tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_cdr");
@@ -1107,14 +1105,15 @@ _83 = _83.rwr ()
 _84 = _84.rwr ()
 e = e.rwr ()
 _85 = _85.rwr ()
+Tail = Tail.rwr ().join ('')
 
-_.set_top (return_value_stack, ` ${e}[1:] `);
+_.set_top (return_value_stack, ` ${e}[1:] ${Tail}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_stringcdr : function (_83, _84, e, _85, ) {
+Primary_stringcdr : function (_83, _84, e, _85, Tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_stringcdr");
@@ -1123,36 +1122,39 @@ _83 = _83.rwr ()
 _84 = _84.rwr ()
 e = e.rwr ()
 _85 = _85.rwr ()
+Tail = Tail.rwr ().join ('')
 
-_.set_top (return_value_stack, ` ${e}[1:] `);
+_.set_top (return_value_stack, ` ${e}[1:] ${Tail}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_pos : function (_86, Primary, ) {
+Primary_pos : function (_86, Primary, Tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_pos");
 
 _86 = _86.rwr ()
 Primary = Primary.rwr ()
+Tail = Tail.rwr ().join ('')
 
-_.set_top (return_value_stack, ` +${Primary}`);
+_.set_top (return_value_stack, ` +${Primary}Tail?`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_neg : function (_87, Primary, ) {
+Primary_neg : function (_87, Primary, Tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_neg");
 
 _87 = _87.rwr ()
 Primary = Primary.rwr ()
+Tail = Tail.rwr ().join ('')
 
-_.set_top (return_value_stack, ` -${Primary}`);
+_.set_top (return_value_stack, ` -${Primary}Tail?`);
 
 
 rule_name_stack.pop ();
@@ -1239,28 +1241,15 @@ _.set_top (return_value_stack, `${number}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_identwithtail : function (ident, PrimaryTail, ) {
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_identwithtail");
-
-ident = ident.rwr ()
-PrimaryTail = PrimaryTail.rwr ()
-
-_.set_top (return_value_stack, `${ident}${PrimaryTail}`);
-
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-Primary_ident : function (ident, ) {
+Primary_ident : function (ident, Tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_ident");
 
 ident = ident.rwr ()
+Tail = Tail.rwr ().join ('')
 
-_.set_top (return_value_stack, `${ident}`);
+_.set_top (return_value_stack, `${ident}${Tail}`);
 
 
 rule_name_stack.pop ();
@@ -1566,85 +1555,87 @@ _.set_top (return_value_stack, `${string}${_161}${Exp}${_162}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PrimaryTail_dictlookup : function (_eyes, key, PrimaryTail, ) {
+Tail_methodcall : function (_dot, ident, tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PrimaryTail_dictlookup");
+_.set_top (rule_name_stack, "Tail_methodcall");
 
-_eyes = _eyes.rwr ()
-key = key.rwr ()
-PrimaryTail = PrimaryTail.rwr ().join ('')
+_dot = _dot.rwr ()
+ident = ident.rwr ()
+tail = tail.rwr ().join ('')
 
-_.set_top (return_value_stack, `["${key}"]${PrimaryTail}`);
+_.set_top (return_value_stack, `.${ident}${tail}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PrimaryTail_methodcall : function (MethodCall, PrimaryTail, ) {
+Tail_dictlookup : function (_at, ident, tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PrimaryTail_methodcall");
+_.set_top (rule_name_stack, "Tail_dictlookup");
 
-MethodCall = MethodCall.rwr ()
-PrimaryTail = PrimaryTail.rwr ().join ('')
+_at = _at.rwr ()
+ident = ident.rwr ()
+tail = tail.rwr ().join ('')
 
-_.set_top (return_value_stack, `${MethodCall}${PrimaryTail}`);
+_.set_top (return_value_stack, `["${ident}"]${tail}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PrimaryTail_offsetref : function (OffsetRef, PrimaryTail, ) {
+Tail_actuals : function (actuals, tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PrimaryTail_offsetref");
+_.set_top (rule_name_stack, "Tail_actuals");
 
-OffsetRef = OffsetRef.rwr ()
-PrimaryTail = PrimaryTail.rwr ().join ('')
+actuals = actuals.rwr ()
+tail = tail.rwr ().join ('')
 
-_.set_top (return_value_stack, `${OffsetRef}${PrimaryTail}`);
+_.set_top (return_value_stack, `${actuals}${tail}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PrimaryTail_lookup : function (FieldLookup, PrimaryTail, ) {
+Tail_offsetref : function (offset, tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PrimaryTail_lookup");
+_.set_top (rule_name_stack, "Tail_offsetref");
 
-FieldLookup = FieldLookup.rwr ()
-PrimaryTail = PrimaryTail.rwr ().join ('')
+offset = offset.rwr ()
+tail = tail.rwr ().join ('')
 
-_.set_top (return_value_stack, `${FieldLookup}${PrimaryTail}`);
+_.set_top (return_value_stack, `${offset}${tail}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-PrimaryTail_slice : function (Slice, PrimaryTail, ) {
+Tail_lookup : function (look, tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "PrimaryTail_slice");
+_.set_top (rule_name_stack, "Tail_lookup");
 
-Slice = Slice.rwr ()
-PrimaryTail = PrimaryTail.rwr ().join ('')
+look = look.rwr ()
+tail = tail.rwr ().join ('')
 
-_.set_top (return_value_stack, `${Slice}${PrimaryTail}`);
+_.set_top (return_value_stack, `${look}${tail}`);
 
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-MethodCall : function (Actuals, ) {
+Tail_slice : function (slice, tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "MethodCall");
+_.set_top (rule_name_stack, "Tail_slice");
 
-Actuals = Actuals.rwr ()
+slice = slice.rwr ()
+tail = tail.rwr ().join ('')
 
-_.set_top (return_value_stack, `${Actuals}`);
+_.set_top (return_value_stack, `${slice}${tail}`);
 
 
 rule_name_stack.pop ();

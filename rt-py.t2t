@@ -1,4 +1,5 @@
-% grammar rt
+% grammar rt 
+
   Main = TopLevel+
   TopLevel =
     | Defvar -- defvar
@@ -80,36 +81,35 @@
       | Primary "^" ExpExp  -- power
       | Primary -- basic
 
-
     Primary =
-      | "(" Exp ")"  -- paren
+      | "(" Exp ")"  Tail? -- paren
       | "[" "]" -- emptylistconst
       | "[" PrimaryComma+ "]" -- listconst
       | "{" "}" -- emptydict
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
-      | kw<"car"> "(" Exp ")" -- car
-      | kw<"cdr"> "(" Exp ")" -- cdr
-      | kw<"stringcdr"> "(" Exp ")" -- stringcdr
-      | "+" Primary   -- pos
-      | "-" Primary   -- neg
+      | kw<"car"> "(" Exp ")" Tail? -- car
+      | kw<"cdr"> "(" Exp ")" Tail? -- cdr
+      | kw<"stringcdr"> "(" Exp ")" Tail? -- stringcdr
+      | "+" Primary Tail?  -- pos
+      | "-" Primary Tail?  -- neg
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
       | kw<"range"> "(" Exp ")" -- range
       | string -- string
       | number -- number
-      | ident PrimaryTail -- identwithtail
-      | ident -- ident
+      | ident Tail? -- ident
 
 
-  PrimaryTail =
-    | "@" ident PrimaryTail? -- dictlookup
-    | MethodCall PrimaryTail? -- methodcall
-    | OffsetRef PrimaryTail? -- offsetref
-    | FieldLookup PrimaryTail? -- lookup
-    | Slice PrimaryTail? -- slice
+  Tail =
+    | "." ident Tail? -- methodcall
+    | "@" ident Tail? -- dictlookup
+    | Actuals Tail? -- actuals
+    | OffsetRef Tail? -- offsetref
+    | FieldLookup Tail? -- lookup
+    | Slice Tail? -- slice
 
   FieldLookup =
     | "[" Exp "]" -- lookup
@@ -121,7 +121,7 @@
     PrimaryComma = Primary ","?
     PairComma = Pair ","?
     
-    Lval = Exp PrimaryTail?
+    Lval = Exp Tail?
 
 
 
@@ -155,6 +155,7 @@
       | kw<"λ">
       | kw<"car">
       | kw<"cdr">
+      | kw<"stringcdr">
       )
       
     ident  = ~keyword identHead identTail*
@@ -186,8 +187,6 @@
       | digit+             -- whole
 
     Pair = string ":" Exp ","?
-
-  MethodCall = Actuals
   
   OffsetRef = "." ident
 
@@ -207,9 +206,6 @@
   nl = "\n"
   notnl = ~nl any
   space += comment
-
-
-
 % rewrite
 
 Main [ TopLevel+] = ‛«TopLevel»’
@@ -274,26 +270,25 @@ MulExp_basic [ ExpExp] =‛«ExpExp»’
 ExpExp_power [ Primary _69 ExpExp] =‛«Primary»«_69»«ExpExp»’
 ExpExp_basic [ Primary] =‛«Primary»’
 
-Primary_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’
+Primary_paren [ _70 Exp _71 Tail?] =‛«_70»«Exp»«_71»«Tail»’
 Primary_emptylistconst [ _72 _73] =‛«_72»«_73»’
 Primary_listconst [ _74 PrimaryComma+ _75] =‛«_74»«PrimaryComma»«_75»’
 Primary_emptydict [ _76 _77] =‛«_76»«_77»’
 Primary_dict [ _78 PairComma+ _79] =‛«_78»«PairComma»«_79»’
 Primary_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
 Primary_fresh [ _83 _84 ident _85] =‛ «ident» ()’
-Primary_car [ _83 _84 e _85] =‛ «e»[0] ’
-Primary_cdr [ _83 _84 e _85] =‛ «e»[1:] ’
-Primary_stringcdr [ _83 _84 e _85] =‛ «e»[1:] ’
-Primary_pos [ _86 Primary] =‛ +«Primary»’
-Primary_neg [ _87 Primary] =‛ -«Primary»’
+Primary_car [ _83 _84 e _85 Tail?] =‛ «e»[0] «Tail»’
+Primary_cdr [ _83 _84 e _85 Tail?] =‛ «e»[1:] «Tail»’
+Primary_stringcdr [ _83 _84 e _85 Tail?] =‛ «e»[1:] «Tail»’
+Primary_pos [ _86 Primary Tail?] =‛ +«Primary»Tail?’
+Primary_neg [ _87 Primary Tail?] =‛ -«Primary»Tail?’
 Primary_phi [ phi] =‛ None’
 Primary_true [ _88] =‛ True’
 Primary_false [ _89] =‛ False’
 Primary_range [ _91 _92 Exp _93] =‛«_91»«_92»«Exp»«_93»’
 Primary_string [ string] =‛«string»’
 Primary_number [ number] =‛«number»’
-Primary_identwithtail [ ident PrimaryTail] =‛«ident»«PrimaryTail»’
-Primary_ident [ ident] =‛«ident»’
+Primary_ident [ ident Tail?] =‛«ident»«Tail»’
 PrimaryComma [ Primary _94?] = ‛«Primary»«_94»’
 PairComma [ Pair _95?] = ‛«Pair»«_95»’
 Lval [ Exp PrimaryTail?] = ‛«Exp»«PrimaryTail»’
@@ -319,12 +314,13 @@ number_fract [ num* _160 den+] =‛«num»«_160»«den»’
 number_whole [ digit+] =‛«digit»’
 Pair [ string _161 Exp _162?] = ‛«string»«_161»«Exp»«_162»’
 
-PrimaryTail_dictlookup [ _eyes key PrimaryTail?] =‛["«key»"]«PrimaryTail»’
-PrimaryTail_methodcall [ MethodCall PrimaryTail?] =‛«MethodCall»«PrimaryTail»’
-PrimaryTail_offsetref [ OffsetRef PrimaryTail?] =‛«OffsetRef»«PrimaryTail»’
-PrimaryTail_lookup [ FieldLookup PrimaryTail?] =‛«FieldLookup»«PrimaryTail»’
-PrimaryTail_slice [ Slice PrimaryTail?] =‛«Slice»«PrimaryTail»’
-MethodCall [ Actuals] = ‛«Actuals»’
+Tail_methodcall [_dot ident tail?] = ‛.«ident»«tail»’
+Tail_dictlookup [_at ident tail?] = ‛["«ident»"]«tail»’
+Tail_actuals [actuals tail?] = ‛«actuals»«tail»’
+Tail_offsetref [offset tail?] = ‛«offset»«tail»’
+Tail_lookup [look tail?] = ‛«look»«tail»’
+Tail_slice [slice tail?] = ‛«slice»«tail»’
+
 OffsetRef [ _163 ident] = ‛«_163»«ident»’
 
 FieldLookup_lookup [ _167 Exp _168] =‛«_167»«Exp»«_168»’

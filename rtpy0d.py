@@ -740,7 +740,7 @@ def generate_shell_components (reg,container_list):
             for child_descriptor in diagram["children"]:
                 if first_char_is(child_descriptor["name"],"$"):
                     name = child_descriptor["name"]
-                    cmd = name[1:].strip()
+                    cmd =  name[1:] .strip()
                     generated_leaf = Template(name=name,instantiator=shell_out_instantiate,template_data=cmd)
                     register_component(reg,generated_leaf)
                 elif first_char_is(child_descriptor["name"],"'"):
