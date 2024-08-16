@@ -91,8 +91,8 @@
       | kw<"fresh"> "(" ident ")" -- fresh
       | kw<"car"> "(" Exp ")" Tail? -- car
       | kw<"cdr"> "(" Exp ")" Tail? -- cdr
-      | kw<"argvcdr"> "(" digit ")" Tail? -- nthcdr
-      | kw<"nth"> "(" digit ")" Tail? -- nth
+      | kw<"argvcdr"> "(" digit ")" Tail? -- nthargvcdr
+      | kw<"nthargv"> "(" digit ")" Tail? -- nthargv
       | kw<"stringcdr"> "(" Exp ")" Tail? -- stringcdr
       | "+" Primary Tail?  -- pos
       | "-" Primary Tail?  -- neg
@@ -159,7 +159,7 @@
       | kw<"cdr">
       | kw<"stringcdr">
       | kw<"argvcdr">
-      | kw<"nth">
+      | kw<"nthargv">
       )
       
     ident  = ~keyword identHead identTail*
@@ -284,6 +284,9 @@ Primary_fresh [ _83 _84 ident _85] =‛ «ident» ()’
 Primary_car [ _83 _84 e _85 Tail?] =‛ «e»[0] «Tail»’
 Primary_cdr [ _83 _84 e _85 Tail?] =‛ «e»[1:] «Tail»’
 Primary_stringcdr [ _83 _84 e _85 Tail?] =‛ «e»[1:] «Tail»’
+Primary_nthargvcdr [ _83 lb n rb Tail?] =‛ sys.argv[«n»:] «Tail»’
+Primary_nthargv [ _83 _84 n _85 Tail?] =‛ sys.argv[«n»] «Tail»’
+Primary_cdr [ _83 _84 e _85 Tail?] =‛ «e»[1:] «Tail»’
 Primary_pos [ _86 Primary Tail?] =‛ +«Primary»Tail?’
 Primary_neg [ _87 Primary Tail?] =‛ -«Primary»Tail?’
 Primary_phi [ phi] =‛ None’

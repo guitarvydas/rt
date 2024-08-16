@@ -103,8 +103,8 @@ rt {
       | kw<"fresh"> "(" ident ")" -- fresh
       | kw<"car"> "(" Exp ")" Tail? -- car
       | kw<"cdr"> "(" Exp ")" Tail? -- cdr
-      | kw<"argvcdr"> "(" digit ")" Tail? -- nthcdr
-      | kw<"nth"> "(" digit ")" Tail? -- nth
+      | kw<"argvcdr"> "(" digit ")" Tail? -- nthargvcdr
+      | kw<"nthargv"> "(" digit ")" Tail? -- nthargv
       | kw<"stringcdr"> "(" Exp ")" Tail? -- stringcdr
       | "+" Primary Tail?  -- pos
       | "-" Primary Tail?  -- neg
@@ -171,7 +171,7 @@ rt {
       | kw<"cdr">
       | kw<"stringcdr">
       | kw<"argvcdr">
-      | kw<"nth">
+      | kw<"nthargv">
       )
       
     ident  = ~keyword identHead identTail*
@@ -1121,6 +1121,57 @@ Primary_stringcdr : function (_83, _84, e, _85, Tail, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_stringcdr");
+
+_83 = _83.rwr ()
+_84 = _84.rwr ()
+e = e.rwr ()
+_85 = _85.rwr ()
+Tail = Tail.rwr ().join ('')
+
+_.set_top (return_value_stack, ` ${e}[1:] ${Tail}`);
+
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Primary_nthargvcdr : function (_83, lb, n, rb, Tail, ) {
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Primary_nthargvcdr");
+
+_83 = _83.rwr ()
+lb = lb.rwr ()
+n = n.rwr ()
+rb = rb.rwr ()
+Tail = Tail.rwr ().join ('')
+
+_.set_top (return_value_stack, ` sys.argv[${n}:] ${Tail}`);
+
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Primary_nthargv : function (_83, _84, n, _85, Tail, ) {
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Primary_nthargv");
+
+_83 = _83.rwr ()
+_84 = _84.rwr ()
+n = n.rwr ()
+_85 = _85.rwr ()
+Tail = Tail.rwr ().join ('')
+
+_.set_top (return_value_stack, ` sys.argv[${n}] ${Tail}`);
+
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Primary_cdr : function (_83, _84, e, _85, Tail, ) {
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Primary_cdr");
 
 _83 = _83.rwr ()
 _84 = _84.rwr ()

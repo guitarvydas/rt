@@ -1137,11 +1137,11 @@ def parse_command_line_args ():
         load_error("usage: ${_00_} ${_0D_} app <arg> <main tab name> <diagram file name 1> ...")
         return  None
     else:
-        root_project = sys.argv[1]
-        root_0D = sys.argv[2]
-        arg = sys.argv[3]
-        main_container_name = sys.argv[4]
-        diagram_source_files = sys.argv[5:]
+        root_project =  sys.argv[1]
+        root_0D =  sys.argv[2]
+        arg =  sys.argv[3]
+        main_container_name =  sys.argv[4]
+        diagram_source_files =  sys.argv[5:]
         return [root_project, root_0D, arg, main_container_name, diagram_source_files]
     
 

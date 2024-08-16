@@ -91,8 +91,8 @@
       | kw<"fresh"> "(" ident ")" -- fresh
       | kw<"car"> "(" Exp ")" Tail? -- car
       | kw<"cdr"> "(" Exp ")" Tail? -- cdr
-      | kw<"argvcdr"> "(" digit ")" Tail? -- nthcdr
-      | kw<"nth"> "(" digit ")" Tail? -- nth
+      | kw<"argvcdr"> "(" digit ")" Tail? -- nthargvcdr
+      | kw<"nthargv"> "(" digit ")" Tail? -- nthargv
       | kw<"stringcdr"> "(" Exp ")" Tail? -- stringcdr
       | "+" Primary Tail?  -- pos
       | "-" Primary Tail?  -- neg
@@ -159,7 +159,7 @@
       | kw<"cdr">
       | kw<"stringcdr">
       | kw<"argvcdr">
-      | kw<"nth">
+      | kw<"nthargv">
       )
       
     ident  = ~keyword identHead identTail*
