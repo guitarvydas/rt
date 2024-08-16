@@ -3,11 +3,13 @@
 Main [ TopLevel+] = ‛«TopLevel»’
 
 TopLevel_defvar [ Defvar] =‛«Defvar»’
+TopLevel_defconst [ Defconst] =‛«Defconst»’
 TopLevel_defn [ Defn] =‛«Defn»’
 TopLevel_defclass [ Defclass] =‛«Defclass»’
 TopLevel_import [ Import] =‛«Import»’
 kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e] = ‛\n«lval» = «e»’
+Defconst [ __ lval _eq e] = ‛\n«lval» = «e»’
 Defn [ _4 ident Formals StatementBlock] = ‛\ndef «ident» «Formals»:«StatementBlock»’
 Defclass [ _6 ident _7 Definit _8] = ‛\nclass «ident»:⤷\n«Definit»⤶\n’
 Import [ _10 ident] = ‛\nimport «ident»’

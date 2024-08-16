@@ -3,6 +3,7 @@
   Main = TopLevel+
   TopLevel =
     | Defvar -- defvar
+    | Defconst -- defconst
     | Defn -- defn
     | Defclass -- defclass
     | Import -- import
@@ -10,6 +11,7 @@
    kw<s> = s ~identTail
 
    Defvar = kw<"defvar"> Lval "=" Exp
+   Defconst = kw<"defconst"> Lval "=" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
    Defclass = kw<"defclass"> ident "{" Definit "}"
    Import = kw<"import"> ident
@@ -132,6 +134,7 @@
     keyword = (
         kw<"fresh">
       | kw<"defvar">
+      | kw<"defconst">
       | kw<"defn">
       | kw<"defclass">
       | kw<"definit">

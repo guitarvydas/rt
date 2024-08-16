@@ -15,6 +15,7 @@ rt {
   Main = TopLevel+
   TopLevel =
     | Defvar -- defvar
+    | Defconst -- defconst
     | Defn -- defn
     | Defclass -- defclass
     | Import -- import
@@ -22,6 +23,7 @@ rt {
    kw<s> = s ~identTail
 
    Defvar = kw<"defvar"> Lval "=" Exp
+   Defconst = kw<"defconst"> Lval "=" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
    Defclass = kw<"defclass"> ident "{" Definit "}"
    Import = kw<"import"> ident
@@ -144,6 +146,7 @@ rt {
     keyword = (
         kw<"fresh">
       | kw<"defvar">
+      | kw<"defconst">
       | kw<"defn">
       | kw<"defclass">
       | kw<"definit">
@@ -253,6 +256,19 @@ _.set_top (return_value_stack, `${Defvar}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
+TopLevel_defconst : function (Defconst, ) {
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "TopLevel_defconst");
+
+Defconst = Defconst.rwr ()
+
+_.set_top (return_value_stack, `${Defconst}`);
+
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
 TopLevel_defn : function (Defn, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
@@ -309,6 +325,22 @@ Defvar : function (__, lval, _eq, e, ) {
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Defvar");
+
+__ = __.rwr ()
+lval = lval.rwr ()
+_eq = _eq.rwr ()
+e = e.rwr ()
+
+_.set_top (return_value_stack, `\n${lval} = ${e}`);
+
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Defconst : function (__, lval, _eq, e, ) {
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Defconst");
 
 __ = __.rwr ()
 lval = lval.rwr ()

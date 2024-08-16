@@ -480,10 +480,10 @@ defn recursive_routing_trace (container, lis, indent) {
         return formatted + recursive_routing_trace (container, rest (lis), indent + '  ')}
 }
 
-defvar enumDown = 0
-defvar enumAcross = 1
-defvar enumUp = 2
-defvar enumThrough = 3
+defconst enumDown = 0
+defconst enumAcross = 1
+defconst enumUp = 2
+defconst enumThrough = 3
 
 defn container_instantiator (reg, owner, container_name, desc) {
     global enumDown, enumUp, enumAcross, enumThrough
