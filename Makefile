@@ -4,7 +4,7 @@
 SRC=test.rt
 D2J=./das2json/mac/das2json
 
-dev: commonlisp
+dev: python
 
 all:
 	${D2J} t2t.drawio
@@ -16,11 +16,13 @@ commonlisp: 0D2py.mjs
 	${D2J} 0D/python/std/transpile.drawio
 	python3 main.py . 0D/python rt0d.rt main cl-t2t.drawio.json transpile.drawio.json >rtcl0d.lisp
 
-regress: 0D2py.mjs
+python: 0D2py.mjs
 	${D2J} py-t2t.drawio
 	${D2J} 0D/python/std/transpile.drawio
 	python3 main.py . 0D/python rt0d.rt main py-t2t.drawio.json transpile.drawio.json >rtpy0d.py
 	python3 rtpy0d.py
+
+regress: python
 
 basic: 0D2py.mjs
 	node 0d2py.mjs <rt0d.rt >rtpy0d.raw.py
