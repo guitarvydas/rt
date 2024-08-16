@@ -8,18 +8,18 @@ TopLevel_defn [ Defn] =‛«Defn»’
 TopLevel_defclass [ Defclass] =‛«Defclass»’
 TopLevel_import [ Import] =‛«Import»’
 kw [ s] = ‛«s»’
-Defvar [ __ lval _eq e] = ‛\n«lval» = «e»’
-Defconst [ __ lval _eq e] = ‛\n«lval» = «e»’
-Defn [ _4 ident Formals StatementBlock] = ‛\ndef «ident» «Formals»:«StatementBlock»’
-Defclass [ _6 ident _7 Definit _8] = ‛\nclass «ident»:⤷\n«Definit»⤶\n’
+Defvar [ __ lval _eq e] = ‛\n(defparameter «lval» «e»)’
+Defconst [ __ lval _eq e] = ‛\n(defconstant «lval» «e»)’
+Defn [ _4 ident Formals StatementBlock] = ‛\n(defun «ident» «Formals»«StatementBlock»)’
+Defclass [ _6 ident _7 Definit _8] = ‛\n(defclass «ident»:⤷\n«Definit»)⤶\n’
 Import [ _10 ident] = ‛\nimport «ident»’
-StatementBlock [ _11 Statement _12] = ‛⤷«Statement»⤶\n’
-Definit [ _14 _15 _17 _18 ident formals* _20 _21 InitStatement+ _22] = ‛def __init__ (self«formals»):⤷\n«InitStatement»⤶\n’
+StatementBlock [ _11 Statement _12] = ‛⤷\n(progn⤷\n«Statement»)⤶⤶\n’
+Definit [ _14 _15 _17 _18 ident formals* _20 _21 InitStatement+ _22] = ‛(defun __init__ «formals»⤷\n«InitStatement»)⤶\n’
 
-Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
-CommaIdent [_comma ident] = ‛, «ident»’
+Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛«scope»’
+CommaIdent [_comma ident] = ‛ «ident»’
 Rec_Statement_if [ IfStatement scope?] =‛«IfStatement»«scope»’
-Rec_Statement_pass [ _27 scope?] =‛\npass«scope»’
+Rec_Statement_pass [ _27 scope?] =‛\n«scope»’
 Rec_Statement_return [ _29 ReturnExp scope?] =‛\nreturn «ReturnExp»«scope»’
 Rec_Statement_for [ ForStatement scope?] =‛«ForStatement»«scope»«scope»’
 Rec_Statement_while [ WhileStatement scope?] =‛«WhileStatement»«scope»’
@@ -37,9 +37,9 @@ TryStatement [ _47 StatementBlock ExceptBlock+] = ‛\ntry:\n«StatementBlock»�
 ExceptBlock_as [ _49 Exp _51 ident StatementBlock] =‛except «Exp» as «ident»:«StatementBlock»’
 ExceptBlock_basic [ _53 ident StatementBlock] =‛except «ident»:«StatementBlock»’
 
-Assignment_pluseq [ Lval _54 Exp] = ‛\n«Lval» += «Exp»’
-Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp] =‛\n[«Lval1»«Lval2»] = «Exp»’
-Assignment_single [ Lval _59 Exp] =‛\n«Lval» = «Exp»’
+Assignment_pluseq [ Lval _54 Exp] = ‛\n(inc «Lval» «Exp»)’
+Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp] =‛\n(multiple-value-bind («Lval1» «Lval2»)⤷\n«Exp»⤶)’
+Assignment_single [ Lval _59 Exp] =‛\n(let («Lval» = «Exp»’ *******
 CommaLval [_comma Lval] = ‛, «Lval»’
 
 ReturnExp_multiple [ _60 Exp1 Exp2+ _62] =‛[«Exp1»«Exp2»]’
