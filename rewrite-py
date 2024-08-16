@@ -64,31 +64,40 @@ MulExp_basic [ ExpExp] =‛«ExpExp»’
 ExpExp_power [ Primary _69 ExpExp] =‛«Primary»«_69»«ExpExp»’
 ExpExp_basic [ Primary] =‛«Primary»’
 
-Primary_paren [ _70 Exp _71 Tail?] =‛«_70»«Exp»«_71»«Tail»’
+Primary_lookup [p _at key] = ‛«p» [«key»]’
+Primary_methodcall [p _dot f actuals] = ‛«p».«f» «actuals»’
+Primary_field [p _dot key] = ‛«p».«key»’ 
+Primary_index [p lb e rb] = ‛«p» [«e»]’ 
+Primary_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’
+Primary_call [p actuals] = ‛«p» «actuals»’
+
+
+
+Primary_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’
 Primary_emptylistconst [ _72 _73] =‛«_72»«_73»’
 Primary_listconst [ _74 PrimaryComma+ _75] =‛«_74»«PrimaryComma»«_75»’
 Primary_emptydict [ _76 _77] =‛«_76»«_77»’
 Primary_dict [ _78 PairComma+ _79] =‛«_78»«PairComma»«_79»’
 Primary_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
 Primary_fresh [ _83 _84 ident _85] =‛ «ident» ()’
-Primary_car [ _83 _84 e _85 Tail?] =‛ «e»[0] «Tail»’
-Primary_cdr [ _83 _84 e _85 Tail?] =‛ «e»[1:] «Tail»’
-Primary_stringcdr [ _83 _84 e _85 Tail?] =‛ «e»[1:] «Tail»’
-Primary_nthargvcdr [ _83 lb n rb Tail?] =‛ sys.argv[«n»:] «Tail»’
-Primary_nthargv [ _83 _84 n _85 Tail?] =‛ sys.argv[«n»] «Tail»’
-Primary_cdr [ _83 _84 e _85 Tail?] =‛ «e»[1:] «Tail»’
-Primary_pos [ _86 Primary Tail?] =‛ +«Primary»Tail?’
-Primary_neg [ _87 Primary Tail?] =‛ -«Primary»Tail?’
+Primary_car [ _83 _84 e _85 ] =‛ «e»[0] ’
+Primary_cdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
+Primary_stringcdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
+Primary_nthargvcdr [ _83 lb n rb ] =‛ sys.argv[«n»:] ’
+Primary_nthargv [ _83 _84 n _85 ] =‛ sys.argv[«n»] ’
+Primary_cdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
+Primary_pos [ _86 Primary ] =‛ +«Primary»’
+Primary_neg [ _87 Primary ] =‛ -«Primary»’
 Primary_phi [ phi] =‛ None’
 Primary_true [ _88] =‛ True’
 Primary_false [ _89] =‛ False’
 Primary_range [ _91 _92 Exp _93] =‛«_91»«_92»«Exp»«_93»’
 Primary_string [ string] =‛«string»’
 Primary_number [ number] =‛«number»’
-Primary_ident [ ident Tail?] =‛«ident»«Tail»’
+Primary_ident [ ident ] =‛«ident»’
 PrimaryComma [ Primary _94?] = ‛«Primary»«_94»’
 PairComma [ Pair _95?] = ‛«Pair»«_95»’
-Lval [ Exp PrimaryTail?] = ‛«Exp»«PrimaryTail»’
+Lval [ Exp ] = ‛«Exp»’
 keyword [ _144] = ‛«_144»’
 ident [ identHead identTail*] = ‛«identHead»«identTail»’
 identHead [ _146] = ‛«_146»’
@@ -111,18 +120,9 @@ number_fract [ num* _160 den+] =‛«num»«_160»«den»’
 number_whole [ digit+] =‛«digit»’
 Pair [ string _161 Exp _162?] = ‛«string»«_161»«Exp»«_162»’
 
-Tail_methodcall [_dot ident tail?] = ‛.«ident»«tail»’
-Tail_dictlookup [_at ident tail?] = ‛["«ident»"]«tail»’
-Tail_actuals [actuals tail?] = ‛«actuals»«tail»’
-Tail_offsetref [offset tail?] = ‛«offset»«tail»’
-Tail_lookup [look tail?] = ‛«look»«tail»’
-Tail_slice [slice tail?] = ‛«slice»«tail»’
-
 OffsetRef [ _163 ident] = ‛«_163»«ident»’
 
-FieldLookup_lookup [ _167 Exp _168] =‛«_167»«Exp»«_168»’
 
-Slice_nthslice [ _176 digit+ _177 _178] =‛«_176»«digit»«_177»«_178»’
 boolOp [ _191] = ‛ «_191» ’
 phi [ _192] = ‛ None’
 
