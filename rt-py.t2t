@@ -84,6 +84,7 @@
       | Primary -- basic
 
     Primary =
+      | Primary "@" ident -- lookupident
       | Primary "@" Primary -- lookup
       | Primary "." Primary Actuals -- methodcall
       | Primary "." Primary -- field
@@ -271,6 +272,7 @@ MulExp_basic [ ExpExp] =‛«ExpExp»’
 ExpExp_power [ Primary _69 ExpExp] =‛«Primary»«_69»«ExpExp»’
 ExpExp_basic [ Primary] =‛«Primary»’
 
+Primary_lookupident [p _at key] = ‛«p» ["«key»"]’
 Primary_lookup [p _at key] = ‛«p» [«key»]’
 Primary_methodcall [p _dot f actuals] = ‛«p».«f» «actuals»’
 Primary_field [p _dot key] = ‛«p».«key»’ 

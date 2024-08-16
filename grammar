@@ -84,6 +84,7 @@
       | Primary -- basic
 
     Primary =
+      | Primary "@" ident -- lookupident
       | Primary "@" Primary -- lookup
       | Primary "." Primary Actuals -- methodcall
       | Primary "." Primary -- field

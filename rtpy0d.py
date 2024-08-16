@@ -186,7 +186,7 @@ def make_Routing_Descriptor (action= None,component= None,port= None,message= No
 
 def make_Send_Descriptor (component= None,port= None,message= None,cause_port= None,cause_message= None):
     rdesc = make_Routing_Descriptor (action=drSend,component=component,port=port,message=message)
-    return {"action":drSend,"component":rdesc [component],"port":rdesc [port],"message":rdesc [message],"cause_port":cause_port,"cause_message":cause_message,"fmt":fmt_send}
+    return {"action":drSend,"component":rdesc ["component"],"port":rdesc ["port"],"message":rdesc ["message"],"cause_port":cause_port,"cause_message":cause_message,"fmt":fmt_send}
 
 def log_send (sender,sender_port,msg,cause_msg):
     send_desc = make_Send_Descriptor (component=sender,port=sender_port,message=msg,cause_port=cause_msg.port,cause_message=cause_msg)
@@ -205,7 +205,7 @@ def fmt_send_string (desc,indent):
 def make_Forward_Descriptor (component= None,port= None,message= None,cause_port= None,cause_message= None):
     rdesc = make_Routing_Descriptor (action=drSend,component=component,port=port,message=message)
     fmt_forward =  lambda desc: ''
-    return {"action":drForward,"component":rdesc [component],"port":rdesc [port],"message":rdesc [message],"cause_port":cause_port,"cause_message":cause_message,"fmt":fmt_forward}
+    return {"action":drForward,"component":rdesc ["component"],"port":rdesc ["port"],"message":rdesc ["message"],"cause_port":cause_port,"cause_message":cause_message,"fmt":fmt_forward}
 
 def log_forward (sender,sender_port,msg,cause_msg):
     pass
@@ -216,7 +216,7 @@ def fmt_forward (desc):
 
 def make_Inject_Descriptor (receiver= None,port= None,message= None):
     rdesc = make_Routing_Descriptor (action=drInject,component=receiver,port=port,message=message)
-    return {"action":drInject,"component":rdesc [component],"port":rdesc [port],"message":rdesc [message],"fmt":fmt_inject}
+    return {"action":drInject,"component":rdesc ["component"],"port":rdesc ["port"],"message":rdesc ["message"],"fmt":fmt_inject}
 
 def log_inject (receiver,port,msg):
     inject_desc = make_Inject_Descriptor (receiver=receiver,port=port,message=msg)
@@ -294,7 +294,7 @@ def log_inout_recursively (container= None,component= None,in_message= None,out_
     
 
 def fmt_inout (desc,indent):
-    outm = desc [out_message]
+    outm = desc ["out_message"]
     if  None == outm:
         return f'\n{indent}  ⊥'
     else:
@@ -314,7 +314,7 @@ def recursive_routing_trace (container,lis,indent):
         return ''
     else:
         desc = first (lis)
-        formatted = desc [fmt (desc,indent)]
+        formatted = desc ["fmt"] (desc,indent)
         return formatted+recursive_routing_trace (container,rest (lis),indent+'  ')
     
 
@@ -327,57 +327,57 @@ def container_instantiator (reg,owner,container_name,desc):
     container = make_container (container_name,owner)
     children = []
     children_by_id = {}
-    for child_desc in desc [children]:
-        child_instance = get_component_instance (reg,child_desc [name],container)
+    for child_desc in desc ["children"]:
+        child_instance = get_component_instance (reg,child_desc ["name"],container)
         children.append (child_instance)
-        children_by_id [child_desc [id]] = child_instance
+        children_by_id [child_desc ["id"]] = child_instance
     
     container.children = children
     me = container
     connectors = []
-    for proto_conn in desc [connections]:
+    for proto_conn in desc ["connections"]:
         source_component =  None
         target_component =  None
         connector = Connector ()
-        if proto_conn [dir] == enumDown:
+        if proto_conn ["dir"] == enumDown:
             connector.direction = "down"
-            connector.sender = Sender (me.name,me,proto_conn [source_port])
-            target_component = children_by_id [proto_conn [target [id]]]
+            connector.sender = Sender (me.name,me,proto_conn ["source_port"])
+            target_component = children_by_id [proto_conn ["target"] ["id"]]
             if (target_component ==  None):
                 load_error (f"internal error: .Down connection target internal error {proto_conn@target}")
             else:
-                connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn [target_port],target_component)
+                connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn ["target_port"],target_component)
                 connectors.append (connector)
             
-        elif proto_conn [dir] == enumAcross:
+        elif proto_conn ["dir"] == enumAcross:
             connector.direction = "across"
-            source_component = children_by_id [proto_conn [source [id]]]
-            target_component = children_by_id [proto_conn [target [id]]]
+            source_component = children_by_id [proto_conn ["source"] ["id"]]
+            target_component = children_by_id [proto_conn ["target"] ["id"]]
             if source_component ==  None:
                 load_error (f"internal error: .Across connection source not ok {proto_conn@source}")
             else:
-                connector.sender = Sender (source_component.name,source_component,proto_conn [source_port])
+                connector.sender = Sender (source_component.name,source_component,proto_conn ["source_port"])
                 if target_component ==  None:
                     load_error (f"internal error: .Across connection target not ok {proto_conn.target}")
                 else:
-                    connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn [target_port],target_component)
+                    connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn ["target_port"],target_component)
                     connectors.append (connector)
                 
             
-        elif proto_conn [dir] == enumUp:
+        elif proto_conn ["dir"] == enumUp:
             connector.direction = "up"
-            source_component = children_by_id [proto_conn [source [id]]]
+            source_component = children_by_id [proto_conn ["source"] ["id"]]
             if source_component ==  None:
                 print (f"internal error: .Up connection source not ok {proto_conn@source}")
             else:
-                connector.sender = Sender (source_component.name,source_component,proto_conn [source_port])
-                connector.receiver = Receiver (me.name,container.outq,proto_conn [target_port],me)
+                connector.sender = Sender (source_component.name,source_component,proto_conn ["source_port"])
+                connector.receiver = Receiver (me.name,container.outq,proto_conn ["target_port"],me)
                 connectors.append (connector)
             
-        elif proto_conn [dir] == enumThrough:
+        elif proto_conn ["dir"] == enumThrough:
             connector.direction = "through"
-            connector.sender = Sender (me.name,me,proto_conn [source_port])
-            connector.receiver = Receiver (me.name,container.outq,proto_conn [target_port],me)
+            connector.sender = Sender (me.name,me,proto_conn ["source_port"])
+            connector.receiver = Receiver (me.name,container.outq,proto_conn ["target_port"],me)
             connectors.append (connector)
         
     
@@ -388,49 +388,49 @@ def container_instantiator (reg,owner,container_name,desc):
     container.children = children
     me = container
     connectors = []
-    for proto_conn in desc [connections]:
+    for proto_conn in desc ["connections"]:
         source_component =  None
         target_component =  None
         connector = Connector ()
-        if proto_conn [dir] == enumDown:
+        if proto_conn ["dir"] == enumDown:
             connector.direction = "down"
-            connector.sender = Sender (me.name,me,proto_conn [source_port])
-            target_component = children_by_id [proto_conn [target [id]]]
+            connector.sender = Sender (me.name,me,proto_conn ["source_port"])
+            target_component = children_by_id [proto_conn ["target"] ["id"]]
             if (target_component ==  None):
                 load_error (f"internal error: .Down connection target internal error {proto_conn@target}")
             else:
-                connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn [target_port],target_component)
+                connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn ["target_port"],target_component)
                 connectors.append (connector)
             
-        elif proto_conn [dir] == enumAcross:
+        elif proto_conn ["dir"] == enumAcross:
             connector.direction = "across"
-            source_component = children_by_id [proto_conn [source [id]]]
-            target_component = children_by_id [proto_conn [target [id]]]
+            source_component = children_by_id [proto_conn ["source"] ["id"]]
+            target_component = children_by_id [proto_conn ["target"] ["id"]]
             if source_component ==  None:
                 load_error (f"internal error: .Across connection source not ok {proto_conn@source}")
             else:
-                connector.sender = Sender (source_component.name,source_component,proto_conn [source_port])
+                connector.sender = Sender (source_component.name,source_component,proto_conn ["source_port"])
                 if target_component ==  None:
                     load_error (f"internal error: .Across connection target not ok {proto_conn.target}")
                 else:
-                    connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn [target_port],target_component)
+                    connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn ["target_port"],target_component)
                     connectors.append (connector)
                 
             
-        elif proto_conn [dir] == enumUp:
+        elif proto_conn ["dir"] == enumUp:
             connector.direction = "up"
-            source_component = children_by_id [proto_conn [source [id]]]
+            source_component = children_by_id [proto_conn ["source"] ["id"]]
             if source_component ==  None:
                 print (f"internal error: .Up connection source not ok {proto_conn@source}")
             else:
-                connector.sender = Sender (source_component.name,source_component,proto_conn [source_port])
-                connector.receiver = Receiver (me.name,container.outq,proto_conn [target_port],me)
+                connector.sender = Sender (source_component.name,source_component,proto_conn ["source_port"])
+                connector.receiver = Receiver (me.name,container.outq,proto_conn ["target_port"],me)
                 connectors.append (connector)
             
-        elif proto_conn [dir] == enumThrough:
+        elif proto_conn ["dir"] == enumThrough:
             connector.direction = "through"
-            connector.sender = Sender (me.name,me,proto_conn [source_port])
-            connector.receiver = Receiver (me.name,container.outq,proto_conn [target_port],me)
+            connector.sender = Sender (me.name,me,proto_conn ["source_port"])
+            connector.receiver = Receiver (me.name,container.outq,proto_conn ["target_port"],me)
             connectors.append (connector)
         
     
@@ -737,14 +737,14 @@ import subprocess
 def generate_shell_components (reg,container_list):
     if  None != container_list:
         for diagram in container_list:
-            for child_descriptor in diagram [children]:
-                if first_char_is (child_descriptor [name],"$"):
-                    name = child_descriptor [name]
+            for child_descriptor in diagram ["children"]:
+                if first_char_is (child_descriptor ["name"],"$"):
+                    name = child_descriptor ["name"]
                     cmd =  name[1:] .strip ()
                     generated_leaf = Template (name=name,instantiator=shell_out_instantiate,template_data=cmd)
                     register_component (reg,generated_leaf)
-                elif first_char_is (child_descriptor [name],"'"):
-                    name = child_descriptor [name]
+                elif first_char_is (child_descriptor ["name"],"'"):
+                    name = child_descriptor ["name"]
                     s =  name[1:]
                     generated_leaf = Template (name=name,instantiator=string_constant_instantiate,template_data=s)
                     register_component (reg,generated_leaf,ok_to_overwrite= True)

@@ -96,6 +96,7 @@ rt {
       | Primary -- basic
 
     Primary =
+      | Primary "@" ident -- lookupident
       | Primary "@" Primary -- lookup
       | Primary "." Primary Actuals -- methodcall
       | Primary "." Primary -- field
@@ -996,6 +997,21 @@ _.set_top (rule_name_stack, "ExpExp_basic");
 Primary = Primary.rwr ()
 
 _.set_top (return_value_stack, `${Primary}`);
+
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Primary_lookupident : function (p, _at, key, ) {
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Primary_lookupident");
+
+p = p.rwr ()
+_at = _at.rwr ()
+key = key.rwr ()
+
+_.set_top (return_value_stack, `${p} ["${key}"]`);
 
 
 rule_name_stack.pop ();
