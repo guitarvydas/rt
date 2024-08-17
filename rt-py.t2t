@@ -22,40 +22,40 @@
 
    Rec_Statement =
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
-     | IfStatement Rec_Statement? -- if
+     | IfStatement  -- if
      | kw<"pass"> Rec_Statement? -- pass
-     | kw<"return"> ReturnExp Rec_Statement? -- return
-     | ForStatement Rec_Statement? -- for
-     | WhileStatement Rec_Statement? -- while
-     | TryStatement Rec_Statement? -- try
-     | Assignment Rec_Statement? -- assignment
+     | kw<"return"> ReturnExp -- return
+     | ForStatement -- for
+     | WhileStatement  -- while
+     | TryStatement -- try
+     | Assignment -- assignment
      | Lval Rec_Statement? -- call
    CommaIdent = "," ident
 
    InitStatement = kw<"self"> "." ident "=" Exp
 
-   IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement?
+   IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
    ElseStatement = kw<"else"> StatementBlock
 
-   ForStatement = kw<"for"> ident kw<"in"> Exp StatementBlock
-   WhileStatement = kw<"while"> Exp StatementBlock
+   ForStatement = kw<"for"> ident kw<"in"> Exp StatementBlock Rec_Statement?
+   WhileStatement = kw<"while"> Exp StatementBlock Rec_Statement?
 
-   TryStatement = kw<"try"> StatementBlock ExceptBlock+
+   TryStatement = kw<"try"> StatementBlock ExceptBlock+ Rec_Statement?
    ExceptBlock =
      | kw<"except"> Exp kw<"as"> ident StatementBlock -- as
      | kw<"except"> ident StatementBlock -- basic
    
    Assignment = 
-     | Lval "+=" Exp -- pluseq
-     | "[" Lval CommaLval+ "]" "=" Exp -- multiple
-     | Lval "=" Exp -- single
+     | Lval "+=" Exp Rec_Statement? -- pluseq
+     | "[" Lval CommaLval+ "]" "=" Exp Rec_Statement? -- multiple
+     | Lval "=" Exp Rec_Statement? -- single
 
    CommaLval = "," Lval
 
     ReturnExp =
-      | "[" Exp CommaExp+ "]" -- multiple
-      | Exp -- single
+      | "[" Exp CommaExp+ "]" Rec_Statement? -- multiple
+      | Exp Rec_Statement? -- single
 
     CommaExp = "," Exp
     
@@ -188,8 +188,6 @@
 
     Pair = string ":" Exp ","?
   
-  OffsetRef = "." ident
-
 
   boolOp = ("==" | "!=" | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">) 
   phi = "ϕ"
@@ -226,32 +224,32 @@ Definit [ _14 _15 _17 _18 ident formals* _20 _21 InitStatement+ _22] = ‛def __
 
 Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
 CommaIdent [_comma ident] = ‛, «ident»’
-Rec_Statement_if [ IfStatement scope?] =‛«IfStatement»«scope»’
+Rec_Statement_if [ IfStatement] =‛«IfStatement»’
 Rec_Statement_pass [ _27 scope?] =‛\npass«scope»’
-Rec_Statement_return [ _29 ReturnExp scope?] =‛\nreturn «ReturnExp»«scope»’
-Rec_Statement_for [ ForStatement scope?] =‛«ForStatement»«scope»«scope»’
-Rec_Statement_while [ WhileStatement scope?] =‛«WhileStatement»«scope»’
-Rec_Statement_try [ TryStatement scope?] =‛«TryStatement»«scope»’
-Rec_Statement_assignment [ Assignment scope?] =‛«Assignment»«scope»’
+Rec_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
+Rec_Statement_for [ ForStatement] =‛«ForStatement»’
+Rec_Statement_while [ WhileStatement] =‛«WhileStatement»’
+Rec_Statement_try [ TryStatement] =‛«TryStatement»’
+Rec_Statement_assignment [ Assignment] =‛«Assignment»’
 Rec_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
 InitStatement [ _31 _32 ident _33 Exp] = ‛\nself.«ident» = «Exp»’
-IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»’
+IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛elif «Exp»:«StatementBlock»’
 ElseStatement [ _39 StatementBlock] = ‛else:«StatementBlock»’
-ForStatement [ _41 ident _43 Exp StatementBlock] = ‛\nfor «ident» in «Exp»:«StatementBlock»’
-WhileStatement [ _45 Exp StatementBlock] = ‛\nwhile «Exp»:«StatementBlock»’
-TryStatement [ _47 StatementBlock ExceptBlock+] = ‛\ntry:\n«StatementBlock»«ExceptBlock»’
+ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor «ident» in «Exp»:«StatementBlock»«rec»’
+WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile «Exp»:«StatementBlock»«rec»’
+TryStatement [ _47 StatementBlock ExceptBlock+ rec?] = ‛\ntry:\n«StatementBlock»«ExceptBlock»«rec»’
 
 ExceptBlock_as [ _49 Exp _51 ident StatementBlock] =‛except «Exp» as «ident»:«StatementBlock»’
 ExceptBlock_basic [ _53 ident StatementBlock] =‛except «ident»:«StatementBlock»’
 
-Assignment_pluseq [ Lval _54 Exp] = ‛\n«Lval» += «Exp»’
-Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp] =‛\n[«Lval1»«Lval2»] = «Exp»’
-Assignment_single [ Lval _59 Exp] =‛\n«Lval» = «Exp»’
+Assignment_pluseq [ Lval _54 Exp rec?] = ‛\n«Lval» += «Exp»«rec»’
+Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp rec?] =‛\n[«Lval1»«Lval2»] = «Exp»«rec»’
+Assignment_single [ Lval _59 Exp rec?] =‛\n«Lval» = «Exp»«rec»’
 CommaLval [_comma Lval] = ‛, «Lval»’
 
-ReturnExp_multiple [ _60 Exp1 Exp2+ _62] =‛[«Exp1»«Exp2»]’
-ReturnExp_single [ Exp] =‛«Exp»’
+ReturnExp_multiple [ _60 Exp1 Exp2+ _62 rec?] =‛[«Exp1»«Exp2»]«rec»’
+ReturnExp_single [ Exp rec?] =‛«Exp»«rec»’
 CommaExp [_comma e] = ‛, «e»’
 Exp [ BooleanExp] = ‛«BooleanExp»’
 
@@ -294,7 +292,6 @@ Primary_cdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
 Primary_stringcdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
 Primary_nthargvcdr [ _83 lb n rb ] =‛ sys.argv[«n»:] ’
 Primary_nthargv [ _83 _84 n _85 ] =‛ sys.argv[«n»] ’
-Primary_cdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
 Primary_pos [ _86 Primary ] =‛ +«Primary»’
 Primary_neg [ _87 Primary ] =‛ -«Primary»’
 Primary_phi [ phi] =‛ None’
@@ -328,9 +325,6 @@ ParamName [ ident _159] = ‛«ident»«_159»’
 number_fract [ num* _160 den+] =‛«num»«_160»«den»’
 number_whole [ digit+] =‛«digit»’
 Pair [ string _161 Exp _162?] = ‛«string»«_161»«Exp»«_162»’
-
-OffsetRef [ _163 ident] = ‛«_163»«ident»’
-
 
 boolOp [ _191] = ‛ «_191» ’
 phi [ _192] = ‛ None’

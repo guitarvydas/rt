@@ -1,50 +1,6 @@
-defn test (x) {
-  a = 1
-  b = 2
-  return a
-}
-
 defn gensym (s) {
     global counter
     name_with_id = f"{s}{subscripted_digit (counter)}"
-    counter += 42
+    counter += 1
     return name_with_id
 }
-
-# defvar counter = 0
-
-# defvar digits = [
-#     "₀", "₁", "₂", "₃", "₄", "₅",
-#     "₆", "₇", "₈", "₉",
-#     "₁₀", "₁₁", "₁₂", "₁₃", "₁₄",
-#     "₁₅", "₁₆", "₁₇", "₁₈", "₁₉",
-#     "₂₀", "₂₁", "₂₂", "₂₃", "₂₄",
-#     "₂₅", "₂₆", "₂₇", "₂₈", "₂₉"
-# ]
-
-# defn gensym (s) {
-#     global counter
-#     name_with_id = f"{s}{subscripted_digit (counter)}"
-#     counter += 1
-#     return name_with_id
-# }
-
-# defn subscripted_digit (n) {
-#   global digits
-#   if (n >= 0 and n <= 29) {
-#     return digits [n]
-#   } else {
-#     return f"₊{n}"
-#   }
-# }
-
-# defclass Datum {
-#   definit (self:Datum) {
-#       self.data = ϕ
-#       self.clone = ϕ
-#       self.reclaim = ϕ
-#       self.srepr = ϕ
-#       self.kind = ϕ
-#       self.raw = ϕ
-#   }
-# }

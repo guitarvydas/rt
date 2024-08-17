@@ -383,61 +383,6 @@ def container_instantiator (reg,owner,container_name,desc):
     
     container.connections = connectors
     return container
-    container.connections = connectors
-    return container
-    container.children = children
-    me = container
-    connectors = []
-    for proto_conn in desc ["connections"]:
-        source_component =  None
-        target_component =  None
-        connector = Connector ()
-        if proto_conn ["dir"] == enumDown:
-            connector.direction = "down"
-            connector.sender = Sender (me.name,me,proto_conn ["source_port"])
-            target_component = children_by_id [proto_conn ["target"] ["id"]]
-            if (target_component ==  None):
-                load_error (f"internal error: .Down connection target internal error {proto_conn@target}")
-            else:
-                connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn ["target_port"],target_component)
-                connectors.append (connector)
-            
-        elif proto_conn ["dir"] == enumAcross:
-            connector.direction = "across"
-            source_component = children_by_id [proto_conn ["source"] ["id"]]
-            target_component = children_by_id [proto_conn ["target"] ["id"]]
-            if source_component ==  None:
-                load_error (f"internal error: .Across connection source not ok {proto_conn@source}")
-            else:
-                connector.sender = Sender (source_component.name,source_component,proto_conn ["source_port"])
-                if target_component ==  None:
-                    load_error (f"internal error: .Across connection target not ok {proto_conn.target}")
-                else:
-                    connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn ["target_port"],target_component)
-                    connectors.append (connector)
-                
-            
-        elif proto_conn ["dir"] == enumUp:
-            connector.direction = "up"
-            source_component = children_by_id [proto_conn ["source"] ["id"]]
-            if source_component ==  None:
-                print (f"internal error: .Up connection source not ok {proto_conn@source}")
-            else:
-                connector.sender = Sender (source_component.name,source_component,proto_conn ["source_port"])
-                connector.receiver = Receiver (me.name,container.outq,proto_conn ["target_port"],me)
-                connectors.append (connector)
-            
-        elif proto_conn ["dir"] == enumThrough:
-            connector.direction = "through"
-            connector.sender = Sender (me.name,me,proto_conn ["source_port"])
-            connector.receiver = Receiver (me.name,container.outq,proto_conn ["target_port"],me)
-            connectors.append (connector)
-        
-    
-    container.connections = connectors
-    return container
-    container.connections = connectors
-    return container
 
 def container_handler (container,message):
     route (container=container,from_component=container,message=message)
@@ -561,7 +506,6 @@ def route (container,from_component,message):
             attempt_tick (container,child,message)
         
         was_sent =  True
-        was_sent =  True
     else:
         fromname = ""
         if (not (is_self (from_component,container))):
@@ -597,7 +541,6 @@ def any_child_ready (container):
             return  True
         
     
-    return  False
     return  False
 
 def child_is_ready (eh):
@@ -724,8 +667,6 @@ def dump_registry (reg):
     
     print ("***************")
     print ()
-    print ("***************")
-    print ()
 
 def print_stats (reg):
     print (f"registry statistics: {reg.stats}")
@@ -847,7 +788,6 @@ def spaces (n):
         s = s+" "
     
     return s
-    return s
 
 def set_active (eh):
     eh.state = "active"
@@ -861,7 +801,6 @@ def fetch_first_output (eh,port):
             return msg.datum
         
     
-    return  None
     return  None
 
 def print_specific_output (eh,port="",stderr= False):
@@ -1157,9 +1096,6 @@ def initialize_component_palette (root_project,root_0D,diagram_source_files,proj
     initialize_stock_components (reg)
     project_specific_components_subroutine (root_project,root_0D,reg)
     return reg
-    initialize_stock_components (reg)
-    project_specific_components_subroutine (root_project,root_0D,reg)
-    return reg
 
 def print_error_maybe (main_container):
     error_port = "✗"
@@ -1192,13 +1128,6 @@ def build_hierarchy (c):
     for i in range(c.depth):
         indent = indent+"  "
     
-    return f"\n{indent}({c.name}{s})"
-    return f"\n{indent}({c.name}{s})"
-    indent = ""
-    for i in range(c.depth):
-        indent = indent+"  "
-    
-    return f"\n{indent}({c.name}{s})"
     return f"\n{indent}({c.name}{s})"
 
 def dump_connections (c):
