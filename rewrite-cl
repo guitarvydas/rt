@@ -1,3 +1,5 @@
+% parameter FunctionName
+
 % rewrite
 
 Main [ TopLevel+] = ‛«TopLevel»’
@@ -10,119 +12,121 @@ TopLevel_import [ Import] =‛«Import»’
 kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e] = ‛\n(defparameter «lval» «e»)’
 Defconst [ __ lval _eq e] = ‛\n(defconstant «lval» «e»)’
-Defn [ _4 ident Formals StatementBlock] = ‛\n(defun «ident» «Formals»«StatementBlock»)’
+Defn [ _4 ident Formals StatementBlock] =  
+    ⎡ FunctionName=‛«ident»’
+        ‛\n(defun «ident» «Formals»«StatementBlock»)’
+    ⎦
 Defclass [ _6 ident _7 Definit _8] = ‛\n(defclass «ident»:⤷\n«Definit»)⤶\n’
 Import [ _10 ident] = ‛\nimport «ident»’
 StatementBlock [ _11 Statement _12] = ‛⤷\n(progn⤷\n«Statement»)⤶⤶\n’
 Definit [ _14 _15 _17 _18 ident formals* _20 _21 InitStatement+ _22] = ‛(defun __init__ «formals»⤷\n«InitStatement»)⤶\n’
 
-Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛«scope»’
-CommaIdent [_comma ident] = ‛ «ident»’
-Rec_Statement_if [ IfStatement scope?] =‛«IfStatement»«scope»’
-Rec_Statement_pass [ _27 scope?] =‛\n«scope»’
-Rec_Statement_return [ _29 ReturnExp scope?] =‛\nreturn «ReturnExp»«scope»’
-Rec_Statement_for [ ForStatement scope?] =‛«ForStatement»«scope»«scope»’
-Rec_Statement_while [ WhileStatement scope?] =‛«WhileStatement»«scope»’
-Rec_Statement_try [ TryStatement scope?] =‛«TryStatement»«scope»’
-Rec_Statement_assignment [ Assignment scope?] =‛«Assignment»«scope»’
+Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
+CommaIdent [_comma ident] = ‛, «ident»’
+Rec_Statement_if [ IfStatement] =‛«IfStatement»’
+Rec_Statement_pass [ _27 scope?] =‛\npass«scope»’
+Rec_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
+Rec_Statement_for [ ForStatement] =‛«ForStatement»’
+Rec_Statement_while [ WhileStatement] =‛«WhileStatement»’
+Rec_Statement_try [ TryStatement] =‛«TryStatement»’
+Rec_Statement_assignment [ Assignment] =‛«Assignment»’
 Rec_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
+Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛«scope»’
+
+CommaIdent [_comma ident] = ‛ «ident»’
 InitStatement [ _31 _32 ident _33 Exp] = ‛\nself.«ident» = «Exp»’
-IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»’
+IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛elif «Exp»:«StatementBlock»’
 ElseStatement [ _39 StatementBlock] = ‛else:«StatementBlock»’
-ForStatement [ _41 ident _43 Exp StatementBlock] = ‛\nfor «ident» in «Exp»:«StatementBlock»’
-WhileStatement [ _45 Exp StatementBlock] = ‛\nwhile «Exp»:«StatementBlock»’
-TryStatement [ _47 StatementBlock ExceptBlock+] = ‛\ntry:\n«StatementBlock»«ExceptBlock»’
+ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor «ident» in «Exp»:«StatementBlock»«rec’
+WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile «Exp»:«StatementBlock»«rec»’
+TryStatement [ _47 StatementBlock ExceptBlock+ rec?] = ‛\ntry:\n«StatementBlock»«ExceptBlock»«rec»’
 
 ExceptBlock_as [ _49 Exp _51 ident StatementBlock] =‛except «Exp» as «ident»:«StatementBlock»’
 ExceptBlock_basic [ _53 ident StatementBlock] =‛except «ident»:«StatementBlock»’
 
-Assignment_pluseq [ Lval _54 Exp] = ‛\n(inc «Lval» «Exp»)’
-Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp] =‛\n(multiple-value-bind («Lval1» «Lval2»)⤷\n«Exp»⤶)’
-Assignment_single [ Lval _59 Exp] =‛\n(let («Lval» = «Exp»’ *******
+Assignment_pluseq [ Lval _54 Exp rec?] = ‛\n(inc «Lval» «Exp»)«rec»’
+Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp rec?] =‛\n(multiple-value-bind («Lval1» «Lval2»)⤷⤷\n«Exp»⤶«rec»⤶)’
+Assignment_single [ Lval _59 Exp rec?] =‛\n(let («Lval» = «Exp»)⤷«rec»⤶)’
 CommaLval [_comma Lval] = ‛, «Lval»’
 
-ReturnExp_multiple [ _60 Exp1 Exp2+ _62] =‛[«Exp1»«Exp2»]’
-ReturnExp_single [ Exp] =‛«Exp»’
-CommaExp [_comma e] = ‛, «e»’
+ReturnExp_multiple [ _60 Exp1 Exp2+ _62 rec?] =‛\n(return-from ⟪FunctionName⟫ (values «Exp1» «Exp2»))«rec»’
+ReturnExp_single [ Exp rec?] =‛\n(return-from ⟪FunctionName⟫ «Exp»)«rec»’
+CommaExp [_comma e] = ‛ «e»’
 Exp [ BooleanExp] = ‛«BooleanExp»’
 
-BooleanExp_boolop [ BooleanExp boolOp BooleanNot] =‛«BooleanExp»«boolOp»«BooleanNot»’
+BooleanExp_boolop [ BooleanExp boolOp BooleanNot] =‛(«boolOp» «BooleanExp» «BooleanNot»)’
 BooleanExp_basic [ BooleanNot] =‛«BooleanNot»’
 
-BooleanNot_not [ _64 BooleanExp] =‛not «BooleanExp»’
+BooleanNot_not [ _64 BooleanExp] =‛(not «BooleanExp»)’
 BooleanNot_basic [ AddExp] =‛«AddExp»’
 
-AddExp_plus [ AddExp _65 MulExp] =‛«AddExp»«_65»«MulExp»’
-AddExp_minus [ AddExp _66 MulExp] =‛«AddExp»«_66»«MulExp»’
+AddExp_plus [ AddExp _65 MulExp] =‛(+ «AddExp» «MulExp»)’
+AddExp_minus [ AddExp _66 MulExp] =‛(- «AddExp» «MulExp»)’
 AddExp_basic [ MulExp] =‛«MulExp»’
 
-MulExp_times [ MulExp _67 ExpExp] =‛«MulExp»«_67»«ExpExp»’
-MulExp_divide [ MulExp _68 ExpExp] =‛«MulExp»«_68»«ExpExp»’
+MulExp_times [ MulExp _67 ExpExp] =‛(* «MulExp» «ExpExp»)’
+MulExp_divide [ MulExp _68 ExpExp] =‛(/ «MulExp» «ExpExp»)’
 MulExp_basic [ ExpExp] =‛«ExpExp»’
 
-ExpExp_power [ Primary _69 ExpExp] =‛«Primary»«_69»«ExpExp»’
+ExpExp_power [ Primary _69 ExpExp] =‛(expt «Primary» «ExpExp»)’
 ExpExp_basic [ Primary] =‛«Primary»’
 
-Primary_lookupident [p _at key] = ‛«p» ["«key»"]’
-Primary_lookup [p _at key] = ‛«p» [«key»]’
-Primary_methodcall [p _dot f actuals] = ‛«p».«f» «actuals»’
-Primary_field [p _dot key] = ‛«p».«key»’ 
-Primary_index [p lb e rb] = ‛«p» [«e»]’ 
-Primary_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’
-Primary_call [p actuals] = ‛«p» «actuals»’
+Primary_lookupident [p _at key] = ‛(gethash '«key» «p»)’
+Primary_lookup [p _at key] = ‛(gethash «key» «p»)’
+Primary_methodcall [p _dot f actuals] = ‛(funcall (slot-value '«f» «p») «actuals»)’
+Primary_field [p _dot key] = ‛(slot-value «key» «p»)’ 
+Primary_index [p lb e rb] = ‛(aref «p» «e»)’ 
+Primary_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
+Primary_call [p actuals] = ‛(«p» «actuals»)’
 
 
-
-Primary_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’
-Primary_emptylistconst [ _72 _73] =‛«_72»«_73»’
-Primary_listconst [ _74 PrimaryComma+ _75] =‛«_74»«PrimaryComma»«_75»’
-Primary_emptydict [ _76 _77] =‛«_76»«_77»’
-Primary_dict [ _78 PairComma+ _79] =‛«_78»«PairComma»«_79»’
-Primary_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
-Primary_fresh [ _83 _84 ident _85] =‛ «ident» ()’
-Primary_car [ _83 _84 e _85 ] =‛ «e»[0] ’
-Primary_cdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
-Primary_stringcdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
-Primary_nthargvcdr [ _83 lb n rb ] =‛ sys.argv[«n»:] ’
-Primary_nthargv [ _83 _84 n _85 ] =‛ sys.argv[«n»] ’
-Primary_cdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
-Primary_pos [ _86 Primary ] =‛ +«Primary»’
-Primary_neg [ _87 Primary ] =‛ -«Primary»’
-Primary_phi [ phi] =‛ None’
-Primary_true [ _88] =‛ True’
-Primary_false [ _89] =‛ False’
-Primary_range [ _91 _92 Exp _93] =‛«_91»«_92»«Exp»«_93»’
+Primary_paren [ _70 Exp _71] =‛ «Exp»’
+Primary_emptylistconst [ _72 _73] =‛ nil’
+Primary_listconst [ _74 PrimaryComma+ _75] =‛(list «PrimaryComma»)’
+Primary_emptydict [ _76 _77] =‛(make-hash-table :test :equal)’
+Primary_dict [ _78 PairComma+ _79] = ‛(fresh-hash (list «PairComma»))’
+Primary_lambda [ _80 Formals? _81 Exp] =‛#'(lambda «Formals» «Exp»)’
+Primary_fresh [ _83 _84 ident _85] =‛(fresh-«ident»)’
+Primary_car [ _83 _84 e _85 ] =‛(car «e»)’
+Primary_cdr [ _83 _84 e _85 ] =‛(cdr «e»)’
+Primary_stringcdr [ _83 _84 e _85 ] =‛(subseq «e» 1)’
+*****
+Primary_nthargvcdr [ _83 lb n rb ] =‛(nthcdr *argv* «n»)’
+Primary_nthargv [ _83 _84 n _85 ] =‛(nth *argv* «n»)’
+Primary_pos [ _86 Primary ] =‛(+ «Primary» 0)’
+Primary_neg [ _87 Primary ] =‛(- 0 «Primary»)’
+Primary_phi [ phi] =‛ nil’
+Primary_true [ _88] =‛ t’
+Primary_false [ _89] =‛ nil’
+Primary_range [ _91 _92 Exp _93] =‛(loop for n from 0 below «Exp» by 1 collect n)’
 Primary_string [ string] =‛«string»’
 Primary_number [ number] =‛«number»’
 Primary_ident [ ident ] =‛«ident»’
-PrimaryComma [ Primary _94?] = ‛«Primary»«_94»’
-PairComma [ Pair _95?] = ‛«Pair»«_95»’
+PrimaryComma [ Primary _94?] = ‛ «Primary»’
+PairComma [ Pair _95?] = ‛ «Pair»’
 Lval [ Exp ] = ‛«Exp»’
 keyword [ _144] = ‛«_144»’
 ident [ identHead identTail*] = ‛«identHead»«identTail»’
 identHead [ _146] = ‛«_146»’
 identTail [ _147] = ‛«_147»’
 
-Formals_noformals [ _148 _149] =‛«_148»«_149»’
-Formals_withformals [ _150 Formal CommaFormal* _151] =‛«_150»«Formal»«CommaFormal»«_151»’
-LambdaFormals_noformals [ _148 _149] =‛’
-LambdaFormals_withformals [ _150 Formal CommaFormal* _151] =‛«Formal»«CommaFormal»’
+Formals_noformals [ _148 _149] =‛()’
+Formals_withformals [ _150 Formal CommaFormal* _151] =‛(«Formal»«CommaFormal»)’
+LambdaFormals_noformals [ _148 _149] =‛()’
+LambdaFormals_withformals [ _150 Formal CommaFormal* _151] =‛(«Formal»«CommaFormal»)’
 Formal [ ident  _152 Exp?] = ‛«ident»«_152»«Exp»’
-CommaFormal [ _153 Formal] = ‛«_153»«Formal»’
+CommaFormal [ _153 Formal] = ‛ «Formal»’
 
-Actuals_noactuals [ _154 _155] =‛«_154»«_155»’
-Actuals_actuals [ _156 Actual CommaActual* _157] =‛«_156»«Actual»«CommaActual»«_157»’
-Actual [ ParamName? Exp] = ‛«ParamName»«Exp»’
-CommaActual [ _158 Actual] = ‛«_158»«Actual»’
-ParamName [ ident _159] = ‛«ident»«_159»’
+Actuals_noactuals [ _154 _155] = ‛’
+Actuals_actuals [ _156 Actual CommaActual* _157] =‛«Actual»«CommaActual»’
+Actual [ ParamName? Exp] = ‛ «ParamName»«Exp»’
+CommaActual [ _158 Actual] = ‛ «Actual»’
+ParamName [ ident _159] = ‛’
 
-number_fract [ num* _160 den+] =‛«num»«_160»«den»’
+number_fract [ num* _160 den+] =‛«num».«den»’
 number_whole [ digit+] =‛«digit»’
-Pair [ string _161 Exp _162?] = ‛«string»«_161»«Exp»«_162»’
-
-OffsetRef [ _163 ident] = ‛«_163»«ident»’
-
+Pair [ string _161 Exp _162?] = ‛(«string» . «Exp»)’
 
 boolOp [ _191] = ‛ «_191» ’
 phi [ _192] = ‛ None’

@@ -120,9 +120,6 @@ number_fract [ num* _160 den+] =‛«num»«_160»«den»’
 number_whole [ digit+] =‛«digit»’
 Pair [ string _161 Exp _162?] = ‛«string»«_161»«Exp»«_162»’
 
-OffsetRef [ _163 ident] = ‛«_163»«ident»’
-
-
 boolOp [ _191] = ‛ «_191» ’
 phi [ _192] = ‛ None’
 

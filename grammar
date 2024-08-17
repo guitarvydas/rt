@@ -22,40 +22,40 @@
 
    Rec_Statement =
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
-     | IfStatement Rec_Statement? -- if
+     | IfStatement  -- if
      | kw<"pass"> Rec_Statement? -- pass
-     | kw<"return"> ReturnExp Rec_Statement? -- return
-     | ForStatement Rec_Statement? -- for
-     | WhileStatement Rec_Statement? -- while
-     | TryStatement Rec_Statement? -- try
-     | Assignment Rec_Statement? -- assignment
+     | kw<"return"> ReturnExp -- return
+     | ForStatement -- for
+     | WhileStatement  -- while
+     | TryStatement -- try
+     | Assignment -- assignment
      | Lval Rec_Statement? -- call
    CommaIdent = "," ident
 
    InitStatement = kw<"self"> "." ident "=" Exp
 
-   IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement?
+   IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
    ElseStatement = kw<"else"> StatementBlock
 
-   ForStatement = kw<"for"> ident kw<"in"> Exp StatementBlock
-   WhileStatement = kw<"while"> Exp StatementBlock
+   ForStatement = kw<"for"> ident kw<"in"> Exp StatementBlock Rec_Statement?
+   WhileStatement = kw<"while"> Exp StatementBlock Rec_Statement?
 
-   TryStatement = kw<"try"> StatementBlock ExceptBlock+
+   TryStatement = kw<"try"> StatementBlock ExceptBlock+ Rec_Statement?
    ExceptBlock =
      | kw<"except"> Exp kw<"as"> ident StatementBlock -- as
      | kw<"except"> ident StatementBlock -- basic
    
    Assignment = 
-     | Lval "+=" Exp -- pluseq
-     | "[" Lval CommaLval+ "]" "=" Exp -- multiple
-     | Lval "=" Exp -- single
+     | Lval "+=" Exp Rec_Statement? -- pluseq
+     | "[" Lval CommaLval+ "]" "=" Exp Rec_Statement? -- multiple
+     | Lval "=" Exp Rec_Statement? -- single
 
    CommaLval = "," Lval
 
     ReturnExp =
-      | "[" Exp CommaExp+ "]" -- multiple
-      | Exp -- single
+      | "[" Exp CommaExp+ "]" Rec_Statement? -- multiple
+      | Exp Rec_Statement? -- single
 
     CommaExp = "," Exp
     
@@ -188,8 +188,6 @@
 
     Pair = string ":" Exp ","?
   
-  OffsetRef = "." ident
-
 
   boolOp = ("==" | "!=" | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">) 
   phi = "ϕ"
