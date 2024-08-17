@@ -1,20 +1,20 @@
 #	'ensure that formatted text option in draw.io is disabled everywhere'
 
-#SRC=rt0d.rt
-SRC=test.rt
+SRC=rt0d.rt
+#SRC=test.rt
 D2J=./das2json/mac/das2json
 
-dev: commonlisp
+dev: python
 
 commonlisp: 0D2cl.mjs support.mjs
 	${D2J} cl-t2t.drawio
 	${D2J} 0D/python/std/transpile.drawio
 	python3 main.py . 0D/python ${SRC} main cl-t2t.drawio.json transpile.drawio.json >rtcl0d.lisp
 
-python: 0D2py.mjs support.mjs
+python: 0D2py.mjs support.mjs t2t.mjs
 	${D2J} py-t2t.drawio
 	${D2J} 0D/python/std/transpile.drawio
-	python3 main.py . 0D/python rt0d.rt main py-t2t.drawio.json transpile.drawio.json >rtpy0d.py
+	python3 main.py . 0D/python ${SRC} main py-t2t.drawio.json transpile.drawio.json >rtpy0d.py
 	python3 rtpy0d.py
 
 regress: python

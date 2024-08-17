@@ -1,10 +1,10 @@
 [
     {
-        "file": "cl-t2t.drawio",
+        "file": "py-t2t.drawio",
         "name": "main",
         "children": [
             {
-                "name": "Common Lisp",
+                "name": "Python",
                 "id": 8
             },
             {
@@ -34,7 +34,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "Common Lisp",
+                    "name": "Python",
                     "id": 8
                 },
                 "target_port": ""
@@ -55,7 +55,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "Common Lisp",
+                    "name": "Python",
                     "id": 8
                 },
                 "source_port": "",
@@ -68,7 +68,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "Common Lisp",
+                    "name": "Python",
                     "id": 8
                 },
                 "source_port": "\u2717",
@@ -81,11 +81,11 @@
         ]
     },
     {
-        "file": "cl-t2t.drawio",
-        "name": "rt-cl",
+        "file": "py-t2t.drawio",
+        "name": "rt-python",
         "children": [
             {
-                "name": "$node 0D2cl.mjs",
+                "name": "$node 0D2py.mjs",
                 "id": 5
             }
         ],
@@ -98,7 +98,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$node 0D2cl.mjs",
+                    "name": "$node 0D2py.mjs",
                     "id": 5
                 },
                 "target_port": ""
@@ -106,7 +106,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$node 0D2cl.mjs",
+                    "name": "$node 0D2py.mjs",
                     "id": 5
                 },
                 "source_port": "",
@@ -119,7 +119,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$node 0D2cl.mjs",
+                    "name": "$node 0D2py.mjs",
                     "id": 5
                 },
                 "source_port": "\u2717",
@@ -132,7 +132,178 @@
         ]
     },
     {
-        "file": "cl-t2t.drawio",
+        "file": "py-t2t.drawio",
+        "name": "rt-cl",
+        "children": [
+            {
+                "name": "Transpile",
+                "id": 12
+            },
+            {
+                "name": "'support.js",
+                "id": 15
+            },
+            {
+                "name": "'rt-cl.rwr",
+                "id": 19
+            },
+            {
+                "name": "'rt.ohm",
+                "id": 22
+            },
+            {
+                "name": "'rt",
+                "id": 24
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'rt",
+                    "id": 24
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'rt-cl.rwr",
+                    "id": 19
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'support.js",
+                    "id": 15
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Transpile",
+                    "id": 12
+                },
+                "target_port": "input"
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'rt.ohm",
+                    "id": 22
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'support.js",
+                    "id": 15
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Transpile",
+                    "id": 12
+                },
+                "target_port": "rwrsupportfn"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'rt",
+                    "id": 24
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Transpile",
+                    "id": 12
+                },
+                "target_port": "grammar name"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'rt-cl.rwr",
+                    "id": 19
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Transpile",
+                    "id": 12
+                },
+                "target_port": "rwrfn"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'rt.ohm",
+                    "id": 22
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Transpile",
+                    "id": 12
+                },
+                "target_port": "ohmfn"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Transpile",
+                    "id": 12
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Transpile",
+                    "id": 12
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            }
+        ]
+    },
+    {
+        "file": "py-t2t.drawio",
         "name": "Scrub",
         "children": [
             {
@@ -183,7 +354,7 @@
         ]
     },
     {
-        "file": "cl-t2t.drawio",
+        "file": "py-t2t.drawio",
         "name": "Scrub Lisp",
         "children": [
             {
@@ -234,7 +405,7 @@
         ]
     },
     {
-        "file": "cl-t2t.drawio",
+        "file": "py-t2t.drawio",
         "name": "PYIndent",
         "children": [
             {
@@ -285,7 +456,7 @@
         ]
     },
     {
-        "file": "cl-t2t.drawio",
+        "file": "py-t2t.drawio",
         "name": "LispIndent",
         "children": [
             {
@@ -336,7 +507,7 @@
         ]
     },
     {
-        "file": "cl-t2t.drawio",
+        "file": "py-t2t.drawio",
         "name": "Python",
         "children": [
             {
@@ -344,7 +515,7 @@
                 "id": 3
             },
             {
-                "name": "rt",
+                "name": "rt-python",
                 "id": 7
             },
             {
@@ -361,7 +532,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "rt",
+                    "name": "rt-python",
                     "id": 7
                 },
                 "target_port": ""
@@ -369,7 +540,7 @@
             {
                 "dir": 1,
                 "source": {
-                    "name": "rt",
+                    "name": "rt-python",
                     "id": 7
                 },
                 "source_port": "",
@@ -408,7 +579,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "rt",
+                    "name": "rt-python",
                     "id": 7
                 },
                 "source_port": "\u2717",
@@ -447,7 +618,7 @@
         ]
     },
     {
-        "file": "cl-t2t.drawio",
+        "file": "py-t2t.drawio",
         "name": "Common Lisp",
         "children": [
             {
