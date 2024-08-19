@@ -229,15 +229,9 @@ let TopLevel = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Main");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-TopLevel = _TopLevel.rwr ().join ('')
-
 TopLevel = _TopLevel.rwr ().join ('')
 
 _.set_top (return_value_stack, `${TopLevel}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -249,15 +243,9 @@ let Defvar = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "TopLevel_defvar");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Defvar = _Defvar.rwr ()
-
 Defvar = _Defvar.rwr ()
 
 _.set_top (return_value_stack, `${Defvar}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -269,15 +257,9 @@ let Defconst = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "TopLevel_defconst");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Defconst = _Defconst.rwr ()
-
 Defconst = _Defconst.rwr ()
 
 _.set_top (return_value_stack, `${Defconst}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -289,15 +271,9 @@ let Defn = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "TopLevel_defn");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Defn = _Defn.rwr ()
-
 Defn = _Defn.rwr ()
 
 _.set_top (return_value_stack, `${Defn}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -309,15 +285,9 @@ let Defclass = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "TopLevel_defclass");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Defclass = _Defclass.rwr ()
-
 Defclass = _Defclass.rwr ()
 
 _.set_top (return_value_stack, `${Defclass}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -329,15 +299,9 @@ let Import = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "TopLevel_import");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Import = _Import.rwr ()
-
 Import = _Import.rwr ()
 
 _.set_top (return_value_stack, `${Import}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -349,15 +313,9 @@ let s = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "kw");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-s = _s.rwr ()
-
 s = _s.rwr ()
 
 _.set_top (return_value_stack, `${s}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -372,21 +330,12 @@ let e = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Defvar");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-__ = ___.rwr ()
-lval = _lval.rwr ()
-_eq = __eq.rwr ()
-e = _e.rwr ()
-
 __ = ___.rwr ()
 lval = _lval.rwr ()
 _eq = __eq.rwr ()
 e = _e.rwr ()
 
 _.set_top (return_value_stack, `\n(defparameter ${lval} ${e})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -401,21 +350,12 @@ let e = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Defconst");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-__ = ___.rwr ()
-lval = _lval.rwr ()
-_eq = __eq.rwr ()
-e = _e.rwr ()
-
 __ = ___.rwr ()
 lval = _lval.rwr ()
 _eq = __eq.rwr ()
 e = _e.rwr ()
 
 _.set_top (return_value_stack, `\n(defconstant ${lval} ${e})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -461,23 +401,13 @@ let _8 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Defclass");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
 _6 = __6.rwr ()
 ident = _ident.rwr ()
 _7 = __7.rwr ()
 Definit = _Definit.rwr ()
 _8 = __8.rwr ()
 
-_6 = __6.rwr ()
-ident = _ident.rwr ()
-_7 = __7.rwr ()
-Definit = _Definit.rwr ()
-_8 = __8.rwr ()
-
-_.set_top (return_value_stack, `\n(defclass ${ident}:⤷\n${Definit})⤶\n`);
-
-FunctionName_stack.pop ();
+_.set_top (return_value_stack, `\n(defclass ${ident}:⤷\n${Definit})⤶`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -490,17 +420,10 @@ let ident = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Import");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_10 = __10.rwr ()
-ident = _ident.rwr ()
-
 _10 = __10.rwr ()
 ident = _ident.rwr ()
 
 _.set_top (return_value_stack, `\nimport ${ident}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -514,19 +437,11 @@ let _12 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "StatementBlock");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
 _11 = __11.rwr ()
 Statement = _Statement.rwr ()
 _12 = __12.rwr ()
 
-_11 = __11.rwr ()
-Statement = _Statement.rwr ()
-_12 = __12.rwr ()
-
-_.set_top (return_value_stack, `⤷\n(progn⤷${Statement})⤶⤶\n`);
-
-FunctionName_stack.pop ();
+_.set_top (return_value_stack, `⤷\n(progn⤷${Statement})⤶⤶`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -547,8 +462,6 @@ let _22 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Definit");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
 _14 = __14.rwr ()
 _15 = __15.rwr ()
 _17 = __17.rwr ()
@@ -560,20 +473,7 @@ _21 = __21.rwr ()
 InitStatement = _InitStatement.rwr ().join ('')
 _22 = __22.rwr ()
 
-_14 = __14.rwr ()
-_15 = __15.rwr ()
-_17 = __17.rwr ()
-_18 = __18.rwr ()
-ident = _ident.rwr ()
-formals = _formals.rwr ().join ('')
-_20 = __20.rwr ()
-_21 = __21.rwr ()
-InitStatement = _InitStatement.rwr ().join ('')
-_22 = __22.rwr ()
-
-_.set_top (return_value_stack, `(defun __init__ ${formals}⤷\n${InitStatement})⤶\n`);
-
-FunctionName_stack.pop ();
+_.set_top (return_value_stack, `\n(defun __init__ ${formals}⤷\n${InitStatement})⤶`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -588,21 +488,12 @@ let scope = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Rec_Statement_globals");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_24 = __24.rwr ()
-ident1 = _ident1.rwr ()
-cidents = _cidents.rwr ().join ('')
-scope = _scope.rwr ().join ('')
-
 _24 = __24.rwr ()
 ident1 = _ident1.rwr ()
 cidents = _cidents.rwr ().join ('')
 scope = _scope.rwr ().join ('')
 
 _.set_top (return_value_stack, `\nglobal ${ident1}${cidents}${scope}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -615,17 +506,10 @@ let ident = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "CommaIdent");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_comma = __comma.rwr ()
-ident = _ident.rwr ()
-
 _comma = __comma.rwr ()
 ident = _ident.rwr ()
 
 _.set_top (return_value_stack, `, ${ident}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -637,15 +521,9 @@ let IfStatement = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Rec_Statement_if");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-IfStatement = _IfStatement.rwr ()
-
 IfStatement = _IfStatement.rwr ()
 
 _.set_top (return_value_stack, `${IfStatement}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -658,17 +536,10 @@ let scope = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Rec_Statement_pass");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_27 = __27.rwr ()
-scope = _scope.rwr ().join ('')
-
 _27 = __27.rwr ()
 scope = _scope.rwr ().join ('')
 
 _.set_top (return_value_stack, `\npass${scope}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -681,17 +552,10 @@ let ReturnExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Rec_Statement_return");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_29 = __29.rwr ()
-ReturnExp = _ReturnExp.rwr ()
-
 _29 = __29.rwr ()
 ReturnExp = _ReturnExp.rwr ()
 
 _.set_top (return_value_stack, `\n${ReturnExp}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -703,15 +567,9 @@ let ForStatement = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Rec_Statement_for");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-ForStatement = _ForStatement.rwr ()
-
 ForStatement = _ForStatement.rwr ()
 
 _.set_top (return_value_stack, `${ForStatement}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -723,15 +581,9 @@ let WhileStatement = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Rec_Statement_while");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-WhileStatement = _WhileStatement.rwr ()
-
 WhileStatement = _WhileStatement.rwr ()
 
 _.set_top (return_value_stack, `${WhileStatement}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -743,15 +595,9 @@ let TryStatement = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Rec_Statement_try");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-TryStatement = _TryStatement.rwr ()
-
 TryStatement = _TryStatement.rwr ()
 
 _.set_top (return_value_stack, `${TryStatement}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -763,15 +609,9 @@ let Assignment = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Rec_Statement_assignment");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Assignment = _Assignment.rwr ()
-
 Assignment = _Assignment.rwr ()
 
 _.set_top (return_value_stack, `${Assignment}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -784,17 +624,10 @@ let scope = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Rec_Statement_call");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Lval = _Lval.rwr ()
-scope = _scope.rwr ().join ('')
-
 Lval = _Lval.rwr ()
 scope = _scope.rwr ().join ('')
 
 _.set_top (return_value_stack, `\n${Lval}${scope}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -809,21 +642,12 @@ let scope = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Rec_Statement_globals");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_24 = __24.rwr ()
-ident1 = _ident1.rwr ()
-cidents = _cidents.rwr ().join ('')
-scope = _scope.rwr ().join ('')
-
 _24 = __24.rwr ()
 ident1 = _ident1.rwr ()
 cidents = _cidents.rwr ().join ('')
 scope = _scope.rwr ().join ('')
 
 _.set_top (return_value_stack, `${scope}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -836,17 +660,10 @@ let ident = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "CommaIdent");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_comma = __comma.rwr ()
-ident = _ident.rwr ()
-
 _comma = __comma.rwr ()
 ident = _ident.rwr ()
 
 _.set_top (return_value_stack, ` ${ident}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -862,14 +679,6 @@ let Exp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "InitStatement");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_31 = __31.rwr ()
-_32 = __32.rwr ()
-ident = _ident.rwr ()
-_33 = __33.rwr ()
-Exp = _Exp.rwr ()
-
 _31 = __31.rwr ()
 _32 = __32.rwr ()
 ident = _ident.rwr ()
@@ -877,8 +686,6 @@ _33 = __33.rwr ()
 Exp = _Exp.rwr ()
 
 _.set_top (return_value_stack, `\nself.${ident} = ${Exp}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -895,8 +702,6 @@ let rec = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "IfStatement");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
 _35 = __35.rwr ()
 Exp = _Exp.rwr ()
 StatementBlock = _StatementBlock.rwr ()
@@ -904,16 +709,7 @@ ElifStatement = _ElifStatement.rwr ().join ('')
 ElseStatement = _ElseStatement.rwr ().join ('')
 rec = _rec.rwr ().join ('')
 
-_35 = __35.rwr ()
-Exp = _Exp.rwr ()
-StatementBlock = _StatementBlock.rwr ()
-ElifStatement = _ElifStatement.rwr ().join ('')
-ElseStatement = _ElseStatement.rwr ().join ('')
-rec = _rec.rwr ().join ('')
-
-_.set_top (return_value_stack, `\nif ${Exp}:${StatementBlock}${ElifStatement}${ElseStatement}${rec}`);
-
-FunctionName_stack.pop ();
+_.set_top (return_value_stack, `\n(cond ⤷\n(${Exp} ${StatementBlock})${ElifStatement}${ElseStatement}⤶)${rec}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -927,19 +723,11 @@ let StatementBlock = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ElifStatement");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
 _37 = __37.rwr ()
 Exp = _Exp.rwr ()
 StatementBlock = _StatementBlock.rwr ()
 
-_37 = __37.rwr ()
-Exp = _Exp.rwr ()
-StatementBlock = _StatementBlock.rwr ()
-
-_.set_top (return_value_stack, `elif ${Exp}:${StatementBlock}`);
-
-FunctionName_stack.pop ();
+_.set_top (return_value_stack, `\n(${Exp} ${StatementBlock})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -952,17 +740,10 @@ let StatementBlock = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ElseStatement");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
 _39 = __39.rwr ()
 StatementBlock = _StatementBlock.rwr ()
 
-_39 = __39.rwr ()
-StatementBlock = _StatementBlock.rwr ()
-
-_.set_top (return_value_stack, `else:${StatementBlock}`);
-
-FunctionName_stack.pop ();
+_.set_top (return_value_stack, `\n(t ${StatementBlock})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -979,15 +760,6 @@ let rec = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ForStatement");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_41 = __41.rwr ()
-ident = _ident.rwr ()
-_43 = __43.rwr ()
-Exp = _Exp.rwr ()
-StatementBlock = _StatementBlock.rwr ()
-rec = _rec.rwr ().join ('')
-
 _41 = __41.rwr ()
 ident = _ident.rwr ()
 _43 = __43.rwr ()
@@ -996,8 +768,6 @@ StatementBlock = _StatementBlock.rwr ()
 rec = _rec.rwr ().join ('')
 
 _.set_top (return_value_stack, `\nfor ${ident} in ${Exp}:${StatementBlock}${rec}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1012,21 +782,12 @@ let rec = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "WhileStatement");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_45 = __45.rwr ()
-Exp = _Exp.rwr ()
-StatementBlock = _StatementBlock.rwr ()
-rec = _rec.rwr ().join ('')
-
 _45 = __45.rwr ()
 Exp = _Exp.rwr ()
 StatementBlock = _StatementBlock.rwr ()
 rec = _rec.rwr ().join ('')
 
 _.set_top (return_value_stack, `\nwhile ${Exp}:${StatementBlock}${rec}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1041,21 +802,12 @@ let rec = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "TryStatement");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_47 = __47.rwr ()
-StatementBlock = _StatementBlock.rwr ()
-ExceptBlock = _ExceptBlock.rwr ().join ('')
-rec = _rec.rwr ().join ('')
-
 _47 = __47.rwr ()
 StatementBlock = _StatementBlock.rwr ()
 ExceptBlock = _ExceptBlock.rwr ().join ('')
 rec = _rec.rwr ().join ('')
 
 _.set_top (return_value_stack, `\ntry:\n${StatementBlock}${ExceptBlock}${rec}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1071,14 +823,6 @@ let StatementBlock = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ExceptBlock_as");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_49 = __49.rwr ()
-Exp = _Exp.rwr ()
-_51 = __51.rwr ()
-ident = _ident.rwr ()
-StatementBlock = _StatementBlock.rwr ()
-
 _49 = __49.rwr ()
 Exp = _Exp.rwr ()
 _51 = __51.rwr ()
@@ -1086,8 +830,6 @@ ident = _ident.rwr ()
 StatementBlock = _StatementBlock.rwr ()
 
 _.set_top (return_value_stack, `except ${Exp} as ${ident}:${StatementBlock}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1101,19 +843,11 @@ let StatementBlock = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ExceptBlock_basic");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_53 = __53.rwr ()
-ident = _ident.rwr ()
-StatementBlock = _StatementBlock.rwr ()
-
 _53 = __53.rwr ()
 ident = _ident.rwr ()
 StatementBlock = _StatementBlock.rwr ()
 
 _.set_top (return_value_stack, `except ${ident}:${StatementBlock}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1128,21 +862,12 @@ let rec = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Assignment_pluseq");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Lval = _Lval.rwr ()
-_54 = __54.rwr ()
-Exp = _Exp.rwr ()
-rec = _rec.rwr ().join ('')
-
 Lval = _Lval.rwr ()
 _54 = __54.rwr ()
 Exp = _Exp.rwr ()
 rec = _rec.rwr ().join ('')
 
 _.set_top (return_value_stack, `\n(inc ${Lval} ${Exp})${rec}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1160,16 +885,6 @@ let rec = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Assignment_multiple");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_55 = __55.rwr ()
-Lval1 = _Lval1.rwr ()
-Lval2 = _Lval2.rwr ().join ('')
-_57 = __57.rwr ()
-_58 = __58.rwr ()
-Exp = _Exp.rwr ()
-rec = _rec.rwr ().join ('')
-
 _55 = __55.rwr ()
 Lval1 = _Lval1.rwr ()
 Lval2 = _Lval2.rwr ().join ('')
@@ -1179,8 +894,6 @@ Exp = _Exp.rwr ()
 rec = _rec.rwr ().join ('')
 
 _.set_top (return_value_stack, `\n(multiple-value-bind (${Lval1} ${Lval2})⤷⤷\n${Exp}⤶${rec}⤶)`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1195,21 +908,12 @@ let rec = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Assignment_single");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Lval = _Lval.rwr ()
-_59 = __59.rwr ()
-Exp = _Exp.rwr ()
-rec = _rec.rwr ().join ('')
-
 Lval = _Lval.rwr ()
 _59 = __59.rwr ()
 Exp = _Exp.rwr ()
 rec = _rec.rwr ().join ('')
 
 _.set_top (return_value_stack, `\n(let (${Lval} ${Exp})⤷${rec}⤶)`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1222,17 +926,10 @@ let Lval = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "CommaLval");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_comma = __comma.rwr ()
-Lval = _Lval.rwr ()
-
 _comma = __comma.rwr ()
 Lval = _Lval.rwr ()
 
 _.set_top (return_value_stack, `, ${Lval}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1248,14 +945,6 @@ let rec = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ReturnExp_multiple");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_60 = __60.rwr ()
-Exp1 = _Exp1.rwr ()
-Exp2 = _Exp2.rwr ().join ('')
-_62 = __62.rwr ()
-rec = _rec.rwr ().join ('')
-
 _60 = __60.rwr ()
 Exp1 = _Exp1.rwr ()
 Exp2 = _Exp2.rwr ().join ('')
@@ -1263,8 +952,6 @@ _62 = __62.rwr ()
 rec = _rec.rwr ().join ('')
 
 _.set_top (return_value_stack, `\n(return-from ${_.top (FunctionName_stack)} (values ${Exp1} ${Exp2}))${rec}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1277,17 +964,10 @@ let rec = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ReturnExp_single");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Exp = _Exp.rwr ()
-rec = _rec.rwr ().join ('')
-
 Exp = _Exp.rwr ()
 rec = _rec.rwr ().join ('')
 
 _.set_top (return_value_stack, `\n(return-from ${_.top (FunctionName_stack)} ${Exp})${rec}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1300,17 +980,10 @@ let e = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "CommaExp");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_comma = __comma.rwr ()
-e = _e.rwr ()
-
 _comma = __comma.rwr ()
 e = _e.rwr ()
 
 _.set_top (return_value_stack, ` ${e}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1322,15 +995,9 @@ let BooleanExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Exp");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-BooleanExp = _BooleanExp.rwr ()
-
 BooleanExp = _BooleanExp.rwr ()
 
 _.set_top (return_value_stack, `${BooleanExp}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1344,19 +1011,11 @@ let BooleanNot = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "BooleanExp_boolop");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-BooleanExp = _BooleanExp.rwr ()
-boolOp = _boolOp.rwr ()
-BooleanNot = _BooleanNot.rwr ()
-
 BooleanExp = _BooleanExp.rwr ()
 boolOp = _boolOp.rwr ()
 BooleanNot = _BooleanNot.rwr ()
 
 _.set_top (return_value_stack, `(${boolOp} ${BooleanExp} ${BooleanNot})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1368,15 +1027,9 @@ let BooleanNot = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "BooleanExp_basic");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-BooleanNot = _BooleanNot.rwr ()
-
 BooleanNot = _BooleanNot.rwr ()
 
 _.set_top (return_value_stack, `${BooleanNot}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1389,17 +1042,10 @@ let BooleanExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "BooleanNot_not");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_64 = __64.rwr ()
-BooleanExp = _BooleanExp.rwr ()
-
 _64 = __64.rwr ()
 BooleanExp = _BooleanExp.rwr ()
 
 _.set_top (return_value_stack, `(not ${BooleanExp})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1411,15 +1057,9 @@ let AddExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "BooleanNot_basic");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-AddExp = _AddExp.rwr ()
-
 AddExp = _AddExp.rwr ()
 
 _.set_top (return_value_stack, `${AddExp}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1433,19 +1073,11 @@ let MulExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "AddExp_plus");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-AddExp = _AddExp.rwr ()
-_65 = __65.rwr ()
-MulExp = _MulExp.rwr ()
-
 AddExp = _AddExp.rwr ()
 _65 = __65.rwr ()
 MulExp = _MulExp.rwr ()
 
 _.set_top (return_value_stack, `(+ ${AddExp} ${MulExp})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1459,19 +1091,11 @@ let MulExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "AddExp_minus");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-AddExp = _AddExp.rwr ()
-_66 = __66.rwr ()
-MulExp = _MulExp.rwr ()
-
 AddExp = _AddExp.rwr ()
 _66 = __66.rwr ()
 MulExp = _MulExp.rwr ()
 
 _.set_top (return_value_stack, `(- ${AddExp} ${MulExp})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1483,15 +1107,9 @@ let MulExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "AddExp_basic");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-MulExp = _MulExp.rwr ()
-
 MulExp = _MulExp.rwr ()
 
 _.set_top (return_value_stack, `${MulExp}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1505,19 +1123,11 @@ let ExpExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "MulExp_times");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-MulExp = _MulExp.rwr ()
-_67 = __67.rwr ()
-ExpExp = _ExpExp.rwr ()
-
 MulExp = _MulExp.rwr ()
 _67 = __67.rwr ()
 ExpExp = _ExpExp.rwr ()
 
 _.set_top (return_value_stack, `(* ${MulExp} ${ExpExp})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1531,19 +1141,11 @@ let ExpExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "MulExp_divide");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-MulExp = _MulExp.rwr ()
-_68 = __68.rwr ()
-ExpExp = _ExpExp.rwr ()
-
 MulExp = _MulExp.rwr ()
 _68 = __68.rwr ()
 ExpExp = _ExpExp.rwr ()
 
 _.set_top (return_value_stack, `(/ ${MulExp} ${ExpExp})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1555,15 +1157,9 @@ let ExpExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "MulExp_basic");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-ExpExp = _ExpExp.rwr ()
-
 ExpExp = _ExpExp.rwr ()
 
 _.set_top (return_value_stack, `${ExpExp}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1577,19 +1173,11 @@ let ExpExp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ExpExp_power");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Primary = _Primary.rwr ()
-_69 = __69.rwr ()
-ExpExp = _ExpExp.rwr ()
-
 Primary = _Primary.rwr ()
 _69 = __69.rwr ()
 ExpExp = _ExpExp.rwr ()
 
 _.set_top (return_value_stack, `(expt ${Primary} ${ExpExp})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1601,15 +1189,9 @@ let Primary = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ExpExp_basic");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Primary = _Primary.rwr ()
-
 Primary = _Primary.rwr ()
 
 _.set_top (return_value_stack, `${Primary}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1623,19 +1205,11 @@ let key = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_lookupident");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-p = _p.rwr ()
-_at = __at.rwr ()
-key = _key.rwr ()
-
 p = _p.rwr ()
 _at = __at.rwr ()
 key = _key.rwr ()
 
 _.set_top (return_value_stack, `(gethash '${key} ${p})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1649,19 +1223,11 @@ let key = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_lookup");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-p = _p.rwr ()
-_at = __at.rwr ()
-key = _key.rwr ()
-
 p = _p.rwr ()
 _at = __at.rwr ()
 key = _key.rwr ()
 
 _.set_top (return_value_stack, `(gethash ${key} ${p})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1676,21 +1242,12 @@ let actuals = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_methodcall");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-p = _p.rwr ()
-_dot = __dot.rwr ()
-f = _f.rwr ()
-actuals = _actuals.rwr ()
-
 p = _p.rwr ()
 _dot = __dot.rwr ()
 f = _f.rwr ()
 actuals = _actuals.rwr ()
 
 _.set_top (return_value_stack, `(funcall (slot-value '${f} ${p}) ${actuals})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1704,19 +1261,11 @@ let key = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_field");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
 p = _p.rwr ()
 _dot = __dot.rwr ()
 key = _key.rwr ()
 
-p = _p.rwr ()
-_dot = __dot.rwr ()
-key = _key.rwr ()
-
-_.set_top (return_value_stack, `(slot-value ${key} ${p})`);
-
-FunctionName_stack.pop ();
+_.set_top (return_value_stack, `(slot-value '${key} ${p})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1731,21 +1280,12 @@ let rb = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_index");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-p = _p.rwr ()
-lb = _lb.rwr ()
-e = _e.rwr ()
-rb = _rb.rwr ()
-
 p = _p.rwr ()
 lb = _lb.rwr ()
 e = _e.rwr ()
 rb = _rb.rwr ()
 
 _.set_top (return_value_stack, `(aref ${p} ${e})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1761,14 +1301,6 @@ let rb = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_nthslice");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-p = _p.rwr ()
-lb = _lb.rwr ()
-ds = _ds.rwr ().join ('')
-_colon = __colon.rwr ()
-rb = _rb.rwr ()
-
 p = _p.rwr ()
 lb = _lb.rwr ()
 ds = _ds.rwr ().join ('')
@@ -1776,8 +1308,6 @@ _colon = __colon.rwr ()
 rb = _rb.rwr ()
 
 _.set_top (return_value_stack, `(nthcdr ${ds} ${p})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1790,17 +1320,10 @@ let actuals = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_call");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-p = _p.rwr ()
-actuals = _actuals.rwr ()
-
 p = _p.rwr ()
 actuals = _actuals.rwr ()
 
 _.set_top (return_value_stack, `(${p} ${actuals})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1814,19 +1337,11 @@ let _71 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_paren");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_70 = __70.rwr ()
-Exp = _Exp.rwr ()
-_71 = __71.rwr ()
-
 _70 = __70.rwr ()
 Exp = _Exp.rwr ()
 _71 = __71.rwr ()
 
 _.set_top (return_value_stack, ` ${Exp}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1839,17 +1354,10 @@ let _73 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_emptylistconst");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_72 = __72.rwr ()
-_73 = __73.rwr ()
-
 _72 = __72.rwr ()
 _73 = __73.rwr ()
 
 _.set_top (return_value_stack, ` nil`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1863,19 +1371,11 @@ let _75 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_listconst");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_74 = __74.rwr ()
-PrimaryComma = _PrimaryComma.rwr ().join ('')
-_75 = __75.rwr ()
-
 _74 = __74.rwr ()
 PrimaryComma = _PrimaryComma.rwr ().join ('')
 _75 = __75.rwr ()
 
 _.set_top (return_value_stack, `(list ${PrimaryComma})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1888,17 +1388,10 @@ let _77 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_emptydict");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_76 = __76.rwr ()
-_77 = __77.rwr ()
-
 _76 = __76.rwr ()
 _77 = __77.rwr ()
 
 _.set_top (return_value_stack, `(make-hash-table :test :equal)`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1912,19 +1405,11 @@ let _79 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_dict");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_78 = __78.rwr ()
-PairComma = _PairComma.rwr ().join ('')
-_79 = __79.rwr ()
-
 _78 = __78.rwr ()
 PairComma = _PairComma.rwr ().join ('')
 _79 = __79.rwr ()
 
 _.set_top (return_value_stack, `(fresh-hash (list ${PairComma}))`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1939,21 +1424,12 @@ let Exp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_lambda");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_80 = __80.rwr ()
-Formals = _Formals.rwr ().join ('')
-_81 = __81.rwr ()
-Exp = _Exp.rwr ()
-
 _80 = __80.rwr ()
 Formals = _Formals.rwr ().join ('')
 _81 = __81.rwr ()
 Exp = _Exp.rwr ()
 
 _.set_top (return_value_stack, `#'(lambda ${Formals} ${Exp})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1968,21 +1444,12 @@ let _85 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_fresh");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_83 = __83.rwr ()
-_84 = __84.rwr ()
-ident = _ident.rwr ()
-_85 = __85.rwr ()
-
 _83 = __83.rwr ()
 _84 = __84.rwr ()
 ident = _ident.rwr ()
 _85 = __85.rwr ()
 
 _.set_top (return_value_stack, `(fresh-${ident})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1997,21 +1464,12 @@ let _85 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_car");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_83 = __83.rwr ()
-_84 = __84.rwr ()
-e = _e.rwr ()
-_85 = __85.rwr ()
-
 _83 = __83.rwr ()
 _84 = __84.rwr ()
 e = _e.rwr ()
 _85 = __85.rwr ()
 
 _.set_top (return_value_stack, `(car ${e})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2026,21 +1484,12 @@ let _85 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_cdr");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_83 = __83.rwr ()
-_84 = __84.rwr ()
-e = _e.rwr ()
-_85 = __85.rwr ()
-
 _83 = __83.rwr ()
 _84 = __84.rwr ()
 e = _e.rwr ()
 _85 = __85.rwr ()
 
 _.set_top (return_value_stack, `(cdr ${e})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2055,21 +1504,12 @@ let _85 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_stringcdr");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_83 = __83.rwr ()
-_84 = __84.rwr ()
-e = _e.rwr ()
-_85 = __85.rwr ()
-
 _83 = __83.rwr ()
 _84 = __84.rwr ()
 e = _e.rwr ()
 _85 = __85.rwr ()
 
 _.set_top (return_value_stack, `(subseq ${e} 1)`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2084,21 +1524,12 @@ let rb = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_nthargvcdr");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_83 = __83.rwr ()
-lb = _lb.rwr ()
-n = _n.rwr ()
-rb = _rb.rwr ()
-
 _83 = __83.rwr ()
 lb = _lb.rwr ()
 n = _n.rwr ()
 rb = _rb.rwr ()
 
 _.set_top (return_value_stack, `(nthcdr *argv* ${n})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2113,21 +1544,12 @@ let _85 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_nthargv");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_83 = __83.rwr ()
-_84 = __84.rwr ()
-n = _n.rwr ()
-_85 = __85.rwr ()
-
 _83 = __83.rwr ()
 _84 = __84.rwr ()
 n = _n.rwr ()
 _85 = __85.rwr ()
 
 _.set_top (return_value_stack, `(nth *argv* ${n})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2140,17 +1562,10 @@ let Primary = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_pos");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_86 = __86.rwr ()
-Primary = _Primary.rwr ()
-
 _86 = __86.rwr ()
 Primary = _Primary.rwr ()
 
 _.set_top (return_value_stack, `(+ ${Primary} 0)`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2163,17 +1578,10 @@ let Primary = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_neg");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_87 = __87.rwr ()
-Primary = _Primary.rwr ()
-
 _87 = __87.rwr ()
 Primary = _Primary.rwr ()
 
 _.set_top (return_value_stack, `(- 0 ${Primary})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2185,15 +1593,9 @@ let phi = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_phi");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-phi = _phi.rwr ()
-
 phi = _phi.rwr ()
 
 _.set_top (return_value_stack, ` nil`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2205,15 +1607,9 @@ let _88 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_true");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_88 = __88.rwr ()
-
 _88 = __88.rwr ()
 
 _.set_top (return_value_stack, ` t`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2225,15 +1621,9 @@ let _89 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_false");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_89 = __89.rwr ()
-
 _89 = __89.rwr ()
 
 _.set_top (return_value_stack, ` nil`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2248,21 +1638,12 @@ let _93 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_range");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_91 = __91.rwr ()
-_92 = __92.rwr ()
-Exp = _Exp.rwr ()
-_93 = __93.rwr ()
-
 _91 = __91.rwr ()
 _92 = __92.rwr ()
 Exp = _Exp.rwr ()
 _93 = __93.rwr ()
 
 _.set_top (return_value_stack, `(loop for n from 0 below ${Exp} by 1 collect n)`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2274,15 +1655,9 @@ let string = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_string");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-string = _string.rwr ()
-
 string = _string.rwr ()
 
 _.set_top (return_value_stack, `${string}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2294,15 +1669,9 @@ let number = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_number");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-number = _number.rwr ()
-
 number = _number.rwr ()
 
 _.set_top (return_value_stack, `${number}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2314,15 +1683,9 @@ let ident = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Primary_ident");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-ident = _ident.rwr ()
-
 ident = _ident.rwr ()
 
 _.set_top (return_value_stack, `${ident}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2335,17 +1698,10 @@ let _94 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "PrimaryComma");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Primary = _Primary.rwr ()
-_94 = __94.rwr ().join ('')
-
 Primary = _Primary.rwr ()
 _94 = __94.rwr ().join ('')
 
 _.set_top (return_value_stack, ` ${Primary}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2358,17 +1714,10 @@ let _95 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "PairComma");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Pair = _Pair.rwr ()
-_95 = __95.rwr ().join ('')
-
 Pair = _Pair.rwr ()
 _95 = __95.rwr ().join ('')
 
 _.set_top (return_value_stack, ` ${Pair}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2380,15 +1729,9 @@ let Exp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Lval");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-Exp = _Exp.rwr ()
-
 Exp = _Exp.rwr ()
 
 _.set_top (return_value_stack, `${Exp}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2400,15 +1743,9 @@ let _144 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "keyword");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_144 = __144.rwr ()
-
 _144 = __144.rwr ()
 
 _.set_top (return_value_stack, `${_144}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2421,17 +1758,10 @@ let identTail = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ident");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-identHead = _identHead.rwr ()
-identTail = _identTail.rwr ().join ('')
-
 identHead = _identHead.rwr ()
 identTail = _identTail.rwr ().join ('')
 
 _.set_top (return_value_stack, `${identHead}${identTail}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2443,15 +1773,9 @@ let _146 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "identHead");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_146 = __146.rwr ()
-
 _146 = __146.rwr ()
 
 _.set_top (return_value_stack, `${_146}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2463,15 +1787,9 @@ let _147 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "identTail");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_147 = __147.rwr ()
-
 _147 = __147.rwr ()
 
 _.set_top (return_value_stack, `${_147}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2484,17 +1802,10 @@ let _149 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Formals_noformals");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_148 = __148.rwr ()
-_149 = __149.rwr ()
-
 _148 = __148.rwr ()
 _149 = __149.rwr ()
 
 _.set_top (return_value_stack, `()`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2509,21 +1820,12 @@ let _151 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Formals_withformals");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_150 = __150.rwr ()
-Formal = _Formal.rwr ()
-CommaFormal = _CommaFormal.rwr ().join ('')
-_151 = __151.rwr ()
-
 _150 = __150.rwr ()
 Formal = _Formal.rwr ()
 CommaFormal = _CommaFormal.rwr ().join ('')
 _151 = __151.rwr ()
 
 _.set_top (return_value_stack, `(${Formal}${CommaFormal})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2536,17 +1838,10 @@ let _149 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "LambdaFormals_noformals");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_148 = __148.rwr ()
-_149 = __149.rwr ()
-
 _148 = __148.rwr ()
 _149 = __149.rwr ()
 
 _.set_top (return_value_stack, `()`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2561,21 +1856,12 @@ let _151 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "LambdaFormals_withformals");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_150 = __150.rwr ()
-Formal = _Formal.rwr ()
-CommaFormal = _CommaFormal.rwr ().join ('')
-_151 = __151.rwr ()
-
 _150 = __150.rwr ()
 Formal = _Formal.rwr ()
 CommaFormal = _CommaFormal.rwr ().join ('')
 _151 = __151.rwr ()
 
 _.set_top (return_value_stack, `(${Formal}${CommaFormal})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2589,19 +1875,11 @@ let Exp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Formal");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-ident = _ident.rwr ()
-_152 = __152.rwr ()
-Exp = _Exp.rwr ().join ('')
-
 ident = _ident.rwr ()
 _152 = __152.rwr ()
 Exp = _Exp.rwr ().join ('')
 
 _.set_top (return_value_stack, `${ident}${_152}${Exp}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2614,17 +1892,10 @@ let Formal = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "CommaFormal");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_153 = __153.rwr ()
-Formal = _Formal.rwr ()
-
 _153 = __153.rwr ()
 Formal = _Formal.rwr ()
 
 _.set_top (return_value_stack, ` ${Formal}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2637,17 +1908,10 @@ let _155 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Actuals_noactuals");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_154 = __154.rwr ()
-_155 = __155.rwr ()
-
 _154 = __154.rwr ()
 _155 = __155.rwr ()
 
 _.set_top (return_value_stack, ``);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2662,21 +1926,12 @@ let _157 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Actuals_actuals");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_156 = __156.rwr ()
-Actual = _Actual.rwr ()
-CommaActual = _CommaActual.rwr ().join ('')
-_157 = __157.rwr ()
-
 _156 = __156.rwr ()
 Actual = _Actual.rwr ()
 CommaActual = _CommaActual.rwr ().join ('')
 _157 = __157.rwr ()
 
 _.set_top (return_value_stack, `${Actual}${CommaActual}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2689,17 +1944,10 @@ let Exp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Actual");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-ParamName = _ParamName.rwr ().join ('')
-Exp = _Exp.rwr ()
-
 ParamName = _ParamName.rwr ().join ('')
 Exp = _Exp.rwr ()
 
 _.set_top (return_value_stack, ` ${ParamName}${Exp}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2712,17 +1960,10 @@ let Actual = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "CommaActual");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_158 = __158.rwr ()
-Actual = _Actual.rwr ()
-
 _158 = __158.rwr ()
 Actual = _Actual.rwr ()
 
 _.set_top (return_value_stack, ` ${Actual}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2735,17 +1976,10 @@ let _159 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "ParamName");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-ident = _ident.rwr ()
-_159 = __159.rwr ()
-
 ident = _ident.rwr ()
 _159 = __159.rwr ()
 
 _.set_top (return_value_stack, ``);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2759,19 +1993,11 @@ let den = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "number_fract");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-num = _num.rwr ().join ('')
-_160 = __160.rwr ()
-den = _den.rwr ().join ('')
-
 num = _num.rwr ().join ('')
 _160 = __160.rwr ()
 den = _den.rwr ().join ('')
 
 _.set_top (return_value_stack, `${num}.${den}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2783,15 +2009,9 @@ let digit = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "number_whole");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-digit = _digit.rwr ().join ('')
-
 digit = _digit.rwr ().join ('')
 
 _.set_top (return_value_stack, `${digit}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2806,21 +2026,12 @@ let _162 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Pair");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-string = _string.rwr ()
-_161 = __161.rwr ()
-Exp = _Exp.rwr ()
-_162 = __162.rwr ().join ('')
-
 string = _string.rwr ()
 _161 = __161.rwr ()
 Exp = _Exp.rwr ()
 _162 = __162.rwr ().join ('')
 
 _.set_top (return_value_stack, `(${string} . ${Exp})`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2832,15 +2043,9 @@ let _191 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "boolOp");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_191 = __191.rwr ()
-
 _191 = __191.rwr ()
 
 _.set_top (return_value_stack, ` ${_191} `);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2852,15 +2057,9 @@ let _192 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "phi");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_192 = __192.rwr ()
-
 _192 = __192.rwr ()
 
 _.set_top (return_value_stack, ` nil`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2874,19 +2073,11 @@ let _194 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "string_fdqstring");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_193 = __193.rwr ()
-notdq = _notdq.rwr ().join ('')
-_194 = __194.rwr ()
-
 _193 = __193.rwr ()
 notdq = _notdq.rwr ().join ('')
 _194 = __194.rwr ()
 
 _.set_top (return_value_stack, `${_193}${notdq}${_194}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2900,19 +2091,11 @@ let _196 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "string_fsqstring");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_195 = __195.rwr ()
-notsq = _notsq.rwr ().join ('')
-_196 = __196.rwr ()
-
 _195 = __195.rwr ()
 notsq = _notsq.rwr ().join ('')
 _196 = __196.rwr ()
 
 _.set_top (return_value_stack, `${_195}${notsq}${_196}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2926,19 +2109,11 @@ let _198 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "string_dqstring");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_197 = __197.rwr ()
-notdq = _notdq.rwr ().join ('')
-_198 = __198.rwr ()
-
 _197 = __197.rwr ()
 notdq = _notdq.rwr ().join ('')
 _198 = __198.rwr ()
 
 _.set_top (return_value_stack, `${_197}${notdq}${_198}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2952,19 +2127,11 @@ let _200 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "string_sqstring");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_199 = __199.rwr ()
-notsq = _notsq.rwr ().join ('')
-_200 = __200.rwr ()
-
 _199 = __199.rwr ()
 notsq = _notsq.rwr ().join ('')
 _200 = __200.rwr ()
 
 _.set_top (return_value_stack, `${_199}${notsq}${_200}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2976,15 +2143,9 @@ let any = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "notdq");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-any = _any.rwr ()
-
 any = _any.rwr ()
 
 _.set_top (return_value_stack, `${any}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2996,15 +2157,9 @@ let any = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "notsq");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-any = _any.rwr ()
-
 any = _any.rwr ()
 
 _.set_top (return_value_stack, `${any}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -3018,19 +2173,11 @@ let nl = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "comment");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_203 = __203.rwr ()
-notnl = _notnl.rwr ().join ('')
-nl = _nl.rwr ()
-
 _203 = __203.rwr ()
 notnl = _notnl.rwr ().join ('')
 nl = _nl.rwr ()
 
 _.set_top (return_value_stack, `; ${notnl}${nl}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -3042,15 +2189,9 @@ let _204 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "nl");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-_204 = __204.rwr ()
-
 _204 = __204.rwr ()
 
 _.set_top (return_value_stack, `${_204}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -3062,15 +2203,9 @@ let any = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "notnl");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-any = _any.rwr ()
-
 any = _any.rwr ()
 
 _.set_top (return_value_stack, `${any}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -3082,15 +2217,9 @@ let comment = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "space");
-FunctionName_stack.push (FunctionName_stack [FunctionName_stack.length-1]);
-
-comment = _comment.rwr ()
-
 comment = _comment.rwr ()
 
 _.set_top (return_value_stack, `${comment}`);
-
-FunctionName_stack.pop ();
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

@@ -1,6 +1,4 @@
-defn gensym (s) {
-    global counter
-    name_with_id = f"{s}{subscripted_digit (counter)}"
-    counter += 1
-    return name_with_id
+defclass Message (port, datum) {
+        • port = port
+        • datum = datum
 }

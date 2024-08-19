@@ -18,14 +18,12 @@ def subscripted_digit (n):
 
 class Datum:
     def __init__ (self):
-        
         self.data =  None
         self.clone =  None
         self.reclaim =  None
         self.srepr =  None
         self.kind =  None
         self.raw =  None
-    
 
 def new_datum_string (s):
     d =  Datum ()
@@ -140,10 +138,8 @@ def raw_datum_int (i):
 
 class Message:
     def __init__ (self,port,datum):
-        
         self.port = port
         self.datum = datum
-    
 
 def clone_port (s):
     return clone_string (s)
@@ -398,28 +394,22 @@ def fifo_is_empty (fifo):
 
 class Connector:
     def __init__ (self):
-        
         self.direction =  None
         self.sender =  None
         self.receiver =  None
-    
 
 class Sender:
     def __init__ (self,name,component,port):
-        
         self.name = name
         self.component = component
         self.port = port
-    
 
 class Receiver:
     def __init__ (self,name,queue,port,component):
-        
         self.name = name
         self.queue = queue
         self.port = port
         self.component = component
-    
 
 def sender_eq (s1,s2):
     same_components = (s1.component == s2.component)
@@ -575,17 +565,13 @@ import json
 import sys
 class Component_Registry:
     def __init__ (self):
-        
         self.templates = {}
-    
 
 class Template:
-    def __init__ (self,name="",template_data= None,instantiator= None):
-        
+    def __init__ (self,name,template_data,instantiator):
         self.name = name
         self.template_data = template_data
         self.instantiator = instantiator
-    
 
 def read_and_convert_json_file (filename):
     try:
@@ -716,7 +702,6 @@ import queue
 import sys
 class Eh:
     def __init__ (self):
-        
         self.name = ""
         self.inq = queue.Queue ()
         self.outq = queue.Queue ()
@@ -733,7 +718,6 @@ class Eh:
         self.kind =  None
         self.trace =  False
         self.depth = 0
-    
 
 def make_container (name,owner):
     eh = Eh ()
@@ -861,25 +845,21 @@ def trash_handler (eh,msg):
     pass
 
 class TwoMessages:
-    def __init__ (self,first= None,second= None):
-        
+    def __init__ (self,first,second):
         self.first = first
         self.second = second
-    
 
 class Deracer_Instance_Data:
-    def __init__ (self,state="idle",buffer= None):
-        
+    def __init__ (self,state,buffer):
         self.state = state
         self.buffer = buffer
-    
 
 def reclaim_Buffers_from_heap (inst):
     pass
 
 def deracer_instantiate (reg,owner,name,template_data):
     name_with_id = gensym ("deracer")
-    inst = Deracer_Instance_Data (buffer=TwoMessages ())
+    inst = Deracer_Instance_Data ("idle",TwoMessages ( None, None))
     inst.state = "idle"
     eh = make_leaf (name=name_with_id,owner=owner,instance_data=inst,handler=deracer_handler)
     return eh
@@ -961,9 +941,7 @@ def ensure_string_datum_handler (eh,msg):
 
 class Syncfilewrite_Data:
     def __init__ (self):
-        
         self.filename = ""
-    
 
 def syncfilewrite_instantiate (reg,owner,name,template_data):
     name_with_id = gensym ("syncfilewrite")
@@ -988,11 +966,9 @@ def syncfilewrite_handler (eh,msg):
 
 class StringConcat_Instance_Data:
     def __init__ (self):
-        
         self.buffer1 =  None
         self.buffer2 =  None
         self.count = 0
-    
 
 def stringconcat_instantiate (reg,owner,name,template_data):
     name_with_id = gensym ("stringconcat")
@@ -1171,13 +1147,11 @@ def fakepipename_handler (eh,msg):
 
 class OhmJS_Instance_Data:
     def __init__ (self):
-        
         self.pathname_0D_ =  None
         self.grammar_name =  None
         self.grammar_filename =  None
         self.semantics_filename =  None
         self.s =  None
-    
 
 def ohmjs_instantiate (reg,owner,name,template_data):
     instance_name = gensym ("OhmJS")
@@ -1227,18 +1201,18 @@ def ohmjs_handle (eh,msg):
     
 
 def initialize_stock_components (reg):
-    register_component (reg,Template (name="1then2",instantiator=deracer_instantiate))
-    register_component (reg,Template (name="?",instantiator=probe_instantiate))
-    register_component (reg,Template (name="?A",instantiator=probeA_instantiate))
-    register_component (reg,Template (name="?B",instantiator=probeB_instantiate))
-    register_component (reg,Template (name="?C",instantiator=probeC_instantiate))
-    register_component (reg,Template (name="trash",instantiator=trash_instantiate))
-    register_component (reg,Template (name="Low Level Read Text File",instantiator=low_level_read_text_file_instantiate))
-    register_component (reg,Template (name="Ensure String Datum",instantiator=ensure_string_datum_instantiate))
-    register_component (reg,Template (name="syncfilewrite",instantiator=syncfilewrite_instantiate))
-    register_component (reg,Template (name="stringconcat",instantiator=stringconcat_instantiate))
-    register_component (reg,Template (name="fakepipename",instantiator=fakepipename_instantiate))
-    register_component (reg,Template (name="OhmJS",instantiator=ohmjs_instantiate))
+    register_component (reg,Template ("1then2", None,deracer_instantiate))
+    register_component (reg,Template ("?", None,probe_instantiate))
+    register_component (reg,Template ("?A", None,probeA_instantiate))
+    register_component (reg,Template ("?B", None,probeB_instantiate))
+    register_component (reg,Template ("?C", None,probeC_instantiate))
+    register_component (reg,Template ("trash", None,trash_instantiate))
+    register_component (reg,Template ("Low Level Read Text File", None,low_level_read_text_file_instantiate))
+    register_component (reg,Template ("Ensure String Datum", None,ensure_string_datum_instantiate))
+    register_component (reg,Template ("syncfilewrite", None,syncfilewrite_instantiate))
+    register_component (reg,Template ("stringconcat", None,stringconcat_instantiate))
+    register_component (reg,Template ("fakepipename", None,fakepipename_instantiate))
+    register_component (reg,Template ("OhmJS", None,ohmjs_instantiate))
 
 def run (pregistry,root_project,root_0D,arg,main_container_name,diagram_source_files,injectfn,show_hierarchy= True,show_connections= True,show_traces= True,show_all_outputs= True):
     set_environment (root_project,root_0D)

@@ -15,6 +15,7 @@ python: 0D2py.mjs support.mjs t2t.mjs
 	${D2J} py-t2t.drawio
 	${D2J} 0D/python/std/transpile.drawio
 	python3 main.py . 0D/python ${SRC} main py-t2t.drawio.json transpile.drawio.json >rtpy0d.py
+	cat rtpy0d.py
 	python3 rtpy0d.py
 
 regress: python
