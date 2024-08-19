@@ -13,12 +13,10 @@
    Defvar = kw<"defvar"> Lval "=" Exp
    Defconst = kw<"defconst"> Lval "=" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
-   Defclass = kw<"defclass"> ident ClassFormals "{" Definit "}"
+   Defclass = kw<"defclass"> ident ClassFormals "{" InitStatement+ "}"
    Import = kw<"import"> ident
 
    StatementBlock = "{" Rec_Statement "}"
-
-   Definit = InitStatement+
 
    Rec_Statement =
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals

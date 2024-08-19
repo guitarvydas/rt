@@ -1,8 +1,4 @@
-defclass Datum () {
-      • data = ϕ
-      • clone = ϕ
-      • reclaim = ϕ
-      • srepr = ϕ
-      • kind = ϕ
-      • raw = ϕ
+defclass Message (port, datum) {
+        • port = port
+        • datum = datum
 }

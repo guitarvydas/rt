@@ -14,7 +14,7 @@ Defn [ _4 ident Formals StatementBlock] = ‛\ndef «ident» «Formals»:«State
 Defclass [ _defclass ident Formals lb Definit rb] = ‛\nclass «ident»:⤷\ndef __init__ (self, «Formals»):⤷⤶⤶\n’
 Import [ _10 ident] = ‛\nimport «ident»’
 StatementBlock [ _11 Statement _12] = ‛⤷«Statement»⤶\n’
-Definit [ _14 _15 _17 _18 ident formals* _20 _21 InitStatement+ _22] = ‛def __init__ (self«formals»):⤷\n«InitStatement»⤶\n’
+Definit [InitStatement+ ] = ‛def __init__ (self«formals»):⤷\n«InitStatement»⤶\n’
 
 Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
 CommaIdent [_comma ident] = ‛, «ident»’

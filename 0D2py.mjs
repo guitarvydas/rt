@@ -44,7 +44,7 @@ rt {
      | Lval Rec_Statement? -- call
    CommaIdent = "," ident
 
-   InitStatement = kw<"•"> ident "=" Exp
+   InitStatement = "•" ident "=" Exp
 
    IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
@@ -142,7 +142,7 @@ rt {
       | kw<"defconst">
       | kw<"defn">
       | kw<"defclass">
-      | kw<"•">
+      | "•"
       | kw<"useglobal">
       | kw<"pass">
       | kw<"return">
