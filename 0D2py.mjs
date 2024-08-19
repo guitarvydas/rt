@@ -25,12 +25,12 @@ rt {
    Defvar = kw<"defvar"> Lval "=" Exp
    Defconst = kw<"defconst"> Lval "=" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
-   Defclass = kw<"defclass"> ident "{" Definit "}"
+   Defclass = kw<"defclass"> ident ClassFormals "{" Definit "}"
    Import = kw<"import"> ident
 
    StatementBlock = "{" Rec_Statement "}"
 
-   Definit = kw<"definit"> "(" kw<"self"> ":" ident CommaFormal* ")" "{" InitStatement+ "}"
+   Definit = InitStatement+
 
    Rec_Statement =
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
@@ -44,7 +44,7 @@ rt {
      | Lval Rec_Statement? -- call
    CommaIdent = "," ident
 
-   InitStatement = kw<"self"> "." ident "=" Exp
+   InitStatement = kw<"•"> ident "=" Exp
 
    IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
@@ -142,8 +142,7 @@ rt {
       | kw<"defconst">
       | kw<"defn">
       | kw<"defclass">
-      | kw<"definit">
-      | kw<"self">
+      | kw<"•">
       | kw<"useglobal">
       | kw<"pass">
       | kw<"return">
@@ -176,6 +175,9 @@ rt {
     identTail = ( alnum | identHead )
 
     Formals =
+      | "(" ")" -- noformals
+      | "(" Formal CommaFormal* ")" -- withformals
+    ClassFormals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
     LambdaFormals =
@@ -379,24 +381,26 @@ _.set_top (return_value_stack, `\ndef ${ident} ${Formals}:${StatementBlock}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Defclass : function (__6, _ident, __7, _Definit, __8, ) {
+Defclass : function (__defclass, _ident, _Formals, __7, _Definit, __8, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=_6,ident,_7,Definit,_8
-let _6 = undefined;
+//** argnames=_defclass,ident,Formals,_7,Definit,_8
+let _defclass = undefined;
 let ident = undefined;
+let Formals = undefined;
 let _7 = undefined;
 let Definit = undefined;
 let _8 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Defclass");
-_6 = __6.rwr ()
+_defclass = __defclass.rwr ()
 ident = _ident.rwr ()
+Formals = _Formals.rwr ().join ('')
 _7 = __7.rwr ()
 Definit = _Definit.rwr ()
 _8 = __8.rwr ()
 
-_.set_top (return_value_stack, `\nclass ${ident}:⤷\n${Definit}⤶\n`);
+_.set_top (return_value_stack, `\nclass ${ident}:⤷\ndef __init__ (self, ${Formals}):⤷⤶⤶\n`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1779,6 +1783,42 @@ CommaFormal = _CommaFormal.rwr ().join ('')
 _151 = __151.rwr ()
 
 _.set_top (return_value_stack, `${_150}${Formal}${CommaFormal}${_151}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+ClassFormals_noformals : function (__148, __149, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_148,_149
+let _148 = undefined;
+let _149 = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "ClassFormals_noformals");
+_148 = __148.rwr ()
+_149 = __149.rwr ()
+
+_.set_top (return_value_stack, ``);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+ClassFormals_withformals : function (__150, _Formal, _CommaFormal, __151, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_150,Formal,CommaFormal,_151
+let _150 = undefined;
+let Formal = undefined;
+let CommaFormal = undefined;
+let _151 = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "ClassFormals_withformals");
+_150 = __150.rwr ()
+Formal = _Formal.rwr ()
+CommaFormal = _CommaFormal.rwr ().join ('')
+_151 = __151.rwr ()
+
+_.set_top (return_value_stack, `,${Formal}${CommaFormal}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

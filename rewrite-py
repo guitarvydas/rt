@@ -11,7 +11,7 @@ kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e] = ‛\n«lval» = «e»’
 Defconst [ __ lval _eq e] = ‛\n«lval» = «e»’
 Defn [ _4 ident Formals StatementBlock] = ‛\ndef «ident» «Formals»:«StatementBlock»’
-Defclass [ _6 ident _7 Definit _8] = ‛\nclass «ident»:⤷\n«Definit»⤶\n’
+Defclass [ _defclass ident Formals? _7 Definit _8] = ‛\nclass «ident»:⤷\ndef __init__ (self, «Formals»):⤷⤶⤶\n’
 Import [ _10 ident] = ‛\nimport «ident»’
 StatementBlock [ _11 Statement _12] = ‛⤷«Statement»⤶\n’
 Definit [ _14 _15 _17 _18 ident formals* _20 _21 InitStatement+ _22] = ‛def __init__ (self«formals»):⤷\n«InitStatement»⤶\n’
@@ -105,6 +105,8 @@ identTail [ _147] = ‛«_147»’
 
 Formals_noformals [ _148 _149] =‛«_148»«_149»’
 Formals_withformals [ _150 Formal CommaFormal* _151] =‛«_150»«Formal»«CommaFormal»«_151»’
+ClassFormals_noformals [ _148 _149] =‛’
+ClassFormals_withformals [ _150 Formal CommaFormal* _151] =‛,«Formal»«CommaFormal»’
 LambdaFormals_noformals [ _148 _149] =‛’
 LambdaFormals_withformals [ _150 Formal CommaFormal* _151] =‛«Formal»«CommaFormal»’
 Formal [ ident  _152 Exp?] = ‛«ident»«_152»«Exp»’

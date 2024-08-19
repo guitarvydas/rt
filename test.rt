@@ -1,6 +1,8 @@
-defn gensym (s) {
-    global counter
-    name_with_id = f"{s}{subscripted_digit (counter)}"
-    counter += 1
-    return name_with_id
+defclass Datum () {
+      • data = ϕ
+      • clone = ϕ
+      • reclaim = ϕ
+      • srepr = ϕ
+      • kind = ϕ
+      • raw = ϕ
 }

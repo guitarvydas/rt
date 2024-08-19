@@ -13,12 +13,12 @@
    Defvar = kw<"defvar"> Lval "=" Exp
    Defconst = kw<"defconst"> Lval "=" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
-   Defclass = kw<"defclass"> ident "{" Definit "}"
+   Defclass = kw<"defclass"> ident ClassFormals "{" Definit "}"
    Import = kw<"import"> ident
 
    StatementBlock = "{" Rec_Statement "}"
 
-   Definit = kw<"definit"> "(" kw<"self"> ":" ident CommaFormal* ")" "{" InitStatement+ "}"
+   Definit = InitStatement+
 
    Rec_Statement =
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
@@ -32,7 +32,7 @@
      | Lval Rec_Statement? -- call
    CommaIdent = "," ident
 
-   InitStatement = kw<"self"> "." ident "=" Exp
+   InitStatement = "•" ident "=" Exp
 
    IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
@@ -130,8 +130,7 @@
       | kw<"defconst">
       | kw<"defn">
       | kw<"defclass">
-      | kw<"definit">
-      | kw<"self">
+      | "•"
       | kw<"useglobal">
       | kw<"pass">
       | kw<"return">
@@ -164,6 +163,9 @@
     identTail = ( alnum | identHead )
 
     Formals =
+      | "(" ")" -- noformals
+      | "(" Formal CommaFormal* ")" -- withformals
+    ClassFormals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
     LambdaFormals =
