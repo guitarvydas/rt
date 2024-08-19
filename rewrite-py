@@ -11,10 +11,9 @@ kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e] = ‛\n«lval» = «e»’
 Defconst [ __ lval _eq e] = ‛\n«lval» = «e»’
 Defn [ _4 ident Formals StatementBlock] = ‛\ndef «ident» «Formals»:«StatementBlock»’
-Defclass [ _defclass ident Formals lb Definit rb] = ‛\nclass «ident»:⤷\ndef __init__ (self, «Formals»):⤷⤶⤶\n’
+Defclass [ _defclass ident Formals lb init+ rb] = ‛\nclass «ident»:⤷\ndef __init__ (self«Formals»):⤷«init»⤶⤶\n’
 Import [ _10 ident] = ‛\nimport «ident»’
 StatementBlock [ _11 Statement _12] = ‛⤷«Statement»⤶\n’
-Definit [ _14 _15 _17 _18 ident formals* _20 _21 InitStatement+ _22] = ‛def __init__ (self«formals»):⤷\n«InitStatement»⤶\n’
 
 Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
 CommaIdent [_comma ident] = ‛, «ident»’
@@ -26,7 +25,7 @@ Rec_Statement_while [ WhileStatement] =‛«WhileStatement»’
 Rec_Statement_try [ TryStatement] =‛«TryStatement»’
 Rec_Statement_assignment [ Assignment] =‛«Assignment»’
 Rec_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
-InitStatement [ _31 _32 ident _33 Exp] = ‛\nself.«ident» = «Exp»’
+InitStatement [ _mark ident _33 Exp] = ‛\nself.«ident» = «Exp»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛elif «Exp»:«StatementBlock»’
 ElseStatement [ _39 StatementBlock] = ‛else:«StatementBlock»’
