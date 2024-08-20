@@ -294,7 +294,7 @@ Primary_lookup [p _at key] = ‛(gethash «key» «p»)’
 Primary_field [p _dot key] = ‛(cdr (assoc '«key» «p»))’ 
 Primary_index [p lb e rb] = ‛(aref «p» «e»)’ 
 Primary_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
-Primary_identcall [id actuals] = ‛(funcall '«id» «actuals»)’
+Primary_identcall [id actuals] = ‛(«id» «actuals»)’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 
 

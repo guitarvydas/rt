@@ -1324,7 +1324,7 @@ _.set_top (rule_name_stack, "Primary_identcall");
 id = _id.rwr ()
 actuals = _actuals.rwr ()
 
-_.set_top (return_value_stack, `(funcall '${id} ${actuals})`);
+_.set_top (return_value_stack, `(${id} ${actuals})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
