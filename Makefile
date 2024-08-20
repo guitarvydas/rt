@@ -1,10 +1,10 @@
 #	'ensure that formatted text option in draw.io is disabled everywhere'
 
-SRC=rt0d.rt
-#SRC=test.rt
+#SRC=rt0d.rt
+SRC=test.rt
 D2J=./das2json/mac/das2json
 
-dev: commonlisp
+dev: python
 
 commonlisp: 0D2cl.mjs support.mjs
 	${D2J} cl-t2t.drawio

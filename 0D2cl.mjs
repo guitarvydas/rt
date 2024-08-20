@@ -1265,7 +1265,7 @@ _dot = __dot.rwr ()
 f = _f.rwr ()
 actuals = _actuals.rwr ()
 
-_.set_top (return_value_stack, `(funcall (slot-value '${f} ${p}) ${actuals})`);
+_.set_top (return_value_stack, `(funcall (cdr (assoc '${f} ${p})) ${actuals})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1283,7 +1283,7 @@ p = _p.rwr ()
 _dot = __dot.rwr ()
 key = _key.rwr ()
 
-_.set_top (return_value_stack, `(slot-value '${key} ${p})`);
+_.set_top (return_value_stack, `(cdr (assoc '${key} ${p}))`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1341,7 +1341,7 @@ _.set_top (rule_name_stack, "Primary_call");
 p = _p.rwr ()
 actuals = _actuals.rwr ()
 
-_.set_top (return_value_stack, `(${p} ${actuals})`);
+_.set_top (return_value_stack, `(funcall ${p} ${actuals})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

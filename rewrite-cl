@@ -78,11 +78,11 @@ ExpExp_basic [ Primary] =‛«Primary»’
 
 Primary_lookupident [p _at key] = ‛(gethash '«key» «p»)’
 Primary_lookup [p _at key] = ‛(gethash «key» «p»)’
-Primary_methodcall [p _dot f actuals] = ‛(funcall (slot-value '«f» «p») «actuals»)’
-Primary_field [p _dot key] = ‛(slot-value '«key» «p»)’ 
+Primary_methodcall [p _dot f actuals] = ‛(funcall (cdr (assoc '«f» «p»)) «actuals»)’
+Primary_field [p _dot key] = ‛(cdr (assoc '«key» «p»))’ 
 Primary_index [p lb e rb] = ‛(aref «p» «e»)’ 
 Primary_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
-Primary_call [p actuals] = ‛(«p» «actuals»)’
+Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 
 
 Primary_paren [ _70 Exp _71] =‛ «Exp»’
