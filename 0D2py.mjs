@@ -100,6 +100,7 @@ rt {
       | Primary "." ident -- field
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice
+      | ident Actuals -- identcall
       | Primary Actuals -- call
       | Atom -- atom
 
@@ -1233,6 +1234,22 @@ _colon = __colon.rwr ()
 rb = _rb.rwr ()
 
 _.set_top (return_value_stack, `${p} [${ds}:]`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Primary_identcall : function (_id, _actuals, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=id,actuals
+let id = undefined;
+let actuals = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Primary_identcall");
+id = _id.rwr ()
+actuals = _actuals.rwr ()
+
+_.set_top (return_value_stack, `${id} ${actuals}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

@@ -1,0 +1,16 @@
+#|
+defn x () {
+  inst.s = clone_string (msg.datum.srepr ())
+}
+|#
+
+(funcall 'clone_string (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg))))))
+
+
+
+
+#|
+x.y ().z
+x.y.z ()
+|#
+

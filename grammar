@@ -88,6 +88,7 @@
       | Primary "." ident -- field
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice
+      | ident Actuals -- identcall
       | Primary Actuals -- call
       | Atom -- atom
 

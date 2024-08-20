@@ -69,6 +69,7 @@ Primary_lookup [p _at key] = ‛«p» [«key»]’
 Primary_field [p _dot key] = ‛«p».«key»’ 
 Primary_index [p lb e rb] = ‛«p» [«e»]’ 
 Primary_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’
+Primary_identcall [id actuals] = ‛«id» «actuals»’
 Primary_call [p actuals] = ‛«p» «actuals»’
 Primary_atom [a] = ‛«a»’
 

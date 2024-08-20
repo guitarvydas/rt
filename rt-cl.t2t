@@ -85,15 +85,18 @@
     Primary =
       | Primary "@" ident -- lookupident
       | Primary "@" Primary -- lookup
-      | Primary "." Primary Actuals -- methodcall
-      | Primary "." Primary -- field
+      | Primary "." ident -- field
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice
+      | ident Actuals -- identcall
       | Primary Actuals -- call
-      | "(" Exp ")" -- paren
+      | Atom -- atom
+
+    Atom =
       | "[" "]" -- emptylistconst
-      | "[" PrimaryComma+ "]" -- listconst
       | "{" "}" -- emptydict
+      | "(" Exp ")" -- paren
+      | "[" PrimaryComma+ "]" -- listconst
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
@@ -288,34 +291,35 @@ ExpExp_basic [ Primary] =‛«Primary»’
 
 Primary_lookupident [p _at key] = ‛(gethash '«key» «p»)’
 Primary_lookup [p _at key] = ‛(gethash «key» «p»)’
-Primary_methodcall [p _dot f actuals] = ‛(funcall (cdr (assoc '«f» «p»)) «actuals»)’
 Primary_field [p _dot key] = ‛(cdr (assoc '«key» «p»))’ 
 Primary_index [p lb e rb] = ‛(aref «p» «e»)’ 
 Primary_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
+Primary_identcall [id actuals] = ‛(funcall '«id» «actuals»)’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 
 
-Primary_paren [ _70 Exp _71] =‛ «Exp»’
-Primary_emptylistconst [ _72 _73] =‛ nil’
-Primary_listconst [ _74 PrimaryComma+ _75] =‛(list «PrimaryComma»)’
-Primary_emptydict [ _76 _77] =‛(make-hash-table :test :equal)’
-Primary_dict [ _78 PairComma+ _79] = ‛(fresh-hash (list «PairComma»))’
-Primary_lambda [ _80 Formals? _81 Exp] =‛#'(lambda «Formals» «Exp»)’
-Primary_fresh [ _83 _84 ident _85] =‛(fresh-«ident»)’
-Primary_car [ _83 _84 e _85 ] =‛(car «e»)’
-Primary_cdr [ _83 _84 e _85 ] =‛(cdr «e»)’
-Primary_stringcdr [ _83 _84 e _85 ] =‛(subseq «e» 1)’
-Primary_nthargvcdr [ _83 lb n rb ] =‛(nthcdr *argv* «n»)’
-Primary_nthargv [ _83 _84 n _85 ] =‛(nth *argv* «n»)’
-Primary_pos [ _86 Primary ] =‛(+ «Primary» 0)’
-Primary_neg [ _87 Primary ] =‛(- 0 «Primary»)’
-Primary_phi [ phi] =‛ nil’
-Primary_true [ _88] =‛ t’
-Primary_false [ _89] =‛ nil’
-Primary_range [ _91 _92 Exp _93] =‛(loop for n from 0 below «Exp» by 1 collect n)’
-Primary_string [ string] =‛«string»’
-Primary_number [ number] =‛«number»’
-Primary_ident [ ident ] =‛«ident»’
+Atom_emptylistconst [ _72 _73] =‛ nil’
+Atom_emptydict [ _76 _77] =‛(make-hash-table :test :equal)’
+Atom_paren [ _70 Exp _71] =‛ «Exp»’
+Atom_listconst [ _74 PrimaryComma+ _75] =‛(list «PrimaryComma»)’
+Atom_dict [ _78 PairComma+ _79] = ‛(fresh-hash (list «PairComma»))’
+Atom_lambda [ _80 Formals? _81 Exp] =‛#'(lambda «Formals» «Exp»)’
+Atom_fresh [ _83 _84 ident _85] =‛(fresh-«ident»)’
+Atom_car [ _83 _84 e _85 ] =‛(car «e»)’
+Atom_cdr [ _83 _84 e _85 ] =‛(cdr «e»)’
+Atom_nthargvcdr [ _83 lb n rb ] =‛(nthcdr *argv* «n»)’
+Atom_nthargv [ _83 _84 n _85 ] =‛(nth *argv* «n»)’
+Atom_stringcdr [ _83 _84 e _85 ] =‛(subseq «e» 1)’
+Atom_pos [ _86 Primary ] =‛(+ «Primary» 0)’
+Atom_neg [ _87 Primary ] =‛(- 0 «Primary»)’
+Atom_phi [ phi] =‛ nil’
+Atom_true [ _88] =‛ t’
+Atom_false [ _89] =‛ nil’
+Atom_range [ _91 _92 Exp _93] =‛(loop for n from 0 below «Exp» by 1 collect n)’
+Atom_string [ string] =‛«string»’
+Atom_number [ number] =‛«number»’
+Atom_ident [ ident ] =‛«ident»’
+
 PrimaryComma [ Primary _94?] = ‛ «Primary»’
 PairComma [ Pair _95?] = ‛ «Pair»’
 Lval [ Exp ] = ‛«Exp»’
