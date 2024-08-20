@@ -201,7 +201,10 @@ rt {
     Pair = string ":" Exp ","?
   
 
-  boolOp = ("==" | "!=" | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">) 
+  boolOp = (boolEq | boolNeq | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">)
+  boolEq = "=="
+  boolNeq = "!="
+
   phi = "ϕ"
   string =
     | "f\"" notdq* "\"" -- fdqstring

@@ -7,7 +7,7 @@ Main [ TopLevel+] = ‛«TopLevel»’
 TopLevel_defvar [ Defvar] =‛«Defvar»’
 TopLevel_defconst [ Defconst] =‛«Defconst»’
 TopLevel_defn [ Defn] =‛«Defn»’
-TopLevel_defclass [ Defclass] =‛«Defclass»’
+TopLevel_defobj [ Defclass] =‛«Defclass»’
 TopLevel_import [ Import] =‛«Import»’
 kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e] = ‛\n(defparameter «lval» «e»)’
@@ -16,7 +16,7 @@ Defn [ _4 ident Formals StatementBlock] =
     ⎡ FunctionName=‛«ident»’
         ‛\n(defun «ident» «Formals»«StatementBlock»)’
     ⎦
-Defclass [ _defclass ident Formals lb init+ rb] = ‛\n(defclass «ident» ()⤷ (⤷«init»⤶)⤶)’
+Defobj [ _defobj ident Formals lb init+ rb] = ‛\n(defun new-«ident» «Formals»⤷\n(list⤷«init»⤶)⤶)\n’
 Import [ _10 ident] = ‛\nimport «ident»’
 StatementBlock [ _11 Statement _12] = ‛⤷\n(progn⤷«Statement»)⤶⤶’
 
@@ -33,7 +33,9 @@ Rec_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
 Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛«scope»’
 
 CommaIdent [_comma ident] = ‛ «ident»’
-InitStatement [ _mark ident _33 Exp] = ‛\n(«ident» :accessor «ident» :initform «Exp»)’
+
+InitStatement [ _mark ident _33 Exp] = ‛\n(cons '«ident» «Exp»)’
+
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\n(cond ⤷\n(«Exp» «StatementBlock»)«ElifStatement»«ElseStatement»⤶)«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp» «StatementBlock»)’
 ElseStatement [ _39 StatementBlock] = ‛\n(t «StatementBlock»)’
@@ -56,6 +58,8 @@ Exp [ BooleanExp] = ‛«BooleanExp»’
 
 BooleanExp_boolop [ BooleanExp boolOp BooleanNot] =‛(«boolOp» «BooleanExp» «BooleanNot»)’
 BooleanExp_basic [ BooleanNot] =‛«BooleanNot»’
+boolEq [_eq] = ‛equal’
+boolNeq [_neq] = ‛nequal’
 
 BooleanNot_not [ _64 BooleanExp] =‛(not «BooleanExp»)’
 BooleanNot_basic [ AddExp] =‛«AddExp»’
@@ -111,8 +115,8 @@ identTail [ _147] = ‛«_147»’
 
 Formals_noformals [ _148 _149] =‛()’
 Formals_withformals [ _150 Formal CommaFormal* _151] =‛(«Formal»«CommaFormal»)’
-ClassFormals_noformals [ _148 _149] =‛’
-ClassFormals_withformals [ _150 Formal CommaFormal* _151] =‛(«Formal»«CommaFormal»)’
+ObjFormals_noformals [ _148 _149] =‛()’
+ObjFormals_withformals [ _150 Formal CommaFormal* _151] =‛(«Formal»«CommaFormal»)’
 LambdaFormals_noformals [ _148 _149] =‛()’
 LambdaFormals_withformals [ _150 Formal CommaFormal* _151] =‛(«Formal»«CommaFormal»)’
 Formal [ ident  _152 Exp?] = ‛«ident»«_152»«Exp»’

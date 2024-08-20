@@ -20,13 +20,7 @@ defclass Datum:
 
 
 ---- cl ----
-(defclass Datum
-  ((data :accessor data :initform nil)
-   (clone :accessor clone :initform nil)
-   (reclaim :accessor reclaim :initform nil)
-   (srepr :accessor srepr :initform nil)
-   (raw :accessor raw :initform nil)))
-
+(defun new-Datum () (list (cons 'data nil) (cons 'clone nil) (cons 'reclaim nil) (cons srepr nil) (cons kind nil) (cons 'raw nil)))
 
 ------
 
@@ -42,19 +36,8 @@ defclass Sender:
 	self.component = component
 	self.port = port
 
-(defclass Sender
-  ((name :accessor name :initform nil)
-   (component :accessor component :initform nil)
-   (port :accessor port :initform nil)))
-(defmethod :initialize ????
-------
-
-defclass Template (name, template_data, instantiator) {
-    .name = name
-    .template_data = template_data
-    .instantiator = instantiator
-}
-
+(defun new-Sender (name component port)
+  (list (cons 'name name) (cons 'component component) (cons 'port port)))
 
 ------
 
@@ -67,7 +50,11 @@ defclass Template (name, template_data, instantiator) {
 
 “owner.name.srepr () :: "." :: name.srepr ()”
 (format nil "~a.~a" (name owner) name)
---> need pre-pass to convert all f"..." to :: style strings
+*** --> need pre-pass to convert all f"..." to :: style strings
+
+---
+
+*** rewrite x != y --> not (x == y)
 
 ---
 

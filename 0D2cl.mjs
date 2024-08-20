@@ -18,7 +18,7 @@ rt {
     | Defvar -- defvar
     | Defconst -- defconst
     | Defn -- defn
-    | Defclass -- defclass
+    | Defobj -- defobj
     | Import -- import
 
    kw<s> = s ~identTail
@@ -26,7 +26,7 @@ rt {
    Defvar = kw<"defvar"> Lval "=" Exp
    Defconst = kw<"defconst"> Lval "=" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
-   Defclass = kw<"defclass"> ident ClassFormals "{" InitStatement+ "}"
+   Defobj = kw<"defobj"> ident ObjFormals "{" InitStatement+ "}"
    Import = kw<"import"> ident
 
    StatementBlock = "{" Rec_Statement "}"
@@ -140,7 +140,7 @@ rt {
       | kw<"defvar">
       | kw<"defconst">
       | kw<"defn">
-      | kw<"defclass">
+      | kw<"defobj">
       | "•"
       | kw<"useglobal">
       | kw<"pass">
@@ -176,7 +176,7 @@ rt {
     Formals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
-    ClassFormals =
+    ObjFormals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
     LambdaFormals =
@@ -202,7 +202,10 @@ rt {
     Pair = string ":" Exp ","?
   
 
-  boolOp = ("==" | "!=" | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">) 
+  boolOp = (boolEq | boolNeq | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">)
+  boolEq = "=="
+  boolNeq = "!="
+
   phi = "ϕ"
   string =
     | "f\"" notdq* "\"" -- fdqstring
@@ -278,13 +281,13 @@ _.set_top (return_value_stack, `${Defn}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-TopLevel_defclass : function (_Defclass, ) {
+TopLevel_defobj : function (_Defclass, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=Defclass
 let Defclass = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "TopLevel_defclass");
+_.set_top (rule_name_stack, "TopLevel_defobj");
 Defclass = _Defclass.rwr ()
 
 _.set_top (return_value_stack, `${Defclass}`);
@@ -390,10 +393,10 @@ FunctionName_stack.pop ();
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Defclass : function (__defclass, _ident, _Formals, _lb, _init, _rb, ) {
+Defobj : function (__defobj, _ident, _Formals, _lb, _init, _rb, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=_defclass,ident,Formals,lb,init,rb
-let _defclass = undefined;
+//** argnames=_defobj,ident,Formals,lb,init,rb
+let _defobj = undefined;
 let ident = undefined;
 let Formals = undefined;
 let lb = undefined;
@@ -401,15 +404,15 @@ let init = undefined;
 let rb = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Defclass");
-_defclass = __defclass.rwr ()
+_.set_top (rule_name_stack, "Defobj");
+_defobj = __defobj.rwr ()
 ident = _ident.rwr ()
 Formals = _Formals.rwr ()
 lb = _lb.rwr ()
 init = _init.rwr ().join ('')
 rb = _rb.rwr ()
 
-_.set_top (return_value_stack, `\n(defclass ${ident} ()⤷ (⤷${init}⤶)⤶)`);
+_.set_top (return_value_stack, `\n(defun new-${ident} ${Formals}⤷\n(list⤷${init}⤶)⤶)\n`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -653,7 +656,7 @@ ident = _ident.rwr ()
 _33 = __33.rwr ()
 Exp = _Exp.rwr ()
 
-_.set_top (return_value_stack, `\n(${ident} :accessor ${ident} :initform ${Exp})`);
+_.set_top (return_value_stack, `\n(cons '${ident} ${Exp})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -998,6 +1001,34 @@ _.set_top (rule_name_stack, "BooleanExp_basic");
 BooleanNot = _BooleanNot.rwr ()
 
 _.set_top (return_value_stack, `${BooleanNot}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+boolEq : function (__eq, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_eq
+let _eq = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "boolEq");
+_eq = __eq.rwr ()
+
+_.set_top (return_value_stack, `equal`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+boolNeq : function (__neq, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_neq
+let _neq = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "boolNeq");
+_neq = __neq.rwr ()
+
+_.set_top (return_value_stack, `nequal`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1798,23 +1829,23 @@ _.set_top (return_value_stack, `(${Formal}${CommaFormal})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-ClassFormals_noformals : function (__148, __149, ) {
+ObjFormals_noformals : function (__148, __149, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_148,_149
 let _148 = undefined;
 let _149 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "ClassFormals_noformals");
+_.set_top (rule_name_stack, "ObjFormals_noformals");
 _148 = __148.rwr ()
 _149 = __149.rwr ()
 
-_.set_top (return_value_stack, ``);
+_.set_top (return_value_stack, `()`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-ClassFormals_withformals : function (__150, _Formal, _CommaFormal, __151, ) {
+ObjFormals_withformals : function (__150, _Formal, _CommaFormal, __151, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_150,Formal,CommaFormal,_151
 let _150 = undefined;
@@ -1823,7 +1854,7 @@ let CommaFormal = undefined;
 let _151 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "ClassFormals_withformals");
+_.set_top (rule_name_stack, "ObjFormals_withformals");
 _150 = __150.rwr ()
 Formal = _Formal.rwr ()
 CommaFormal = _CommaFormal.rwr ().join ('')
