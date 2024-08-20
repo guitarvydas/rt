@@ -514,7 +514,7 @@
       (slot-value '(handler  child  msg) child)
       (let (after_state (slot-value 'state child))
         
-        (return-from step_child (values ( nequal  ( and  ( equal  before_state "idle") after_state) "idle")  ( nequal  ( and  ( nequal  before_state "idle") after_state) "idle") ( equal  ( and  ( nequal  before_state "idle") after_state) "idle")))))))
+        (return-from step_child (values (not (equal ( and  ( equal  before_state "idle") after_state) "idle"))  (not (equal ( and  (not (equal before_state "idle")) after_state) "idle")) ( equal  ( and  (not (equal before_state "idle")) after_state) "idle")))))))
 (defun save_message (eh msg)
   (progn
     (slot-value '(slot-value '(put  msg) saved_messages) eh)))
@@ -553,7 +553,7 @@
                 (t 
                   (progn
                     (cond 
-                      ( ( nequal  (slot-value 'state child) "idle") 
+                      ( (not (equal (slot-value 'state child) "idle")) 
                         (progn
                           (let (msg (force_tick  container  child))
                             (slot-value '(handler  child  msg) child)
@@ -571,7 +571,7 @@
 (defun attempt_tick (parent eh)
   (progn
     (cond 
-      (( nequal  (slot-value 'state eh) "idle") 
+      ((not (equal (slot-value 'state eh) "idle")) 
         (progn
           (force_tick  parent  eh))))))
 (defun is_tick (msg)
@@ -633,7 +633,7 @@
 (defun child_is_ready (eh)
   (progn
     
-    (return-from child_is_ready ( or  ( or  ( or   (not  (slot-value '(slot-value '(empty ) outq) eh))  (not  (slot-value '(slot-value '(empty ) inq) eh)))  ( nequal  (slot-value 'state eh) "idle"))  (any_child_ready  eh)))))
+    (return-from child_is_ready ( or  ( or  ( or   (not  (slot-value '(slot-value '(empty ) outq) eh))  (not  (slot-value '(slot-value '(empty ) inq) eh)))  (not (equal (slot-value 'state eh) "idle")))  (any_child_ready  eh)))))
 (defun print_routing_trace (eh)
   (progn
     (print  (routing_trace_all  eh))))
@@ -741,7 +741,7 @@ import sys
                       (let (owner_name "")
                         (let (instance_name f"{template_name}")
                           (cond 
-                            (( nequal   nil owner) 
+                            ((not (equal  nil owner)) 
                               (progn
                                 (let (owner_name (slot-value 'name owner))
                                   (let (instance_name f"{owner_name}.{template_name}")))))
@@ -788,7 +788,7 @@ import sys
     (defun generate_shell_components (reg container_list)
       (progn
         (cond 
-          (( nequal   nil container_list) 
+          ((not (equal  nil container_list)) 
             (progn
               for diagram in container_list:
               (progn
@@ -822,7 +822,7 @@ import sys
             ((not  ( equal  (slot-value 'returncode ret) 0)) 
               (progn
                 (cond 
-                  (( nequal  (slot-value 'stderr ret)  nil) 
+                  ((not (equal (slot-value 'stderr ret)  nil)) 
                     (progn
                       
                       (return-from run_command (values ""  (slot-value 'stderr ret)))))
@@ -934,7 +934,7 @@ import sys
       (progn
         (let (datum (fetch_first_output  eh  port))
           (cond 
-            (( nequal  datum  nil) 
+            ((not (equal datum  nil)) 
               (progn
                 (cond 
                   (stderr 
@@ -1077,11 +1077,11 @@ import sys
           (progn
             (let (f  nil)))
           (cond 
-            (( nequal  f  nil) 
+            ((not (equal f  nil)) 
               (progn
                 (let (data (slot-value '(read ) f))
                   (cond 
-                    (( nequal  data  nil) 
+                    ((not (equal data  nil)) 
                       (progn
                         (send_string  eh  ""  data  msg)))
                     (t 
@@ -1130,7 +1130,7 @@ import sys
                 (let (contents (slot-value '(slot-value '(srepr ) datum) msg))
                   (let (f (open  (slot-value 'filename inst)  "w"))
                     (cond 
-                      (( nequal  f  nil) 
+                      ((not (equal f  nil)) 
                         (progn
                           (slot-value '(write  (slot-value '(slot-value '(srepr ) datum) msg)) f)
                           (slot-value '(close ) f)
@@ -1204,7 +1204,7 @@ import sys
             (multiple-value-bind (stdout , stderr)
               (run_command  eh  cmd  s)
               (cond 
-                (( nequal  stderr  nil) 
+                ((not (equal stderr  nil)) 
                   (progn
                     (send_string  eh  "✗"  stderr  msg)))
                 (t 
@@ -1215,11 +1215,11 @@ import sys
         (let (name_with_id (gensym  "strconst"))
           (let (s template_data)
             (cond 
-              (( nequal  root_project "") 
+              ((not (equal root_project "")) 
                 (progn
                   (let (s (slot-value '(sub  "_00_"  root_project  s) re))))))
             (cond 
-              (( nequal  root_0D "") 
+              ((not (equal root_0D "")) 
                 (progn
                   (let (s (slot-value '(sub  "_0D_"  root_0D  s) re))))))
             
@@ -1273,7 +1273,7 @@ import sys
         (let (error_port "✗")
           (let (err (fetch_first_output  main_container  error_port))
             (cond 
-              (( and   ( nequal  err  nil)  ( <  0 (len  (trimws  (slot-value '(srepr ) err))))) 
+              (( and   (not (equal err  nil))  ( <  0 (len  (trimws  (slot-value '(srepr ) err))))) 
                 (progn
                   (print  "___ !!! ERRORS !!! ___")
                   (print_specific_output  main_container  error_port   nil))))))))
@@ -1359,7 +1359,7 @@ import sys
     (defun ohmjs_maybe (eh inst causingMsg)
       (progn
         (cond 
-          (( nequal  ( and  ( nequal  ( and  ( nequal  ( and  ( nequal  ( and  ( nequal   nil (slot-value 'pathname_0D_ inst))  nil) (slot-value 'grammar_name inst))  nil) (slot-value 'grammar_filename inst))  nil) (slot-value 'semantics_filename inst))  nil) (slot-value 's inst)) 
+          ((not (equal ( and  (not (equal ( and  (not (equal ( and  (not (equal ( and  (not (equal  nil (slot-value 'pathname_0D_ inst)))  nil) (slot-value 'grammar_name inst)))  nil) (slot-value 'grammar_filename inst)))  nil) (slot-value 'semantics_filename inst)))  nil) (slot-value 's inst))) 
             (progn
               (let (cmd (list  f"{inst.pathname_0D_}/std/ohmjs.js" f"{inst.grammar_name}" f"{inst.grammar_filename}" f"{inst.semantics_filename}"))
                 (multiple-value-bind (captured_output , err)

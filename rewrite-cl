@@ -56,6 +56,7 @@ ReturnExp_single [ Exp rec?] =‛\n(return-from ⟪FunctionName⟫ «Exp»)«rec
 CommaExp [_comma e] = ‛ «e»’
 Exp [ BooleanExp] = ‛«BooleanExp»’
 
+BooleanExp_boolopneq [ BooleanExp boolOp BooleanNot] =‛(not (equal «BooleanExp» «BooleanNot»))’
 BooleanExp_boolop [ BooleanExp boolOp BooleanNot] =‛(«boolOp» «BooleanExp» «BooleanNot»)’
 BooleanExp_basic [ BooleanNot] =‛«BooleanNot»’
 boolEq [_eq] = ‛equal’

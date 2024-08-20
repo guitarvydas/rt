@@ -73,6 +73,7 @@ rt {
     Exp =  BooleanExp
 
     BooleanExp =
+      | BooleanExp boolNeq BooleanNot -- boolopneq
       | BooleanExp boolOp BooleanNot -- boolop
       | BooleanNot -- basic
 
@@ -969,6 +970,24 @@ _.set_top (rule_name_stack, "Exp");
 BooleanExp = _BooleanExp.rwr ()
 
 _.set_top (return_value_stack, `${BooleanExp}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+BooleanExp_boolopneq : function (_BooleanExp, _boolOp, _BooleanNot, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=BooleanExp,boolOp,BooleanNot
+let BooleanExp = undefined;
+let boolOp = undefined;
+let BooleanNot = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "BooleanExp_boolopneq");
+BooleanExp = _BooleanExp.rwr ()
+boolOp = _boolOp.rwr ()
+BooleanNot = _BooleanNot.rwr ()
+
+_.set_top (return_value_stack, `(not (equal ${BooleanExp} ${BooleanNot}))`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

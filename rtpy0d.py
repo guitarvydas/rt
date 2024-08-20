@@ -437,7 +437,7 @@ def step_child (child,msg):
     before_state = child.state
     child.handler (child,msg)
     after_state = child.state
-    return [before_state == "idle" and after_state != "idle", before_state != "idle" and after_state != "idle", before_state != "idle" and after_state == "idle"]
+    return [before_state == "idle" and after_state!="idle", before_state!="idle" and after_state!="idle", before_state!="idle" and after_state == "idle"]
 
 def save_message (eh,msg):
     eh.saved_messages.put (msg)
@@ -463,7 +463,7 @@ def step_children (container,causingMessage):
                 
                 destroy_message (msg)
             else:
-                if (child.state != "idle"):
+                if (child.state!="idle"):
                     msg = force_tick (container,child)
                     child.handler (child,msg)
                     log_tick (container=container,component=child,in_message=msg)
@@ -482,7 +482,7 @@ def step_children (container,causingMessage):
     
 
 def attempt_tick (parent,eh):
-    if eh.state != "idle":
+    if eh.state!="idle":
         force_tick (parent,eh)
     
 
@@ -534,7 +534,7 @@ def any_child_ready (container):
     return  False
 
 def child_is_ready (eh):
-    return (not (eh.outq.empty ())) or (not (eh.inq.empty ())) or (eh.state != "idle") or (any_child_ready (eh))
+    return (not (eh.outq.empty ())) or (not (eh.inq.empty ())) or (eh.state!="idle") or (any_child_ready (eh))
 
 def print_routing_trace (eh):
     print (routing_trace_all (eh))
@@ -623,7 +623,7 @@ def get_component_instance (reg,full_name,owner):
         else:
             owner_name = ""
             instance_name = f"{template_name}"
-            if  None != owner:
+            if  None!=owner:
                 owner_name = owner.name
                 instance_name = f"{owner_name}.{template_name}"
             else:
@@ -662,7 +662,7 @@ def mangle_name (s):
 
 import subprocess
 def generate_shell_components (reg,container_list):
-    if  None != container_list:
+    if  None!=container_list:
         for diagram in container_list:
             for child_descriptor in diagram ["children"]:
                 if first_char_is (child_descriptor ["name"],"$"):
@@ -689,7 +689,7 @@ def first_char_is (s,c):
 def run_command (eh,cmd,s):
     ret = subprocess.run (cmd,capture_output= True,input=s,encoding='utf_8')
     if not (ret.returncode == 0):
-        if ret.stderr !=  None:
+        if ret.stderr!= None:
             return ["", ret.stderr]
         else:
             return ["", f"error in shell_out {ret.returncode}"]
@@ -789,7 +789,7 @@ def fetch_first_output (eh,port):
 
 def print_specific_output (eh,port="",stderr= False):
     datum = fetch_first_output (eh,port)
-    if datum !=  None:
+    if datum!= None:
         if stderr:
             outf = sys.stderr
         else:
@@ -913,9 +913,9 @@ def low_level_read_text_file_handler (eh,msg):
     except Exception as e:
         f =  None
     
-    if f !=  None:
+    if f!= None:
         data = f.read ()
-        if data !=  None:
+        if data!= None:
             send_string (eh,"",data,msg)
         else:
             emsg = f"read error on file {fname}"
@@ -955,7 +955,7 @@ def syncfilewrite_handler (eh,msg):
     elif "input" == msg.port:
         contents = msg.datum.srepr ()
         f = open (inst.filename,"w")
-        if f !=  None:
+        if f!= None:
             f.write (msg.datum.srepr ())
             f.close ()
             send (eh,"done",new_datum_bang (),msg)
@@ -1017,7 +1017,7 @@ def shell_out_handler (eh,msg):
     cmd = eh.instance_data
     s = msg.datum.srepr ()
     [stdout, stderr] = run_command (eh,cmd,s)
-    if stderr !=  None:
+    if stderr!= None:
         send_string (eh,"✗",stderr,msg)
     else:
         send_string (eh,"",stdout,msg)
@@ -1028,10 +1028,10 @@ def string_constant_instantiate (reg,owner,name,template_data):
     global root_0D
     name_with_id = gensym ("strconst")
     s = template_data
-    if root_project != "":
+    if root_project!="":
         s = re.sub ("_00_",root_project,s)
     
-    if root_0D != "":
+    if root_0D!="":
         s = re.sub ("_0D_",root_0D,s)
     
     return make_leaf (name_with_id,owner,s,string_constant_handler)
@@ -1076,7 +1076,7 @@ def initialize_component_palette (root_project,root_0D,diagram_source_files,proj
 def print_error_maybe (main_container):
     error_port = "✗"
     err = fetch_first_output (main_container,error_port)
-    if (err !=  None) and (0 < len (trimws (err.srepr ()))):
+    if (err!= None) and (0 < len (trimws (err.srepr ()))):
         print ("___ !!! ERRORS !!! ___")
         print_specific_output (main_container,error_port, False)
     
@@ -1159,7 +1159,7 @@ def ohmjs_instantiate (reg,owner,name,template_data):
     return make_leaf (instance_name,owner,inst,ohmjs_handle)
 
 def ohmjs_maybe (eh,inst,causingMsg):
-    if  None != inst.pathname_0D_ and  None != inst.grammar_name and  None != inst.grammar_filename and  None != inst.semantics_filename and  None != inst.s:
+    if  None!=inst.pathname_0D_ and  None!=inst.grammar_name and  None!=inst.grammar_filename and  None!=inst.semantics_filename and  None!=inst.s:
         cmd = [f"{inst.pathname_0D_}/std/ohmjs.js",f"{inst.grammar_name}",f"{inst.grammar_filename}",f"{inst.semantics_filename}"]
         [captured_output, err] = run_command (eh,cmd,inst.s)
         if err ==  None:

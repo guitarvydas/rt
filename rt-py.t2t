@@ -60,6 +60,7 @@
     Exp =  BooleanExp
 
     BooleanExp =
+      | BooleanExp boolNeq BooleanNot -- boolopneq
       | BooleanExp boolOp BooleanNot -- boolop
       | BooleanNot -- basic
 
@@ -255,6 +256,7 @@ ReturnExp_single [ Exp rec?] =‛«Exp»«rec»’
 CommaExp [_comma e] = ‛, «e»’
 Exp [ BooleanExp] = ‛«BooleanExp»’
 
+BooleanExp_boolopneq [ BooleanExp boolOp BooleanNot] =‛«BooleanExp»«boolOp»«BooleanNot»’
 BooleanExp_boolop [ BooleanExp boolOp BooleanNot] =‛«BooleanExp»«boolOp»«BooleanNot»’
 BooleanExp_basic [ BooleanNot] =‛«BooleanNot»’
 

@@ -60,6 +60,7 @@
     Exp =  BooleanExp
 
     BooleanExp =
+      | BooleanExp boolNeq BooleanNot -- boolopneq
       | BooleanExp boolOp BooleanNot -- boolop
       | BooleanNot -- basic
 
