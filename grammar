@@ -5,7 +5,7 @@
     | Defvar -- defvar
     | Defconst -- defconst
     | Defn -- defn
-    | Defclass -- defclass
+    | Defobj -- defobj
     | Import -- import
 
    kw<s> = s ~identTail
@@ -13,7 +13,7 @@
    Defvar = kw<"defvar"> Lval "=" Exp
    Defconst = kw<"defconst"> Lval "=" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
-   Defclass = kw<"defclass"> ident ClassFormals "{" InitStatement+ "}"
+   Defobj = kw<"defobj"> ident ObjFormals "{" InitStatement+ "}"
    Import = kw<"import"> ident
 
    StatementBlock = "{" Rec_Statement "}"
@@ -127,7 +127,7 @@
       | kw<"defvar">
       | kw<"defconst">
       | kw<"defn">
-      | kw<"defclass">
+      | kw<"defobj">
       | "•"
       | kw<"useglobal">
       | kw<"pass">
@@ -163,7 +163,7 @@
     Formals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
-    ClassFormals =
+    ObjFormals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
     LambdaFormals =

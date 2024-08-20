@@ -5,7 +5,7 @@
     | Defvar -- defvar
     | Defconst -- defconst
     | Defn -- defn
-    | Defclass -- defclass
+    | Defobj -- defobj
     | Import -- import
 
    kw<s> = s ~identTail
@@ -13,7 +13,7 @@
    Defvar = kw<"defvar"> Lval "=" Exp
    Defconst = kw<"defconst"> Lval "=" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
-   Defclass = kw<"defclass"> ident ClassFormals "{" InitStatement+ "}"
+   Defobj = kw<"defobj"> ident ObjFormals "{" InitStatement+ "}"
    Import = kw<"import"> ident
 
    StatementBlock = "{" Rec_Statement "}"
@@ -127,7 +127,7 @@
       | kw<"defvar">
       | kw<"defconst">
       | kw<"defn">
-      | kw<"defclass">
+      | kw<"defobj">
       | "•"
       | kw<"useglobal">
       | kw<"pass">
@@ -163,7 +163,7 @@
     Formals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
-    ClassFormals =
+    ObjFormals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
     LambdaFormals =
@@ -211,13 +211,13 @@ Main [ TopLevel+] = ‛«TopLevel»’
 TopLevel_defvar [ Defvar] =‛«Defvar»’
 TopLevel_defconst [ Defconst] =‛«Defconst»’
 TopLevel_defn [ Defn] =‛«Defn»’
-TopLevel_defclass [ Defclass] =‛«Defclass»’
+TopLevel_defobj [ Defobj] =‛«Defobj»’
 TopLevel_import [ Import] =‛«Import»’
 kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e] = ‛\n«lval» = «e»’
 Defconst [ __ lval _eq e] = ‛\n«lval» = «e»’
 Defn [ _4 ident Formals StatementBlock] = ‛\ndef «ident» «Formals»:«StatementBlock»’
-Defclass [ _defclass ident Formals lb init+ rb] = ‛\nclass «ident»:⤷\ndef __init__ (self«Formals»):⤷«init»⤶⤶\n’
+Defobj [ _defobj ident Formals lb init+ rb] = ‛\nclass «ident»:⤷\ndef __init__ (self«Formals»):⤷«init»⤶⤶\n’
 Import [ _10 ident] = ‛\nimport «ident»’
 StatementBlock [ _11 Statement _12] = ‛⤷«Statement»⤶\n’
 
@@ -310,8 +310,8 @@ identTail [ _147] = ‛«_147»’
 
 Formals_noformals [ _148 _149] =‛«_148»«_149»’
 Formals_withformals [ _150 Formal CommaFormal* _151] =‛«_150»«Formal»«CommaFormal»«_151»’
-ClassFormals_noformals [ _148 _149] =‛’
-ClassFormals_withformals [ _150 Formal CommaFormal* _151] =‛,«Formal»«CommaFormal»’
+ObjFormals_noformals [ _148 _149] =‛’
+ObjFormals_withformals [ _150 Formal CommaFormal* _151] =‛,«Formal»«CommaFormal»’
 LambdaFormals_noformals [ _148 _149] =‛’
 LambdaFormals_withformals [ _150 Formal CommaFormal* _151] =‛«Formal»«CommaFormal»’
 Formal [ ident  _152 Exp?] = ‛«ident»«_152»«Exp»’

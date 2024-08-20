@@ -1,4 +1,9 @@
-defclass Message (port, datum) {
+defobj Message (port, datum) {
         • port = port
         • datum = datum
+}
+defobj Sender (name, component, port) {
+        • name = name
+        • component = component # from
+        • port = port # from's port
 }

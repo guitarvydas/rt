@@ -25,7 +25,7 @@ defn subscripted_digit (n) {
   }
 }
 
-defclass Datum () {
+defobj Datum () {
       • data = ϕ
       • clone = ϕ
       • reclaim = ϕ
@@ -172,7 +172,7 @@ defn raw_datum_int (i) {
 #
 # `port` refers to the name of the incoming or outgoing port of this component.
 # `datum` is the data attached to this message.
-defclass Message (port, datum) {
+defobj Message (port, datum) {
         • port = port
         • datum = datum
 }
@@ -561,7 +561,7 @@ defn fifo_is_empty (fifo) {
 # no affect on the default message routing system _ it is there for debugging
 # purposes, or for reading by other tools.
 
-defclass Connector () {
+defobj Connector () {
         • direction = ϕ # down, across, up, through
         • sender = ϕ
         • receiver = ϕ
@@ -570,7 +570,7 @@ defclass Connector () {
 # `Sender` is used to "pattern match" which `Receiver` a message should go to,
 # based on component ID (pointer) and port name.
 
-defclass Sender (name, component, port) {
+defobj Sender (name, component, port) {
         • name = name
         • component = component # from
         • port = port # from's port
@@ -579,7 +579,7 @@ defclass Sender (name, component, port) {
 # `Receiver` is a handle to a destination queue, and a `port` name to assign
 # to incoming messages to this queue.
 
-defclass Receiver (name, queue, port, component) {
+defobj Receiver (name, queue, port, component) {
         • name = name
         • queue = queue # queue (input | output) of receiver
         • port = port # destination port
@@ -762,11 +762,11 @@ import json
 import sys
 
 
-defclass Component_Registry () {
+defobj Component_Registry () {
         • templates = {}
 }
 
-defclass Template (name, template_data, instantiator) {
+defobj Template (name, template_data, instantiator) {
         • name = name
         • template_data = template_data
         • instantiator = instantiator
@@ -924,7 +924,7 @@ import sys
 
 
 # Eh_States :: enum { idle, active }
-defclass Eh () {
+defobj Eh () {
         • name = ""
         • inq = queue.Queue ()
         • outq = queue.Queue ()
@@ -1101,13 +1101,13 @@ defn trash_handler (eh, msg) {
     # to appease dumped_on_floor checker
     pass
 }
-defclass TwoMessages (first, second) {
+defobj TwoMessages (first, second) {
         • first = first
         • second = second
 }
 
 # Deracer_States :: enum { idle, waitingForFirst, waitingForSecond }
-defclass Deracer_Instance_Data (state, buffer) {
+defobj Deracer_Instance_Data (state, buffer) {
         • state=state
         • buffer=buffer
 }
@@ -1196,7 +1196,7 @@ defn ensure_string_datum_handler (eh, msg) {
         send_string (eh, "✗", emsg, msg)}
 }
 
-defclass Syncfilewrite_Data () {
+defobj Syncfilewrite_Data () {
         • filename = ""
 }
 
@@ -1222,7 +1222,7 @@ defn syncfilewrite_handler (eh, msg) {
             send_string (eh, "✗", f"open error on file {inst.filename}", msg)}}
 }
 
-defclass StringConcat_Instance_Data () {
+defobj StringConcat_Instance_Data () {
         • buffer1 = ϕ
         • buffer2 = ϕ
         • count = 0
@@ -1428,7 +1428,7 @@ defn fakepipename_handler (eh, msg) {
     send_string (eh, "", f"/tmp/fakepipe{rand}", msg)
 }
 
-defclass OhmJS_Instance_Data () {
+defobj OhmJS_Instance_Data () {
         • pathname_0D_ = ϕ
         • grammar_name = ϕ
         • grammar_filename = ϕ
