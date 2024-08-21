@@ -21,7 +21,7 @@ pattern =
 defnwithphi = "defn " spaces ident spaces "(" stuff* ")"
 
 stuff =
-  | "⇐ϕ" -- eqphi
+  | "=ϕ" -- eqphi
   | "(" stuff* ")" -- nested
   | ~")" any -- default
   

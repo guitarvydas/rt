@@ -9,7 +9,7 @@ let rule_name_stack = [];
 
 
 const grammar = String.raw`
-remmutate {
+namedarg {
 
 
 main = pattern+
@@ -21,7 +21,8 @@ pattern =
 call = ident spaces "(" stuff* ")"
 
 stuff =
-  | "⇐" -- mutate
+  | "(" stuff* ")" -- nested
+  | "=" -- eq
   | ~")" any -- default
   
 ident = firstc restc*
@@ -98,13 +99,31 @@ _.set_top (return_value_stack, `${id}${_ws2}${lp}${stuff}${rp}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-stuff_mutate : function (_x, ) {
+stuff_nested : function (_lp, _s, _rp, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=lp,s,rp
+let lp = undefined;
+let s = undefined;
+let rp = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "stuff_nested");
+lp = _lp.rwr ()
+s = _s.rwr ().join ('')
+rp = _rp.rwr ()
+
+_.set_top (return_value_stack, `${lp}${s}${rp}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+stuff_eq : function (_x, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=x
 let x = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "stuff_mutate");
+_.set_top (rule_name_stack, "stuff_eq");
 x = _x.rwr ()
 
 _.set_top (return_value_stack, ` ∷ `);

@@ -1,15 +1,14 @@
-% grammar namedarg
+% grammar remmutate
 
 main = pattern+
 
 pattern =
-  | call -- call
+  | defnwithmutate -- defn
   | any -- default
 
-call = ident spaces "(" stuff* ")"
+defnwithmutate = "defn" spaces ident spaces "(" stuff* ")"
 
 stuff =
-  | "(" stuff* ")" -- nested
   | "=" -- eq
   | ~")" any -- default
   
@@ -21,12 +20,11 @@ restc = alnum | "_"
 % rewrite
 main [p+] = ‛«p»’
 
-pattern_call [x] = ‛«x»’
+pattern_defn [d] = ‛«d»’
 pattern_default [x] = ‛«x»’
 
-call [id _ws2 lp stuff* rp] = ‛«id»«_ws2»«lp»«stuff»«rp»’
+defnwithmutate [_defn _ws1 id _ws2 lp stuff* rp] = ‛«_defn»«_ws1»«id»«_ws2»«lp»«stuff»«rp»’
 
-stuff_nested [lp s* rp] = ‛«lp»«s»«rp»’
 stuff_eq [x] = ‛ ∷ ’
 stuff_default [x] = ‛«x»’
 

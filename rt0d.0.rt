@@ -18,7 +18,7 @@ defn gensym (s) {
 
 defn subscripted_digit (n) {
   global digits
-  if (n > ∷  0 and n < ∷  29) {
+  if (n >= 0 and n <= 29) {
     return digits [n]
   } else {
     return f"₊{n}"
@@ -185,13 +185,13 @@ defn clone_port (s) {
 # entering the very top of a network.
 defn make_message (port, datum) {
     p = clone_string (port)
-    m = Message (port ∷ p, datum ∷ datum.clone ())
+    m = Message (port=p, datum=datum.clone ())
     return m
 }
 
 # Clones a message. Primarily used internally for "fanning out" a message to multiple destinations.
 defn message_clone (message) {
-    m = Message (port ∷ clone_port (message.port), datum ∷ message.datum.clone ())
+    m = Message (port=clone_port (message.port), datum=message.datum.clone ())
     return m
 }
 
@@ -231,7 +231,7 @@ defvar drThrough = "through"
 # See "class_free programming" starting at 45:01 of https://www.youtube.com/watch?v=XFTOG895C7c
 
 
-defn make_Routing_Descriptor (action, component, port, message) {
+defn make_Routing_Descriptor (action=ϕ, component=ϕ, port=ϕ, message=ϕ) {
     return {
         "action": action,
         "component": component,
@@ -241,8 +241,8 @@ defn make_Routing_Descriptor (action, component, port, message) {
 }
 
 ####
-defn make_Send_Descriptor (component, port, message, cause_port, cause_message) {
-    rdesc = make_Routing_Descriptor (action ∷ drSend, component ∷ component, port ∷ port, message ∷ message)
+defn make_Send_Descriptor (component=ϕ, port=ϕ, message=ϕ, cause_port=ϕ, cause_message=ϕ) {
+    rdesc = make_Routing_Descriptor (action=drSend, component=component, port=port, message=message)
     return {
         "action": drSend,
         "component": rdesc@component,
@@ -255,13 +255,13 @@ defn make_Send_Descriptor (component, port, message, cause_port, cause_message) 
 }
 
 defn log_send (sender, sender_port, msg, cause_msg) {
-    send_desc = make_Send_Descriptor (component ∷ sender, port ∷ sender_port, message ∷ msg, cause_port ∷ cause_msg.port, cause_message ∷ cause_msg)
-    append_routing_descriptor (container ∷ sender.owner, desc ∷ send_desc)
+    send_desc = make_Send_Descriptor (component=sender, port=sender_port, message=msg, cause_port=cause_msg.port, cause_message=cause_msg)
+    append_routing_descriptor (container=sender.owner, desc=send_desc)
 }
 
 defn log_send_string (sender, sender_port, msg, cause_msg) {
     send_desc = make_Send_Descriptor (sender, sender_port, msg, cause_msg.port, cause_msg)
-    append_routing_descriptor (container ∷ sender.owner, desc ∷ send_desc)
+    append_routing_descriptor (container=sender.owner, desc=send_desc)
 }
 
 defn fmt_send (desc, indent) {
@@ -274,8 +274,8 @@ defn fmt_send_string (desc, indent) {
 }
 
 ####
-defn make_Forward_Descriptor (component, port, message, cause_port, cause_message) {
-    rdesc = make_Routing_Descriptor (action ∷ drSend, component ∷ component, port ∷ port, message ∷ message)
+defn make_Forward_Descriptor (component=ϕ, port=ϕ, message=ϕ, cause_port=ϕ, cause_message=ϕ) {
+    rdesc = make_Routing_Descriptor (action=drSend, component=component, port=port, message=message)
     fmt_forward = λ (desc) : ''
     return {
         "action": drForward,
@@ -298,8 +298,8 @@ defn fmt_forward (desc) {
 }
 
 ####
-defn make_Inject_Descriptor (receiver, port, message) {
-    rdesc = make_Routing_Descriptor (action ∷ drInject, component ∷ receiver, port ∷ port, message ∷ message)
+defn make_Inject_Descriptor (receiver=ϕ, port=ϕ, message=ϕ) {
+    rdesc = make_Routing_Descriptor (action=drInject, component=receiver, port=port, message=message)
     return {
         "action": drInject,
         "component": rdesc@component,
@@ -310,8 +310,8 @@ defn make_Inject_Descriptor (receiver, port, message) {
 }
 
 defn log_inject (receiver, port, msg) {
-    inject_desc = make_Inject_Descriptor (receiver ∷ receiver, port ∷ port, message ∷ msg)
-    append_routing_descriptor (container ∷ receiver, desc ∷ inject_desc)
+    inject_desc = make_Inject_Descriptor (receiver=receiver, port=port, message=msg)
+    append_routing_descriptor (container=receiver, desc=inject_desc)
 }
 
 defn fmt_inject (desc, indent) {
@@ -319,7 +319,7 @@ defn fmt_inject (desc, indent) {
 }
 
 ####
-defn make_Down_Descriptor (container, source_port, source_message, target, target_port, target_message) {
+defn make_Down_Descriptor (container=ϕ, source_port=ϕ, source_message=ϕ, target=ϕ, target_port=ϕ, target_message=ϕ) {
     return {
         "action": drDown,
         "container": container,
@@ -332,7 +332,7 @@ defn make_Down_Descriptor (container, source_port, source_message, target, targe
         }
 }
 
-defn log_down (container, source_port, source_message, target, target_port, target_message) {
+defn log_down (container=ϕ, source_port=ϕ, source_message=ϕ, target=ϕ, target_port=ϕ, target_message=ϕ) {
     rdesc = make_Down_Descriptor (container, source_port, source_message, target, target_port, target_message)
     append_routing_descriptor (container, rdesc)
 }
@@ -342,7 +342,7 @@ defn fmt_down (desc, indent) {
 }
 
 ####
-defn make_Up_Descriptor (source, source_port, source_message, container, container_port, container_message) {
+defn make_Up_Descriptor (source=ϕ, source_port=ϕ, source_message=ϕ, container=ϕ, container_port=ϕ, container_message=ϕ) {
     return {
         "action": drUp,
         "source": source,
@@ -355,7 +355,7 @@ defn make_Up_Descriptor (source, source_port, source_message, container, contain
         }
 }
 
-defn log_up (source, source_port, source_message, container, target_port, target_message) {
+defn log_up (source=ϕ, source_port=ϕ, source_message=ϕ, container=ϕ, target_port=ϕ, target_message=ϕ) {
     rdesc = make_Up_Descriptor (source, source_port, source_message, container, target_port, target_message)
     append_routing_descriptor (container, rdesc)
 }
@@ -364,7 +364,7 @@ defn fmt_up (desc, indent) {
     return f'\n{indent}↑ {desc@source.name}."{desc@source_port}" ➔ {desc@container.name}."{desc@container_port}" {format_message (desc@container_message)}'
 }
 
-defn make_Across_Descriptor (container, source, source_port, source_message, target, target_port, target_message) {
+defn make_Across_Descriptor (container=ϕ, source=ϕ, source_port=ϕ, source_message=ϕ, target=ϕ, target_port=ϕ, target_message=ϕ) {
     return {
         "action": drAcross,
         "container": container,
@@ -378,7 +378,7 @@ defn make_Across_Descriptor (container, source, source_port, source_message, tar
         }
 }
 
-defn log_across (container, source, source_port, source_message, target, target_port, target_message) {
+defn log_across (container=ϕ, source=ϕ, source_port=ϕ, source_message=ϕ, target=ϕ, target_port=ϕ, target_message=ϕ) {
     rdesc = make_Across_Descriptor (container, source, source_port, source_message, target, target_port, target_message)
     append_routing_descriptor (container, rdesc)
 }
@@ -388,7 +388,7 @@ defn fmt_across (desc, indent) {
 }
 
 ####
-defn make_Through_Descriptor (container, source_port, source_message, target_port, message) {
+defn make_Through_Descriptor (container=ϕ, source_port=ϕ, source_message=ϕ, target_port=ϕ, message=ϕ) {
     return {
         "action": drThrough,
         "container": container,
@@ -400,7 +400,7 @@ defn make_Through_Descriptor (container, source_port, source_message, target_por
         }
 }
 
-defn log_through (container, source_port, source_message, target_port, message) {
+defn log_through (container=ϕ, source_port=ϕ, source_message=ϕ, target_port=ϕ, message=ϕ) {
     rdesc = make_Through_Descriptor (container, source_port, source_message, target_port, message)
     append_routing_descriptor (container, rdesc)
 }
@@ -410,7 +410,7 @@ defn fmt_through (desc, indent) {
 }
 
 ####
-defn make_InOut_Descriptor (container, component, in_message, out_port, out_message) {
+defn make_InOut_Descriptor (container=ϕ, component=ϕ, in_message=ϕ, out_port=ϕ, out_message=ϕ) {
     return {
         "action": drInOut,
         "container": container,
@@ -421,31 +421,31 @@ defn make_InOut_Descriptor (container, component, in_message, out_port, out_mess
         }
 }
 
-defn log_inout (container, component, in_message) {
+defn log_inout (container=ϕ, component=ϕ, in_message=ϕ) {
     if component.outq.empty () {
-        log_inout_no_output (container ∷ container, component ∷ component, in_message ∷ in_message) }
+        log_inout_no_output (container=container, component=component, in_message=in_message) }
     else {
-        log_inout_recursively (container ∷ container, component ∷ component, in_message ∷ in_message, out_messages ∷ list (component.outq.queue)) }
+        log_inout_recursively (container=container, component=component, in_message=in_message, out_messages=list (component.outq.queue)) }
 }
 
-defn log_inout_no_output (container, component, in_message) {
-    rdesc = make_InOut_Descriptor (container ∷ container, component ∷ component, in_message ∷ in_message)
+defn log_inout_no_output (container=ϕ, component=ϕ, in_message=ϕ) {
+    rdesc = make_InOut_Descriptor (container=container, component=component, in_message=in_message)
     append_routing_descriptor (container, rdesc)
 }
 
-defn log_inout_single (container, component, in_message, out_message) {
-    rdesc = make_InOut_Descriptor (container ∷ container, component ∷ component, in_message ∷ in_message, out_message ∷ out_message)
+defn log_inout_single (container=ϕ, component=ϕ, in_message=ϕ, out_message=ϕ) {
+    rdesc = make_InOut_Descriptor (container=container, component=component, in_message=in_message, out_message=out_message)
     append_routing_descriptor (container, rdesc)
 }
 
-defn log_inout_recursively (container, component, in_message, out_messages ∷ []) {
+defn log_inout_recursively (container=ϕ, component=ϕ, in_message=ϕ, out_messages=[]) {
     if [] == out_messages {
         pass }
     else {
         m = car (out_messages)
         rest = cdr (out_messages)
-        log_inout_single (container ∷ container, component ∷ component, in_message ∷ in_message, out_message ∷ m)
-        log_inout_recursively (container ∷ container, component ∷ component, in_message ∷ in_message, out_messages ∷ rest) }
+        log_inout_single (container=container, component=component, in_message=in_message, out_message=m)
+        log_inout_recursively (container=container, component=component, in_message=in_message, out_messages=rest) }
 }
 
 defn fmt_inout (desc, indent) {
@@ -456,7 +456,7 @@ defn fmt_inout (desc, indent) {
         return f'\n{indent}  ∴ {desc@component.name} {format_message (outm)}'}
 }
 
-defn log_tick (container, component, in_message) {
+defn log_tick (container=ϕ, component=ϕ, in_message=ϕ) {
     pass
 }
 
@@ -504,7 +504,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
             connector.direction = "down"
             connector.sender = Sender (me.name, me, proto_conn@source_port)
             target_component = children_by_id [proto_conn@target@id]
-            if (target_component  ∷  ∷  ϕ) {
+            if (target_component == ϕ) {
                 load_error (f"internal error: .Down connection target internal error {proto_conn@target}")}
             else{
                 connector.receiver = Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
@@ -543,7 +543,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
 
 # The default handler for container components.
 defn container_handler (container, message) {
-    route (container ∷ container, from_component ∷ container, message ∷ message) # references to 'self' are replaced by the container during instantiation
+    route (container=container, from_component=container, message=message) # references to 'self' are replaced by the container during instantiation
     while any_child_ready (container) {
         step_children (container, message)}
 }
@@ -596,7 +596,7 @@ defn sender_eq (s1, s2) {
 # Delivers the given message to the receiver of this connector.
 
 defn deposit (parent, conn, message) {
-    new_message = make_message (port ∷ conn.receiver.port, datum ∷ message.datum)
+    new_message = make_message (port=conn.receiver.port, datum=message.datum)
     log_connection (parent, conn, new_message)
     push_message (parent, conn.receiver.component, conn.receiver.queue, new_message)
 }
@@ -647,18 +647,18 @@ defn step_children (container, causingMessage) {
                 elif continued_long_run {
                     pass }
                 elif ended_long_run {
-                    log_inout (container ∷ container, component ∷ child, in_message ∷ fetch_saved_message_and_clear (child))}
+                    log_inout (container=container, component=child, in_message=fetch_saved_message_and_clear (child))}
                 else {
-                    log_inout (container ∷ container, component ∷ child, in_message ∷ msg)}
+                    log_inout (container=container, component=child, in_message=msg)}
                 destroy_message(msg)}
             else {
-                if (child.state ! ∷  "idle") {
+                if (child.state != "idle") {
                     msg = force_tick (container, child)
                     child.handler(child, msg)
-                    log_tick (container ∷ container, component ∷ child, in_message ∷ msg)
+                    log_tick (container=container, component=child, in_message=msg)
                     destroy_message(msg)}}
             
-            if (child.state  ∷  ∷  "active") {
+            if (child.state == "active") {
                 # if child remains active, then the container must remain active and must propagate "ticks" to child
                 container.state = "active"}
             
@@ -692,7 +692,7 @@ defn route (container, from_component, message) {
         fromname = ""
         if (not (is_self (from_component, container))) {
             fromname = from_component.name }
-        from_sender = Sender (name ∷ fromname, component ∷ from_component, port ∷ message.port)
+        from_sender = Sender (name=fromname, component=from_component, port=message.port)
         
         for connector in container.connections {
             if sender_eq (from_sender, connector.sender) {
@@ -722,7 +722,7 @@ defn any_child_ready (container) {
 }
 
 defn child_is_ready (eh) {
-    return (not (eh.outq.empty ())) or (not (eh.inq.empty ())) or ( eh.state ! ∷  "idle") or (any_child_ready (eh))
+    return (not (eh.outq.empty ())) or (not (eh.inq.empty ())) or ( eh.state != "idle") or (any_child_ready (eh))
 }
 
 defn print_routing_trace (eh) {
@@ -735,25 +735,25 @@ defn append_routing_descriptor (container, desc) {
 
 defn log_connection (container, connector, message) {
     if "down" == connector.direction{
-        log_down (container ∷ container, source_port ∷ connector.sender.port, target ∷ connector.receiver.component, target_port ∷ connector.receiver.port,
-                  target_message ∷ message) }
+        log_down (container=container, source_port=connector.sender.port, target=connector.receiver.component, target_port=connector.receiver.port,
+                  target_message=message) }
     elif "up" == connector.direction {
-        log_up (source ∷ connector.sender.component, source_port ∷ connector.sender.port, container ∷ container, target_port ∷ connector.receiver.port,
-                  target_message ∷ message) }
+        log_up (source=connector.sender.component, source_port=connector.sender.port, container=container, target_port=connector.receiver.port,
+                  target_message=message) }
     elif "across" == connector.direction {
-        log_across (container ∷ container,
-                    source ∷ connector.sender.component, source_port ∷ connector.sender.port,
-                    target ∷ connector.receiver.component, target_port ∷ connector.receiver.port, target_message ∷ message) }
+        log_across (container=container,
+                    source=connector.sender.component, source_port=connector.sender.port,
+                    target=connector.receiver.component, target_port=connector.receiver.port, target_message=message) }
     elif "through" == connector.direction {
-        log_through (container ∷ container, source_port ∷ connector.sender.port, source_message ∷ ϕ,
-                     target_port ∷ connector.receiver.port, message ∷ message) }
+        log_through (container=container, source_port=connector.sender.port, source_message=ϕ,
+                     target_port=connector.receiver.port, message=message) }
     else {
         print (f"*** FATAL error: in log_connection /{connector.direction}/ /{message.port}/ /{message.datum.srepr ()}/")
         exit () }
 }
 
 defn container_injector (container, message) {
-    log_inject (receiver ∷ container, port ∷ message.port, msg ∷ message)
+    log_inject (receiver=container, port=message.port, msg=message)
     container_handler (container, message)
 }
 
@@ -800,7 +800,7 @@ defn make_component_registry () {
     return Component_Registry ()
 }
 
-defn register_component (reg, template, ok_to_overwrite ∷ ⊥) {
+defn register_component (reg, template, ok_to_overwrite=⊥) {
     name = mangle_name (template.name)
     if name in reg.templates and not ok_to_overwrite {
         load_error (f"Component {template.name} already declared")}
@@ -817,7 +817,7 @@ defn get_component_instance (reg, full_name, owner) {
     template_name = mangle_name (full_name)
     if template_name in reg.templates {
         template = reg.templates[template_name]
-        if (template  ∷  ∷  ϕ) {
+        if (template == ϕ) {
             load_error (f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
             return ϕ}
         else {
@@ -874,13 +874,13 @@ defn generate_shell_components (reg, container_list) {
                 if first_char_is (child_descriptor@name, "$"){
                     name = child_descriptor@name
                     cmd = stringcdr (name).strip ()
-                    generated_leaf = Template (name ∷ name, instantiator ∷ shell_out_instantiate, template_data ∷ cmd)
+                    generated_leaf = Template (name=name, instantiator=shell_out_instantiate, template_data=cmd)
                     register_component (reg, generated_leaf)}
                 elif first_char_is (child_descriptor@name, "'"){
                     name = child_descriptor@name
                     s = stringcdr (name)
-                    generated_leaf = Template (name ∷ name, instantiator ∷ string_constant_instantiate, template_data ∷ s)
-                    register_component (reg, generated_leaf, ok_to_overwrite ∷ ⊤)}}}}
+                    generated_leaf = Template (name=name, instantiator=string_constant_instantiate, template_data=s)
+                    register_component (reg, generated_leaf, ok_to_overwrite=⊤)}}}}
 }
 
 defn first_char (s) {
@@ -894,8 +894,8 @@ defn first_char_is (s, c) {
 # this needs to be rewritten to use the low_level "shell_out" component, this can be done solely as a diagram without using python code here
 # I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped
 defn run_command (eh, cmd, s) {
-    ret = subprocess.run (cmd, capture_output ∷ ⊤, input ∷ s, encoding ∷ 'utf_8')
-    if  not (ret.returncode  ∷  ∷  0){
+    ret = subprocess.run (cmd, capture_output=⊤, input=s, encoding='utf_8')
+    if  not (ret.returncode == 0){
         if ret.stderr != ϕ{
             return ["", ret.stderr]}
         else{
@@ -976,20 +976,20 @@ defn make_leaf (name, owner, instance_data, handler) {
 
 defn send (eh,port,datum,causingMessage) {
     msg = make_message(port, datum)
-    log_send (sender ∷ eh, sender_port ∷ port, msg ∷ msg, cause_msg ∷ causingMessage)
+    log_send (sender=eh, sender_port=port, msg=msg, cause_msg=causingMessage)
     put_output (eh, msg)
 }
 
 defn send_string (eh, port, s, causingMessage) {
     datum = new_datum_string (s)
-    msg = make_message(port ∷ port, datum ∷ datum)
-    log_send_string (sender ∷ eh, sender_port ∷ port, msg ∷ msg, cause_msg ∷ causingMessage)
+    msg = make_message(port=port, datum=datum)
+    log_send_string (sender=eh, sender_port=port, msg=msg, cause_msg=causingMessage)
     put_output (eh, msg)
 }
 
 defn forward (eh, port, msg) {
     fwdmsg = make_message(port, msg.datum)
-    log_forward (sender ∷ eh, sender_port ∷ port, msg ∷ msg, cause_msg ∷ msg)
+    log_forward (sender=eh, sender_port=port, msg=msg, cause_msg=msg)
     put_output (eh, msg)
 }
 
@@ -1029,19 +1029,19 @@ defn set_idle (eh) {
 
 defn fetch_first_output (eh, port) {
     for msg in list (eh.outq.queue) {
-        if (msg.port  ∷  ∷  port){
+        if (msg.port == port){
             return msg.datum}}
     return ϕ
 }
 
-defn print_specific_output (eh, port ∷ "", stderr ∷ ⊥) {
+defn print_specific_output (eh, port="", stderr=⊥) {
     datum = fetch_first_output (eh, port)
     if datum != ϕ{
         if stderr{              # I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in...
             outf = sys.stderr}
         else{
             outf = sys.stdout}
-        print (datum.srepr (), file ∷ outf)}
+        print (datum.srepr (), file=outf)}
 }
 
 defn put_output (eh, msg) {
@@ -1049,7 +1049,7 @@ defn put_output (eh, msg) {
 }
 
 defn injector_NIY (eh, msg) {
-    print (f'Injector not implemented for this component "{eh.name}" kind ∷ {eh.kind} port ∷ "{msg.port}"')
+    print (f'Injector not implemented for this component "{eh.name}" kind={eh.kind} port="{msg.port}"')
     exit ()
 }
 
@@ -1070,31 +1070,31 @@ defn set_environment (rproject, r0D) {
 
 defn probe_instantiate (reg, owner, name, template_data) {
     name_with_id = gensym ("?")
-    return make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name=name_with_id, owner=owner, instance_data=ϕ, handler=probe_handler)
 }
 defn probeA_instantiate (reg, owner, name, template_data) {
     name_with_id = gensym ("?A")
-    return make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name=name_with_id, owner=owner, instance_data=ϕ, handler=probe_handler)
 }
 
 defn probeB_instantiate (reg, owner, name, template_data) {
     name_with_id = gensym("?B")
-    return make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name=name_with_id, owner=owner, instance_data=ϕ, handler=probe_handler)
 }
 
 defn probeC_instantiate (reg, owner, name, template_data) {
     name_with_id = gensym("?C")
-    return make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name=name_with_id, owner=owner, instance_data=ϕ, handler=probe_handler)
 }
 
 defn probe_handler (eh, msg) {
     s = msg.datum.srepr ()
-    print (f"... probe {eh.name}: {s}", file ∷ sys.stderr)
+    print (f"... probe {eh.name}: {s}", file=sys.stderr)
 }
 
 defn trash_instantiate (reg, owner, name, template_data) {
     name_with_id = gensym ("trash")
-    return make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ trash_handler)
+    return make_leaf (name=name_with_id, owner=owner, instance_data=ϕ, handler=trash_handler)
 }
 
 defn trash_handler (eh, msg) {
@@ -1120,7 +1120,7 @@ defn deracer_instantiate (reg, owner, name, template_data) {
     name_with_id = gensym ("deracer")
     inst = Deracer_Instance_Data ("idle", TwoMessages (ϕ, ϕ))
     inst.state = "idle"
-    eh = make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ inst, handler ∷ deracer_handler)
+    eh = make_leaf (name=name_with_id, owner=owner, instance_data=inst, handler=deracer_handler)
     return eh
 }
 
@@ -1249,7 +1249,7 @@ defn stringconcat_handler (eh, msg) {
 }
 
 defn maybe_stringconcat (eh, inst, msg) {
-    if (0  ∷  ∷  len (inst.buffer1)) and (0  ∷  ∷  len (inst.buffer2)){
+    if (0 == len (inst.buffer1)) and (0 == len (inst.buffer2)){
         runtime_error ("something is wrong in stringconcat, both strings are 0 length")}
     if inst.count >= 2{
         concatenated_string = ""
@@ -1337,7 +1337,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files, 
         all_containers_within_single_file = json2internal (diagram_source)
         generate_shell_components (reg, all_containers_within_single_file)
         for container in all_containers_within_single_file{
-            register_component (reg, Template (name ∷ container ['name'] , template_data ∷ container, instantiator ∷ container_instantiator))}}
+            register_component (reg, Template (name=container ['name'] , template_data=container, instantiator=container_instantiator))}}
     initialize_stock_components (reg)
     project_specific_components_subroutine (root_project, root_0D, reg) # add user specified components (probably only leaves)
     return reg
@@ -1346,7 +1346,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files, 
 defn print_error_maybe (main_container) {
     error_port = "✗"
     err = fetch_first_output (main_container, error_port)
-    if (err ! ∷  ϕ) and (0 < len (trimws (err.srepr ()))){
+    if (err != ϕ) and (0 < len (trimws (err.srepr ()))){
         print ("___ !!! ERRORS !!! ___")
         print_specific_output (main_container, error_port, ⊥)}
 }
@@ -1510,10 +1510,10 @@ defn initialize_stock_components (reg) {
 }
 
 defn run (pregistry, root_project, root_0D, arg, main_container_name, diagram_source_files, injectfn,
-              show_hierarchy ∷ ⊤, show_connections ∷ ⊤, show_traces ∷ ⊤, show_all_outputs ∷ ⊤) {
+              show_hierarchy=⊤, show_connections=⊤, show_traces=⊤, show_all_outputs=⊤) {
     set_environment (root_project, root_0D)
     # get entrypoint container
-    main_container = get_component_instance(pregistry, main_container_name, owner ∷ ϕ)
+    main_container = get_component_instance(pregistry, main_container_name, owner=ϕ)
     if ϕ == main_container{
         load_error (f"Couldn't find container with page name {main_container_name} in files {diagram_source_files} (check tab names, or disable compression?)")}
     if show_hierarchy{
@@ -1526,14 +1526,11 @@ defn run (pregistry, root_project, root_0D, arg, main_container_name, diagram_so
         dump_outputs (main_container)}
     else{
         print_error_maybe (main_container)
-        print_specific_output (main_container, port ∷ "", stderr ∷ ⊥)}
+        print_specific_output (main_container, port="", stderr=⊥)}
     if show_traces{
         print ("___ routing traces ___")
         print (routing_trace_all (main_container))}
     if show_all_outputs{
         print ("___ done ___")}
 }
-
-
-
 
