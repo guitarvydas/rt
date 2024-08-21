@@ -1,0 +1,5 @@
+⇐  mutation
+=  equal
+≡   Let
+a ⇇ b  assign all fields of b to corresponding fields of a
+n∷p named parameter, p corresponds to parameter n

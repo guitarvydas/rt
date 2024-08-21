@@ -17,21 +17,21 @@ defn gensym (s) {
 }
 
 defn subscripted_digit (n) {
-  global digits
-  if (n >≡ 0 and n <≡ 29) {
-    return digits [n]
-  } else {
-    return f"₊{n}"
-  }
+    global digits
+    if (n >≡ 0 and n <≡ 29) {
+	return digits [n]
+    } else {
+	return f"₊{n}"
+    }
 }
 
 defobj Datum () {
-      • data ⇐ ϕ
-      • clone ⇐ ϕ
-      • reclaim ⇐ ϕ
-      • srepr ⇐ ϕ
-      • kind ⇐ ϕ
-      • raw ⇐ ϕ
+    • data ⇐ ϕ
+    • clone ⇐ ϕ
+    • reclaim ⇐ ϕ
+    • srepr ⇐ ϕ
+    • kind ⇐ ϕ
+    • raw ⇐ ϕ
 }
 
 defn new_datum_string (s) {
@@ -46,20 +46,20 @@ defn new_datum_string (s) {
 }
 
 defn clone_datum_string (d) {
-  d ⇐ new_datum_string (d.data)
-  return d
+    d ⇐ new_datum_string (d.data)
+    return d
 }
 
 defn reclaim_datum_string (src) {
-  pass
+    pass
 }
 
 defn srepr_datum_string (d) {
-  return d.data
+    return d.data
 }
 
 defn raw_datum_string (d) {
-  return bytearray (d.data,'UTF_8')
+    return bytearray (d.data,'UTF_8')
 }
 
 defn new_datum_bang () {
@@ -161,45 +161,45 @@ defn reclaim_int (src) {
 }
 
 defn srepr_datum_int (i) {
-  return str (i)
+    return str (i)
 }
 
 defn raw_datum_int (i) {
     return i
 }
 
-# Message passed to a leaf component.
-#
+    # Message passed to a leaf component.
+    #
 # `port` refers to the name of the incoming or outgoing port of this component.
-# `datum` is the data attached to this message.
-defobj Message (port, datum) {
+    # `datum` is the data attached to this message.
+    defobj Message (port, datum) {
         • port ⇐ port
         • datum ⇐ datum
-}
+    }
 
 defn clone_port (s) {
     return clone_string (s)
 }
 
-# Utility for making a `Message`. Used to safely "seed" messages
-# entering the very top of a network.
-defn make_message (port, datum) {
-    p ≡ clone_string (port)
-    m ≡ Message (port∷p, datum∷datum.clone ())
-    return m
-}
+    # Utility for making a `Message`. Used to safely "seed" messages
+    # entering the very top of a network.
+    defn make_message (port, datum) {
+	p ≡ clone_string (port)
+	m ≡ Message (port∷p, datum∷datum.clone ())
+	return m
+    }
 
-# Clones a message. Primarily used internally for "fanning out" a message to multiple destinations.
-defn message_clone (message) {
-    m ⇐ Message (port∷clone_port (message.port), datum∷message.datum.clone ())
-    return m
-}
+    # Clones a message. Primarily used internally for "fanning out" a message to multiple destinations.
+    defn message_clone (message) {
+	m ⇐ Message (port∷clone_port (message.port), datum∷message.datum.clone ())
+	return m
+    }
 
-# Frees a message.
-defn destroy_message (msg) {
-    # during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages
-    pass
-}
+    # Frees a message.
+    defn destroy_message (msg) {
+	# during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages
+	pass
+    }
 
 defn destroy_datum (msg) {
     pass
@@ -217,7 +217,7 @@ defn format_message (m) {
         return f'⟪"{m.port}"⦂"{m.datum.srepr ()}"⟫' }
 }
 
-# dynamic routing descriptors
+    # dynamic routing descriptors
 
 defvar drInject ⇐ "inject"
 defvar drSend ⇐ "send"
@@ -228,7 +228,7 @@ defvar drUp ⇐ "up"
 defvar drAcross ⇐ "across"
 defvar drThrough ⇐ "through"
 
-# See "class_free programming" starting at 45:01 of https://www.youtube.com/watch?v⇐XFTOG895C7c
+    # See "class_free programming" starting at 45:01 of https://www.youtube.com/watch?v⇐XFTOG895C7c
 
 
 defn make_Routing_Descriptor (action∷ϕ, component∷ϕ, port∷ϕ, message∷ϕ) {
@@ -237,7 +237,7 @@ defn make_Routing_Descriptor (action∷ϕ, component∷ϕ, port∷ϕ, message∷
         "component": component,
         "port": port,
         "message": message
-        }
+    }
 }
 
 ####
@@ -251,7 +251,7 @@ defn make_Send_Descriptor (component∷ϕ, port∷ϕ, message∷ϕ, cause_port�
         "cause_port": cause_port,
         "cause_message": cause_message,
         "fmt": fmt_send
-        }
+    }
 }
 
 defn log_send (sender, sender_port, msg, cause_msg) {
@@ -285,7 +285,7 @@ defn make_Forward_Descriptor (component, port, message, cause_port, cause_messag
         "cause_port": cause_port,
         "cause_message": cause_message,
         "fmt": fmt_forward
-        }
+    }
 }
 
 defn log_forward (sender, sender_port, msg, cause_msg) {
@@ -298,7 +298,7 @@ defn fmt_forward (desc) {
 }
 
 ####
-defn make_Inject_Descriptor (receiver⇐ϕ, port⇐ϕ, message⇐ϕ) {
+defn make_Inject_Descriptor (receiver, port, message) {
     rdesc ⇐ make_Routing_Descriptor (action∷drInject, component∷receiver, port∷port, message∷message)
     return {
         "action": drInject,
@@ -306,7 +306,7 @@ defn make_Inject_Descriptor (receiver⇐ϕ, port⇐ϕ, message⇐ϕ) {
         "port": rdesc@port,
         "message": rdesc@message,
         "fmt" : fmt_inject
-        }
+    }
 }
 
 defn log_inject (receiver, port, msg) {
@@ -329,7 +329,7 @@ defn make_Down_Descriptor (container, source_port, source_message, target, targe
         "target_port": target_port,
         "target_message": target_message,
         "fmt" : fmt_down
-        }
+    }
 }
 
 defn log_down (container, source_port, source_message, target, target_port, target_message) {
@@ -352,7 +352,7 @@ defn make_Up_Descriptor (source, source_port, source_message, container, contain
         "container_port": container_port,
         "container_message": container_message,
         "fmt" : fmt_up
-        }
+    }
 }
 
 defn log_up (source, source_port, source_message, container, target_port, target_message) {
@@ -375,7 +375,7 @@ defn make_Across_Descriptor (container, source, source_port, source_message, tar
         "target_port": target_port,
         "target_message": target_message,
         "fmt" : fmt_across
-        }
+    }
 }
 
 defn log_across (container, source, source_port, source_message, target, target_port, target_message) {
@@ -397,7 +397,7 @@ defn make_Through_Descriptor (container, source_port, source_message, target_por
         "target_port": target_port,
         "message": message,
         "fmt" : fmt_through
-        }
+    }
 }
 
 defn log_through (container, source_port, source_message, target_port, message) {
@@ -418,7 +418,7 @@ defn make_InOut_Descriptor (container, component, in_message, out_port, out_mess
         "in_message": in_message,
         "out_message": out_message,
         "fmt" : fmt_inout
-        }
+    }
 }
 
 defn log_inout (container, component, in_message) {
@@ -435,7 +435,7 @@ defn log_inout_no_output (container, component, in_message) {
 
 *****
 
-defn log_inout_single (container, component, in_message, out_message⇐ϕ) {
+defn log_inout_single (container, component, in_message, out_message) {
     rdesc ≡ make_InOut_Descriptor (container⇐container, component⇐component, in_message⇐in_message, out_message⇐out_message)
     append_routing_descriptor (container, rdesc)
 }
@@ -458,7 +458,7 @@ defn fmt_inout (desc, indent) {
         return f'\n{indent}  ∴ {desc@component.name} {format_message (outm)}'}
 }
 
-defn log_tick (container, component, in_message⇐ϕ) {
+defn log_tick (container, component, in_message) {
     pass
 }
 
@@ -538,44 +538,44 @@ defn container_instantiator (reg, owner, container_name, desc) {
             connector.sender ⇐ Sender (me.name, me, proto_conn@source_port)
             connector.receiver ⇐ Receiver (me.name, container.outq, proto_conn@target_port, me)
             connectors.append (connector) }}
-            
+    
     container.connections ⇐ connectors
     return container
 }
 
-# The default handler for container components.
-defn container_handler (container, message) {
-    route (container⇐container, from_component⇐container, message⇐message) # references to 'self' are replaced by the container during instantiation
-    while any_child_ready (container) {
-        step_children (container, message)}
-}
+    # The default handler for container components.
+    defn container_handler (container, message) {
+	route (container⇐container, from_component⇐container, message⇐message) # references to 'self' are replaced by the container during instantiation
+	while any_child_ready (container) {
+            step_children (container, message)}
+    }
 
-# Frees the given container and associated data.
-defn destroy_container (eh) {
-    pass
-}
+    # Frees the given container and associated data.
+    defn destroy_container (eh) {
+	pass
+    }
 
 defn fifo_is_empty (fifo) {
     return fifo.empty ()
 }
 
-# Routing connection for a container component. The `direction` field has
-# no affect on the default message routing system _ it is there for debugging
-# purposes, or for reading by other tools.
+    # Routing connection for a container component. The `direction` field has
+    # no affect on the default message routing system _ it is there for debugging
+    # purposes, or for reading by other tools.
 
 defobj Connector () {
-        • direction ⇐ ϕ # down, across, up, through
-        • sender ⇐ ϕ
-        • receiver ⇐ ϕ
+    • direction ⇐ ϕ # down, across, up, through
+    • sender ⇐ ϕ
+    • receiver ⇐ ϕ
 }
 
 # `Sender` is used to "pattern match" which `Receiver` a message should go to,
-# based on component ID (pointer) and port name.
+    # based on component ID (pointer) and port name.
 
 defobj Sender (name, component, port) {
-        • name ⇐ name
-        • component ⇐ component # from
-        • port ⇐ port # from's port
+    • name ⇐ name
+    • component ⇐ component # from
+    • port ⇐ port # from's port
 }
 
 # `Receiver` is a handle to a destination queue, and a `port` name to assign
@@ -684,217 +684,217 @@ defn is_tick (msg) {
 # Routes a single message to all matching destinations, according to
 # the container's connection network.
 
-defn route (container, from_component, message) {
-    was_sent ⇐ ⊥ # for checking that output went somewhere (at least during bootstrap)
-    if is_tick (message){
-        for child in container.children {
-            attempt_tick (container, child, message) }
-        was_sent ⇐ ⊤ }
-    else {
-        fromname ⇐ ""
-        if (not (is_self (from_component, container))) {
-            fromname ⇐ from_component.name }
-        from_sender ⇐ Sender (name⇐fromname, component⇐from_component, port⇐message.port)
-        
-        for connector in container.connections {
-            if sender_eq (from_sender, connector.sender) {
-                deposit (container, connector, message)
-                was_sent ⇐ ⊤}}}
-    if not (was_sent) {
-        print ("\n\n*** Error: ***")
-        dump_possible_connections (container)
-        print_routing_trace (container)
-        print ("***")
-        print (f"{container.name}: message '{message.port}' from {fromname} dropped on floor...")
-        print ("***")
-        exit () }
-}
+    defn route (container, from_component, message) {
+	was_sent ⇐ ⊥ # for checking that output went somewhere (at least during bootstrap)
+	if is_tick (message){
+            for child in container.children {
+		attempt_tick (container, child, message) }
+            was_sent ⇐ ⊤ }
+	else {
+            fromname ⇐ ""
+            if (not (is_self (from_component, container))) {
+		fromname ⇐ from_component.name }
+            from_sender ⇐ Sender (name⇐fromname, component⇐from_component, port⇐message.port)
+            
+            for connector in container.connections {
+		if sender_eq (from_sender, connector.sender) {
+                    deposit (container, connector, message)
+                    was_sent ⇐ ⊤}}}
+	if not (was_sent) {
+            print ("\n\n*** Error: ***")
+            dump_possible_connections (container)
+            print_routing_trace (container)
+            print ("***")
+            print (f"{container.name}: message '{message.port}' from {fromname} dropped on floor...")
+            print ("***")
+            exit () }
+    }
 
-defn dump_possible_connections (container) {
-    print (f"*** possible connections for {container.name}:")
-    for connector in container.connections {
-        print (f"{connector.direction} {connector.sender.name}.{connector.sender.port} -> {connector.receiver.name}.{connector.receiver.port}") }
-}
+    defn dump_possible_connections (container) {
+	print (f"*** possible connections for {container.name}:")
+	for connector in container.connections {
+            print (f"{connector.direction} {connector.sender.name}.{connector.sender.port} -> {connector.receiver.name}.{connector.receiver.port}") }
+    }
 
-defn any_child_ready (container) {
-    for child in container.children {
-        if child_is_ready(child) {
-            return ⊤}}
-    return ⊥
-}
+    defn any_child_ready (container) {
+	for child in container.children {
+            if child_is_ready(child) {
+		return ⊤}}
+	return ⊥
+    }
 
-defn child_is_ready (eh) {
-    return (not (eh.outq.empty ())) or (not (eh.inq.empty ())) or ( eh.state !⇐ "idle") or (any_child_ready (eh))
-}
+    defn child_is_ready (eh) {
+	return (not (eh.outq.empty ())) or (not (eh.inq.empty ())) or ( eh.state !⇐ "idle") or (any_child_ready (eh))
+    }
 
-defn print_routing_trace (eh) {
-    print (routing_trace_all (eh))
-}
+    defn print_routing_trace (eh) {
+	print (routing_trace_all (eh))
+    }
 
-defn append_routing_descriptor (container, desc) {
-    container.routings.put (desc)
-}
+    defn append_routing_descriptor (container, desc) {
+	container.routings.put (desc)
+    }
 
-defn log_connection (container, connector, message) {
-    if "down" = connector.direction{
-        log_down (container⇐container, source_port⇐connector.sender.port, target⇐connector.receiver.component, target_port⇐connector.receiver.port,
-                  target_message⇐message) }
-    elif "up" = connector.direction {
-        log_up (source⇐connector.sender.component, source_port⇐connector.sender.port, container⇐container, target_port⇐connector.receiver.port,
-                  target_message⇐message) }
-    elif "across" = connector.direction {
-        log_across (container⇐container,
-                    source⇐connector.sender.component, source_port⇐connector.sender.port,
-                    target⇐connector.receiver.component, target_port⇐connector.receiver.port, target_message⇐message) }
-    elif "through" = connector.direction {
-        log_through (container⇐container, source_port⇐connector.sender.port, source_message⇐ϕ,
-                     target_port⇐connector.receiver.port, message⇐message) }
-    else {
-        print (f"*** FATAL error: in log_connection /{connector.direction}/ /{message.port}/ /{message.datum.srepr ()}/")
-        exit () }
-}
+    defn log_connection (container, connector, message) {
+	if "down" = connector.direction{
+            log_down (container⇐container, source_port⇐connector.sender.port, target⇐connector.receiver.component, target_port⇐connector.receiver.port,
+                      target_message⇐message) }
+	elif "up" = connector.direction {
+            log_up (source⇐connector.sender.component, source_port⇐connector.sender.port, container⇐container, target_port⇐connector.receiver.port,
+                    target_message⇐message) }
+	elif "across" = connector.direction {
+            log_across (container⇐container,
+			source⇐connector.sender.component, source_port⇐connector.sender.port,
+			target⇐connector.receiver.component, target_port⇐connector.receiver.port, target_message⇐message) }
+	elif "through" = connector.direction {
+            log_through (container⇐container, source_port⇐connector.sender.port, source_message⇐ϕ,
+			 target_port⇐connector.receiver.port, message⇐message) }
+	else {
+            print (f"*** FATAL error: in log_connection /{connector.direction}/ /{message.port}/ /{message.datum.srepr ()}/")
+            exit () }
+    }
 
-defn container_injector (container, message) {
-    log_inject (receiver⇐container, port⇐message.port, msg⇐message)
-    container_handler (container, message)
-}
+    defn container_injector (container, message) {
+	log_inject (receiver⇐container, port⇐message.port, msg⇐message)
+	container_handler (container, message)
+    }
 
-import os
-import json
-import sys
+    import os
+    import json
+    import sys
 
 
-defobj Component_Registry () {
+    defobj Component_Registry () {
         • templates ⇐ {}
-}
+    }
 
-defobj Template (name, template_data, instantiator) {
+    defobj Template (name, template_data, instantiator) {
         • name ⇐ name
         • template_data ⇐ template_data
         • instantiator ⇐ instantiator
-}
-defn read_and_convert_json_file (filename) {
-    try {
-        fil ⇐ open(filename, 'r')
+    }
+    defn read_and_convert_json_file (filename) {
+	try {
+            fil ⇐ open(filename, 'r')
             json_data ⇐ fil.read()
             routings ⇐ json.loads(json_data)
 	    fil.close ()
             return routings }
-    except FileNotFoundError {
-        print (f"File not found: {filename}")
-        return ϕ}
-    except json.JSONDecodeError as e {
-        print (f"Error decoding JSON in file: {e}")
-        return ϕ}
-}
+	except FileNotFoundError {
+            print (f"File not found: {filename}")
+            return ϕ}
+	except json.JSONDecodeError as e {
+            print (f"Error decoding JSON in file: {e}")
+            return ϕ}
+    }
 
-defn json2internal (container_xml) {
-    fname ⇐ os.path.basename (container_xml)
-    routings ⇐ read_and_convert_json_file (fname)
-    return routings
-}
+    defn json2internal (container_xml) {
+	fname ⇐ os.path.basename (container_xml)
+	routings ⇐ read_and_convert_json_file (fname)
+	return routings
+    }
 
-defn delete_decls (d) {
-    pass
-}
+    defn delete_decls (d) {
+	pass
+    }
 
-defn make_component_registry () {
-    return Component_Registry ()
-}
+    defn make_component_registry () {
+	return Component_Registry ()
+    }
 
-defn register_component (reg, template, ok_to_overwrite⇐⊥) {
-    name ⇐ mangle_name (template.name)
-    if name in reg.templates and not ok_to_overwrite {
-        load_error (f"Component {template.name} already declared")}
-    reg.templates[name] ⇐ template
-    return reg
-}
+    defn register_component (reg, template, ok_to_overwrite⇐⊥) {
+	name ⇐ mangle_name (template.name)
+	if name in reg.templates and not ok_to_overwrite {
+            load_error (f"Component {template.name} already declared")}
+	reg.templates[name] ⇐ template
+	return reg
+    }
 
-defn register_multiple_components (reg, templates) {
-    for template in templates {
-        register_component (reg, template)}
-}
+    defn register_multiple_components (reg, templates) {
+	for template in templates {
+            register_component (reg, template)}
+    }
 
-defn get_component_instance (reg, full_name, owner) {
-    template_name ⇐ mangle_name (full_name)
-    if template_name in reg.templates {
-        template ⇐ reg.templates[template_name]
-        if (template = ϕ) {
+    defn get_component_instance (reg, full_name, owner) {
+	template_name ⇐ mangle_name (full_name)
+	if template_name in reg.templates {
+            template ⇐ reg.templates[template_name]
+            if (template = ϕ) {
+		load_error (f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
+		return ϕ}
+            else {
+		owner_name ⇐ ""
+		instance_name ⇐ f"{template_name}"
+		if ϕ !⇐ owner {
+                    owner_name ⇐ owner.name
+                    instance_name ⇐ f"{owner_name}.{template_name}"}
+		else{
+                    instance_name ⇐ f"{template_name}"}
+		instance ⇐ template.instantiator (reg, owner, instance_name, template.template_data)
+		instance.depth ⇐ calculate_depth (instance)
+		return instance }}
+	else {
             load_error (f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
             return ϕ}
-        else {
-            owner_name ⇐ ""
-            instance_name ⇐ f"{template_name}"
-            if ϕ !⇐ owner {
-                owner_name ⇐ owner.name
-                instance_name ⇐ f"{owner_name}.{template_name}"}
-            else{
-                instance_name ⇐ f"{template_name}"}
-            instance ⇐ template.instantiator (reg, owner, instance_name, template.template_data)
-            instance.depth ⇐ calculate_depth (instance)
-            return instance }}
-    else {
-            load_error (f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
-            return ϕ}
-}
-defn calculate_depth (eh) {
-    if eh.owner = ϕ {
-        return 0}
-    else {
-        return 1 + calculate_depth (eh.owner)}
-}
+    }
+    defn calculate_depth (eh) {
+	if eh.owner = ϕ {
+            return 0}
+	else {
+            return 1 + calculate_depth (eh.owner)}
+    }
 
-defn dump_registry (reg) {
-    print ()
-    print ("*** PALETTE ***")
-    for c in reg.templates{
-        print (c.name)}
-    print ("***************")
-    print ()
-}
+    defn dump_registry (reg) {
+	print ()
+	print ("*** PALETTE ***")
+	for c in reg.templates{
+            print (c.name)}
+	print ("***************")
+	print ()
+    }
 
-defn print_stats (reg) {
-    print (f"registry statistics: {reg.stats}")
-}
+    defn print_stats (reg) {
+	print (f"registry statistics: {reg.stats}")
+    }
 
-defn mangle_name (s) {
-    # trim name to remove code from Container component names _ deferred until later (or never)
-    return s
-}
+    defn mangle_name (s) {
+	# trim name to remove code from Container component names _ deferred until later (or never)
+	return s
+    }
 
-import subprocess
-defn generate_shell_components (reg, container_list) {
-    # [
-    #     {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},
-    #     {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []}
-    # ]
-    if ϕ !⇐ container_list {
-        for diagram in container_list{
-            # loop through every component in the diagram and look for names that start with "$"
-            # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},
-            for child_descriptor in diagram@children{
-                if first_char_is (child_descriptor@name, "$"){
-                    name ⇐ child_descriptor@name
-                    cmd ⇐ stringcdr (name).strip ()
-                    generated_leaf ⇐ Template (name⇐name, instantiator⇐shell_out_instantiate, template_data⇐cmd)
-                    register_component (reg, generated_leaf)}
-                elif first_char_is (child_descriptor@name, "'"){
-                    name ⇐ child_descriptor@name
-                    s ⇐ stringcdr (name)
-                    generated_leaf ⇐ Template (name⇐name, instantiator⇐string_constant_instantiate, template_data⇐s)
-                    register_component (reg, generated_leaf, ok_to_overwrite⇐⊤)}}}}
-}
+    import subprocess
+    defn generate_shell_components (reg, container_list) {
+	# [
+	    #     {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},
+	    #     {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []}
+	    # ]
+	if ϕ !⇐ container_list {
+            for diagram in container_list{
+		# loop through every component in the diagram and look for names that start with "$"
+		    # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},
+		for child_descriptor in diagram@children{
+                    if first_char_is (child_descriptor@name, "$"){
+			name ⇐ child_descriptor@name
+			cmd ⇐ stringcdr (name).strip ()
+			generated_leaf ⇐ Template (name⇐name, instantiator⇐shell_out_instantiate, template_data⇐cmd)
+			register_component (reg, generated_leaf)}
+                    elif first_char_is (child_descriptor@name, "'"){
+			name ⇐ child_descriptor@name
+			s ⇐ stringcdr (name)
+			generated_leaf ⇐ Template (name⇐name, instantiator⇐string_constant_instantiate, template_data⇐s)
+			register_component (reg, generated_leaf, ok_to_overwrite⇐⊤)}}}}
+    }
 
-defn first_char (s) {
-    return car (s)
-}
+    defn first_char (s) {
+	return car (s)
+    }
 
-defn first_char_is (s, c) {
-    return c = first_char (s)
-}
+    defn first_char_is (s, c) {
+	return c = first_char (s)
+    }
 
-# this needs to be rewritten to use the low_level "shell_out" component, this can be done solely as a diagram without using python code here
-# I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped
+    # this needs to be rewritten to use the low_level "shell_out" component, this can be done solely as a diagram without using python code here
+    # I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped
 defn run_command (eh, cmd, s) {
     ret ⇐ subprocess.run (cmd, capture_output⇐⊤, input⇐s, encoding⇐'utf_8')
     if  not (ret.returncode = 0){
@@ -1535,4 +1535,5 @@ defn run (pregistry, root_project, root_0D, arg, main_container_name, diagram_so
     if show_all_outputs{
         print ("___ done ___")}
 }
+
 

@@ -1,0 +1,33 @@
+% grammar remphi
+
+main = pattern+
+
+pattern =
+  | defnwithphi -- withphi
+  | any -- default
+
+defnwithphi = "defn" spaces ident spaces "(" stuff* ")"
+
+stuff =
+  | "⇐ϕ" -- eqphi
+  | ~")" any -- default
+  
+ident = firstc restc*
+firstc = letter | "_"
+restc = alnum | "_"
+
+
+% rewrite
+main [p+] = ‛«p»’
+
+pattern_withphi [d] = ‛«d»’
+pattern_default [x] = ‛«x»’
+
+defnwithphi [_defn _ws1 id _ws2 lp stuff* rp] = ‛«_defn»«_ws1»«id»«_ws2»«lp»«stuff»«rp»’
+
+stuff_eqphi [x] = ‛’
+stuff_default [x] = ‛«x»’
+
+ident [f r*] = ‛«f»«r»’
+firstc [c] = ‛«c»’
+restc [c] = ‛«c»’
