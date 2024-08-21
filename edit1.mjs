@@ -15,10 +15,10 @@ remphi {
 main = pattern+
 
 pattern =
-  | applySyntactic<Defnwithphi> -- withphi
+  | defnwithphi -- withphi
   | any -- default
 
-Defnwithphi = "defn " ident "(" stuff* ")"
+defnwithphi = "defn " spaces ident spaces "(" stuff* ")"
 
 stuff =
   | "⇐ϕ" -- eqphi
@@ -77,24 +77,28 @@ _.set_top (return_value_stack, `${x}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Defnwithphi : function (__defn, _id, _lp, _stuff, _rp, ) {
+defnwithphi : function (__defn, _ws1, _id, _ws2, _lp, _stuff, _rp, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=_defn,id,lp,stuff,rp
+//** argnames=_defn,ws1,id,ws2,lp,stuff,rp
 let _defn = undefined;
+let ws1 = undefined;
 let id = undefined;
+let ws2 = undefined;
 let lp = undefined;
 let stuff = undefined;
 let rp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Defnwithphi");
+_.set_top (rule_name_stack, "defnwithphi");
 _defn = __defn.rwr ()
+ws1 = _ws1.rwr ()
 id = _id.rwr ()
+ws2 = _ws2.rwr ()
 lp = _lp.rwr ()
 stuff = _stuff.rwr ().join ('')
 rp = _rp.rwr ()
 
-_.set_top (return_value_stack, `defn ${id} ${lp}${stuff}${rp}`);
+_.set_top (return_value_stack, `${_defn}${ws1}${id}${ws2}${lp}${stuff}${rp}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
