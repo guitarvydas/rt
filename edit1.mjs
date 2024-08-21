@@ -22,6 +22,7 @@ Defnwithphi = "defn " ident "(" stuff* ")"
 
 stuff =
   | "⇐ϕ" -- eqphi
+  | "(" stuff* ")" -- nested
   | ~")" any -- default
   
 ident = ~"defn " firstc restc*
@@ -108,6 +109,24 @@ _.set_top (rule_name_stack, "stuff_eqphi");
 x = _x.rwr ()
 
 _.set_top (return_value_stack, ``);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+stuff_nested : function (_lp, _x, _rp, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=lp,x,rp
+let lp = undefined;
+let x = undefined;
+let rp = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "stuff_nested");
+lp = _lp.rwr ()
+x = _x.rwr ().join ('')
+rp = _rp.rwr ()
+
+_.set_top (return_value_stack, `(${x})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
