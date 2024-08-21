@@ -3,10 +3,10 @@
 main = pattern+
 
 pattern =
-  | defnwithphi -- withphi
+  | applySyntactic<Defnwithphi> -- withphi
   | any -- default
 
-defnwithphi = "defn " spaces ident spaces "(" stuff* ")"
+Defnwithphi = "defn " ident "(" stuff* ")"
 
 stuff =
   | "⇐ϕ" -- eqphi
@@ -23,7 +23,7 @@ main [p+] = ‛«p»’
 pattern_withphi [d] = ‛«d»’
 pattern_default [x] = ‛«x»’
 
-defnwithphi [_defn _ws1 id _ws2 lp stuff* rp] = ‛«_defn»«_ws1»«id»«_ws2»«lp»«stuff»«rp»’
+Defnwithphi [_defn id lp stuff* rp] = ‛defn «id» «lp»«stuff»«rp»’
 
 stuff_eqphi [x] = ‛’
 stuff_default [x] = ‛«x»’
