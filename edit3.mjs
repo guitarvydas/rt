@@ -9,22 +9,22 @@ let rule_name_stack = [];
 
 
 const grammar = String.raw`
-remphi {
+remmutate {
 
 
 main = pattern+
 
 pattern =
-  | defnwithphi -- withphi
+  | call -- call
   | any -- default
 
-defnwithphi = "defn " spaces ident spaces "(" stuff* ")"
+call = ident spaces "(" stuff* ")"
 
 stuff =
-  | "⇐ϕ" -- eqphi
+  | "⇐" -- mutate
   | ~")" any -- default
   
-ident = ~"defn " firstc restc*
+ident = firstc restc*
 firstc = letter | "_"
 restc = alnum | "_"
 
@@ -48,16 +48,16 @@ _.set_top (return_value_stack, `${p}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-pattern_withphi : function (_d, ) {
+pattern_call : function (_x, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=d
-let d = undefined;
+//** argnames=x
+let x = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "pattern_withphi");
-d = _d.rwr ()
+_.set_top (rule_name_stack, "pattern_call");
+x = _x.rwr ()
 
-_.set_top (return_value_stack, `${d}`);
+_.set_top (return_value_stack, `${x}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -76,11 +76,9 @@ _.set_top (return_value_stack, `${x}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-defnwithphi : function (__defn, __ws1, _id, __ws2, _lp, _stuff, _rp, ) {
+call : function (_id, __ws2, _lp, _stuff, _rp, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=_defn,_ws1,id,_ws2,lp,stuff,rp
-let _defn = undefined;
-let _ws1 = undefined;
+//** argnames=id,_ws2,lp,stuff,rp
 let id = undefined;
 let _ws2 = undefined;
 let lp = undefined;
@@ -88,30 +86,28 @@ let stuff = undefined;
 let rp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "defnwithphi");
-_defn = __defn.rwr ()
-_ws1 = __ws1.rwr ()
+_.set_top (rule_name_stack, "call");
 id = _id.rwr ()
 _ws2 = __ws2.rwr ()
 lp = _lp.rwr ()
 stuff = _stuff.rwr ().join ('')
 rp = _rp.rwr ()
 
-_.set_top (return_value_stack, `${_defn}${_ws1}${id}${_ws2}${lp}${stuff}${rp}`);
+_.set_top (return_value_stack, `${id}${_ws2}${lp}${stuff}${rp}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-stuff_eqphi : function (_x, ) {
+stuff_mutate : function (_x, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=x
 let x = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "stuff_eqphi");
+_.set_top (rule_name_stack, "stuff_mutate");
 x = _x.rwr ()
 
-_.set_top (return_value_stack, ``);
+_.set_top (return_value_stack, ` ∷ `);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

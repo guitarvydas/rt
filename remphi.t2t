@@ -6,13 +6,13 @@ pattern =
   | defnwithphi -- withphi
   | any -- default
 
-defnwithphi = "defn" spaces ident spaces "(" stuff* ")"
+defnwithphi = "defn " spaces ident spaces "(" stuff* ")"
 
 stuff =
   | "⇐ϕ" -- eqphi
   | ~")" any -- default
   
-ident = firstc restc*
+ident = ~"defn " firstc restc*
 firstc = letter | "_"
 restc = alnum | "_"
 

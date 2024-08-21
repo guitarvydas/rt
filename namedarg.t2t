@@ -3,10 +3,10 @@
 main = pattern+
 
 pattern =
-  | defnwithmutate -- defn
+  | call -- call
   | any -- default
 
-defnwithmutate = "defn" spaces ident spaces "(" stuff* ")"
+call = ident spaces "(" stuff* ")"
 
 stuff =
   | "⇐" -- mutate
@@ -20,10 +20,10 @@ restc = alnum | "_"
 % rewrite
 main [p+] = ‛«p»’
 
-pattern_defn [d] = ‛«d»’
+pattern_call [x] = ‛«x»’
 pattern_default [x] = ‛«x»’
 
-defnwithmutate [_defn _ws1 id _ws2 lp stuff* rp] = ‛«_defn»«_ws1»«id»«_ws2»«lp»«stuff»«rp»’
+call [id _ws2 lp stuff* rp] = ‛«id»«_ws2»«lp»«stuff»«rp»’
 
 stuff_mutate [x] = ‛ ∷ ’
 stuff_default [x] = ‛«x»’
