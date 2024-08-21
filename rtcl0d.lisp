@@ -31,17 +31,17 @@
 (defun new_datum_string (s)
   (progn
     (let (d (fresh-Datum))
-      (let ((slot-value 'data d) s)
-        (let ((slot-value 'clone d) #'(lambda  (clone_datum_string  d)))
-          (let ((slot-value 'reclaim d) #'(lambda  (reclaim_datum_string  d)))
-            (let ((slot-value 'srepr d) #'(lambda  (srepr_datum_string  d)))
-              (let ((slot-value 'raw d) #'(lambda  (raw_datum_string  d)))
-                (let ((slot-value 'kind d) #'(lambda  "string"))
+      (let ((cdr (assoc 'data d)) s)
+        (let ((cdr (assoc 'clone d)) #'(lambda  (clone_datum_string  d)))
+          (let ((cdr (assoc 'reclaim d)) #'(lambda  (reclaim_datum_string  d)))
+            (let ((cdr (assoc 'srepr d)) #'(lambda  (srepr_datum_string  d)))
+              (let ((cdr (assoc 'raw d)) #'(lambda  (raw_datum_string  d)))
+                (let ((cdr (assoc 'kind d)) #'(lambda  "string"))
                   
                   (return-from new_datum_string d))))))))))
 (defun clone_datum_string (d)
   (progn
-    (let (d (new_datum_string  (slot-value 'data d)))
+    (let (d (new_datum_string  (cdr (assoc 'data d))))
       
       (return-from clone_datum_string d))))
 (defun reclaim_datum_string (src)
@@ -50,20 +50,20 @@
 (defun srepr_datum_string (d)
   (progn
     
-    (return-from srepr_datum_string (slot-value 'data d))))
+    (return-from srepr_datum_string (cdr (assoc 'data d)))))
 (defun raw_datum_string (d)
   (progn
     
-    (return-from raw_datum_string (bytearray  (slot-value 'data d)  'UTF_8'))))
+    (return-from raw_datum_string (bytearray  (cdr (assoc 'data d))  'UTF_8'))))
 (defun new_datum_bang ()
   (progn
     (let (p (Datum ))
-      (let ((slot-value 'data p)  t)
-        (let ((slot-value 'clone p) #'(lambda  (clone_datum_bang  p)))
-          (let ((slot-value 'reclaim p) #'(lambda  (reclaim_datum_bang  p)))
-            (let ((slot-value 'srepr p) #'(lambda  (srepr_datum_bang )))
-              (let ((slot-value 'raw p) #'(lambda  (raw_datum_bang )))
-                (let ((slot-value 'kind p) #'(lambda  "bang"))
+      (let ((cdr (assoc 'data p))  t)
+        (let ((cdr (assoc 'clone p)) #'(lambda  (clone_datum_bang  p)))
+          (let ((cdr (assoc 'reclaim p)) #'(lambda  (reclaim_datum_bang  p)))
+            (let ((cdr (assoc 'srepr p)) #'(lambda  (srepr_datum_bang )))
+              (let ((cdr (assoc 'raw p)) #'(lambda  (raw_datum_bang )))
+                (let ((cdr (assoc 'kind p)) #'(lambda  "bang"))
                   
                   (return-from new_datum_bang p))))))))))
 (defun clone_datum_bang (d)
@@ -84,10 +84,10 @@
 (defun new_datum_tick ()
   (progn
     (let (p (new_datum_bang ))
-      (let ((slot-value 'kind p) #'(lambda  "tick"))
-        (let ((slot-value 'clone p) #'(lambda  (new_datum_tick )))
-          (let ((slot-value 'srepr p) #'(lambda  (srepr_datum_tick )))
-            (let ((slot-value 'raw p) #'(lambda  (raw_datum_tick )))
+      (let ((cdr (assoc 'kind p)) #'(lambda  "tick"))
+        (let ((cdr (assoc 'clone p)) #'(lambda  (new_datum_tick )))
+          (let ((cdr (assoc 'srepr p)) #'(lambda  (srepr_datum_tick )))
+            (let ((cdr (assoc 'raw p)) #'(lambda  (raw_datum_tick )))
               
               (return-from new_datum_tick p))))))))
 (defun srepr_datum_tick ()
@@ -101,19 +101,19 @@
 (defun new_datum_bytes (b)
   (progn
     (let (p (Datum ))
-      (let ((slot-value 'data p) b)
-        (let ((slot-value 'clone p) clone_datum_bytes)
-          (let ((slot-value 'reclaim p) #'(lambda  (reclaim_datum_bytes  p)))
-            (let ((slot-value 'srepr p) #'(lambda  (srepr_datum_bytes  b)))
-              (let ((slot-value 'raw p) #'(lambda  (raw_datum_bytes  b)))
-                (let ((slot-value 'kind p) #'(lambda  "bytes"))
+      (let ((cdr (assoc 'data p)) b)
+        (let ((cdr (assoc 'clone p)) clone_datum_bytes)
+          (let ((cdr (assoc 'reclaim p)) #'(lambda  (reclaim_datum_bytes  p)))
+            (let ((cdr (assoc 'srepr p)) #'(lambda  (srepr_datum_bytes  b)))
+              (let ((cdr (assoc 'raw p)) #'(lambda  (raw_datum_bytes  b)))
+                (let ((cdr (assoc 'kind p)) #'(lambda  "bytes"))
                   
                   (return-from new_datum_bytes p))))))))))
 (defun clone_datum_bytes (src)
   (progn
     (let (p (Datum ))
       (let (p src)
-        (let ((slot-value 'data p) (slot-value '(clone ) src))
+        (let ((cdr (assoc 'data p)) (funcall (cdr (assoc 'clone src)) ))
           
           (return-from clone_datum_bytes p))))))
 (defun reclaim_datum_bytes (src)
@@ -122,11 +122,11 @@
 (defun srepr_datum_bytes (d)
   (progn
     
-    (return-from srepr_datum_bytes (slot-value '(slot-value '(decode  'utf_8') data) d))))
+    (return-from srepr_datum_bytes (funcall (cdr (assoc 'decode (cdr (assoc 'data d))))  'utf_8'))))
 (defun raw_datum_bytes (d)
   (progn
     
-    (return-from raw_datum_bytes (slot-value 'data d))))
+    (return-from raw_datum_bytes (cdr (assoc 'data d)))))
 (defun new_datum_handle (h)
   (progn
     
@@ -134,12 +134,12 @@
 (defun new_datum_int (i)
   (progn
     (let (p (Datum ))
-      (let ((slot-value 'data p) i)
-        (let ((slot-value 'clone p) #'(lambda  (clone_int  i)))
-          (let ((slot-value 'reclaim p) #'(lambda  (reclaim_int  i)))
-            (let ((slot-value 'srepr p) #'(lambda  (srepr_datum_int  i)))
-              (let ((slot-value 'raw p) #'(lambda  (raw_datum_int  i)))
-                (let ((slot-value 'kind p) #'(lambda  "int"))
+      (let ((cdr (assoc 'data p)) i)
+        (let ((cdr (assoc 'clone p)) #'(lambda  (clone_int  i)))
+          (let ((cdr (assoc 'reclaim p)) #'(lambda  (reclaim_int  i)))
+            (let ((cdr (assoc 'srepr p)) #'(lambda  (srepr_datum_int  i)))
+              (let ((cdr (assoc 'raw p)) #'(lambda  (raw_datum_int  i)))
+                (let ((cdr (assoc 'kind p)) #'(lambda  "int"))
                   
                   (return-from new_datum_int p))))))))))
 (defun clone_int (i)
@@ -171,12 +171,12 @@
 (defun make_message (port datum)
   (progn
     (let (p (clone_string  port))
-      (let (m (Message  p  (slot-value '(clone ) datum)))
+      (let (m (Message  p  (funcall (cdr (assoc 'clone datum)) )))
         
         (return-from make_message m)))))
 (defun message_clone (message)
   (progn
-    (let (m (Message  (clone_port  (slot-value 'port message))  (slot-value '(slot-value '(clone ) datum) message)))
+    (let (m (Message  (clone_port  (cdr (assoc 'port message)))  (funcall (cdr (assoc 'clone (cdr (assoc 'datum message)))) )))
       
       (return-from message_clone m))))
 (defun destroy_message (msg)
@@ -218,12 +218,12 @@
       (return-from make_Send_Descriptor (fresh-hash (list  ("action" . drSend) ("component" . (gethash 'component rdesc)) ("port" . (gethash 'port rdesc)) ("message" . (gethash 'message rdesc)) ("cause_port" . cause_port) ("cause_message" . cause_message) ("fmt" . fmt_send)))))))
 (defun log_send (sender sender_port msg cause_msg)
   (progn
-    (let (send_desc (make_Send_Descriptor  sender  sender_port  msg  (slot-value 'port cause_msg)  cause_msg))
-      (append_routing_descriptor  (slot-value 'owner sender)  send_desc))))
+    (let (send_desc (make_Send_Descriptor  sender  sender_port  msg  (cdr (assoc 'port cause_msg))  cause_msg))
+      (append_routing_descriptor  (cdr (assoc 'owner sender))  send_desc))))
 (defun log_send_string (sender sender_port msg cause_msg)
   (progn
-    (let (send_desc (make_Send_Descriptor  sender  sender_port  msg  (slot-value 'port cause_msg)  cause_msg))
-      (append_routing_descriptor  (slot-value 'owner sender)  send_desc))))
+    (let (send_desc (make_Send_Descriptor  sender  sender_port  msg  (cdr (assoc 'port cause_msg))  cause_msg))
+      (append_routing_descriptor  (cdr (assoc 'owner sender))  send_desc))))
 (defun fmt_send (desc indent)
   (progn
     
@@ -313,12 +313,12 @@
 (defun log_inout (container= nil component= nil in_message= nil)
   (progn
     (cond 
-      ((slot-value '(slot-value '(empty ) outq) component) 
+      ((funcall (cdr (assoc 'empty (cdr (assoc 'outq component)))) ) 
         (progn
           (log_inout_no_output  container  component  in_message)))
       (t 
         (progn
-          (log_inout_recursively  container  component  in_message  (list  (slot-value '(slot-value 'queue outq) component))))))))
+          (log_inout_recursively  container  component  in_message  (list  (cdr (assoc 'queue (cdr (assoc 'outq component)))))))))))
 (defun log_inout_no_output (container= nil component= nil in_message= nil)
   (progn
     (let (rdesc (make_InOut_Descriptor  container  component  in_message))
@@ -357,7 +357,7 @@
 (defun routing_trace_all (container)
   (progn
     (let (indent "")
-      (let (lis (list  (slot-value '(slot-value 'queue routings) container)))
+      (let (lis (list  (cdr (assoc 'queue (cdr (assoc 'routings container))))))
         
         (return-from routing_trace_all (recursive_routing_trace  container  lis  indent))))))
 (defun recursive_routing_trace (container lis indent)
@@ -370,7 +370,7 @@
       (t 
         (progn
           (let (desc (first  lis))
-            (let (formatted ((gethash 'fmt desc)  desc  indent))
+            (let (formatted (funcall (gethash 'fmt desc)  desc  indent))
               
               (return-from recursive_routing_trace (+ formatted (recursive_routing_trace  container  (rest  lis)  (+ indent '  ')))))))))))
 (defconstant enumDown 0)
@@ -385,9 +385,9 @@
           for child_desc in (gethash 'children desc):
           (progn
             (let (child_instance (get_component_instance  reg  (gethash 'name child_desc)  container))
-              (slot-value '(append  child_instance) children)
+              (funcall (cdr (assoc 'append children))  child_instance)
               (let ((aref children_by_id (gethash 'id child_desc)) child_instance))))
-          (let ((slot-value 'children container) children)
+          (let ((cdr (assoc 'children container)) children)
             (let (me container)
               (let (connectors  nil)
                 for proto_conn in (gethash 'connections desc):
@@ -398,8 +398,8 @@
                         (cond 
                           (( equal  (gethash 'dir proto_conn) enumDown) 
                             (progn
-                              (let ((slot-value 'direction connector) "down")
-                                (let ((slot-value 'sender connector) (Sender  (slot-value 'name me)  me  (gethash 'source_port proto_conn)))
+                              (let ((cdr (assoc 'direction connector)) "down")
+                                (let ((cdr (assoc 'sender connector)) (Sender  (cdr (assoc 'name me))  me  (gethash 'source_port proto_conn)))
                                   (let (target_component (aref children_by_id (gethash 'id (gethash 'target proto_conn))))
                                     (cond 
                                       ( ( equal  target_component  nil) 
@@ -407,11 +407,11 @@
                                           (load_error  f"internal error: .Down connection target internal error {proto_conn@target}")))
                                       (t 
                                         (progn
-                                          (let ((slot-value 'receiver connector) (Receiver  (slot-value 'name target_component)  (slot-value 'inq target_component)  (gethash 'target_port proto_conn)  target_component))
-                                            (slot-value '(append  connector) connectors))))))))))
+                                          (let ((cdr (assoc 'receiver connector)) (Receiver  (cdr (assoc 'name target_component))  (cdr (assoc 'inq target_component))  (gethash 'target_port proto_conn)  target_component))
+                                            (funcall (cdr (assoc 'append connectors))  connector))))))))))
                           (( equal  (gethash 'dir proto_conn) enumAcross) 
                             (progn
-                              (let ((slot-value 'direction connector) "across")
+                              (let ((cdr (assoc 'direction connector)) "across")
                                 (let (source_component (aref children_by_id (gethash 'id (gethash 'source proto_conn))))
                                   (let (target_component (aref children_by_id (gethash 'id (gethash 'target proto_conn))))
                                     (cond 
@@ -420,18 +420,18 @@
                                           (load_error  f"internal error: .Across connection source not ok {proto_conn@source}")))
                                       (t 
                                         (progn
-                                          (let ((slot-value 'sender connector) (Sender  (slot-value 'name source_component)  source_component  (gethash 'source_port proto_conn)))
+                                          (let ((cdr (assoc 'sender connector)) (Sender  (cdr (assoc 'name source_component))  source_component  (gethash 'source_port proto_conn)))
                                             (cond 
                                               (( equal  target_component  nil) 
                                                 (progn
                                                   (load_error  f"internal error: .Across connection target not ok {proto_conn.target}")))
                                               (t 
                                                 (progn
-                                                  (let ((slot-value 'receiver connector) (Receiver  (slot-value 'name target_component)  (slot-value 'inq target_component)  (gethash 'target_port proto_conn)  target_component))
-                                                    (slot-value '(append  connector) connectors))))))))))))))
+                                                  (let ((cdr (assoc 'receiver connector)) (Receiver  (cdr (assoc 'name target_component))  (cdr (assoc 'inq target_component))  (gethash 'target_port proto_conn)  target_component))
+                                                    (funcall (cdr (assoc 'append connectors))  connector))))))))))))))
                           (( equal  (gethash 'dir proto_conn) enumUp) 
                             (progn
-                              (let ((slot-value 'direction connector) "up")
+                              (let ((cdr (assoc 'direction connector)) "up")
                                 (let (source_component (aref children_by_id (gethash 'id (gethash 'source proto_conn))))
                                   (cond 
                                     (( equal  source_component  nil) 
@@ -439,16 +439,16 @@
                                         (print  f"internal error: .Up connection source not ok {proto_conn@source}")))
                                     (t 
                                       (progn
-                                        (let ((slot-value 'sender connector) (Sender  (slot-value 'name source_component)  source_component  (gethash 'source_port proto_conn)))
-                                          (let ((slot-value 'receiver connector) (Receiver  (slot-value 'name me)  (slot-value 'outq container)  (gethash 'target_port proto_conn)  me))
-                                            (slot-value '(append  connector) connectors))))))))))
+                                        (let ((cdr (assoc 'sender connector)) (Sender  (cdr (assoc 'name source_component))  source_component  (gethash 'source_port proto_conn)))
+                                          (let ((cdr (assoc 'receiver connector)) (Receiver  (cdr (assoc 'name me))  (cdr (assoc 'outq container))  (gethash 'target_port proto_conn)  me))
+                                            (funcall (cdr (assoc 'append connectors))  connector))))))))))
                           (( equal  (gethash 'dir proto_conn) enumThrough) 
                             (progn
-                              (let ((slot-value 'direction connector) "through")
-                                (let ((slot-value 'sender connector) (Sender  (slot-value 'name me)  me  (gethash 'source_port proto_conn)))
-                                  (let ((slot-value 'receiver connector) (Receiver  (slot-value 'name me)  (slot-value 'outq container)  (gethash 'target_port proto_conn)  me))
-                                    (slot-value '(append  connector) connectors)))))))))))
-                (let ((slot-value 'connections container) connectors)
+                              (let ((cdr (assoc 'direction connector)) "through")
+                                (let ((cdr (assoc 'sender connector)) (Sender  (cdr (assoc 'name me))  me  (gethash 'source_port proto_conn)))
+                                  (let ((cdr (assoc 'receiver connector)) (Receiver  (cdr (assoc 'name me))  (cdr (assoc 'outq container))  (gethash 'target_port proto_conn)  me))
+                                    (funcall (cdr (assoc 'append connectors))  connector)))))))))))
+                (let ((cdr (assoc 'connections container)) connectors)
                   
                   (return-from container_instantiator container))))))))))
 (defun container_handler (container message)
@@ -463,7 +463,7 @@
 (defun fifo_is_empty (fifo)
   (progn
     
-    (return-from fifo_is_empty (slot-value '(empty ) fifo))))
+    (return-from fifo_is_empty (funcall (cdr (assoc 'empty fifo)) ))))
 (defun new-Connector ()
   (list
     (cons 'direction  nil)
@@ -485,55 +485,55 @@
 
 (defun sender_eq (s1 s2)
   (progn
-    (let (same_components  ( equal  (slot-value 'component s1) (slot-value 'component s2)))
-      (let (same_ports  ( equal  (slot-value 'port s1) (slot-value 'port s2)))
+    (let (same_components  ( equal  (cdr (assoc 'component s1)) (cdr (assoc 'component s2))))
+      (let (same_ports  ( equal  (cdr (assoc 'port s1)) (cdr (assoc 'port s2))))
         
         (return-from sender_eq ( and  same_components same_ports))))))
 (defun deposit (parent conn message)
   (progn
-    (let (new_message (make_message  (slot-value '(slot-value 'port receiver) conn)  (slot-value 'datum message)))
+    (let (new_message (make_message  (cdr (assoc 'port (cdr (assoc 'receiver conn))))  (cdr (assoc 'datum message))))
       (log_connection  parent  conn  new_message)
-      (push_message  parent  (slot-value '(slot-value 'component receiver) conn)  (slot-value '(slot-value 'queue receiver) conn)  new_message))))
+      (push_message  parent  (cdr (assoc 'component (cdr (assoc 'receiver conn))))  (cdr (assoc 'queue (cdr (assoc 'receiver conn))))  new_message))))
 (defun force_tick (parent eh)
   (progn
     (let (tick_msg (make_message  "."  (new_datum_tick )))
-      (push_message  parent  eh  (slot-value 'inq eh)  tick_msg)
+      (push_message  parent  eh  (cdr (assoc 'inq eh))  tick_msg)
       
       (return-from force_tick tick_msg))))
 (defun push_message (parent receiver inq m)
   (progn
-    (slot-value '(put  m) inq)
-    (slot-value '(slot-value '(put  receiver) visit_ordering) parent)))
+    (funcall (cdr (assoc 'put inq))  m)
+    (funcall (cdr (assoc 'put (cdr (assoc 'visit_ordering parent))))  receiver)))
 (defun is_self (child container)
   (progn
     
     (return-from is_self ( equal  child container))))
 (defun step_child (child msg)
   (progn
-    (let (before_state (slot-value 'state child))
-      (slot-value '(handler  child  msg) child)
-      (let (after_state (slot-value 'state child))
+    (let (before_state (cdr (assoc 'state child)))
+      (funcall (cdr (assoc 'handler child))  child  msg)
+      (let (after_state (cdr (assoc 'state child)))
         
         (return-from step_child (values (not (equal ( and  ( equal  before_state "idle") after_state) "idle"))  (not (equal ( and  (not (equal before_state "idle")) after_state) "idle")) ( equal  ( and  (not (equal before_state "idle")) after_state) "idle")))))))
 (defun save_message (eh msg)
   (progn
-    (slot-value '(slot-value '(put  msg) saved_messages) eh)))
+    (funcall (cdr (assoc 'put (cdr (assoc 'saved_messages eh))))  msg)))
 (defun fetch_saved_message_and_clear (eh)
   (progn
     
-    (return-from fetch_saved_message_and_clear (slot-value '(slot-value '(get ) saved_messages) eh))))
+    (return-from fetch_saved_message_and_clear (funcall (cdr (assoc 'get (cdr (assoc 'saved_messages eh)))) ))))
 (defun step_children (container causingMessage)
   (progn
-    (let ((slot-value 'state container) "idle")
-      for child in (list  (slot-value '(slot-value 'queue visit_ordering) container)):
+    (let ((cdr (assoc 'state container)) "idle")
+      for child in (list  (cdr (assoc 'queue (cdr (assoc 'visit_ordering container))))):
       (progn
         (cond 
           ( (not  (is_self  child  container)) 
             (progn
               (cond 
-                ( (not  (slot-value '(slot-value '(empty ) inq) child)) 
+                ( (not  (funcall (cdr (assoc 'empty (cdr (assoc 'inq child)))) )) 
                   (progn
-                    (let (msg (slot-value '(slot-value '(get ) inq) child))
+                    (let (msg (funcall (cdr (assoc 'get (cdr (assoc 'inq child)))) ))
                       (multiple-value-bind (began_long_run , continued_long_run, ended_long_run)
                         (step_child  child  msg)
                         (cond 
@@ -553,38 +553,38 @@
                 (t 
                   (progn
                     (cond 
-                      ( (not (equal (slot-value 'state child) "idle")) 
+                      ( (not (equal (cdr (assoc 'state child)) "idle")) 
                         (progn
                           (let (msg (force_tick  container  child))
-                            (slot-value '(handler  child  msg) child)
+                            (funcall (cdr (assoc 'handler child))  child  msg)
                             (log_tick  container  child  msg)
                             (destroy_message  msg))))))))
               (cond 
-                ( ( equal  (slot-value 'state child) "active") 
+                ( ( equal  (cdr (assoc 'state child)) "active") 
                   (progn
-                    (let ((slot-value 'state container) "active")))))
-              while  (not  (slot-value '(slot-value '(empty ) outq) child)):
+                    (let ((cdr (assoc 'state container)) "active")))))
+              while  (not  (funcall (cdr (assoc 'empty (cdr (assoc 'outq child)))) )):
               (progn
-                (let (msg (slot-value '(slot-value '(get ) outq) child))
+                (let (msg (funcall (cdr (assoc 'get (cdr (assoc 'outq child)))) ))
                   (route  container  child  msg)
                   (destroy_message  msg))))))))))
 (defun attempt_tick (parent eh)
   (progn
     (cond 
-      ((not (equal (slot-value 'state eh) "idle")) 
+      ((not (equal (cdr (assoc 'state eh)) "idle")) 
         (progn
           (force_tick  parent  eh))))))
 (defun is_tick (msg)
   (progn
     
-    (return-from is_tick ( equal  "tick" (slot-value '(slot-value '(kind ) datum) msg)))))
+    (return-from is_tick ( equal  "tick" (funcall (cdr (assoc 'kind (cdr (assoc 'datum msg)))) )))))
 (defun route (container from_component message)
   (progn
     (let (was_sent  nil)
       (cond 
         ((is_tick  message) 
           (progn
-            for child in (slot-value 'children container):
+            for child in (cdr (assoc 'children container)):
             (progn
               (attempt_tick  container  child  message))
             (let (was_sent  t))))
@@ -594,12 +594,12 @@
               (cond 
                 ( (not  (is_self  from_component  container)) 
                   (progn
-                    (let (fromname (slot-value 'name from_component))))))
-              (let (from_sender (Sender  fromname  from_component  (slot-value 'port message)))
-                for connector in (slot-value 'connections container):
+                    (let (fromname (cdr (assoc 'name from_component)))))))
+              (let (from_sender (Sender  fromname  from_component  (cdr (assoc 'port message))))
+                for connector in (cdr (assoc 'connections container)):
                 (progn
                   (cond 
-                    ((sender_eq  from_sender  (slot-value 'sender connector)) 
+                    ((sender_eq  from_sender  (cdr (assoc 'sender connector))) 
                       (progn
                         (deposit  container  connector  message)
                         (let (was_sent  t)))))))))))
@@ -616,12 +616,12 @@
 (defun dump_possible_connections (container)
   (progn
     (print  f"*** possible connections for {container.name}:")
-    for connector in (slot-value 'connections container):
+    for connector in (cdr (assoc 'connections container)):
     (progn
       (print  f"{connector.direction} {connector.sender.name}.{connector.sender.port} -> {connector.receiver.name}.{connector.receiver.port}"))))
 (defun any_child_ready (container)
   (progn
-    for child in (slot-value 'children container):
+    for child in (cdr (assoc 'children container)):
     (progn
       (cond 
         ((child_is_ready  child) 
@@ -633,35 +633,35 @@
 (defun child_is_ready (eh)
   (progn
     
-    (return-from child_is_ready ( or  ( or  ( or   (not  (slot-value '(slot-value '(empty ) outq) eh))  (not  (slot-value '(slot-value '(empty ) inq) eh)))  (not (equal (slot-value 'state eh) "idle")))  (any_child_ready  eh)))))
+    (return-from child_is_ready ( or  ( or  ( or   (not  (funcall (cdr (assoc 'empty (cdr (assoc 'outq eh)))) ))  (not  (funcall (cdr (assoc 'empty (cdr (assoc 'inq eh)))) )))  (not (equal (cdr (assoc 'state eh)) "idle")))  (any_child_ready  eh)))))
 (defun print_routing_trace (eh)
   (progn
     (print  (routing_trace_all  eh))))
 (defun append_routing_descriptor (container desc)
   (progn
-    (slot-value '(slot-value '(put  desc) routings) container)))
+    (funcall (cdr (assoc 'put (cdr (assoc 'routings container))))  desc)))
 (defun log_connection (container connector message)
   (progn
     (cond 
-      (( equal  "down" (slot-value 'direction connector)) 
+      (( equal  "down" (cdr (assoc 'direction connector))) 
         (progn
-          (log_down  container  (slot-value '(slot-value 'port sender) connector)  (slot-value '(slot-value 'component receiver) connector)  (slot-value '(slot-value 'port receiver) connector)  message)))
-      (( equal  "up" (slot-value 'direction connector)) 
+          (log_down  container  (cdr (assoc 'port (cdr (assoc 'sender connector))))  (cdr (assoc 'component (cdr (assoc 'receiver connector))))  (cdr (assoc 'port (cdr (assoc 'receiver connector))))  message)))
+      (( equal  "up" (cdr (assoc 'direction connector))) 
         (progn
-          (log_up  (slot-value '(slot-value 'component sender) connector)  (slot-value '(slot-value 'port sender) connector)  container  (slot-value '(slot-value 'port receiver) connector)  message)))
-      (( equal  "across" (slot-value 'direction connector)) 
+          (log_up  (cdr (assoc 'component (cdr (assoc 'sender connector))))  (cdr (assoc 'port (cdr (assoc 'sender connector))))  container  (cdr (assoc 'port (cdr (assoc 'receiver connector))))  message)))
+      (( equal  "across" (cdr (assoc 'direction connector))) 
         (progn
-          (log_across  container  (slot-value '(slot-value 'component sender) connector)  (slot-value '(slot-value 'port sender) connector)  (slot-value '(slot-value 'component receiver) connector)  (slot-value '(slot-value 'port receiver) connector)  message)))
-      (( equal  "through" (slot-value 'direction connector)) 
+          (log_across  container  (cdr (assoc 'component (cdr (assoc 'sender connector))))  (cdr (assoc 'port (cdr (assoc 'sender connector))))  (cdr (assoc 'component (cdr (assoc 'receiver connector))))  (cdr (assoc 'port (cdr (assoc 'receiver connector))))  message)))
+      (( equal  "through" (cdr (assoc 'direction connector))) 
         (progn
-          (log_through  container  (slot-value '(slot-value 'port sender) connector)   nil  (slot-value '(slot-value 'port receiver) connector)  message)))
+          (log_through  container  (cdr (assoc 'port (cdr (assoc 'sender connector))))   nil  (cdr (assoc 'port (cdr (assoc 'receiver connector))))  message)))
       (t 
         (progn
           (print  f"*** FATAL error: in log_connection /{connector.direction}/ /{message.port}/ /{message.datum.srepr ()}/")
           (exit ))))))
 (defun container_injector (container message)
   (progn
-    (log_inject  container  (slot-value 'port message)  message)
+    (log_inject  container  (cdr (assoc 'port message))  message)
     (container_handler  container  message)))
 import os
 import json
@@ -682,22 +682,22 @@ import sys
     
     (progn
       (let (fil (open  filename  'r'))
-        (let (json_data (slot-value '(read ) fil))
-          (let (routings (slot-value '(loads  json_data) json))
-            (slot-value '(close ) fil)
+        (let (json_data (funcall (cdr (assoc 'read fil)) ))
+          (let (routings (funcall (cdr (assoc 'loads json))  json_data))
+            (funcall (cdr (assoc 'close fil)) )
             
             (return-from read_and_convert_json_file routings)))))except FileNotFoundError:
     (progn
       (print  f"File not found: {filename}")
       
-      (return-from read_and_convert_json_file  nil))except (slot-value 'JSONDecodeError json) as e:
+      (return-from read_and_convert_json_file  nil))except (cdr (assoc 'JSONDecodeError json)) as e:
     (progn
       (print  f"Error decoding JSON in file: {e}")
       
       (return-from read_and_convert_json_file  nil))))
 (defun json2internal (container_xml)
   (progn
-    (let (fname (slot-value '(slot-value '(basename  container_xml) path) os))
+    (let (fname (funcall (cdr (assoc 'basename (cdr (assoc 'path os))))  container_xml))
       (let (routings (read_and_convert_json_file  fname))
         
         (return-from json2internal routings)))))
@@ -710,12 +710,12 @@ import sys
     (return-from make_component_registry (Component_Registry ))))
 (defun register_component (reg template ok_to_overwrite= nil)
   (progn
-    (let (name (mangle_name  (slot-value 'name template)))
+    (let (name (mangle_name  (cdr (assoc 'name template))))
       (cond 
-        (( and  ( in  name (slot-value 'templates reg)) (not ok_to_overwrite)) 
+        (( and  ( in  name (cdr (assoc 'templates reg))) (not ok_to_overwrite)) 
           (progn
             (load_error  f"Component {template.name} already declared"))))
-      (let ((slot-value '(aref templates name) reg) template)
+      (let ((aref (cdr (assoc 'templates reg)) name) template)
         
         (return-from register_component reg)))))
 (defun register_multiple_components (reg templates)
@@ -727,9 +727,9 @@ import sys
   (progn
     (let (template_name (mangle_name  full_name))
       (cond 
-        (( in  template_name (slot-value 'templates reg)) 
+        (( in  template_name (cdr (assoc 'templates reg))) 
           (progn
-            (let (template (slot-value '(aref templates template_name) reg))
+            (let (template (aref (cdr (assoc 'templates reg)) template_name))
               (cond 
                 ( ( equal  template  nil) 
                   (progn
@@ -743,13 +743,13 @@ import sys
                           (cond 
                             ((not (equal  nil owner)) 
                               (progn
-                                (let (owner_name (slot-value 'name owner))
+                                (let (owner_name (cdr (assoc 'name owner)))
                                   (let (instance_name f"{owner_name}.{template_name}")))))
                             (t 
                               (progn
                                 (let (instance_name f"{template_name}")))))
-                          (let (instance (slot-value '(instantiator  reg  owner  instance_name  (slot-value 'template_data template)) template))
-                            (let ((slot-value 'depth instance) (calculate_depth  instance))
+                          (let (instance (funcall (cdr (assoc 'instantiator template))  reg  owner  instance_name  (cdr (assoc 'template_data template))))
+                            (let ((cdr (assoc 'depth instance)) (calculate_depth  instance))
                               
                               (return-from get_component_instance instance)))))))))))
           (t 
@@ -760,21 +760,21 @@ import sys
     (defun calculate_depth (eh)
       (progn
         (cond 
-          (( equal  (slot-value 'owner eh)  nil) 
+          (( equal  (cdr (assoc 'owner eh))  nil) 
             (progn
               
               (return-from calculate_depth 0)))
           (t 
             (progn
               
-              (return-from calculate_depth (+ 1 (calculate_depth  (slot-value 'owner eh)))))))))
+              (return-from calculate_depth (+ 1 (calculate_depth  (cdr (assoc 'owner eh))))))))))
     (defun dump_registry (reg)
       (progn
         (print )
         (print  "*** PALETTE ***")
-        for c in (slot-value 'templates reg):
+        for c in (cdr (assoc 'templates reg)):
         (progn
-          (print  (slot-value 'name c)))
+          (print  (cdr (assoc 'name c))))
         (print  "***************")
         (print )))
     (defun print_stats (reg)
@@ -798,7 +798,7 @@ import sys
                     ((first_char_is  (gethash 'name child_descriptor)  "$") 
                       (progn
                         (let (name (gethash 'name child_descriptor))
-                          (let (cmd (slot-value '(strip ) (subseq name 1)))
+                          (let (cmd (funcall (cdr (assoc 'strip (subseq name 1))) ))
                             (let (generated_leaf (Template  name  shell_out_instantiate  cmd))
                               (register_component  reg  generated_leaf))))))
                     ((first_char_is  (gethash 'name child_descriptor)  "'") 
@@ -817,15 +817,15 @@ import sys
         (return-from first_char_is ( equal  c (first_char  s)))))
     (defun run_command (eh cmd s)
       (progn
-        (let (ret (slot-value '(run  cmd   t  s  'utf_8') subprocess))
+        (let (ret (funcall (cdr (assoc 'run subprocess))  cmd   t  s  'utf_8'))
           (cond 
-            ((not  ( equal  (slot-value 'returncode ret) 0)) 
+            ((not  ( equal  (cdr (assoc 'returncode ret)) 0)) 
               (progn
                 (cond 
-                  ((not (equal (slot-value 'stderr ret)  nil)) 
+                  ((not (equal (cdr (assoc 'stderr ret))  nil)) 
                     (progn
                       
-                      (return-from run_command (values ""  (slot-value 'stderr ret)))))
+                      (return-from run_command (values ""  (cdr (assoc 'stderr ret))))))
                   (t 
                     (progn
                       
@@ -833,21 +833,21 @@ import sys
             (t 
               (progn
                 
-                (return-from run_command (values (slot-value 'stdout ret)   nil))))))))
+                (return-from run_command (values (cdr (assoc 'stdout ret))   nil))))))))
     import queue
     import sys
     (defun new-Eh ()
       (list
         (cons 'name "")
-        (cons 'inq (slot-value '(Queue ) queue))
-        (cons 'outq (slot-value '(Queue ) queue))
+        (cons 'inq (funcall (cdr (assoc 'Queue queue)) ))
+        (cons 'outq (funcall (cdr (assoc 'Queue queue)) ))
         (cons 'owner  nil)
-        (cons 'saved_messages (slot-value '(LifoQueue ) queue))
+        (cons 'saved_messages (funcall (cdr (assoc 'LifoQueue queue)) ))
         (cons 'inject injector_NIY)
         (cons 'children  nil)
-        (cons 'visit_ordering (slot-value '(Queue ) queue))
+        (cons 'visit_ordering (funcall (cdr (assoc 'Queue queue)) ))
         (cons 'connections  nil)
-        (cons 'routings (slot-value '(Queue ) queue))
+        (cons 'routings (funcall (cdr (assoc 'Queue queue)) ))
         (cons 'handler  nil)
         (cons 'instance_data  nil)
         (cons 'state "idle")
@@ -858,23 +858,23 @@ import sys
     (defun make_container (name owner)
       (progn
         (let (eh (Eh ))
-          (let ((slot-value 'name eh) name)
-            (let ((slot-value 'owner eh) owner)
-              (let ((slot-value 'handler eh) container_handler)
-                (let ((slot-value 'inject eh) container_injector)
-                  (let ((slot-value 'state eh) "idle")
-                    (let ((slot-value 'kind eh) "container")
+          (let ((cdr (assoc 'name eh)) name)
+            (let ((cdr (assoc 'owner eh)) owner)
+              (let ((cdr (assoc 'handler eh)) container_handler)
+                (let ((cdr (assoc 'inject eh)) container_injector)
+                  (let ((cdr (assoc 'state eh)) "idle")
+                    (let ((cdr (assoc 'kind eh)) "container")
                       
                       (return-from make_container eh))))))))))
     (defun make_leaf (name owner instance_data handler)
       (progn
         (let (eh (Eh ))
-          (let ((slot-value 'name eh) f"{owner.name}.{name}")
-            (let ((slot-value 'owner eh) owner)
-              (let ((slot-value 'handler eh) handler)
-                (let ((slot-value 'instance_data eh) instance_data)
-                  (let ((slot-value 'state eh) "idle")
-                    (let ((slot-value 'kind eh) "leaf")
+          (let ((cdr (assoc 'name eh)) f"{owner.name}.{name}")
+            (let ((cdr (assoc 'owner eh)) owner)
+              (let ((cdr (assoc 'handler eh)) handler)
+                (let ((cdr (assoc 'instance_data eh)) instance_data)
+                  (let ((cdr (assoc 'state eh)) "idle")
+                    (let ((cdr (assoc 'kind eh)) "leaf")
                       
                       (return-from make_leaf eh))))))))))
     (defun send (eh port datum causingMessage)
@@ -890,19 +890,19 @@ import sys
             (put_output  eh  msg)))))
     (defun forward (eh port msg)
       (progn
-        (let (fwdmsg (make_message  port  (slot-value 'datum msg)))
+        (let (fwdmsg (make_message  port  (cdr (assoc 'datum msg))))
           (log_forward  eh  port  msg  msg)
           (put_output  eh  msg))))
     (defun inject (eh msg)
       (progn
-        (slot-value '(inject  eh  msg) eh)))
+        (funcall (cdr (assoc 'inject eh))  eh  msg)))
     (defun output_list (eh)
       (progn
         
-        (return-from output_list (slot-value 'outq eh))))
+        (return-from output_list (cdr (assoc 'outq eh)))))
     (defun print_output_list (eh)
       (progn
-        for m in (list  (slot-value '(slot-value 'queue outq) eh)):
+        for m in (list  (cdr (assoc 'queue (cdr (assoc 'outq eh))))):
         (progn
           (print  (format_message  m)))))
     (defun spaces (n)
@@ -915,19 +915,19 @@ import sys
           (return-from spaces s))))
     (defun set_active (eh)
       (progn
-        (let ((slot-value 'state eh) "active"))))
+        (let ((cdr (assoc 'state eh)) "active"))))
     (defun set_idle (eh)
       (progn
-        (let ((slot-value 'state eh) "idle"))))
+        (let ((cdr (assoc 'state eh)) "idle"))))
     (defun fetch_first_output (eh port)
       (progn
-        for msg in (list  (slot-value '(slot-value 'queue outq) eh)):
+        for msg in (list  (cdr (assoc 'queue (cdr (assoc 'outq eh))))):
         (progn
           (cond 
-            ( ( equal  (slot-value 'port msg) port) 
+            ( ( equal  (cdr (assoc 'port msg)) port) 
               (progn
                 
-                (return-from fetch_first_output (slot-value 'datum msg))))))
+                (return-from fetch_first_output (cdr (assoc 'datum msg)))))))
         
         (return-from fetch_first_output  nil)))
     (defun print_specific_output (eh port="" stderr= nil)
@@ -939,14 +939,14 @@ import sys
                 (cond 
                   (stderr 
                     (progn
-                      (let (outf (slot-value 'stderr sys)))))
+                      (let (outf (cdr (assoc 'stderr sys))))))
                   (t 
                     (progn
-                      (let (outf (slot-value 'stdout sys))))))
-                (print  (slot-value '(srepr ) datum)  outf)))))))
+                      (let (outf (cdr (assoc 'stdout sys)))))))
+                (print  (funcall (cdr (assoc 'srepr datum)) )  outf)))))))
     (defun put_output (eh msg)
       (progn
-        (slot-value '(slot-value '(put  msg) outq) eh)))
+        (funcall (cdr (assoc 'put (cdr (assoc 'outq eh))))  msg)))
     (defun injector_NIY (eh msg)
       (progn
         (print  f'Injector not implemented for this component "{eh.name}" kind={eh.kind} port="{msg.port}"')
@@ -983,8 +983,8 @@ import sys
           (return-from probeC_instantiate (make_leaf  name_with_id  owner   nil  probe_handler)))))
     (defun probe_handler (eh msg)
       (progn
-        (let (s (slot-value '(slot-value '(srepr ) datum) msg))
-          (print  f"... probe {eh.name}: {s}"  (slot-value 'stderr sys)))))
+        (let (s (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) ))
+          (print  f"... probe {eh.name}: {s}"  (cdr (assoc 'stderr sys))))))
     (defun trash_instantiate (reg owner name template_data)
       (progn
         (let (name_with_id (gensym  "trash"))
@@ -1010,52 +1010,52 @@ import sys
       (progn
         (let (name_with_id (gensym  "deracer"))
           (let (inst (Deracer_Instance_Data  "idle"  (TwoMessages   nil   nil)))
-            (let ((slot-value 'state inst) "idle")
+            (let ((cdr (assoc 'state inst)) "idle")
               (let (eh (make_leaf  name_with_id  owner  inst  deracer_handler))
                 
                 (return-from deracer_instantiate eh)))))))
     (defun send_first_then_second (eh inst)
       (progn
-        (forward  eh  "1"  (slot-value '(slot-value 'first buffer) inst))
-        (forward  eh  "2"  (slot-value '(slot-value 'second buffer) inst))
+        (forward  eh  "1"  (cdr (assoc 'first (cdr (assoc 'buffer inst)))))
+        (forward  eh  "2"  (cdr (assoc 'second (cdr (assoc 'buffer inst)))))
         (reclaim_Buffers_from_heap  inst)))
     (defun deracer_handler (eh msg)
       (progn
-        (let (inst (slot-value 'instance_data eh))
+        (let (inst (cdr (assoc 'instance_data eh)))
           (cond 
-            (( equal  (slot-value 'state inst) "idle") 
+            (( equal  (cdr (assoc 'state inst)) "idle") 
               (progn
                 (cond 
-                  (( equal  "1" (slot-value 'port msg)) 
+                  (( equal  "1" (cdr (assoc 'port msg))) 
                     (progn
-                      (let ((slot-value '(slot-value 'first buffer) inst) msg)
-                        (let ((slot-value 'state inst) "waitingForSecond")))))
-                  (( equal  "2" (slot-value 'port msg)) 
+                      (let ((cdr (assoc 'first (cdr (assoc 'buffer inst)))) msg)
+                        (let ((cdr (assoc 'state inst)) "waitingForSecond")))))
+                  (( equal  "2" (cdr (assoc 'port msg))) 
                     (progn
-                      (let ((slot-value '(slot-value 'second buffer) inst) msg)
-                        (let ((slot-value 'state inst) "waitingForFirst")))))
+                      (let ((cdr (assoc 'second (cdr (assoc 'buffer inst)))) msg)
+                        (let ((cdr (assoc 'state inst)) "waitingForFirst")))))
                   (t 
                     (progn
                       (runtime_error  f"bad msg.port (case A) for deracer {msg.port}"))))))
-            (( equal  (slot-value 'state inst) "waitingForFirst") 
+            (( equal  (cdr (assoc 'state inst)) "waitingForFirst") 
               (progn
                 (cond 
-                  (( equal  "1" (slot-value 'port msg)) 
+                  (( equal  "1" (cdr (assoc 'port msg))) 
                     (progn
-                      (let ((slot-value '(slot-value 'first buffer) inst) msg)
+                      (let ((cdr (assoc 'first (cdr (assoc 'buffer inst)))) msg)
                         (send_first_then_second  eh  inst)
-                        (let ((slot-value 'state inst) "idle")))))
+                        (let ((cdr (assoc 'state inst)) "idle")))))
                   (t 
                     (progn
                       (runtime_error  f"bad msg.port (case B) for deracer {msg.port}"))))))
-            (( equal  (slot-value 'state inst) "waitingForSecond") 
+            (( equal  (cdr (assoc 'state inst)) "waitingForSecond") 
               (progn
                 (cond 
-                  (( equal  "2" (slot-value 'port msg)) 
+                  (( equal  "2" (cdr (assoc 'port msg))) 
                     (progn
-                      (let ((slot-value '(slot-value 'second buffer) inst) msg)
+                      (let ((cdr (assoc 'second (cdr (assoc 'buffer inst)))) msg)
                         (send_first_then_second  eh  inst)
-                        (let ((slot-value 'state inst) "idle")))))
+                        (let ((cdr (assoc 'state inst)) "idle")))))
                   (t 
                     (progn
                       (runtime_error  f"bad msg.port (case C) for deracer {msg.port}"))))))
@@ -1069,7 +1069,7 @@ import sys
           (return-from low_level_read_text_file_instantiate (make_leaf  name_with_id  owner   nil  low_level_read_text_file_handler)))))
     (defun low_level_read_text_file_handler (eh msg)
       (progn
-        (let (fname (slot-value '(slot-value '(srepr ) datum) msg))
+        (let (fname (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) ))
           try:
           
           (progn
@@ -1079,7 +1079,7 @@ import sys
           (cond 
             ((not (equal f  nil)) 
               (progn
-                (let (data (slot-value '(read ) f))
+                (let (data (funcall (cdr (assoc 'read f)) ))
                   (cond 
                     ((not (equal data  nil)) 
                       (progn
@@ -1088,7 +1088,7 @@ import sys
                       (progn
                         (let (emsg f"read error on file {fname}")
                           (send_string  eh  "✗"  emsg  msg)))))
-                  (slot-value '(close ) f))))
+                  (funcall (cdr (assoc 'close f)) ))))
             (t 
               (progn
                 (let (emsg f"open error on file {fname}")
@@ -1101,7 +1101,7 @@ import sys
     (defun ensure_string_datum_handler (eh msg)
       (progn
         (cond 
-          (( equal  "string" (slot-value '(slot-value '(kind ) datum) msg)) 
+          (( equal  "string" (funcall (cdr (assoc 'kind (cdr (assoc 'datum msg)))) )) 
             (progn
               (forward  eh  ""  msg)))
           (t 
@@ -1120,20 +1120,20 @@ import sys
             (return-from syncfilewrite_instantiate (make_leaf  name_with_id  owner  inst  syncfilewrite_handler))))))
     (defun syncfilewrite_handler (eh msg)
       (progn
-        (let (inst (slot-value 'instance_data eh))
+        (let (inst (cdr (assoc 'instance_data eh)))
           (cond 
-            (( equal  "filename" (slot-value 'port msg)) 
+            (( equal  "filename" (cdr (assoc 'port msg))) 
               (progn
-                (let ((slot-value 'filename inst) (slot-value '(slot-value '(srepr ) datum) msg)))))
-            (( equal  "input" (slot-value 'port msg)) 
+                (let ((cdr (assoc 'filename inst)) (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) )))))
+            (( equal  "input" (cdr (assoc 'port msg))) 
               (progn
-                (let (contents (slot-value '(slot-value '(srepr ) datum) msg))
-                  (let (f (open  (slot-value 'filename inst)  "w"))
+                (let (contents (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) ))
+                  (let (f (open  (cdr (assoc 'filename inst))  "w"))
                     (cond 
                       ((not (equal f  nil)) 
                         (progn
-                          (slot-value '(write  (slot-value '(slot-value '(srepr ) datum) msg)) f)
-                          (slot-value '(close ) f)
+                          (funcall (cdr (assoc 'write f))  (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) ))
+                          (funcall (cdr (assoc 'close f)) )
                           (send  eh  "done"  (new_datum_bang )  msg)))
                       (t 
                         (progn
@@ -1152,17 +1152,17 @@ import sys
             (return-from stringconcat_instantiate (make_leaf  name_with_id  owner  instp  stringconcat_handler))))))
     (defun stringconcat_handler (eh msg)
       (progn
-        (let (inst (slot-value 'instance_data eh))
+        (let (inst (cdr (assoc 'instance_data eh)))
           (cond 
-            (( equal  "1" (slot-value 'port msg)) 
+            (( equal  "1" (cdr (assoc 'port msg))) 
               (progn
-                (let ((slot-value 'buffer1 inst) (clone_string  (slot-value '(slot-value '(srepr ) datum) msg)))
-                  (inc (slot-value 'count inst) 1)
+                (let ((cdr (assoc 'buffer1 inst)) (clone_string  (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) )))
+                  (inc (cdr (assoc 'count inst)) 1)
                   (maybe_stringconcat  eh  inst  msg))))
-            (( equal  "2" (slot-value 'port msg)) 
+            (( equal  "2" (cdr (assoc 'port msg))) 
               (progn
-                (let ((slot-value 'buffer2 inst) (clone_string  (slot-value '(slot-value '(srepr ) datum) msg)))
-                  (inc (slot-value 'count inst) 1)
+                (let ((cdr (assoc 'buffer2 inst)) (clone_string  (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) )))
+                  (inc (cdr (assoc 'count inst)) 1)
                   (maybe_stringconcat  eh  inst  msg))))
             (t 
               (progn
@@ -1170,37 +1170,37 @@ import sys
     (defun maybe_stringconcat (eh inst msg)
       (progn
         (cond 
-          (( and   ( equal  0 (len  (slot-value 'buffer1 inst)))  ( equal  0 (len  (slot-value 'buffer2 inst)))) 
+          (( and   ( equal  0 (len  (cdr (assoc 'buffer1 inst))))  ( equal  0 (len  (cdr (assoc 'buffer2 inst))))) 
             (progn
               (runtime_error  "something is wrong in stringconcat, both strings are 0 length"))))
         (cond 
-          (( >=  (slot-value 'count inst) 2) 
+          (( >=  (cdr (assoc 'count inst)) 2) 
             (progn
               (let (concatenated_string "")
                 (cond 
-                  (( equal  0 (len  (slot-value 'buffer1 inst))) 
+                  (( equal  0 (len  (cdr (assoc 'buffer1 inst)))) 
                     (progn
-                      (let (concatenated_string (slot-value 'buffer2 inst)))))
-                  (( equal  0 (len  (slot-value 'buffer2 inst))) 
+                      (let (concatenated_string (cdr (assoc 'buffer2 inst))))))
+                  (( equal  0 (len  (cdr (assoc 'buffer2 inst)))) 
                     (progn
-                      (let (concatenated_string (slot-value 'buffer1 inst)))))
+                      (let (concatenated_string (cdr (assoc 'buffer1 inst))))))
                   (t 
                     (progn
-                      (let (concatenated_string (+ (slot-value 'buffer1 inst) (slot-value 'buffer2 inst)))))))
+                      (let (concatenated_string (+ (cdr (assoc 'buffer1 inst)) (cdr (assoc 'buffer2 inst))))))))
                 (send_string  eh  ""  concatenated_string  msg)
-                (let ((slot-value 'buffer1 inst)  nil)
-                  (let ((slot-value 'buffer2 inst)  nil)
-                    (let ((slot-value 'count inst) 0))))))))))
+                (let ((cdr (assoc 'buffer1 inst))  nil)
+                  (let ((cdr (assoc 'buffer2 inst))  nil)
+                    (let ((cdr (assoc 'count inst)) 0))))))))))
     (defun shell_out_instantiate (reg owner name template_data)
       (progn
         (let (name_with_id (gensym  "shell_out"))
-          (let (cmd (slot-value '(split  template_data) shlex))
+          (let (cmd (funcall (cdr (assoc 'split shlex))  template_data))
             
             (return-from shell_out_instantiate (make_leaf  name_with_id  owner  cmd  shell_out_handler))))))
     (defun shell_out_handler (eh msg)
       (progn
-        (let (cmd (slot-value 'instance_data eh))
-          (let (s (slot-value '(slot-value '(srepr ) datum) msg))
+        (let (cmd (cdr (assoc 'instance_data eh)))
+          (let (s (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) ))
             (multiple-value-bind (stdout , stderr)
               (run_command  eh  cmd  s)
               (cond 
@@ -1217,16 +1217,16 @@ import sys
             (cond 
               ((not (equal root_project "")) 
                 (progn
-                  (let (s (slot-value '(sub  "_00_"  root_project  s) re))))))
+                  (let (s (funcall (cdr (assoc 'sub re))  "_00_"  root_project  s))))))
             (cond 
               ((not (equal root_0D "")) 
                 (progn
-                  (let (s (slot-value '(sub  "_0D_"  root_0D  s) re))))))
+                  (let (s (funcall (cdr (assoc 'sub re))  "_0D_"  root_0D  s))))))
             
             (return-from string_constant_instantiate (make_leaf  name_with_id  owner  s  string_constant_handler))))))
     (defun string_constant_handler (eh msg)
       (progn
-        (let (s (slot-value 'instance_data eh))
+        (let (s (cdr (assoc 'instance_data eh)))
           (send_string  eh  ""  s  msg))))
     (defun string_make_persistent (s)
       (progn
@@ -1240,7 +1240,7 @@ import sys
     (defun parse_command_line_args ()
       (progn
         (cond 
-          ( ( <  (len  (slot-value 'argv sys))  (+ 5 1)) 
+          ( ( <  (len  (cdr (assoc 'argv sys)))  (+ 5 1)) 
             (progn
               (load_error  "usage: ${_00_} ${_0D_} app <arg> <main tab name> <diagram file name 1> ...")
               
@@ -1273,7 +1273,7 @@ import sys
         (let (error_port "✗")
           (let (err (fetch_first_output  main_container  error_port))
             (cond 
-              (( and   (not (equal err  nil))  ( <  0 (len  (trimws  (slot-value '(srepr ) err))))) 
+              (( and   (not (equal err  nil))  ( <  0 (len  (trimws  (funcall (cdr (assoc 'srepr err)) ))))) 
                 (progn
                   (print  "___ !!! ERRORS !!! ___")
                   (print_specific_output  main_container  error_port   nil))))))))
@@ -1294,11 +1294,11 @@ import sys
     (defun build_hierarchy (c)
       (progn
         (let (s "")
-          for child in (slot-value 'children c):
+          for child in (cdr (assoc 'children c)):
           (progn
             (let (s f"{s}{build_hierarchy (child)}")))
           (let (indent "")
-            for i in (loop for n from 0 below (slot-value 'depth c) by 1 collect n):
+            for i in (loop for n from 0 below (cdr (assoc 'depth c)) by 1 collect n):
             (progn
               (let (indent (+ indent "  "))))
             
@@ -1308,14 +1308,14 @@ import sys
         (print )
         (print  f"___ connections ___")
         (dump_possible_connections  c)
-        for child in (slot-value 'children c):
+        for child in (cdr (assoc 'children c)):
         (progn
           (print )
           (dump_possible_connections  child))))
     (defun trimws (s)
       (progn
         
-        (return-from trimws (slot-value '(strip ) s))))
+        (return-from trimws (funcall (cdr (assoc 'strip s)) ))))
     (defun clone_string (s)
       (progn
         
@@ -1359,11 +1359,11 @@ import sys
     (defun ohmjs_maybe (eh inst causingMsg)
       (progn
         (cond 
-          ((not (equal ( and  (not (equal ( and  (not (equal ( and  (not (equal ( and  (not (equal  nil (slot-value 'pathname_0D_ inst)))  nil) (slot-value 'grammar_name inst)))  nil) (slot-value 'grammar_filename inst)))  nil) (slot-value 'semantics_filename inst)))  nil) (slot-value 's inst))) 
+          ((not (equal ( and  (not (equal ( and  (not (equal ( and  (not (equal ( and  (not (equal  nil (cdr (assoc 'pathname_0D_ inst))))  nil) (cdr (assoc 'grammar_name inst))))  nil) (cdr (assoc 'grammar_filename inst))))  nil) (cdr (assoc 'semantics_filename inst))))  nil) (cdr (assoc 's inst)))) 
             (progn
               (let (cmd (list  f"{inst.pathname_0D_}/std/ohmjs.js" f"{inst.grammar_name}" f"{inst.grammar_filename}" f"{inst.semantics_filename}"))
                 (multiple-value-bind (captured_output , err)
-                  (run_command  eh  cmd  (slot-value 's inst))
+                  (run_command  eh  cmd  (cdr (assoc 's inst)))
                   (cond 
                     (( equal  err  nil) 
                       (progn
@@ -1376,34 +1376,34 @@ import sys
                       (t 
                         (progn
                           (send_string  eh  "✗"  errstring  causingMsg))))
-                    (let ((slot-value 'pathname_0D_ inst)  nil)
-                      (let ((slot-value 'grammar_name inst)  nil)
-                        (let ((slot-value 'grammar_filename inst)  nil)
-                          (let ((slot-value 'semantics_filename inst)  nil)
-                            (let ((slot-value 's inst)  nil))))))))))))))
+                    (let ((cdr (assoc 'pathname_0D_ inst))  nil)
+                      (let ((cdr (assoc 'grammar_name inst))  nil)
+                        (let ((cdr (assoc 'grammar_filename inst))  nil)
+                          (let ((cdr (assoc 'semantics_filename inst))  nil)
+                            (let ((cdr (assoc 's inst))  nil))))))))))))))
     (defun ohmjs_handle (eh msg)
       (progn
-        (let (inst (slot-value 'instance_data eh))
+        (let (inst (cdr (assoc 'instance_data eh)))
           (cond 
-            (( equal  (slot-value 'port msg) "0D path") 
+            (( equal  (cdr (assoc 'port msg)) "0D path") 
               (progn
-                (let ((slot-value 'pathname_0D_ inst) (clone_string  (slot-value '(slot-value '(srepr ) datum) msg)))
+                (let ((cdr (assoc 'pathname_0D_ inst)) (clone_string  (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) )))
                   (ohmjs_maybe  eh  inst  msg))))
-            (( equal  (slot-value 'port msg) "grammar name") 
+            (( equal  (cdr (assoc 'port msg)) "grammar name") 
               (progn
-                (let ((slot-value 'grammar_name inst) (clone_string  (slot-value '(slot-value '(srepr ) datum) msg)))
+                (let ((cdr (assoc 'grammar_name inst)) (clone_string  (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) )))
                   (ohmjs_maybe  eh  inst  msg))))
-            (( equal  (slot-value 'port msg) "grammar") 
+            (( equal  (cdr (assoc 'port msg)) "grammar") 
               (progn
-                (let ((slot-value 'grammar_filename inst) (clone_string  (slot-value '(slot-value '(srepr ) datum) msg)))
+                (let ((cdr (assoc 'grammar_filename inst)) (clone_string  (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) )))
                   (ohmjs_maybe  eh  inst  msg))))
-            (( equal  (slot-value 'port msg) "semantics") 
+            (( equal  (cdr (assoc 'port msg)) "semantics") 
               (progn
-                (let ((slot-value 'semantics_filename inst) (clone_string  (slot-value '(slot-value '(srepr ) datum) msg)))
+                (let ((cdr (assoc 'semantics_filename inst)) (clone_string  (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) )))
                   (ohmjs_maybe  eh  inst  msg))))
-            (( equal  (slot-value 'port msg) "input") 
+            (( equal  (cdr (assoc 'port msg)) "input") 
               (progn
-                (let ((slot-value 's inst) (clone_string  (slot-value '(slot-value '(srepr ) datum) msg)))
+                (let ((cdr (assoc 's inst)) (clone_string  (funcall (cdr (assoc 'srepr (cdr (assoc 'datum msg)))) )))
                   (ohmjs_maybe  eh  inst  msg))))
             (t 
               (progn

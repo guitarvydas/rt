@@ -98,15 +98,18 @@ rt {
     Primary =
       | Primary "@" ident -- lookupident
       | Primary "@" Primary -- lookup
-      | Primary "." Primary Actuals -- methodcall
-      | Primary "." Primary -- field
+      | Primary "." ident -- field
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice
+      | ident Actuals -- identcall
       | Primary Actuals -- call
-      | "(" Exp ")" -- paren
+      | Atom -- atom
+
+    Atom =
       | "[" "]" -- emptylistconst
-      | "[" PrimaryComma+ "]" -- listconst
       | "{" "}" -- emptydict
+      | "(" Exp ")" -- paren
+      | "[" PrimaryComma+ "]" -- listconst
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
@@ -1250,26 +1253,6 @@ _.set_top (return_value_stack, `(gethash ${key} ${p})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_methodcall : function (_p, __dot, _f, _actuals, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=p,_dot,f,actuals
-let p = undefined;
-let _dot = undefined;
-let f = undefined;
-let actuals = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_methodcall");
-p = _p.rwr ()
-_dot = __dot.rwr ()
-f = _f.rwr ()
-actuals = _actuals.rwr ()
-
-_.set_top (return_value_stack, `(funcall (slot-value '${f} ${p}) ${actuals})`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
 Primary_field : function (_p, __dot, _key, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=p,_dot,key
@@ -1283,7 +1266,7 @@ p = _p.rwr ()
 _dot = __dot.rwr ()
 key = _key.rwr ()
 
-_.set_top (return_value_stack, `(slot-value '${key} ${p})`);
+_.set_top (return_value_stack, `(cdr (assoc '${key} ${p}))`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1330,6 +1313,22 @@ _.set_top (return_value_stack, `(nthcdr ${ds} ${p})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
+Primary_identcall : function (_id, _actuals, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=id,actuals
+let id = undefined;
+let actuals = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Primary_identcall");
+id = _id.rwr ()
+actuals = _actuals.rwr ()
+
+_.set_top (return_value_stack, `(${id} ${actuals})`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
 Primary_call : function (_p, _actuals, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=p,actuals
@@ -1341,12 +1340,44 @@ _.set_top (rule_name_stack, "Primary_call");
 p = _p.rwr ()
 actuals = _actuals.rwr ()
 
-_.set_top (return_value_stack, `(${p} ${actuals})`);
+_.set_top (return_value_stack, `(funcall ${p} ${actuals})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_paren : function (__70, _Exp, __71, ) {
+Atom_emptylistconst : function (__72, __73, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_72,_73
+let _72 = undefined;
+let _73 = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Atom_emptylistconst");
+_72 = __72.rwr ()
+_73 = __73.rwr ()
+
+_.set_top (return_value_stack, ` nil`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Atom_emptydict : function (__76, __77, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_76,_77
+let _76 = undefined;
+let _77 = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Atom_emptydict");
+_76 = __76.rwr ()
+_77 = __77.rwr ()
+
+_.set_top (return_value_stack, `(make-hash-table :test :equal)`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Atom_paren : function (__70, _Exp, __71, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_70,Exp,_71
 let _70 = undefined;
@@ -1354,7 +1385,7 @@ let Exp = undefined;
 let _71 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_paren");
+_.set_top (rule_name_stack, "Atom_paren");
 _70 = __70.rwr ()
 Exp = _Exp.rwr ()
 _71 = __71.rwr ()
@@ -1364,23 +1395,7 @@ _.set_top (return_value_stack, ` ${Exp}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_emptylistconst : function (__72, __73, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=_72,_73
-let _72 = undefined;
-let _73 = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_emptylistconst");
-_72 = __72.rwr ()
-_73 = __73.rwr ()
-
-_.set_top (return_value_stack, ` nil`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-Primary_listconst : function (__74, _PrimaryComma, __75, ) {
+Atom_listconst : function (__74, _PrimaryComma, __75, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_74,PrimaryComma,_75
 let _74 = undefined;
@@ -1388,7 +1403,7 @@ let PrimaryComma = undefined;
 let _75 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_listconst");
+_.set_top (rule_name_stack, "Atom_listconst");
 _74 = __74.rwr ()
 PrimaryComma = _PrimaryComma.rwr ().join ('')
 _75 = __75.rwr ()
@@ -1398,23 +1413,7 @@ _.set_top (return_value_stack, `(list ${PrimaryComma})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_emptydict : function (__76, __77, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=_76,_77
-let _76 = undefined;
-let _77 = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_emptydict");
-_76 = __76.rwr ()
-_77 = __77.rwr ()
-
-_.set_top (return_value_stack, `(make-hash-table :test :equal)`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-Primary_dict : function (__78, _PairComma, __79, ) {
+Atom_dict : function (__78, _PairComma, __79, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_78,PairComma,_79
 let _78 = undefined;
@@ -1422,7 +1421,7 @@ let PairComma = undefined;
 let _79 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_dict");
+_.set_top (rule_name_stack, "Atom_dict");
 _78 = __78.rwr ()
 PairComma = _PairComma.rwr ().join ('')
 _79 = __79.rwr ()
@@ -1432,7 +1431,7 @@ _.set_top (return_value_stack, `(fresh-hash (list ${PairComma}))`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_lambda : function (__80, _Formals, __81, _Exp, ) {
+Atom_lambda : function (__80, _Formals, __81, _Exp, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_80,Formals,_81,Exp
 let _80 = undefined;
@@ -1441,7 +1440,7 @@ let _81 = undefined;
 let Exp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_lambda");
+_.set_top (rule_name_stack, "Atom_lambda");
 _80 = __80.rwr ()
 Formals = _Formals.rwr ().join ('')
 _81 = __81.rwr ()
@@ -1452,7 +1451,7 @@ _.set_top (return_value_stack, `#'(lambda ${Formals} ${Exp})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_fresh : function (__83, __84, _ident, __85, ) {
+Atom_fresh : function (__83, __84, _ident, __85, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_83,_84,ident,_85
 let _83 = undefined;
@@ -1461,7 +1460,7 @@ let ident = undefined;
 let _85 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_fresh");
+_.set_top (rule_name_stack, "Atom_fresh");
 _83 = __83.rwr ()
 _84 = __84.rwr ()
 ident = _ident.rwr ()
@@ -1472,7 +1471,7 @@ _.set_top (return_value_stack, `(fresh-${ident})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_car : function (__83, __84, _e, __85, ) {
+Atom_car : function (__83, __84, _e, __85, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_83,_84,e,_85
 let _83 = undefined;
@@ -1481,7 +1480,7 @@ let e = undefined;
 let _85 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_car");
+_.set_top (rule_name_stack, "Atom_car");
 _83 = __83.rwr ()
 _84 = __84.rwr ()
 e = _e.rwr ()
@@ -1492,7 +1491,7 @@ _.set_top (return_value_stack, `(car ${e})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_cdr : function (__83, __84, _e, __85, ) {
+Atom_cdr : function (__83, __84, _e, __85, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_83,_84,e,_85
 let _83 = undefined;
@@ -1501,7 +1500,7 @@ let e = undefined;
 let _85 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_cdr");
+_.set_top (rule_name_stack, "Atom_cdr");
 _83 = __83.rwr ()
 _84 = __84.rwr ()
 e = _e.rwr ()
@@ -1512,27 +1511,7 @@ _.set_top (return_value_stack, `(cdr ${e})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_stringcdr : function (__83, __84, _e, __85, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=_83,_84,e,_85
-let _83 = undefined;
-let _84 = undefined;
-let e = undefined;
-let _85 = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_stringcdr");
-_83 = __83.rwr ()
-_84 = __84.rwr ()
-e = _e.rwr ()
-_85 = __85.rwr ()
-
-_.set_top (return_value_stack, `(subseq ${e} 1)`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-Primary_nthargvcdr : function (__83, _lb, _n, _rb, ) {
+Atom_nthargvcdr : function (__83, _lb, _n, _rb, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_83,lb,n,rb
 let _83 = undefined;
@@ -1541,7 +1520,7 @@ let n = undefined;
 let rb = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_nthargvcdr");
+_.set_top (rule_name_stack, "Atom_nthargvcdr");
 _83 = __83.rwr ()
 lb = _lb.rwr ()
 n = _n.rwr ()
@@ -1552,7 +1531,7 @@ _.set_top (return_value_stack, `(nthcdr *argv* ${n})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_nthargv : function (__83, __84, _n, __85, ) {
+Atom_nthargv : function (__83, __84, _n, __85, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_83,_84,n,_85
 let _83 = undefined;
@@ -1561,7 +1540,7 @@ let n = undefined;
 let _85 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_nthargv");
+_.set_top (rule_name_stack, "Atom_nthargv");
 _83 = __83.rwr ()
 _84 = __84.rwr ()
 n = _n.rwr ()
@@ -1572,14 +1551,34 @@ _.set_top (return_value_stack, `(nth *argv* ${n})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_pos : function (__86, _Primary, ) {
+Atom_stringcdr : function (__83, __84, _e, __85, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_83,_84,e,_85
+let _83 = undefined;
+let _84 = undefined;
+let e = undefined;
+let _85 = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Atom_stringcdr");
+_83 = __83.rwr ()
+_84 = __84.rwr ()
+e = _e.rwr ()
+_85 = __85.rwr ()
+
+_.set_top (return_value_stack, `(subseq ${e} 1)`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Atom_pos : function (__86, _Primary, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_86,Primary
 let _86 = undefined;
 let Primary = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_pos");
+_.set_top (rule_name_stack, "Atom_pos");
 _86 = __86.rwr ()
 Primary = _Primary.rwr ()
 
@@ -1588,14 +1587,14 @@ _.set_top (return_value_stack, `(+ ${Primary} 0)`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_neg : function (__87, _Primary, ) {
+Atom_neg : function (__87, _Primary, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_87,Primary
 let _87 = undefined;
 let Primary = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_neg");
+_.set_top (rule_name_stack, "Atom_neg");
 _87 = __87.rwr ()
 Primary = _Primary.rwr ()
 
@@ -1604,13 +1603,13 @@ _.set_top (return_value_stack, `(- 0 ${Primary})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_phi : function (_phi, ) {
+Atom_phi : function (_phi, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=phi
 let phi = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_phi");
+_.set_top (rule_name_stack, "Atom_phi");
 phi = _phi.rwr ()
 
 _.set_top (return_value_stack, ` nil`);
@@ -1618,13 +1617,13 @@ _.set_top (return_value_stack, ` nil`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_true : function (__88, ) {
+Atom_true : function (__88, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_88
 let _88 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_true");
+_.set_top (rule_name_stack, "Atom_true");
 _88 = __88.rwr ()
 
 _.set_top (return_value_stack, ` t`);
@@ -1632,13 +1631,13 @@ _.set_top (return_value_stack, ` t`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_false : function (__89, ) {
+Atom_false : function (__89, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_89
 let _89 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_false");
+_.set_top (rule_name_stack, "Atom_false");
 _89 = __89.rwr ()
 
 _.set_top (return_value_stack, ` nil`);
@@ -1646,7 +1645,7 @@ _.set_top (return_value_stack, ` nil`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_range : function (__91, __92, _Exp, __93, ) {
+Atom_range : function (__91, __92, _Exp, __93, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_91,_92,Exp,_93
 let _91 = undefined;
@@ -1655,7 +1654,7 @@ let Exp = undefined;
 let _93 = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_range");
+_.set_top (rule_name_stack, "Atom_range");
 _91 = __91.rwr ()
 _92 = __92.rwr ()
 Exp = _Exp.rwr ()
@@ -1666,13 +1665,13 @@ _.set_top (return_value_stack, `(loop for n from 0 below ${Exp} by 1 collect n)`
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_string : function (_string, ) {
+Atom_string : function (_string, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=string
 let string = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_string");
+_.set_top (rule_name_stack, "Atom_string");
 string = _string.rwr ()
 
 _.set_top (return_value_stack, `${string}`);
@@ -1680,13 +1679,13 @@ _.set_top (return_value_stack, `${string}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_number : function (_number, ) {
+Atom_number : function (_number, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=number
 let number = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_number");
+_.set_top (rule_name_stack, "Atom_number");
 number = _number.rwr ()
 
 _.set_top (return_value_stack, `${number}`);
@@ -1694,13 +1693,13 @@ _.set_top (return_value_stack, `${number}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Primary_ident : function (_ident, ) {
+Atom_ident : function (_ident, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=ident
 let ident = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Primary_ident");
+_.set_top (rule_name_stack, "Atom_ident");
 ident = _ident.rwr ()
 
 _.set_top (return_value_stack, `${ident}`);

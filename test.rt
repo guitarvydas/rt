@@ -1,16 +1,3 @@
-defobj Message (port, datum) {
-        • port = port
-        • datum = datum
-}
-defobj Sender (name, component, port) {
-        • name = name
-        • component = component # from
-        • port = port # from's port
-}
-defobj OhmJS_Instance_Data () {
-        • pathname_0D_ = ϕ
-        • grammar_name = ϕ
-        • grammar_filename = ϕ
-        • semantics_filename = ϕ
-        • s = ϕ
+defn x () {
+  inst.s = clone_string (msg.datum.srepr ())
 }

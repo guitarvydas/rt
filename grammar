@@ -85,15 +85,18 @@
     Primary =
       | Primary "@" ident -- lookupident
       | Primary "@" Primary -- lookup
-      | Primary "." Primary Actuals -- methodcall
-      | Primary "." Primary -- field
+      | Primary "." ident -- field
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice
+      | ident Actuals -- identcall
       | Primary Actuals -- call
-      | "(" Exp ")" -- paren
+      | Atom -- atom
+
+    Atom =
       | "[" "]" -- emptylistconst
-      | "[" PrimaryComma+ "]" -- listconst
       | "{" "}" -- emptydict
+      | "(" Exp ")" -- paren
+      | "[" PrimaryComma+ "]" -- listconst
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
