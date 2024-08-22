@@ -3,15 +3,11 @@
 main = pattern+
 
 pattern =
-  | defnwithmutate -- defn
+  | mutate -- mutate
   | any -- default
 
-defnwithmutate = "defn" spaces ident spaces "(" stuff* ")"
+mutate = ident "." ident spaces "=" 
 
-stuff =
-  | "=" -- eq
-  | ~")" any -- default
-  
 ident = firstc restc*
 firstc = letter | "_"
 restc = alnum | "_"
@@ -20,13 +16,10 @@ restc = alnum | "_"
 % rewrite
 main [p+] = ‛«p»’
 
-pattern_defn [d] = ‛«d»’
+pattern_mutate [d] = ‛«d»’
 pattern_default [x] = ‛«x»’
 
-defnwithmutate [_defn _ws1 id _ws2 lp stuff* rp] = ‛«_defn»«_ws1»«id»«_ws2»«lp»«stuff»«rp»’
-
-stuff_eq [x] = ‛ ∷ ’
-stuff_default [x] = ‛«x»’
+mutate [id1 _dot id2 ws eq] = ‛«id1».«id2»«ws»⇐’
 
 ident [f r*] = ‛«f»«r»’
 firstc [c] = ‛«c»’

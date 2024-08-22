@@ -211,7 +211,7 @@ defn destroy_port (msg) {
 
 #####
 defn format_message (m) {
-    if m == ϕ {
+    if m ~~ ϕ {
         return "ϕ" }
     else {
         return f'⟪"{m.port}"⦂"{m.datum.srepr ()}"⟫' }
@@ -439,7 +439,7 @@ defn log_inout_single (container=ϕ, component=ϕ, in_message=ϕ, out_message=ϕ
 }
 
 defn log_inout_recursively (container=ϕ, component=ϕ, in_message=ϕ, out_messages=[]) {
-    if [] == out_messages {
+    if [] ~~ out_messages {
         pass }
     else {
         m = car (out_messages)
@@ -450,7 +450,7 @@ defn log_inout_recursively (container=ϕ, component=ϕ, in_message=ϕ, out_messa
 
 defn fmt_inout (desc, indent) {
     outm = desc@out_message
-    if ϕ == outm {
+    if ϕ ~~ outm {
         return f'\n{indent}  ⊥'}
     else {
         return f'\n{indent}  ∴ {desc@component.name} {format_message (outm)}'}
@@ -468,7 +468,7 @@ defn routing_trace_all (container) {
 }
 
 defn recursive_routing_trace (container, lis, indent) {
-    if [] == lis {
+    if [] ~~ lis {
         return ''}
     else {
         desc = first (lis)
@@ -499,39 +499,39 @@ defn container_instantiator (reg, owner, container_name, desc) {
         source_component = ϕ
         target_component = ϕ
         connector = Connector ()
-        if proto_conn@dir == enumDown {
+        if proto_conn@dir ~~ enumDown {
             # JSON: {'dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},
             connector.direction = "down"
             connector.sender = Sender (me.name, me, proto_conn@source_port)
             target_component = children_by_id [proto_conn@target@id]
-            if (target_component == ϕ) {
+            if (target_component ~~ ϕ) {
                 load_error (f"internal error: .Down connection target internal error {proto_conn@target}")}
             else{
                 connector.receiver = Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
                 connectors.append (connector) }}
-        elif proto_conn@dir == enumAcross {
+        elif proto_conn@dir ~~ enumAcross {
             connector.direction = "across"
             source_component = children_by_id [proto_conn@source@id]
             target_component = children_by_id [proto_conn@target@id]
-            if source_component == ϕ {
+            if source_component ~~ ϕ {
                 load_error (f"internal error: .Across connection source not ok {proto_conn@source}") }
             else {
                 connector.sender = Sender (source_component.name, source_component, proto_conn@source_port)
-                if target_component == ϕ {
+                if target_component ~~ ϕ {
                     load_error (f"internal error: .Across connection target not ok {proto_conn.target}") }
                 else {
                     connector.receiver = Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
                     connectors.append (connector)}}}
-        elif proto_conn@dir == enumUp {
+        elif proto_conn@dir ~~ enumUp {
             connector.direction = "up"
             source_component = children_by_id [proto_conn@source@id]
-            if source_component == ϕ {
+            if source_component ~~ ϕ {
                 print (f"internal error: .Up connection source not ok {proto_conn@source}") }
             else {
                 connector.sender = Sender (source_component.name, source_component, proto_conn@source_port)
                 connector.receiver = Receiver (me.name, container.outq, proto_conn@target_port, me)
                 connectors.append (connector) }}
-        elif proto_conn@dir == enumThrough {
+        elif proto_conn@dir ~~ enumThrough {
             connector.direction = "through"
             connector.sender = Sender (me.name, me, proto_conn@source_port)
             connector.receiver = Receiver (me.name, container.outq, proto_conn@target_port, me)
@@ -588,8 +588,8 @@ defobj Receiver (name, queue, port, component) {
 
 # Checks if two senders match, by pointer equality and port name matching.
 defn sender_eq (s1, s2) {
-    same_components = (s1.component == s2.component)
-    same_ports = (s1.port == s2.port)
+    same_components = (s1.component ~~ s2.component)
+    same_ports = (s1.port ~~ s2.port)
     return same_components and same_ports
 }
 
@@ -614,16 +614,16 @@ defn push_message (parent, receiver, inq, m) {
 
 defn is_self (child, container) {
     # in an earlier version "self" was denoted as ϕ
-    return child == container
+    return child ~~ container
 }
 
 defn step_child (child, msg) {
     before_state = child.state
     child.handler(child, msg)
     after_state = child.state
-    return [before_state == "idle" and after_state != "idle", 
+    return [before_state ~~ "idle" and after_state != "idle", 
             before_state != "idle" and after_state != "idle",
-            before_state != "idle" and after_state == "idle"]
+            before_state != "idle" and after_state ~~ "idle"]
 }
 
 defn save_message (eh, msg) {
@@ -637,7 +637,7 @@ defn fetch_saved_message_and_clear (eh) {
 defn step_children (container, causingMessage) {
     container.state = "idle"
     for child in list (container.visit_ordering.queue) {
-        # child == container represents self, skip it
+        # child ~~ container represents self, skip it
         if (not (is_self (child, container))){
             if (not (child.inq.empty ())){
                 msg = child.inq.get ()
@@ -658,7 +658,7 @@ defn step_children (container, causingMessage) {
                     log_tick (container=container, component=child, in_message=msg)
                     destroy_message(msg)}}
             
-            if (child.state == "active") {
+            if (child.state ~~ "active") {
                 # if child remains active, then the container must remain active and must propagate "ticks" to child
                 container.state = "active"}
             
@@ -676,7 +676,7 @@ defn attempt_tick (parent, eh) {
 }
 
 defn is_tick (msg) {
-    return "tick" == msg.datum.kind ()
+    return "tick" ~~ msg.datum.kind ()
 }
 
 # Routes a single message to all matching destinations, according to
@@ -734,17 +734,17 @@ defn append_routing_descriptor (container, desc) {
 }
 
 defn log_connection (container, connector, message) {
-    if "down" == connector.direction{
+    if "down" ~~ connector.direction{
         log_down (container=container, source_port=connector.sender.port, target=connector.receiver.component, target_port=connector.receiver.port,
                   target_message=message) }
-    elif "up" == connector.direction {
+    elif "up" ~~ connector.direction {
         log_up (source=connector.sender.component, source_port=connector.sender.port, container=container, target_port=connector.receiver.port,
                   target_message=message) }
-    elif "across" == connector.direction {
+    elif "across" ~~ connector.direction {
         log_across (container=container,
                     source=connector.sender.component, source_port=connector.sender.port,
                     target=connector.receiver.component, target_port=connector.receiver.port, target_message=message) }
-    elif "through" == connector.direction {
+    elif "through" ~~ connector.direction {
         log_through (container=container, source_port=connector.sender.port, source_message=ϕ,
                      target_port=connector.receiver.port, message=message) }
     else {
@@ -817,7 +817,7 @@ defn get_component_instance (reg, full_name, owner) {
     template_name = mangle_name (full_name)
     if template_name in reg.templates {
         template = reg.templates[template_name]
-        if (template == ϕ) {
+        if (template ~~ ϕ) {
             load_error (f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
             return ϕ}
         else {
@@ -836,7 +836,7 @@ defn get_component_instance (reg, full_name, owner) {
             return ϕ}
 }
 defn calculate_depth (eh) {
-    if eh.owner == ϕ {
+    if eh.owner ~~ ϕ {
         return 0}
     else {
         return 1 + calculate_depth (eh.owner)}
@@ -888,14 +888,14 @@ defn first_char (s) {
 }
 
 defn first_char_is (s, c) {
-    return c == first_char (s)
+    return c ~~ first_char (s)
 }
 
 # this needs to be rewritten to use the low_level "shell_out" component, this can be done solely as a diagram without using python code here
 # I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped
 defn run_command (eh, cmd, s) {
     ret = subprocess.run (cmd, capture_output=⊤, input=s, encoding='utf_8')
-    if  not (ret.returncode == 0){
+    if  not (ret.returncode ~~ 0){
         if ret.stderr != ϕ{
             return ["", ret.stderr]}
         else{
@@ -1029,7 +1029,7 @@ defn set_idle (eh) {
 
 defn fetch_first_output (eh, port) {
     for msg in list (eh.outq.queue) {
-        if (msg.port == port){
+        if (msg.port ~~ port){
             return msg.datum}}
     return ϕ
 }
@@ -1132,24 +1132,24 @@ defn send_first_then_second (eh, inst) {
 
 defn deracer_handler (eh, msg) {
     inst = eh.instance_data
-    if inst.state == "idle" {
-        if "1" == msg.port{
+    if inst.state ~~ "idle" {
+        if "1" ~~ msg.port{
             inst.buffer.first = msg
             inst.state = "waitingForSecond"}
-        elif "2" == msg.port{
+        elif "2" ~~ msg.port{
             inst.buffer.second = msg
             inst.state = "waitingForFirst"}
         else{
             runtime_error (f"bad msg.port (case A) for deracer {msg.port}")}}
-    elif inst.state == "waitingForFirst" {
-        if "1" == msg.port{
+    elif inst.state ~~ "waitingForFirst" {
+        if "1" ~~ msg.port{
             inst.buffer.first = msg
             send_first_then_second (eh, inst)
             inst.state = "idle"}
         else{
             runtime_error (f"bad msg.port (case B) for deracer {msg.port}")}}
-    elif inst.state == "waitingForSecond"{
-        if "2" == msg.port{
+    elif inst.state ~~ "waitingForSecond"{
+        if "2" ~~ msg.port{
             inst.buffer.second = msg
             send_first_then_second (eh, inst)
             inst.state = "idle"}
@@ -1189,7 +1189,7 @@ defn ensure_string_datum_instantiate (reg, owner, name, template_data) {
 }
 
 defn ensure_string_datum_handler (eh, msg) {
-    if "string" == msg.datum.kind (){
+    if "string" ~~ msg.datum.kind (){
         forward (eh, "", msg)}
     else{
         emsg = f"*** ensure: type error (expected a string datum) but got {msg.datum}"
@@ -1209,9 +1209,9 @@ defn syncfilewrite_instantiate (reg, owner, name, template_data) {
 
 defn syncfilewrite_handler (eh, msg) {
     inst = eh.instance_data
-    if "filename" == msg.port{
+    if "filename" ~~ msg.port{
         inst.filename = msg.datum.srepr ()}
-    elif "input" == msg.port {
+    elif "input" ~~ msg.port {
         contents = msg.datum.srepr ()
         f = open (inst.filename, "w")
         if f != ϕ{
@@ -1236,11 +1236,11 @@ defn stringconcat_instantiate (reg, owner, name, template_data) {
 
 defn stringconcat_handler (eh, msg) {
     inst = eh.instance_data
-    if "1" == msg.port{
+    if "1" ~~ msg.port{
         inst.buffer1 = clone_string (msg.datum.srepr ())
         inst.count += 1
         maybe_stringconcat (eh, inst, msg)}
-    elif "2" == msg.port{
+    elif "2" ~~ msg.port{
         inst.buffer2 = clone_string (msg.datum.srepr ())
         inst.count += 1
         maybe_stringconcat (eh, inst, msg)}
@@ -1249,13 +1249,13 @@ defn stringconcat_handler (eh, msg) {
 }
 
 defn maybe_stringconcat (eh, inst, msg) {
-    if (0 == len (inst.buffer1)) and (0 == len (inst.buffer2)){
+    if (0 ~~ len (inst.buffer1)) and (0 ~~ len (inst.buffer2)){
         runtime_error ("something is wrong in stringconcat, both strings are 0 length")}
     if inst.count >= 2{
         concatenated_string = ""
-        if 0 == len (inst.buffer1){
+        if 0 ~~ len (inst.buffer1){
             concatenated_string = inst.buffer2}
-        elif 0 == len (inst.buffer2){
+        elif 0 ~~ len (inst.buffer2){
             concatenated_string = inst.buffer1}
         else{
             concatenated_string = inst.buffer1 + inst.buffer2}        
@@ -1447,10 +1447,10 @@ defn ohmjs_maybe (eh, inst, causingMsg) {
         cmd = [f"{inst.pathname_0D_}/std/ohmjs.js", f"{inst.grammar_name}", f"{inst.grammar_filename}", f"{inst.semantics_filename}"]
         [captured_output, err] = run_command (eh, cmd, inst.s)
 
-        if err == ϕ{
+        if err ~~ ϕ{
             err = ""}
         errstring = trimws (err)
-        if len (errstring) == 0{
+        if len (errstring) ~~ 0{
             send_string (eh, "", trimws (captured_output), causingMsg)}
         else{
             send_string (eh, "✗", errstring, causingMsg)}
@@ -1463,19 +1463,19 @@ defn ohmjs_maybe (eh, inst, causingMsg) {
 
 defn ohmjs_handle (eh, msg) {
     inst = eh.instance_data
-    if msg.port == "0D path"{
+    if msg.port ~~ "0D path"{
         inst.pathname_0D_ = clone_string (msg.datum.srepr ())
         ohmjs_maybe (eh, inst, msg)}
-    elif msg.port == "grammar name"{
+    elif msg.port ~~ "grammar name"{
         inst.grammar_name = clone_string (msg.datum.srepr ())
         ohmjs_maybe (eh, inst, msg)}
-    elif msg.port == "grammar"{
+    elif msg.port ~~ "grammar"{
         inst.grammar_filename = clone_string (msg.datum.srepr ())
         ohmjs_maybe (eh, inst, msg)}
-    elif msg.port == "semantics"{
+    elif msg.port ~~ "semantics"{
         inst.semantics_filename = clone_string (msg.datum.srepr ())
         ohmjs_maybe (eh, inst, msg)}
-    elif msg.port == "input"{
+    elif msg.port ~~ "input"{
         inst.s = clone_string (msg.datum.srepr ())
         ohmjs_maybe (eh, inst, msg)}
     else{
@@ -1514,7 +1514,7 @@ defn run (pregistry, root_project, root_0D, arg, main_container_name, diagram_so
     set_environment (root_project, root_0D)
     # get entrypoint container
     main_container = get_component_instance(pregistry, main_container_name, owner=ϕ)
-    if ϕ == main_container{
+    if ϕ ~~ main_container{
         load_error (f"Couldn't find container with page name {main_container_name} in files {diagram_source_files} (check tab names, or disable compression?)")}
     if show_hierarchy{
         dump_hierarchy (main_container)}
