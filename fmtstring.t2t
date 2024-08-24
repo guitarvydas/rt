@@ -1,0 +1,58 @@
+% grammar fmtstring
+main = pattern+
+
+pattern =
+  | fmtstring -- fmtstring
+  | any -- default
+
+fmtstring = "f" fstring
+
+fstring =
+  | lq innard* rq
+  | dq innard* dq
+
+dq = "\""
+lq = "“"
+rq = "”"
+
+innard =
+  | "{" interpolation "}" -- interpolation
+  | ~"}" ~dq ~lq ~rq any -- default
+
+interpolation =
+  | interpolation "." ident spaces "(" ")" -- methodcall
+  | interpolation "." ident -- attribute
+  | interpolation "@" ident -- lookup
+  | ~"." ~"@"  ~"(" ~")" ident -- default
+
+ident = first rest*
+first = letter | "_"
+rest = alnum | "_"
+
+
+% rewrite
+main [pattern+] = ‛«pattern»’
+
+pattern_fmtstring [s] = ‛«s»’
+pattern_default [x] = ‛«x»’
+
+fmtstring [_f s] = ‛«_f»«s»’
+
+fstring [ldq innard* rdq] = ‛«ldq»«innard»«rdq»’
+
+dq [c] = ‛«c»’
+lq [c] = ‛«c»’
+rq [c] = ‛«c»’
+
+innard_interpolation [lb v rb] = ‛«lb»«v»«rb»’
+innard_default [c] = ‛«c»’
+
+interpolation_methodcall [i _dot ident ws lp rp] = ‛«i»«_dot»«ident»«ws»«lp»«rp»’
+interpolation_attribute [ident1 _dot ident2] = ‛«ident1»«_dot»«ident2»’
+interpolation_lookup [ident1 _at ident2] = ‛«ident1»«_at»«ident2»’
+interpolation_default [ident] = ‛«ident»’
+
+ident [first rest*] = ‛«first»«rest»’
+first [c] = ‛«c»’
+rest [c] = ‛«c»’
+

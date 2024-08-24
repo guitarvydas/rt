@@ -34,6 +34,9 @@ Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛«scope»’
 
 CommaIdent [_comma ident] = ‛ «ident»’
 
+Deftemp [_deftemp lval _mutate e rec?] = ‛\n(setf «lval» «e»)«rec»)’
+Defsynonym [ lval _eqv e rec?] = ‛\n(let ((«lval» «e»))«rec»)’
+
 InitStatement [ _mark ident _33 Exp] = ‛\n(cons '«ident» «Exp»)’
 
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\n(cond ⤷\n(«Exp» «StatementBlock»)«ElifStatement»«ElseStatement»⤶)«rec»’
@@ -46,9 +49,8 @@ TryStatement [ _47 StatementBlock ExceptBlock+ rec?] = ‛\ntry:\n«StatementBlo
 ExceptBlock_as [ _49 Exp _51 ident StatementBlock] =‛except «Exp» as «ident»:«StatementBlock»’
 ExceptBlock_basic [ _53 ident StatementBlock] =‛except «ident»:«StatementBlock»’
 
-Assignment_pluseq [ Lval _54 Exp rec?] = ‛\n(inc «Lval» «Exp»)«rec»’
 Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp rec?] =‛\n(multiple-value-bind («Lval1» «Lval2»)⤷⤷\n«Exp»⤶«rec»⤶)’
-Assignment_single [ Lval _59 Exp rec?] =‛\n(let («Lval» «Exp»)⤷«rec»⤶)’
+Assignment_single [ Lval _59 Exp rec?] =‛\n(setf «Lval» «Exp»)«rec»)’
 CommaLval [_comma Lval] = ‛, «Lval»’
 
 ReturnExp_multiple [ _60 Exp1 Exp2+ _62 rec?] =‛\n(return-from ⟪FunctionName⟫ (values «Exp1» «Exp2»))«rec»’
@@ -121,7 +123,8 @@ ObjFormals_noformals [ _148 _149] =‛()’
 ObjFormals_withformals [ _150 Formal CommaFormal* _151] =‛(«Formal»«CommaFormal»)’
 LambdaFormals_noformals [ _148 _149] =‛()’
 LambdaFormals_withformals [ _150 Formal CommaFormal* _151] =‛(«Formal»«CommaFormal»)’
-Formal [ ident  _152 Exp?] = ‛«ident»«_152»«Exp»’
+Formal_defaultvalue [ ident  _152 Exp] = ‛:«ident» «Exp»’
+Formal_plain [ ident] = ‛«ident»’
 CommaFormal [ _153 Formal] = ‛ «Formal»’
 
 Actuals_noactuals [ _154 _155] = ‛’
@@ -135,6 +138,8 @@ number_whole [ digit+] =‛«digit»’
 Pair [ string _161 Exp _162?] = ‛(«string» . «Exp»)’
 
 boolOp [ _191] = ‛ «_191» ’
+boolEq [op] = ‛equal’
+boolNeq [op] = ‛!equal’
 phi [ _192] = ‛ nil’
 
 string_fdqstring [ _193 notdq* _194] =‛«_193»«notdq»«_194»’

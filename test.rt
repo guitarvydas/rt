@@ -1,3 +1,18 @@
-defn x () {
-  inst.s = clone_string (msg.datum.srepr ())
+defobj Datum () {
+      • data ⇐ ϕ
+      • clone ⇐ ϕ
+      • reclaim ⇐ ϕ
+      • srepr ⇐ ϕ
+      • kind ⇐ ϕ
+      • raw ⇐ ϕ
+}
+defn new_datum_string (s) {
+    d ≡ fresh (Datum)
+    d.data ⇐ s
+    d.clone ⇐ λ: clone_datum_string (d)
+    d.reclaim ⇐ λ: reclaim_datum_string (d)    
+    d.srepr ⇐ λ: srepr_datum_string (d)
+    d.raw ⇐ λ: raw_datum_string (d)    
+    d.kind ⇐ λ: "string"
+    return d
 }

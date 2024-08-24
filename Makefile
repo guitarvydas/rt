@@ -4,7 +4,7 @@ SRC=rt0d.rt
 #SRC=test.rt
 D2J=./das2json/mac/das2json
 
-dev: python
+dev: preprocess
 
 commonlisp: 0D2cl.mjs support.mjs
 	${D2J} cl-t2t.drawio
@@ -39,6 +39,11 @@ t2t.mjs : ../t2t/t2t.mjs
 
 support.mjs : ../t2t/support.mjs
 	cp ../t2t/support.mjs .
+
+
+preprocess: t2t.mjs fmtstring.t2t
+	node t2t.mjs <fmtstring.t2t >preprocess.mjs
+	node preprocess.mjs <${SRC}
 
 #########
 

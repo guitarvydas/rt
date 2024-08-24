@@ -23,8 +23,8 @@ rt {
 
    kw<s> = s ~identTail
 
-   Defvar = kw<"defvar"> Lval "=" Exp
-   Defconst = kw<"defconst"> Lval "=" Exp
+   Defvar = kw<"defvar"> Lval "⇐" Exp
+   Defconst = kw<"defconst"> Lval "≡" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
    Defobj = kw<"defobj"> ident ObjFormals "{" InitStatement+ "}"
    Import = kw<"import"> ident
@@ -32,6 +32,8 @@ rt {
    StatementBlock = "{" Rec_Statement "}"
 
    Rec_Statement =
+     | Deftemp -- deftemp
+     | Defsynonym -- defsynonym     
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
      | IfStatement  -- if
      | kw<"pass"> Rec_Statement? -- pass
@@ -43,7 +45,10 @@ rt {
      | Lval Rec_Statement? -- call
    CommaIdent = "," ident
 
-   InitStatement = "•" ident "=" Exp
+   Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
+   Defsynonym = Lval "≡" Exp Rec_Statement?
+
+   InitStatement = "•" ident "⇐" Exp
 
    IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
@@ -58,9 +63,8 @@ rt {
      | kw<"except"> ident StatementBlock -- basic
    
    Assignment = 
-     | Lval "+=" Exp Rec_Statement? -- pluseq
-     | "[" Lval CommaLval+ "]" "=" Exp Rec_Statement? -- multiple
-     | Lval "=" Exp Rec_Statement? -- single
+     | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
+     | Lval "⇐" Exp Rec_Statement? -- single
 
    CommaLval = "," Lval
 
@@ -141,10 +145,11 @@ rt {
 
     keyword = (
         kw<"fresh">
-      | kw<"defvar">
       | kw<"defconst">
-      | kw<"defn">
+      | kw<"deftemp">
       | kw<"defobj">
+      | kw<"defvar">
+      | kw<"defn">
       | "•"
       | kw<"useglobal">
       | kw<"pass">
@@ -187,7 +192,10 @@ rt {
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
 
-    Formal = ident ("=" Exp)?
+    Formal = 
+       | ident "∷" Exp -- defaultvalue
+       | ident -- plain
+       
     CommaFormal = "," Formal
     
     Actuals = 
@@ -197,7 +205,7 @@ rt {
    Actual = ParamName? Exp
    CommaActual = "," Actual
 
-   ParamName = ident "="
+   ParamName = ident "∷"
 
     number =
       | digit* "." digit+  -- fract
@@ -207,7 +215,7 @@ rt {
   
 
   boolOp = (boolEq | boolNeq | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">)
-  boolEq = "=="
+  boolEq = "="
   boolNeq = "!="
 
   phi = "ϕ"
@@ -645,6 +653,48 @@ _.set_top (return_value_stack, ` ${ident}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
+Deftemp : function (__deftemp, _lval, __mutate, _e, _rec, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_deftemp,lval,_mutate,e,rec
+let _deftemp = undefined;
+let lval = undefined;
+let _mutate = undefined;
+let e = undefined;
+let rec = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Deftemp");
+_deftemp = __deftemp.rwr ()
+lval = _lval.rwr ()
+_mutate = __mutate.rwr ()
+e = _e.rwr ()
+rec = _rec.rwr ().join ('')
+
+_.set_top (return_value_stack, `\n(setf ${lval} ${e})${rec})`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Defsynonym : function (_lval, __eqv, _e, _rec, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=lval,_eqv,e,rec
+let lval = undefined;
+let _eqv = undefined;
+let e = undefined;
+let rec = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Defsynonym");
+lval = _lval.rwr ()
+_eqv = __eqv.rwr ()
+e = _e.rwr ()
+rec = _rec.rwr ().join ('')
+
+_.set_top (return_value_stack, `\n(let ((${lval} ${e}))${rec})`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
 InitStatement : function (__mark, _ident, __33, _Exp, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_mark,ident,_33,Exp
@@ -827,26 +877,6 @@ _.set_top (return_value_stack, `except ${ident}:${StatementBlock}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Assignment_pluseq : function (_Lval, __54, _Exp, _rec, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=Lval,_54,Exp,rec
-let Lval = undefined;
-let _54 = undefined;
-let Exp = undefined;
-let rec = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Assignment_pluseq");
-Lval = _Lval.rwr ()
-_54 = __54.rwr ()
-Exp = _Exp.rwr ()
-rec = _rec.rwr ().join ('')
-
-_.set_top (return_value_stack, `\n(inc ${Lval} ${Exp})${rec}`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
 Assignment_multiple : function (__55, _Lval1, _Lval2, __57, __58, _Exp, _rec, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_55,Lval1,Lval2,_57,_58,Exp,rec
@@ -888,7 +918,7 @@ _59 = __59.rwr ()
 Exp = _Exp.rwr ()
 rec = _rec.rwr ().join ('')
 
-_.set_top (return_value_stack, `\n(let (${Lval} ${Exp})⤷${rec}⤶)`);
+_.set_top (return_value_stack, `\n(setf ${Lval} ${Exp})${rec})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -1919,7 +1949,7 @@ _.set_top (return_value_stack, `(${Formal}${CommaFormal})`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-Formal : function (_ident, __152, _Exp, ) {
+Formal_defaultvalue : function (_ident, __152, _Exp, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=ident,_152,Exp
 let ident = undefined;
@@ -1927,12 +1957,26 @@ let _152 = undefined;
 let Exp = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "Formal");
+_.set_top (rule_name_stack, "Formal_defaultvalue");
 ident = _ident.rwr ()
 _152 = __152.rwr ()
-Exp = _Exp.rwr ().join ('')
+Exp = _Exp.rwr ()
 
-_.set_top (return_value_stack, `${ident}${_152}${Exp}`);
+_.set_top (return_value_stack, `:${ident} ${Exp}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+Formal_plain : function (_ident, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=ident
+let ident = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Formal_plain");
+ident = _ident.rwr ()
+
+_.set_top (return_value_stack, `${ident}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2099,6 +2143,34 @@ _.set_top (rule_name_stack, "boolOp");
 _191 = __191.rwr ()
 
 _.set_top (return_value_stack, ` ${_191} `);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+boolEq : function (_op, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=op
+let op = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "boolEq");
+op = _op.rwr ()
+
+_.set_top (return_value_stack, `equal`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+boolNeq : function (_op, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=op
+let op = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "boolNeq");
+op = _op.rwr ()
+
+_.set_top (return_value_stack, `!equal`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
