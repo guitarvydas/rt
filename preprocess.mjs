@@ -17,11 +17,9 @@ pattern =
   | fmtstring -- fmtstring
   | any -- default
 
-fmtstring = "f" fstring
-
-fstring =
-  | lq innard* rq
-  | dq innard* dq
+fmtstring =
+  | "f" dq innard* dq -- f
+  | lq innard* rq -- u
 
 dq = "\""
 lq = "“"
@@ -89,36 +87,40 @@ _.set_top (return_value_stack, `${x}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-fmtstring : function (__f, _s, ) {
+fmtstring_f : function (__f, _ldq, _innard, _rdq, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=_f,s
+//** argnames=_f,ldq,innard,rdq
 let _f = undefined;
-let s = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "fmtstring");
-_f = __f.rwr ()
-s = _s.rwr ()
-
-_.set_top (return_value_stack, `${_f}${s}`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-fstring : function (_ldq, _innard, _rdq, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=ldq,innard,rdq
 let ldq = undefined;
 let innard = undefined;
 let rdq = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "fstring");
+_.set_top (rule_name_stack, "fmtstring_f");
+_f = __f.rwr ()
 ldq = _ldq.rwr ()
 innard = _innard.rwr ().join ('')
 rdq = _rdq.rwr ()
 
-_.set_top (return_value_stack, `${ldq}${innard}${rdq}`);
+_.set_top (return_value_stack, `${_f}${ldq}${innard}${rdq}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+fmtstring_u : function (_luq, _innard, _ruq, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=luq,innard,ruq
+let luq = undefined;
+let innard = undefined;
+let ruq = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "fmtstring_u");
+luq = _luq.rwr ()
+innard = _innard.rwr ().join ('')
+ruq = _ruq.rwr ()
+
+_.set_top (return_value_stack, `${luq}${innard}${ruq}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
