@@ -10,8 +10,8 @@
 
    kw<s> = s ~identTail
 
-   Defvar = kw<"defvar"> Lval "=" Exp
-   Defconst = kw<"defconst"> Lval "=" Exp
+   Defvar = kw<"defvar"> Lval "⇐" Exp
+   Defconst = kw<"defconst"> Lval "≡" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
    Defobj = kw<"defobj"> ident ObjFormals "{" InitStatement+ "}"
    Import = kw<"import"> ident
@@ -19,6 +19,8 @@
    StatementBlock = "{" Rec_Statement "}"
 
    Rec_Statement =
+     | Deftemp -- deftemp
+     | Defsynonym -- defsynonym     
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
      | IfStatement  -- if
      | kw<"pass"> Rec_Statement? -- pass
@@ -30,7 +32,10 @@
      | Lval Rec_Statement? -- call
    CommaIdent = "," ident
 
-   InitStatement = "•" ident "=" Exp
+   Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
+   Defsynonym = Lval "≡" Exp Rec_Statement?
+
+   InitStatement = "•" ident "⇐" Exp
 
    IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
@@ -45,9 +50,8 @@
      | kw<"except"> ident StatementBlock -- basic
    
    Assignment = 
-     | Lval "+=" Exp Rec_Statement? -- pluseq
-     | "[" Lval CommaLval+ "]" "=" Exp Rec_Statement? -- multiple
-     | Lval "=" Exp Rec_Statement? -- single
+     | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
+     | Lval "⇐" Exp Rec_Statement? -- single
 
    CommaLval = "," Lval
 
@@ -128,10 +132,11 @@
 
     keyword = (
         kw<"fresh">
-      | kw<"defvar">
       | kw<"defconst">
-      | kw<"defn">
+      | kw<"deftemp">
       | kw<"defobj">
+      | kw<"defvar">
+      | kw<"defn">
       | "•"
       | kw<"useglobal">
       | kw<"pass">
@@ -174,7 +179,10 @@
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
 
-    Formal = ident ("=" Exp)?
+    Formal = 
+       | ident "∷" Exp -- defaultvalue
+       | ident -- plain
+       
     CommaFormal = "," Formal
     
     Actuals = 
@@ -184,7 +192,7 @@
    Actual = ParamName? Exp
    CommaActual = "," Actual
 
-   ParamName = ident "="
+   ParamName = ident "∷"
 
     number =
       | digit* "." digit+  -- fract
@@ -194,7 +202,7 @@
   
 
   boolOp = (boolEq | boolNeq | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">)
-  boolEq = "=="
+  boolEq = "="
   boolNeq = "!="
 
   phi = "ϕ"
@@ -238,6 +246,11 @@ Rec_Statement_while [ WhileStatement] =‛«WhileStatement»’
 Rec_Statement_try [ TryStatement] =‛«TryStatement»’
 Rec_Statement_assignment [ Assignment] =‛«Assignment»’
 Rec_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
+
+Deftemp [_deftemp lval _mutate e rec?] = ‛\n«lval» = «e»«rec»’
+Defsynonym [ lval _eqv e rec?] = ‛\n«lval» = «e»«rec»’
+
+
 InitStatement [ _mark ident _33 Exp] = ‛\nself.«ident» = «Exp»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛elif «Exp»:«StatementBlock»’
@@ -249,7 +262,6 @@ TryStatement [ _47 StatementBlock ExceptBlock+ rec?] = ‛\ntry:\n«StatementBlo
 ExceptBlock_as [ _49 Exp _51 ident StatementBlock] =‛except «Exp» as «ident»:«StatementBlock»’
 ExceptBlock_basic [ _53 ident StatementBlock] =‛except «ident»:«StatementBlock»’
 
-Assignment_pluseq [ Lval _54 Exp rec?] = ‛\n«Lval» += «Exp»«rec»’
 Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp rec?] =‛\n[«Lval1»«Lval2»] = «Exp»«rec»’
 Assignment_single [ Lval _59 Exp rec?] =‛\n«Lval» = «Exp»«rec»’
 CommaLval [_comma Lval] = ‛, «Lval»’
@@ -324,20 +336,23 @@ ObjFormals_noformals [ _148 _149] =‛’
 ObjFormals_withformals [ _150 Formal CommaFormal* _151] =‛,«Formal»«CommaFormal»’
 LambdaFormals_noformals [ _148 _149] =‛’
 LambdaFormals_withformals [ _150 Formal CommaFormal* _151] =‛«Formal»«CommaFormal»’
-Formal [ ident  _152 Exp?] = ‛«ident»«_152»«Exp»’
+Formal_defaultvalue [ ident  _152 Exp] = ‛«ident»=«Exp»’
+Formal_plain [ ident] = ‛«ident»’
 CommaFormal [ _153 Formal] = ‛«_153»«Formal»’
 
 Actuals_noactuals [ _154 _155] =‛«_154»«_155»’
 Actuals_actuals [ _156 Actual CommaActual* _157] =‛«_156»«Actual»«CommaActual»«_157»’
 Actual [ ParamName? Exp] = ‛«ParamName»«Exp»’
 CommaActual [ _158 Actual] = ‛«_158»«Actual»’
-ParamName [ ident _159] = ‛«ident»«_159»’
+ParamName [ ident _159] = ‛«ident»=’
 
 number_fract [ num* _160 den+] =‛«num»«_160»«den»’
 number_whole [ digit+] =‛«digit»’
 Pair [ string _161 Exp _162?] = ‛«string»«_161»«Exp»«_162»’
 
 boolOp [ _191] = ‛ «_191» ’
+boolEq [op] = ‛==’
+boolNeq [op] = ‛!=’
 phi [ _192] = ‛ None’
 
 string_fdqstring [ _193 notdq* _194] =‛«_193»«notdq»«_194»’

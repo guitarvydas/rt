@@ -5,7 +5,7 @@ digits = ["₀","₁","₂","₃","₄","₅","₆","₇","₈","₉","₁₀","
 def gensym (s):
     global counter
     name_with_id = f"{s}{subscripted_digit (counter)}"
-    counter += 1
+    counter = counter+1
     return name_with_id
 
 def subscripted_digit (n):
@@ -123,7 +123,6 @@ def new_datum_int (i):
     return p
 
 def clone_int (i):
-    p = Datum ()
     p = new_datum_int (i)
     return p
 
@@ -177,10 +176,10 @@ drDown = "down"
 drUp = "up"
 drAcross = "across"
 drThrough = "through"
-def make_Routing_Descriptor (action= None,component= None,port= None,message= None):
+def make_Routing_Descriptor (action,component,port,message):
     return {"action":action,"component":component,"port":port,"message":message}
 
-def make_Send_Descriptor (component= None,port= None,message= None,cause_port= None,cause_message= None):
+def make_Send_Descriptor (component,port,message,cause_port,cause_message):
     rdesc = make_Routing_Descriptor (action=drSend,component=component,port=port,message=message)
     return {"action":drSend,"component":rdesc ["component"],"port":rdesc ["port"],"message":rdesc ["message"],"cause_port":cause_port,"cause_message":cause_message,"fmt":fmt_send}
 
@@ -198,7 +197,7 @@ def fmt_send (desc,indent):
 def fmt_send_string (desc,indent):
     return fmt_send (desc,indent)
 
-def make_Forward_Descriptor (component= None,port= None,message= None,cause_port= None,cause_message= None):
+def make_Forward_Descriptor (component,port,message,cause_port,cause_message):
     rdesc = make_Routing_Descriptor (action=drSend,component=component,port=port,message=message)
     fmt_forward =  lambda desc: ''
     return {"action":drForward,"component":rdesc ["component"],"port":rdesc ["port"],"message":rdesc ["message"],"cause_port":cause_port,"cause_message":cause_message,"fmt":fmt_forward}
@@ -210,7 +209,7 @@ def fmt_forward (desc):
     print (f"*** Error fmt_forward {desc}")
     quit ()
 
-def make_Inject_Descriptor (receiver= None,port= None,message= None):
+def make_Inject_Descriptor (receiver,port,message):
     rdesc = make_Routing_Descriptor (action=drInject,component=receiver,port=port,message=message)
     return {"action":drInject,"component":rdesc ["component"],"port":rdesc ["port"],"message":rdesc ["message"],"fmt":fmt_inject}
 
@@ -221,65 +220,65 @@ def log_inject (receiver,port,msg):
 def fmt_inject (desc,indent):
     return f'\n{indent}⟹  {desc@component.name}."{desc@port}" {format_message (desc@message)}'
 
-def make_Down_Descriptor (container= None,source_port= None,source_message= None,target= None,target_port= None,target_message= None):
+def make_Down_Descriptor (container,source_port,source_message,target,target_port,target_message):
     return {"action":drDown,"container":container,"source_port":source_port,"source_message":source_message,"target":target,"target_port":target_port,"target_message":target_message,"fmt":fmt_down}
 
-def log_down (container= None,source_port= None,source_message= None,target= None,target_port= None,target_message= None):
+def log_down (container,source_port,source_message,target,target_port,target_message):
     rdesc = make_Down_Descriptor (container,source_port,source_message,target,target_port,target_message)
     append_routing_descriptor (container,rdesc)
 
 def fmt_down (desc,indent):
     return f'\n{indent}↓ {desc@container.name}."{desc@source_port}" ➔ {desc@target.name}."{desc@target_port}" {format_message (desc@target_message)}'
 
-def make_Up_Descriptor (source= None,source_port= None,source_message= None,container= None,container_port= None,container_message= None):
+def make_Up_Descriptor (source,source_port,source_message,container,container_port,container_message):
     return {"action":drUp,"source":source,"source_port":source_port,"source_message":source_message,"container":container,"container_port":container_port,"container_message":container_message,"fmt":fmt_up}
 
-def log_up (source= None,source_port= None,source_message= None,container= None,target_port= None,target_message= None):
+def log_up (source,source_port,source_message,container,target_port,target_message):
     rdesc = make_Up_Descriptor (source,source_port,source_message,container,target_port,target_message)
     append_routing_descriptor (container,rdesc)
 
 def fmt_up (desc,indent):
     return f'\n{indent}↑ {desc@source.name}."{desc@source_port}" ➔ {desc@container.name}."{desc@container_port}" {format_message (desc@container_message)}'
 
-def make_Across_Descriptor (container= None,source= None,source_port= None,source_message= None,target= None,target_port= None,target_message= None):
+def make_Across_Descriptor (container,source,source_port,source_message,target,target_port,target_message):
     return {"action":drAcross,"container":container,"source":source,"source_port":source_port,"source_message":source_message,"target":target,"target_port":target_port,"target_message":target_message,"fmt":fmt_across}
 
-def log_across (container= None,source= None,source_port= None,source_message= None,target= None,target_port= None,target_message= None):
+def log_across (container,source,source_port,source_message,target,target_port,target_message):
     rdesc = make_Across_Descriptor (container,source,source_port,source_message,target,target_port,target_message)
     append_routing_descriptor (container,rdesc)
 
 def fmt_across (desc,indent):
     return f'\n{indent}→ {desc@source.name}."{desc@source_port}" ➔ {desc@target.name}."{desc@target_port}"  {format_message (desc@target_message)}'
 
-def make_Through_Descriptor (container= None,source_port= None,source_message= None,target_port= None,message= None):
+def make_Through_Descriptor (container,source_port,source_message,target_port,message):
     return {"action":drThrough,"container":container,"source_port":source_port,"source_message":source_message,"target_port":target_port,"message":message,"fmt":fmt_through}
 
-def log_through (container= None,source_port= None,source_message= None,target_port= None,message= None):
+def log_through (container,source_port,source_message,target_port,message):
     rdesc = make_Through_Descriptor (container,source_port,source_message,target_port,message)
     append_routing_descriptor (container,rdesc)
 
 def fmt_through (desc,indent):
     return f'\n{indent}⇶ {desc @container.name}."{desc@source_port}" ➔ {desc@container.name}."{desc@target_port}" {format_message (desc@message)}'
 
-def make_InOut_Descriptor (container= None,component= None,in_message= None,out_port= None,out_message= None):
+def make_InOut_Descriptor (container,component,in_message,out_port,out_message):
     return {"action":drInOut,"container":container,"component":component,"in_message":in_message,"out_message":out_message,"fmt":fmt_inout}
 
-def log_inout (container= None,component= None,in_message= None):
+def log_inout (container,component,in_message):
     if component.outq.empty ():
         log_inout_no_output (container=container,component=component,in_message=in_message)
     else:
         log_inout_recursively (container=container,component=component,in_message=in_message,out_messages=list (component.outq.queue))
     
 
-def log_inout_no_output (container= None,component= None,in_message= None):
-    rdesc = make_InOut_Descriptor (container=container,component=component,in_message=in_message)
+def log_inout_no_output (container,component,in_message):
+    rdesc = make_InOut_Descriptor (container=container,component=component,in_message=in_message,out_port= None,out_message= None)
     append_routing_descriptor (container,rdesc)
 
-def log_inout_single (container= None,component= None,in_message= None,out_message= None):
-    rdesc = make_InOut_Descriptor (container=container,component=component,in_message=in_message,out_message=out_message)
+def log_inout_single (container,component,in_message,out_message):
+    rdesc = make_InOut_Descriptor (container=container,component=component,in_message=in_message,out_port= None,out_message=out_message)
     append_routing_descriptor (container,rdesc)
 
-def log_inout_recursively (container= None,component= None,in_message= None,out_messages=[]):
+def log_inout_recursively (container,component,in_message,out_messages=[]):
     if [] == out_messages:
         pass
     else:
@@ -297,7 +296,7 @@ def fmt_inout (desc,indent):
         return f'\n{indent}  ∴ {desc@component.name} {format_message (outm)}'
     
 
-def log_tick (container= None,component= None,in_message= None):
+def log_tick (container,component,in_message):
     pass
 
 def routing_trace_all (container):
@@ -463,14 +462,14 @@ def step_children (container,causingMessage):
                 
                 destroy_message (msg)
             else:
-                if (child.state!="idle"):
+                if child.state!="idle":
                     msg = force_tick (container,child)
                     child.handler (child,msg)
                     log_tick (container=container,component=child,in_message=msg)
                     destroy_message (msg)
                 
             
-            if (child.state == "active"):
+            if child.state == "active":
                 container.state = "active"
             
             while (not (child.outq.empty ())):
@@ -491,13 +490,13 @@ def is_tick (msg):
 
 def route (container,from_component,message):
     was_sent =  False
+    fromname = ""
     if is_tick (message):
         for child in container.children:
             attempt_tick (container,child,message)
         
         was_sent =  True
     else:
-        fromname = ""
         if (not (is_self (from_component,container))):
             fromname = from_component.name
         
@@ -544,11 +543,11 @@ def append_routing_descriptor (container,desc):
 
 def log_connection (container,connector,message):
     if "down" == connector.direction:
-        log_down (container=container,source_port=connector.sender.port,target=connector.receiver.component,target_port=connector.receiver.port,target_message=message)
+        log_down (container=container,source_port=connector.sender.port,source_message= None,target=connector.receiver.component,target_port=connector.receiver.port,target_message=message)
     elif "up" == connector.direction:
-        log_up (source=connector.sender.component,source_port=connector.sender.port,container=container,target_port=connector.receiver.port,target_message=message)
+        log_up (source=connector.sender.component,source_port=connector.sender.port,source_message= None,container=container,target_port=connector.receiver.port,target_message=message)
     elif "across" == connector.direction:
-        log_across (container=container,source=connector.sender.component,source_port=connector.sender.port,target=connector.receiver.component,target_port=connector.receiver.port,target_message=message)
+        log_across (container=container,source=connector.sender.component,source_port=connector.sender.port,source_message= None,target=connector.receiver.component,target_port=connector.receiver.port,target_message=message)
     elif "through" == connector.direction:
         log_through (container=container,source_port=connector.sender.port,source_message= None,target_port=connector.receiver.port,message=message)
     else:
@@ -789,6 +788,7 @@ def fetch_first_output (eh,port):
 
 def print_specific_output (eh,port="",stderr= False):
     datum = fetch_first_output (eh,port)
+    outf =  None
     if datum!= None:
         if stderr:
             outf = sys.stderr
@@ -802,7 +802,7 @@ def put_output (eh,msg):
     eh.outq.put (msg)
 
 def injector_NIY (eh,msg):
-    print (f'Injector not implemented for this component "{eh.name}" kind={eh.kind} port="{msg.port}"')
+    print (f'Injector not implemented for this component "{eh.name}" kind ∷ {eh.kind} port ∷ "{msg.port}"')
     exit ()
 
 import sys
@@ -979,11 +979,11 @@ def stringconcat_handler (eh,msg):
     inst = eh.instance_data
     if "1" == msg.port:
         inst.buffer1 = clone_string (msg.datum.srepr ())
-        inst.count += 1
+        inst.count = inst.count+1
         maybe_stringconcat (eh,inst,msg)
     elif "2" == msg.port:
         inst.buffer2 = clone_string (msg.datum.srepr ())
-        inst.count += 1
+        inst.count = inst.count+1
         maybe_stringconcat (eh,inst,msg)
     else:
         runtime_error (f"bad msg.port for stringconcat: {msg.port}")
@@ -1048,6 +1048,8 @@ def string_clone (s):
 
 import sys
 def parse_command_line_args ():
+    global root_project
+    global root_0D
     if (len (sys.argv) < (5+1)):
         load_error ("usage: ${_00_} ${_0D_} app <arg> <main tab name> <diagram file name 1> ...")
         return  None
@@ -1142,7 +1144,7 @@ def fakepipename_instantiate (reg,owner,name,template_data):
 rand = 0
 def fakepipename_handler (eh,msg):
     global rand
-    rand += 1
+    rand = rand+1
     send_string (eh,"",f"/tmp/fakepipe{rand}",msg)
 
 class OhmJS_Instance_Data:
@@ -1161,7 +1163,7 @@ def ohmjs_instantiate (reg,owner,name,template_data):
 def ohmjs_maybe (eh,inst,causingMsg):
     if  None!=inst.pathname_0D_ and  None!=inst.grammar_name and  None!=inst.grammar_filename and  None!=inst.semantics_filename and  None!=inst.s:
         cmd = [f"{inst.pathname_0D_}/std/ohmjs.js",f"{inst.grammar_name}",f"{inst.grammar_filename}",f"{inst.semantics_filename}"]
-        [captured_output, err] = run_command (eh,cmd,inst.s)
+        [captured_output,err] = run_command (eh,cmd,inst.s)
         if err ==  None:
             err = ""
         
