@@ -16,8 +16,8 @@ rq = "”"
 innard =
   | "{" interpolation "}" innard -- rec_interpolation
   | "{" interpolation "}" -- bottom_interpolation
-  | ~"}" ~dq ~lq ~rq any innard -- rec_default
-  | ~"}" ~dq ~lq ~rq any -- bottom_default
+  | ~"}" ~dq ~lq ~rq char innard -- rec_default
+  | ~"}" ~dq ~lq ~rq char -- bottom_default
 
 interpolation =
   | interpolation "." ident spaces "(" ")" -- methodcall
@@ -25,6 +25,10 @@ interpolation =
   | interpolation "@" ident -- lookup
   | ~"." ~"@"  ~"(" ~")" ident -- default
 
+char =
+  | "'" -- sq
+  | any -- default
+  
 ident = first rest*
 first = letter | "_"
 rest = alnum | "_"
@@ -52,6 +56,9 @@ interpolation_methodcall [i _dot ident ws lp rp] = ‛«i»«_dot»«ident»«ws
 interpolation_attribute [ident1 _dot ident2] = ‛«ident1»«_dot»«ident2»’
 interpolation_lookup [ident1 _at ident2] = ‛«ident1»«_at»«ident2»’
 interpolation_default [ident] = ‛«ident»’
+
+char_sq [c] = ‛\\'’
+char_default [c] = ‛«c»’
 
 ident [first rest*] = ‛«first»«rest»’
 first [c] = ‛«c»’

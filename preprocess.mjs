@@ -28,8 +28,8 @@ rq = "”"
 innard =
   | "{" interpolation "}" innard -- rec_interpolation
   | "{" interpolation "}" -- bottom_interpolation
-  | ~"}" ~dq ~lq ~rq any innard -- rec_default
-  | ~"}" ~dq ~lq ~rq any -- bottom_default
+  | ~"}" ~dq ~lq ~rq char innard -- rec_default
+  | ~"}" ~dq ~lq ~rq char -- bottom_default
 
 interpolation =
   | interpolation "." ident spaces "(" ")" -- methodcall
@@ -37,6 +37,10 @@ interpolation =
   | interpolation "@" ident -- lookup
   | ~"." ~"@"  ~"(" ~")" ident -- default
 
+char =
+  | "'" -- sq
+  | any -- default
+  
 ident = first rest*
 first = letter | "_"
 rest = alnum | "_"
@@ -307,6 +311,34 @@ _.set_top (rule_name_stack, "interpolation_default");
 ident = _ident.rwr ()
 
 _.set_top (return_value_stack, `${ident}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+char_sq : function (_c, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=c
+let c = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "char_sq");
+c = _c.rwr ()
+
+_.set_top (return_value_stack, `\\'`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+char_default : function (_c, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=c
+let c = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "char_default");
+c = _c.rwr ()
+
+_.set_top (return_value_stack, `${c}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
