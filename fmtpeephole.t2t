@@ -1,4 +1,4 @@
-fmtpeephole {
+% grammar fmtpeephole
 
 main = pattern+
 
@@ -16,13 +16,37 @@ CharRun =
 
 char = q (~reserved any)*
 
-interpolation = "«" ident "»"
+interpolation = "⎨" ident "⎬"
 
 q = "◦"
-reserved = q | "«" | "»"
+reserved = q | "⎨" | "⎬"
 
 ident = first rest*
 first = letter | "_"
 rest = alnum | "_"
 
+}
+
+% rewrite
+
+main [pattern+] = «pattern»
+
+pattern_str [p] = ‛«p»’
+pattern_default [x] = ‛«x»’
+
+Strtop_charrun [run rec?] = ‛«run»«rec»’
+Strtop_interpolation [i rec?] = ‛«i»«rec»’
+
+CharRun_run [c rec] = ‛«c»«rec»’
+CharRun_single [c] = ‛«c»’
+
+char [_q c*] = ‛«c»’
+interpolation [lb ident rb] = ‛«lb»«ident»«rb»’
+
+q [c] = ‛«c»’
+reserved [c] = ‛«c»’
+
+ident [first rest*] = ‛«first»«rest»’
+first [c] = ‛«c»’
+rest [c] = ‛«c»’
 }

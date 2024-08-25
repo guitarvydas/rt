@@ -47,17 +47,17 @@ dq [c] = ‛«c»’
 lq [c] = ‛«c»’
 rq [c] = ‛«c»’
 
-innard_rec_interpolation [lb v rb rec] = ‛scons (interpolate («v»), «rec»)’
-innard_bottom_interpolation [lb v rb] = ‛interpolate («v»)’
-innard_rec_default [c rec] = ‛scons ('«c»', «rec»)’
-innard_bottom_default [c] = ‛'«c»'’
+innard_rec_interpolation [lb v rb rec] = ‛⎨«v»⎬«rec»’
+innard_bottom_interpolation [lb v rb] = ‛⎨«v»⎬’
+innard_rec_default [c rec] = ‛◦«c»«rec»’
+innard_bottom_default [c] = ‛◦«c»’
 
 interpolation_methodcall [i _dot ident ws lp rp] = ‛«i»«_dot»«ident»«ws»«lp»«rp»’
 interpolation_attribute [ident1 _dot ident2] = ‛«ident1»«_dot»«ident2»’
 interpolation_lookup [ident1 _at ident2] = ‛«ident1»«_at»«ident2»’
 interpolation_default [ident] = ‛«ident»’
 
-char_sq [c] = ‛\\'’
+char_sq [c] = ‛\'’
 char_default [c] = ‛«c»’
 
 ident [first rest*] = ‛«first»«rest»’

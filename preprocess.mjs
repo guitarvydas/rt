@@ -188,7 +188,7 @@ v = _v.rwr ()
 rb = _rb.rwr ()
 rec = _rec.rwr ()
 
-_.set_top (return_value_stack, `scons (interpolate (${v}), ${rec})`);
+_.set_top (return_value_stack, `⎨${v}⎬${rec}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -206,7 +206,7 @@ lb = _lb.rwr ()
 v = _v.rwr ()
 rb = _rb.rwr ()
 
-_.set_top (return_value_stack, `interpolate (${v})`);
+_.set_top (return_value_stack, `⎨${v}⎬`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -222,7 +222,7 @@ _.set_top (rule_name_stack, "innard_rec_default");
 c = _c.rwr ()
 rec = _rec.rwr ()
 
-_.set_top (return_value_stack, `scons ('${c}', ${rec})`);
+_.set_top (return_value_stack, `◦${c}${rec}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -236,7 +236,7 @@ rule_name_stack.push ("");
 _.set_top (rule_name_stack, "innard_bottom_default");
 c = _c.rwr ()
 
-_.set_top (return_value_stack, `'${c}'`);
+_.set_top (return_value_stack, `◦${c}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -324,7 +324,7 @@ rule_name_stack.push ("");
 _.set_top (rule_name_stack, "char_sq");
 c = _c.rwr ()
 
-_.set_top (return_value_stack, `\\'`);
+_.set_top (return_value_stack, `\'`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
