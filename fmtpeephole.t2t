@@ -3,24 +3,23 @@ fmtpeephole {
 main = pattern+
 
 pattern =
-  | applySyntactic<Str> -- str
+  | applySyntactic<Strtop> -- str
   | any -- default
 
-Str =
-  | "scons" "(" Str "," Str ")" -- rec
-  | Interpolation -- interpolate
-  | char -- char
+Strtop =
+  | CharRun Strtop? -- charrun
+  | interpolation Strtop? -- interpolation
   
-Interpolation =
-  | "interpolate" "(" ident ")" -- single
+CharRun =
+  | char CharRun -- run
+  | char -- single
 
-char = sq (("\\'" | ~sq any))* sq
+char = q (~reserved any)*
 
-sq = "'"
+interpolation = "«" ident "»"
 
-string = dq schar* dq
-dq = "\""
-schar = ~dq any
+q = "◦"
+reserved = q | "«" | "»"
 
 ident = first rest*
 first = letter | "_"
