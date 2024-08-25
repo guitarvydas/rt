@@ -3,21 +3,17 @@ fmtpeephole {
 main = pattern+
 
 pattern =
-  | str -- str
+  | applySyntactic<Str> -- str
   | any -- default
 
-str =
-  | applySyntactic<Interpolation> ("," str)?
-  | applySyntactic<CharRun> ("," str)?
+Str =
+  | "scons" "(" Str "," Str ")" -- rec
+  | Interpolation -- interpolate
+  | char -- char
   
 Interpolation =
-  | "scons" "(" "interpolate "(" ident ")" "," str ")" -- scons
   | "interpolate" "(" ident ")" -- single
 
-CharRun =
-  | "scons" "(" char "," CharRun ")" -- run
-  | char -- single
-  
 char = sq (("\\'" | ~sq any))* sq
 
 sq = "'"
