@@ -1,4 +1,5 @@
 defn build_hierarchy (c) {
     s ⇐ f"{s}{build_hierarchy (child)}"}
-    return f"\n{indent}({c.name}{s})"
+    return ◦\◦n⎨indent⎬◦(⎨c.name⎬⎨s⎬◦)
 }
+

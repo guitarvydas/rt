@@ -7,14 +7,16 @@ pattern =
   | any -- default
 
 Strtop =
-  | CharRun Strtop? -- charrun
-  | interpolation Strtop? -- interpolation
+  | CharRun Strtop -- charrunrec
+  | CharRun -- charrunsingle
+  | interpolation Strtop -- interpolationrec
+  | interpolation -- interpolationsingle
   
 CharRun =
   | char CharRun -- run
   | char -- single
 
-char = q (~reserved any)*
+char = q (~reserved any)
 
 interpolation = "⎨" ident "⎬"
 
@@ -25,23 +27,23 @@ ident = first rest*
 first = letter | "_"
 rest = alnum | "_"
 
-}
-
 % rewrite
 
-main [pattern+] = «pattern»
+main [pattern+] = ‛«pattern»’
 
 pattern_str [p] = ‛«p»’
 pattern_default [x] = ‛«x»’
 
-Strtop_charrun [run rec?] = ‛«run»«rec»’
-Strtop_interpolation [i rec?] = ‛«i»«rec»’
+Strtop_charrunrec [run rec] = ‛strcons ("«run»", «rec»)’
+Strtop_charrunsingle [run] = ‛"«run»"’
+Strtop_interpolationrec [i rec] = ‛strcons («i», «rec»)’
+Strtop_interpolationsingle [i] = ‛«i»’
 
 CharRun_run [c rec] = ‛«c»«rec»’
 CharRun_single [c] = ‛«c»’
 
-char [_q c*] = ‛«c»’
-interpolation [lb ident rb] = ‛«lb»«ident»«rb»’
+char [_q c] = ‛«c»’
+interpolation [lb ident rb] = ‛«ident»’
 
 q [c] = ‛«c»’
 reserved [c] = ‛«c»’
@@ -49,4 +51,3 @@ reserved [c] = ‛«c»’
 ident [first rest*] = ‛«first»«rest»’
 first [c] = ‛«c»’
 rest [c] = ‛«c»’
-}

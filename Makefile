@@ -1,7 +1,7 @@
 #	'ensure that formatted text option in draw.io is disabled everywhere'
 
-SRC=rt0d.rt
-#SRC=test.rt
+#SRC=rt0d.rt
+SRC=test.rt
 D2J=./das2json/mac/das2json
 
 dev: preprocess
@@ -43,7 +43,9 @@ support.mjs : ../t2t/support.mjs
 
 preprocess: t2t.mjs fmtstring.t2t
 	node t2t.mjs <fmtstring.t2t >preprocess.mjs
-	node preprocess.mjs <${SRC}
+	node t2t.mjs <fmtpeephole.t2t >peephole.mjs
+	node preprocess.mjs <${SRC} >${SRC}.preprocessed
+	node peephole.mjs <${SRC}.preprocessed >${SRC}.optimized
 
 #########
 
