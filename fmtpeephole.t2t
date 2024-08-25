@@ -3,49 +3,18 @@ fmtpeephole {
 main = pattern+
 
 pattern =
-  | applySyntactic<StringCons> -- scons
+  | applySyntactic<CharRun> -- run
   | any -- default
 
-StringCons =
-  | RunOfRawCharacters
-  | kw<"scons"> "(" StringCons "," StringCons ")"
-  | interpolation
-  | char
-
-runOfRawCharacters =
-  | "scons" "(" runOfRawCharacters "," char ")"
-  | char
-
-
+CharRun =
+  | "scons" "(" char "," CharRun ")" -- run
+  | char -- single
   
-char = sq ch sq
+char = sq (~sq any)* sq
 
 sq = "'"
-ch = ~reserved any
-
-reserved = ( "'" | "(" | ")" | "," | kw<"scons"> | kw<"rawstr"> | kw<"rawc"> )
-kw<s> = s ~(alnum | "_")
 
 string = dq schar* dq
 dq = "\""
 schar = ~dq any
 }
-
-
-
-
-
-  
-Scons =
-  | "scons" "(" Rawc "," Rawc ")" -- pairc
-  | "scons" "(" Rawstr "," Rawc ")" -- appendc
-  | "scons" "(" Sitem "," Scons ")" -- list
-  | Sitem -- atom
-
-Sitem = Rawstr | Rawc
-
-Rawstr =
-  | "scons" "(" Rawc "," Rawc ")" -- pair 
-  | "rawstr" "(" string ")"
-Rawc = "rawc" "(" char ")"
-
