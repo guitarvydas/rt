@@ -11,7 +11,7 @@ str =
   | applySyntactic<CharRun> ("," str)?
   
 Interpolation =
-  | "scons" "(" "interpolate "(" ident ")" "," str ")" -- scons
+  | "scons" "(" "interpolate" "(" ident ")" "," str ")" -- scons
   | "interpolate" "(" ident ")" -- single
 
 CharRun =
