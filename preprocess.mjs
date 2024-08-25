@@ -18,16 +18,18 @@ pattern =
   | any -- default
 
 fmtstring =
-  | "f" dq innard* dq -- f
-  | lq innard* rq -- u
+  | "f" dq innard dq -- f
+  | lq innard rq -- u
 
 dq = "\""
 lq = "“"
 rq = "”"
 
 innard =
-  | "{" interpolation "}" -- interpolation
-  | ~"}" ~dq ~lq ~rq any -- default
+  | "{" interpolation "}" innard -- rec_interpolation
+  | "{" interpolation "}" -- bottom_interpolation
+  | ~"}" ~dq ~lq ~rq any innard -- rec_default
+  | ~"}" ~dq ~lq ~rq any -- bottom_default
 
 interpolation =
   | interpolation "." ident spaces "(" ")" -- methodcall
@@ -99,10 +101,10 @@ rule_name_stack.push ("");
 _.set_top (rule_name_stack, "fmtstring_f");
 _f = __f.rwr ()
 ldq = _ldq.rwr ()
-innard = _innard.rwr ().join ('')
+innard = _innard.rwr ()
 rdq = _rdq.rwr ()
 
-_.set_top (return_value_stack, `${_f}${ldq}${innard}${rdq}`);
+_.set_top (return_value_stack, `${innard}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -117,10 +119,10 @@ return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "fmtstring_u");
 luq = _luq.rwr ()
-innard = _innard.rwr ().join ('')
+innard = _innard.rwr ()
 ruq = _ruq.rwr ()
 
-_.set_top (return_value_stack, `${luq}${innard}${ruq}`);
+_.set_top (return_value_stack, `${innard}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -167,7 +169,27 @@ _.set_top (return_value_stack, `${c}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-innard_interpolation : function (_lb, _v, _rb, ) {
+innard_rec_interpolation : function (_lb, _v, _rb, _rec, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=lb,v,rb,rec
+let lb = undefined;
+let v = undefined;
+let rb = undefined;
+let rec = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "innard_rec_interpolation");
+lb = _lb.rwr ()
+v = _v.rwr ()
+rb = _rb.rwr ()
+rec = _rec.rwr ()
+
+_.set_top (return_value_stack, `scons (interpolate (${v}), ${rec})`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+innard_bottom_interpolation : function (_lb, _v, _rb, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=lb,v,rb
 let lb = undefined;
@@ -175,26 +197,42 @@ let v = undefined;
 let rb = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "innard_interpolation");
+_.set_top (rule_name_stack, "innard_bottom_interpolation");
 lb = _lb.rwr ()
 v = _v.rwr ()
 rb = _rb.rwr ()
 
-_.set_top (return_value_stack, `${lb}${v}${rb}`);
+_.set_top (return_value_stack, `interpolate (${v})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-innard_default : function (_c, ) {
+innard_rec_default : function (_c, _rec, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=c,rec
+let c = undefined;
+let rec = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "innard_rec_default");
+c = _c.rwr ()
+rec = _rec.rwr ()
+
+_.set_top (return_value_stack, `scons ('${c}', ${rec})`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+innard_bottom_default : function (_c, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=c
 let c = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "innard_default");
+_.set_top (rule_name_stack, "innard_bottom_default");
 c = _c.rwr ()
 
-_.set_top (return_value_stack, `${c}`);
+_.set_top (return_value_stack, `'${c}'`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

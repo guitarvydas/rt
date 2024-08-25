@@ -1,0 +1,2 @@
+scons (rawc ('C'), rawc ('o'))
+scons (rawc ('C'), scons (rawc ('o'), rawc ('p')))

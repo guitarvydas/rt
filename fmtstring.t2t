@@ -6,16 +6,18 @@ pattern =
   | any -- default
 
 fmtstring =
-  | "f" dq innard* dq -- f
-  | lq innard* rq -- u
+  | "f" dq innard dq -- f
+  | lq innard rq -- u
 
 dq = "\""
 lq = "“"
 rq = "”"
 
 innard =
-  | "{" interpolation "}" -- interpolation
-  | ~"}" ~dq ~lq ~rq any -- default
+  | "{" interpolation "}" innard -- rec_interpolation
+  | "{" interpolation "}" -- bottom_interpolation
+  | ~"}" ~dq ~lq ~rq any innard -- rec_default
+  | ~"}" ~dq ~lq ~rq any -- bottom_default
 
 interpolation =
   | interpolation "." ident spaces "(" ")" -- methodcall
@@ -34,15 +36,17 @@ main [pattern+] = ‛«pattern»’
 pattern_fmtstring [s] = ‛«s»’
 pattern_default [x] = ‛«x»’
 
-fmtstring_f [_f ldq innard* rdq] = ‛«_f»«ldq»«innard»«rdq»’
-fmtstring_u [luq innard* ruq] = ‛«luq»«innard»«ruq»’
+fmtstring_f [_f ldq innard rdq] = ‛«innard»’
+fmtstring_u [luq innard ruq] = ‛«innard»’
 
 dq [c] = ‛«c»’
 lq [c] = ‛«c»’
 rq [c] = ‛«c»’
 
-innard_interpolation [lb v rb] = ‛«lb»«v»«rb»’
-innard_default [c] = ‛«c»’
+innard_rec_interpolation [lb v rb rec] = ‛scons (interpolate («v»), «rec»)’
+innard_bottom_interpolation [lb v rb] = ‛interpolate («v»)’
+innard_rec_default [c rec] = ‛scons ('«c»', «rec»)’
+innard_bottom_default [c] = ‛'«c»'’
 
 interpolation_methodcall [i _dot ident ws lp rp] = ‛«i»«_dot»«ident»«ws»«lp»«rp»’
 interpolation_attribute [ident1 _dot ident2] = ‛«ident1»«_dot»«ident2»’
@@ -52,4 +56,3 @@ interpolation_default [ident] = ‛«ident»’
 ident [first rest*] = ‛«first»«rest»’
 first [c] = ‛«c»’
 rest [c] = ‛«c»’
-
