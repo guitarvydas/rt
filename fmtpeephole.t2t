@@ -3,7 +3,7 @@
 main = pattern+
 
 pattern =
-  | applySyntactic<Strtop> -- str
+  | "“"  applySyntactic<Strtop> "”" -- str
   | any -- default
 
 Strtop =
@@ -18,7 +18,10 @@ CharRun =
 
 char = q (~reserved any)
 
-interpolation = "⎨" ident "⎬"
+interpolation = "⎨" istuff* "⎬"
+istuff =
+  | "⎨" istuff* "⎬" -- rec
+  | ~"⎨" ~"⎬" any -- default
 
 q = "◦"
 reserved = q | "⎨" | "⎬"
@@ -31,11 +34,12 @@ rest = alnum | "_"
 
 main [pattern+] = ‛«pattern»’
 
-pattern_str [p] = ‛«p»’
+pattern_str [lb p rb] = ‛«p»’
 pattern_default [x] = ‛«x»’
 
+
 Strtop_charrunrec [run rec] = ‛strcons ("«run»", «rec»)’
-Strtop_charrunsingle [run] = ‛"«run»"’
+Strtop_charrunsingle [run] = ‛«run»’
 Strtop_interpolationrec [i rec] = ‛strcons («i», «rec»)’
 Strtop_interpolationsingle [i] = ‛«i»’
 
@@ -43,7 +47,9 @@ CharRun_run [c rec] = ‛«c»«rec»’
 CharRun_single [c] = ‛«c»’
 
 char [_q c] = ‛«c»’
-interpolation [lb ident rb] = ‛«ident»’
+interpolation [lb istuff* rb] = ‛«istuff»’
+istuff_rec [lb istuff* rb] = ‛«istuff»’
+istuff_default [c] = ‛«c»’
 
 q [c] = ‛«c»’
 reserved [c] = ‛«c»’

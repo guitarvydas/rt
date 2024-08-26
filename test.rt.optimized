@@ -1,5 +1,6 @@
-defn build_hierarchy (c) {
-    s ⇐ f"{s}{build_hierarchy (child)}"}
-    returnstrcons ("\n", strcons (indent, "("))⎨c.name⎬strcons (s, ")")}
+defn h (c) {
+    s ⇐ strcons (s, b(c))}
+    return strcons ("\n", strcons (i, strcons ("(", strcons (c.n, strcons (s, ))))))
+}
 
 

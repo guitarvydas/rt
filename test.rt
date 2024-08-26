@@ -1,4 +1,4 @@
-defn build_hierarchy (c) {
-    s ⇐ f"{s}{build_hierarchy (child)}"}
-    return f"\n{indent}({c.name}{s})"
+defn h (c) {
+    s ⇐ f"{s}{b(c)}"}
+    return f"\n{i}({c.n}{s})"
 }

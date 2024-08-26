@@ -32,10 +32,8 @@ innard =
   | ~"}" ~dq ~lq ~rq char -- bottom_default
 
 interpolation =
-  | interpolation "." ident spaces "(" ")" -- methodcall
-  | interpolation "." ident -- attribute
-  | interpolation "@" ident -- lookup
-  | ~"." ~"@"  ~"(" ~")" ident -- default
+  | "{" interpolation "}" -- nested
+  | ~"{" ~"}" any interpolation? -- default
 
 char =
   | "'" -- sq
@@ -108,7 +106,7 @@ ldq = _ldq.rwr ()
 innard = _innard.rwr ()
 rdq = _rdq.rwr ()
 
-_.set_top (return_value_stack, `${innard}`);
+_.set_top (return_value_stack, `“${innard}”`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -126,7 +124,7 @@ luq = _luq.rwr ()
 innard = _innard.rwr ()
 ruq = _ruq.rwr ()
 
-_.set_top (return_value_stack, `${innard}`);
+_.set_top (return_value_stack, `“${innard}”`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -241,76 +239,36 @@ _.set_top (return_value_stack, `◦${c}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-interpolation_methodcall : function (_i, __dot, _ident, _ws, _lp, _rp, ) {
+interpolation_nested : function (_lb, _i, _rb, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=i,_dot,ident,ws,lp,rp
+//** argnames=lb,i,rb
+let lb = undefined;
 let i = undefined;
-let _dot = undefined;
-let ident = undefined;
-let ws = undefined;
-let lp = undefined;
-let rp = undefined;
+let rb = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "interpolation_methodcall");
+_.set_top (rule_name_stack, "interpolation_nested");
+lb = _lb.rwr ()
 i = _i.rwr ()
-_dot = __dot.rwr ()
-ident = _ident.rwr ()
-ws = _ws.rwr ()
-lp = _lp.rwr ()
-rp = _rp.rwr ()
+rb = _rb.rwr ()
 
-_.set_top (return_value_stack, `${i}${_dot}${ident}${ws}${lp}${rp}`);
+_.set_top (return_value_stack, `${lb}${i}${rb}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-interpolation_attribute : function (_ident1, __dot, _ident2, ) {
+interpolation_default : function (_i, _rec, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=ident1,_dot,ident2
-let ident1 = undefined;
-let _dot = undefined;
-let ident2 = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "interpolation_attribute");
-ident1 = _ident1.rwr ()
-_dot = __dot.rwr ()
-ident2 = _ident2.rwr ()
-
-_.set_top (return_value_stack, `${ident1}${_dot}${ident2}`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-interpolation_lookup : function (_ident1, __at, _ident2, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=ident1,_at,ident2
-let ident1 = undefined;
-let _at = undefined;
-let ident2 = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "interpolation_lookup");
-ident1 = _ident1.rwr ()
-_at = __at.rwr ()
-ident2 = _ident2.rwr ()
-
-_.set_top (return_value_stack, `${ident1}${_at}${ident2}`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-interpolation_default : function (_ident, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=ident
-let ident = undefined;
+//** argnames=i,rec
+let i = undefined;
+let rec = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "interpolation_default");
-ident = _ident.rwr ()
+i = _i.rwr ()
+rec = _rec.rwr ().join ('')
 
-_.set_top (return_value_stack, `${ident}`);
+_.set_top (return_value_stack, `${i}${rec}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

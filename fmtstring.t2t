@@ -20,10 +20,8 @@ innard =
   | ~"}" ~dq ~lq ~rq char -- bottom_default
 
 interpolation =
-  | interpolation "." ident spaces "(" ")" -- methodcall
-  | interpolation "." ident -- attribute
-  | interpolation "@" ident -- lookup
-  | ~"." ~"@"  ~"(" ~")" ident -- default
+  | "{" interpolation "}" -- nested
+  | ~"{" ~"}" any interpolation? -- default
 
 char =
   | "'" -- sq
@@ -40,8 +38,8 @@ main [pattern+] = ‛«pattern»’
 pattern_fmtstring [s] = ‛«s»’
 pattern_default [x] = ‛«x»’
 
-fmtstring_f [_f ldq innard rdq] = ‛«innard»’
-fmtstring_u [luq innard ruq] = ‛«innard»’
+fmtstring_f [_f ldq innard rdq] = ‛“«innard»”’
+fmtstring_u [luq innard ruq] = ‛“«innard»”’
 
 dq [c] = ‛«c»’
 lq [c] = ‛«c»’
@@ -52,10 +50,8 @@ innard_bottom_interpolation [lb v rb] = ‛⎨«v»⎬’
 innard_rec_default [c rec] = ‛◦«c»«rec»’
 innard_bottom_default [c] = ‛◦«c»’
 
-interpolation_methodcall [i _dot ident ws lp rp] = ‛«i»«_dot»«ident»«ws»«lp»«rp»’
-interpolation_attribute [ident1 _dot ident2] = ‛«ident1»«_dot»«ident2»’
-interpolation_lookup [ident1 _at ident2] = ‛«ident1»«_at»«ident2»’
-interpolation_default [ident] = ‛«ident»’
+interpolation_nested [lb i rb] = ‛«lb»«i»«rb»’
+interpolation_default [i rec?] = ‛«i»«rec»’
 
 char_sq [c] = ‛\'’
 char_default [c] = ‛«c»’

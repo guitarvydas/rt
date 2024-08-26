@@ -15,7 +15,7 @@ fmtpeephole {
 main = pattern+
 
 pattern =
-  | applySyntactic<Strtop> -- str
+  | "“"  applySyntactic<Strtop> "”" -- str
   | any -- default
 
 Strtop =
@@ -30,7 +30,10 @@ CharRun =
 
 char = q (~reserved any)
 
-interpolation = "⎨" ident "⎬"
+interpolation = "⎨" istuff* "⎬"
+istuff =
+  | "⎨" istuff* "⎬" -- rec
+  | ~"⎨" ~"⎬" any -- default
 
 q = "◦"
 reserved = q | "⎨" | "⎬"
@@ -58,14 +61,18 @@ _.set_top (return_value_stack, `${pattern}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-pattern_str : function (_p, ) {
+pattern_str : function (_lb, _p, _rb, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=p
+//** argnames=lb,p,rb
+let lb = undefined;
 let p = undefined;
+let rb = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "pattern_str");
+lb = _lb.rwr ()
 p = _p.rwr ()
+rb = _rb.rwr ()
 
 _.set_top (return_value_stack, `${p}`);
 
@@ -111,7 +118,7 @@ rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Strtop_charrunsingle");
 run = _run.rwr ()
 
-_.set_top (return_value_stack, `"${run}"`);
+_.set_top (return_value_stack, `${run}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -192,20 +199,52 @@ _.set_top (return_value_stack, `${c}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-interpolation : function (_lb, _ident, _rb, ) {
+interpolation : function (_lb, _istuff, _rb, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=lb,ident,rb
+//** argnames=lb,istuff,rb
 let lb = undefined;
-let ident = undefined;
+let istuff = undefined;
 let rb = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "interpolation");
 lb = _lb.rwr ()
-ident = _ident.rwr ()
+istuff = _istuff.rwr ().join ('')
 rb = _rb.rwr ()
 
-_.set_top (return_value_stack, `${ident}`);
+_.set_top (return_value_stack, `${istuff}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+istuff_rec : function (_lb, _istuff, _rb, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=lb,istuff,rb
+let lb = undefined;
+let istuff = undefined;
+let rb = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "istuff_rec");
+lb = _lb.rwr ()
+istuff = _istuff.rwr ().join ('')
+rb = _rb.rwr ()
+
+_.set_top (return_value_stack, `${istuff}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+istuff_default : function (_c, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=c
+let c = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "istuff_default");
+c = _c.rwr ()
+
+_.set_top (return_value_stack, `${c}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
