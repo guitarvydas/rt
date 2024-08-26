@@ -109,6 +109,7 @@
       | kw<"argvcdr"> "(" digit ")" -- nthargvcdr
       | kw<"nthargv"> "(" digit ")" -- nthargv
       | kw<"stringcdr"> "(" Exp ")" -- stringcdr
+      | kw<"strcons"> "(" Exp "," Exp ")" -- strcons
       | "+" Primary -- pos
       | "-" Primary -- neg
       | phi -- phi
@@ -162,6 +163,7 @@
       | kw<"stringcdr">
       | kw<"argvcdr">
       | kw<"nthargv">
+      | kw<"strcons">
       )
       
     ident  = ~keyword identHead identTail*
@@ -312,6 +314,7 @@ Atom_cdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
 Atom_nthargvcdr [ _83 lb n rb ] =‛ sys.argv[«n»:] ’
 Atom_nthargv [ _83 _84 n _85 ] =‛ sys.argv[«n»] ’
 Atom_stringcdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
+Atom_strcons [ _strcons lp e1 _comma e2 rp] =‛ str(«e1») + «e2» ’
 Atom_pos [ _86 Primary ] =‛ +«Primary»’
 Atom_neg [ _87 Primary ] =‛ -«Primary»’
 Atom_phi [ phi] =‛ None’

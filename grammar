@@ -109,6 +109,7 @@
       | kw<"argvcdr"> "(" digit ")" -- nthargvcdr
       | kw<"nthargv"> "(" digit ")" -- nthargv
       | kw<"stringcdr"> "(" Exp ")" -- stringcdr
+      | kw<"strcons"> "(" Exp "," Exp ")" -- strcons
       | "+" Primary -- pos
       | "-" Primary -- neg
       | phi -- phi
@@ -162,6 +163,7 @@
       | kw<"stringcdr">
       | kw<"argvcdr">
       | kw<"nthargv">
+      | kw<"strcons">
       )
       
     ident  = ~keyword identHead identTail*

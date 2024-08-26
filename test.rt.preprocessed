@@ -1,5 +1,5 @@
 defn h (c) {
-    s ⇐ “⎨s⎬⎨b(c)⎬”}
+    s ⇐ “⎨s⎬⎨b(c)⎬”
     return “◦\◦n⎨i⎬◦(⎨c.n⎬⎨s⎬◦)”
 }
 

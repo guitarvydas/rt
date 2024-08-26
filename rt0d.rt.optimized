@@ -11,7 +11,7 @@ defvar digits ⇐ [
 
 defn gensym (s) {
     global counter
-    name_with_id ≡ f"{s}{subscripted_digit (counter)}"
+    name_with_id ≡ strcons (s, subscripted_digit (counter))
     counter ⇐ counter + 1
     return name_with_id
 }
@@ -21,7 +21,8 @@ defn subscripted_digit (n) {
   if (n >=  0 and n <=  29) {
     return digits [n]
   } else {
-    returnstrcons ("₊", n)}
+    return strcons ("₊", n)
+  }
 }
 
 defobj Datum () {
@@ -505,7 +506,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
             connector.sender ⇐ Sender (me.name, me, proto_conn@source_port)
             target_component ≡ children_by_id [proto_conn@target@id]
             if (target_component = ϕ) {
-                load_error ("internal error: .Down connection target internal error "⎨proto_conn@target⎬)}
+                load_error (strcons ("internal error: .Down connection target internal error ", proto_conn@target))}
             else{
                 connector.receiver ⇐ Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
                 connectors.append (connector) }}
@@ -514,11 +515,11 @@ defn container_instantiator (reg, owner, container_name, desc) {
             source_component ≡ children_by_id [proto_conn@source@id]
             target_component ≡ children_by_id [proto_conn@target@id]
             if source_component = ϕ {
-                load_error ("internal error: .Across connection source not ok "⎨proto_conn@source⎬) }
+                load_error (strcons ("internal error: .Across connection source not ok ", proto_conn@source)) }
             else {
                 connector.sender ⇐ Sender (source_component.name, source_component, proto_conn@source_port)
                 if target_component = ϕ {
-                    load_error ("internal error: .Across connection target not ok "⎨proto_conn.target⎬) }
+                    load_error (strcons ("internal error: .Across connection target not ok ", proto_conn.target)) }
                 else {
                     connector.receiver ⇐ Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
                     connectors.append (connector)}}}
@@ -526,7 +527,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
             connector.direction ⇐ "up"
             source_component ≡ children_by_id [proto_conn@source@id]
             if source_component = ϕ {
-                print ("internal error: .Up connection source not ok "⎨proto_conn@source⎬) }
+                print (strcons ("internal error: .Up connection source not ok ", proto_conn@source)) }
             else {
                 connector.sender ⇐ Sender (source_component.name, source_component, proto_conn@source_port)
                 connector.receiver ⇐ Receiver (me.name, container.outq, proto_conn@target_port, me)
@@ -703,15 +704,15 @@ defn route (container, from_component, message) {
         dump_possible_connections (container)
         print_routing_trace (container)
         print ("***")
-        print (⎨container.name⎬": message '"⎨message.port⎬strcons ("' from ", strcons (fromname, " dropped on floor...")))
+        print (strcons (container.name, strcons (": message '", strcons (message.port, strcons ("' from ", strcons (fromname, " dropped on floor..."))))))
         print ("***")
         exit () }
 }
 
 defn dump_possible_connections (container) {
-    print ("*** possible connections for "⎨container.name⎬":")
+    print (strcons ("*** possible connections for ", strcons (container.name, ":")))
     for connector in container.connections {
-        print (⎨connector.direction⎬" "⎨connector.sender.name⎬"."⎨connector.sender.port⎬" -> "⎨connector.receiver.name⎬"."⎨connector.receiver.port⎬) }
+        print (strcons (connector.direction, strcons (" ", strcons (connector.sender.name, strcons (".", strcons (connector.sender.port, strcons (" -> ", strcons (connector.receiver.name, strcons (".", connector.receiver.port))))))))) }
 }
 
 defn any_child_ready (container) {
@@ -752,7 +753,7 @@ defn log_connection (container, connector, message) {
         log_through (container ∷ container, source_port ∷ connector.sender.port, source_message ∷ ϕ,
                      target_port ∷ connector.receiver.port, message ∷ message) }
     else {
-        print ("*** FATAL error: in log_connection /"⎨connector.direction⎬"/ /"⎨message.port⎬"/ /"⎨message.datum.srepr ()⎬"/")
+        print (strcons ("*** FATAL error: in log_connection /", strcons (connector.direction, strcons ("/ /", strcons (message.port, strcons ("/ /", strcons (message.datum.srepr (), "/")))))))
         exit () }
 }
 
@@ -807,7 +808,7 @@ defn make_component_registry () {
 defn register_component (reg, template, ok_to_overwrite ∷ ⊥) {
     name ≡ mangle_name (template.name)
     if name in reg.templates and not ok_to_overwrite {
-        load_error ("Component "⎨template.name⎬" already declared")}
+        load_error (strcons ("Component ", strcons (template.name, " already declared")))}
     reg.templates[name] ≡ template
     return reg
 }
@@ -826,11 +827,12 @@ defn get_component_instance (reg, full_name, owner) {
             return ϕ}
         else {
             owner_name ≡ ""
-            instance_name ≡template_nameif ϕ != owner {
+            instance_name ≡ template_name
+            if ϕ != owner {
                 owner_name ≡ owner.name
-                instance_name ≡strcons (owner_name, strcons (".", template_name))}
+                instance_name ≡ strcons (owner_name, strcons (".", template_name))}
             else{
-                instance_name ≡template_name}
+                instance_name ≡ template_name}
             instance ≡ template.instantiator (reg, owner, instance_name, template.template_data)
             instance.depth ⇐ calculate_depth (instance)
             return instance }}
@@ -855,7 +857,7 @@ defn dump_registry (reg) {
 }
 
 defn print_stats (reg) {
-    print ("registry statistics: "⎨reg.stats⎬)
+    print (strcons ("registry statistics: ", reg.stats))
 }
 
 defn mangle_name (s) {
@@ -902,7 +904,7 @@ defn run_command (eh, cmd, s) {
         if ret.stderr != ϕ{
             return ["", ret.stderr]}
         else{
-            return ["","error in shell_out "⎨ret.returncode⎬]}}
+            return ["", strcons ("error in shell_out ", ret.returncode)]}}
     else{
         return [ret.stdout, ϕ]}
 }
@@ -965,7 +967,8 @@ defn make_container (name, owner) {
 
 defn make_leaf (name, owner, instance_data, handler) {
     eh ≡ Eh ()
-    eh.name ⇐ ⎨owner.name⎬strcons (".", name)eh.owner ⇐ owner
+    eh.name ⇐ strcons (owner.name, strcons (".", name))
+    eh.owner ⇐ owner
     eh.handler ⇐ handler
     eh.instance_data ⇐ instance_data
     eh.state ⇐ "idle"
@@ -1092,7 +1095,7 @@ defn probeC_instantiate (reg, owner, name, template_data) {
 
 defn probe_handler (eh, msg) {
     s ≡ msg.datum.srepr ()
-    print ("... probe "⎨eh.name⎬strcons (": ", s), file ∷ sys.stderr)
+    print (strcons ("... probe ", strcons (eh.name, strcons (": ", s))), file ∷ sys.stderr)
 }
 
 defn trash_instantiate (reg, owner, name, template_data) {
@@ -1143,21 +1146,21 @@ defn deracer_handler (eh, msg) {
             inst.buffer.second ⇐ msg
             inst.state ⇐ "waitingForFirst"}
         else{
-            runtime_error ("bad msg.port (case A) for deracer "⎨msg.port⎬)}}
+            runtime_error (strcons ("bad msg.port (case A) for deracer ", msg.port))}}
     elif inst.state = "waitingForFirst" {
         if "1" = msg.port{
             inst.buffer.first ⇐ msg
             send_first_then_second (eh, inst)
             inst.state ⇐ "idle"}
         else{
-            runtime_error ("bad msg.port (case B) for deracer "⎨msg.port⎬)}}
+            runtime_error (strcons ("bad msg.port (case B) for deracer ", msg.port))}}
     elif inst.state = "waitingForSecond"{
         if "2" = msg.port{
             inst.buffer.second ⇐ msg
             send_first_then_second (eh, inst)
             inst.state ⇐ "idle"}
         else{
-            runtime_error ("bad msg.port (case C) for deracer "⎨msg.port⎬)}}
+            runtime_error (strcons ("bad msg.port (case C) for deracer ", msg.port))}}
     else{
         runtime_error ("bad state for deracer {eh.state}")}
 }
@@ -1178,10 +1181,12 @@ defn low_level_read_text_file_handler (eh, msg) {
         if data!= ϕ{
             send_string (eh, "", data, msg)}
         else{
-            emsg ≡strcons ("read error on file ", fname)send_string (eh, "✗", emsg, msg)}
+            emsg ≡ strcons ("read error on file ", fname)
+            send_string (eh, "✗", emsg, msg)}
         f.close ()}
     else{
-        emsg ≡strcons ("open error on file ", fname)send_string (eh, "✗", emsg, msg)}
+        emsg ≡ strcons ("open error on file ", fname)
+        send_string (eh, "✗", emsg, msg)}
 }
 
 defn ensure_string_datum_instantiate (reg, owner, name, template_data) {
@@ -1193,7 +1198,7 @@ defn ensure_string_datum_handler (eh, msg) {
     if "string" = msg.datum.kind (){
         forward (eh, "", msg)}
     else{
-        emsg ≡"*** ensure: type error (expected a string datum) but got "⎨msg.datum⎬
+        emsg ≡ strcons ("*** ensure: type error (expected a string datum) but got ", msg.datum)
         send_string (eh, "✗", emsg, msg)}
 }
 
@@ -1220,7 +1225,7 @@ defn syncfilewrite_handler (eh, msg) {
             f.close ()
             send (eh, "done", new_datum_bang (), msg)}
         else{
-            send_string (eh, "✗","open error on file "⎨inst.filename⎬, msg)}}
+            send_string (eh, "✗", strcons ("open error on file ", inst.filename), msg)}}
 }
 
 defobj StringConcat_Instance_Data () {
@@ -1246,7 +1251,7 @@ defn stringconcat_handler (eh, msg) {
         inst.count ⇐ inst.count + 1
         maybe_stringconcat (eh, inst, msg)}
     else{
-        runtime_error ("bad msg.port for stringconcat: "⎨msg.port⎬)}
+        runtime_error (strcons ("bad msg.port for stringconcat: ", msg.port))}
 }
 
 defn maybe_stringconcat (eh, inst, msg) {
@@ -1369,17 +1374,18 @@ defn trace_outputs (main_container) {
 
 defn dump_hierarchy (main_container) {
     print ()
-    print (f"___ Hierarchy ___{(build_hierarchy (main_container))}")
+    print (strcons ("___ Hierarchy ___", (build_hierarchy (main_container))))
 }
 
 defn build_hierarchy (c) {
     deftemp s ⇐ ""
     for child in c.children{
-        s ⇐ f"{s}{build_hierarchy (child)}"}
+        s ⇐ strcons (s, build_hierarchy (child))}
     deftemp indent ⇐ ""
     for i in range (c.depth){
         indent ⇐ indent + "  "}
-    returnstrcons ("\n", strcons (indent, "("))⎨c.name⎬strcons (s, ")")}
+    return strcons ("\n", strcons (indent, strcons ("(", strcons (c.name, strcons (s, ")")))))
+}
 
 defn dump_connections (c) {
     print ()
@@ -1426,7 +1432,7 @@ defvar rand ⇐ 0
 defn fakepipename_handler (eh, msg) {
     global rand
     rand ⇐ rand + 1 # not very random, but good enough _ 'rand' must be unique within a single run
-    send_string (eh, "",strcons ("/tmp/fakepipe", rand), msg)
+    send_string (eh, "", strcons ("/tmp/fakepipe", rand), msg)
 }
 
 defobj OhmJS_Instance_Data () {
@@ -1445,7 +1451,7 @@ defn ohmjs_instantiate (reg, owner, name, template_data) {
 
 defn ohmjs_maybe (eh, inst, causingMsg) {
     if ϕ != inst.pathname_0D_ and ϕ != inst.grammar_name and ϕ != inst.grammar_filename and ϕ != inst.semantics_filename and ϕ != inst.s{
-        cmd ≡ [⎨inst.pathname_0D_⎬"/std/ohmjs.js", ⎨inst.grammar_name⎬, ⎨inst.grammar_filename⎬, ⎨inst.semantics_filename⎬]
+        cmd ≡ [strcons (inst.pathname_0D_, "/std/ohmjs.js"), inst.grammar_name, inst.grammar_filename, inst.semantics_filename]
         [captured_output, err] ≡ run_command (eh, cmd, inst.s)
 
         if err = ϕ{
@@ -1480,7 +1486,7 @@ defn ohmjs_handle (eh, msg) {
         inst.s ⇐ clone_string (msg.datum.srepr ())
         ohmjs_maybe (eh, inst, msg)}
     else{
-        emsg ≡"!!! ERROR: OhmJS got an illegal message port "⎨msg.port⎬
+        emsg ≡ strcons ("!!! ERROR: OhmJS got an illegal message port ", msg.port)
         send_string (eh, "✗", emsg, msg)}
 }
 

@@ -118,7 +118,7 @@ rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Strtop_charrunsingle");
 run = _run.rwr ()
 
-_.set_top (return_value_stack, `${run}`);
+_.set_top (return_value_stack, `"${run}"`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -335,7 +335,7 @@ function main (src) {
 	var generated_code = cstSemantics (cst).rwr ();
 	return generated_code;
     } else {
-	return parser.trace (src).toString ();
+        return cst.message;	
     }
 }
 

@@ -4,7 +4,7 @@ counter = 0
 digits = ["₀","₁","₂","₃","₄","₅","₆","₇","₈","₉","₁₀","₁₁","₁₂","₁₃","₁₄","₁₅","₁₆","₁₇","₁₈","₁₉","₂₀","₂₁","₂₂","₂₃","₂₄","₂₅","₂₆","₂₇","₂₈","₂₉"]
 def gensym (s):
     global counter
-    name_with_id = f"{s}{subscripted_digit (counter)}"
+    name_with_id =  str(s) + subscripted_digit (counter)
     counter = counter+1
     return name_with_id
 
@@ -13,7 +13,7 @@ def subscripted_digit (n):
     if (n >= 0 and n <= 29):
         return digits [n]
     else:
-        return f"₊{n}"
+        return  str("₊") + n 
     
 
 class Datum:
@@ -206,7 +206,7 @@ def log_forward (sender,sender_port,msg,cause_msg):
     pass
 
 def fmt_forward (desc):
-    print (f"*** Error fmt_forward {desc}")
+    print ( str("*** Error fmt_forward ") + desc )
     quit ()
 
 def make_Inject_Descriptor (receiver,port,message):
@@ -339,7 +339,7 @@ def container_instantiator (reg,owner,container_name,desc):
             connector.sender = Sender (me.name,me,proto_conn ["source_port"])
             target_component = children_by_id [proto_conn ["target"] ["id"]]
             if (target_component ==  None):
-                load_error (f"internal error: .Down connection target internal error {proto_conn@target}")
+                load_error ( str("internal error: .Down connection target internal error ") + proto_conn ["target"] )
             else:
                 connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn ["target_port"],target_component)
                 connectors.append (connector)
@@ -349,11 +349,11 @@ def container_instantiator (reg,owner,container_name,desc):
             source_component = children_by_id [proto_conn ["source"] ["id"]]
             target_component = children_by_id [proto_conn ["target"] ["id"]]
             if source_component ==  None:
-                load_error (f"internal error: .Across connection source not ok {proto_conn@source}")
+                load_error ( str("internal error: .Across connection source not ok ") + proto_conn ["source"] )
             else:
                 connector.sender = Sender (source_component.name,source_component,proto_conn ["source_port"])
                 if target_component ==  None:
-                    load_error (f"internal error: .Across connection target not ok {proto_conn.target}")
+                    load_error ( str("internal error: .Across connection target not ok ") + proto_conn.target )
                 else:
                     connector.receiver = Receiver (target_component.name,target_component.inq,proto_conn ["target_port"],target_component)
                     connectors.append (connector)
@@ -363,7 +363,7 @@ def container_instantiator (reg,owner,container_name,desc):
             connector.direction = "up"
             source_component = children_by_id [proto_conn ["source"] ["id"]]
             if source_component ==  None:
-                print (f"internal error: .Up connection source not ok {proto_conn@source}")
+                print ( str("internal error: .Up connection source not ok ") + proto_conn ["source"] )
             else:
                 connector.sender = Sender (source_component.name,source_component,proto_conn ["source_port"])
                 connector.receiver = Receiver (me.name,container.outq,proto_conn ["target_port"],me)
@@ -513,15 +513,15 @@ def route (container,from_component,message):
         dump_possible_connections (container)
         print_routing_trace (container)
         print ("***")
-        print (f"{container.name}: message '{message.port}' from {fromname} dropped on floor...")
+        print ( str(container.name) +  str(": message '") +  str(message.port) +  str("' from ") +  str(fromname) + " dropped on floor..."     )
         print ("***")
         exit ()
     
 
 def dump_possible_connections (container):
-    print (f"*** possible connections for {container.name}:")
+    print ( str("*** possible connections for ") +  str(container.name) + ":"  )
     for connector in container.connections:
-        print (f"{connector.direction} {connector.sender.name}.{connector.sender.port} _> {connector.receiver.name}.{connector.receiver.port}")
+        print ( str(connector.direction) +  str(" ") +  str(connector.sender.name) +  str(".") +  str(connector.sender.port) +  str(" _> ") +  str(connector.receiver.name) +  str(".") + connector.receiver.port        )
     
 
 def any_child_ready (container):
@@ -551,7 +551,7 @@ def log_connection (container,connector,message):
     elif "through" == connector.direction:
         log_through (container=container,source_port=connector.sender.port,source_message= None,target_port=connector.receiver.port,message=message)
     else:
-        print (f"*** FATAL error: in log_connection /{connector.direction}/ /{message.port}/ /{message.datum.srepr ()}/")
+        print ( str("*** FATAL error: in log_connection /") +  str(connector.direction) +  str("/ /") +  str(message.port) +  str("/ /") +  str(message.datum.srepr ()) + "/"      )
         exit ()
     
 
@@ -581,10 +581,10 @@ def read_and_convert_json_file (filename):
         fil.close ()
         return routings
     except FileNotFoundError:
-        print (f"File not found: {filename}")
+        print ( str("File not found: ") + filename )
         return  None
     except json.JSONDecodeError as e:
-        print (f"Error decoding JSON in file: {e}")
+        print ( str("Error decoding JSON in file: ") + e )
         return  None
     
 
@@ -602,7 +602,7 @@ def make_component_registry ():
 def register_component (reg,template,ok_to_overwrite= False):
     name = mangle_name (template.name)
     if name in reg.templates and not ok_to_overwrite:
-        load_error (f"Component {template.name} already declared")
+        load_error ( str("Component ") +  str(template.name) + " already declared"  )
     
     reg.templates [name] = template
     return reg
@@ -617,23 +617,23 @@ def get_component_instance (reg,full_name,owner):
     if template_name in reg.templates:
         template = reg.templates [template_name]
         if (template ==  None):
-            load_error (f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
+            load_error ( str("Registry Error: Can't find component ") +  str(template_name) + " (does it need to be declared in components_to_include_in_project?"  )
             return  None
         else:
             owner_name = ""
-            instance_name = f"{template_name}"
+            instance_name = template_name
             if  None!=owner:
                 owner_name = owner.name
-                instance_name = f"{owner_name}.{template_name}"
+                instance_name =  str(owner_name) +  str(".") + template_name  
             else:
-                instance_name = f"{template_name}"
+                instance_name = template_name
             
             instance = template.instantiator (reg,owner,instance_name,template.template_data)
             instance.depth = calculate_depth (instance)
             return instance
         
     else:
-        load_error (f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
+        load_error ( str("Registry Error: Can't find component ") +  str(template_name) + " (does it need to be declared in components_to_include_in_project?"  )
         return  None
     
 
@@ -654,7 +654,7 @@ def dump_registry (reg):
     print ()
 
 def print_stats (reg):
-    print (f"registry statistics: {reg.stats}")
+    print ( str("registry statistics: ") + reg.stats )
 
 def mangle_name (s):
     return s
@@ -691,7 +691,7 @@ def run_command (eh,cmd,s):
         if ret.stderr!= None:
             return ["", ret.stderr]
         else:
-            return ["", f"error in shell_out {ret.returncode}"]
+            return ["",  str("error in shell_out ") + ret.returncode ]
         
     else:
         return [ret.stdout,  None]
@@ -730,7 +730,7 @@ def make_container (name,owner):
 
 def make_leaf (name,owner,instance_data,handler):
     eh = Eh ()
-    eh.name = f"{owner.name}.{name}"
+    eh.name =  str(owner.name) +  str(".") + name
     eh.owner = owner
     eh.handler = handler
     eh.instance_data = instance_data
@@ -835,7 +835,7 @@ def probeC_instantiate (reg,owner,name,template_data):
 
 def probe_handler (eh,msg):
     s = msg.datum.srepr ()
-    print (f"... probe {eh.name}: {s}",file=sys.stderr)
+    print ( str("... probe ") +  str(eh.name) +  str(": ") + s   ,file=sys.stderr)
 
 def trash_instantiate (reg,owner,name,template_data):
     name_with_id = gensym ("trash")
@@ -879,7 +879,7 @@ def deracer_handler (eh,msg):
             inst.buffer.second = msg
             inst.state = "waitingForFirst"
         else:
-            runtime_error (f"bad msg.port (case A) for deracer {msg.port}")
+            runtime_error ( str("bad msg.port (case A) for deracer ") + msg.port )
         
     elif inst.state == "waitingForFirst":
         if "1" == msg.port:
@@ -887,7 +887,7 @@ def deracer_handler (eh,msg):
             send_first_then_second (eh,inst)
             inst.state = "idle"
         else:
-            runtime_error (f"bad msg.port (case B) for deracer {msg.port}")
+            runtime_error ( str("bad msg.port (case B) for deracer ") + msg.port )
         
     elif inst.state == "waitingForSecond":
         if "2" == msg.port:
@@ -895,7 +895,7 @@ def deracer_handler (eh,msg):
             send_first_then_second (eh,inst)
             inst.state = "idle"
         else:
-            runtime_error (f"bad msg.port (case C) for deracer {msg.port}")
+            runtime_error ( str("bad msg.port (case C) for deracer ") + msg.port )
         
     else:
         runtime_error ("bad state for deracer {eh.state}")
@@ -918,12 +918,12 @@ def low_level_read_text_file_handler (eh,msg):
         if data!= None:
             send_string (eh,"",data,msg)
         else:
-            emsg = f"read error on file {fname}"
+            emsg =  str("read error on file ") + fname
             send_string (eh,"✗",emsg,msg)
         
         f.close ()
     else:
-        emsg = f"open error on file {fname}"
+        emsg =  str("open error on file ") + fname
         send_string (eh,"✗",emsg,msg)
     
 
@@ -935,7 +935,7 @@ def ensure_string_datum_handler (eh,msg):
     if "string" == msg.datum.kind ():
         forward (eh,"",msg)
     else:
-        emsg = f"*** ensure: type error (expected a string datum) but got {msg.datum}"
+        emsg =  str("*** ensure: type error (expected a string datum) but got ") + msg.datum
         send_string (eh,"✗",emsg,msg)
     
 
@@ -960,7 +960,7 @@ def syncfilewrite_handler (eh,msg):
             f.close ()
             send (eh,"done",new_datum_bang (),msg)
         else:
-            send_string (eh,"✗",f"open error on file {inst.filename}",msg)
+            send_string (eh,"✗", str("open error on file ") + inst.filename ,msg)
         
     
 
@@ -986,7 +986,7 @@ def stringconcat_handler (eh,msg):
         inst.count = inst.count+1
         maybe_stringconcat (eh,inst,msg)
     else:
-        runtime_error (f"bad msg.port for stringconcat: {msg.port}")
+        runtime_error ( str("bad msg.port for stringconcat: ") + msg.port )
     
 
 def maybe_stringconcat (eh,inst,msg):
@@ -1095,22 +1095,22 @@ def trace_outputs (main_container):
 
 def dump_hierarchy (main_container):
     print ()
-    print (f"___ Hierarchy ___{(build_hierarchy (main_container))}")
+    print ( str("___ Hierarchy ___") + (build_hierarchy (main_container)) )
 
 def build_hierarchy (c):
     s = ""
     for child in c.children:
-        s = f"{s}{build_hierarchy (child)}"
+        s =  str(s) + build_hierarchy (child) 
     
     indent = ""
     for i in range(c.depth):
         indent = indent+"  "
     
-    return f"\n{indent}({c.name}{s})"
+    return  str("\n") +  str(indent) +  str("(") +  str(c.name) +  str(s) + ")"     
 
 def dump_connections (c):
     print ()
-    print (f"___ connections ___")
+    print ("___ connections ___")
     dump_possible_connections (c)
     for child in c.children:
         print ()
@@ -1145,7 +1145,7 @@ rand = 0
 def fakepipename_handler (eh,msg):
     global rand
     rand = rand+1
-    send_string (eh,"",f"/tmp/fakepipe{rand}",msg)
+    send_string (eh,"", str("/tmp/fakepipe") + rand ,msg)
 
 class OhmJS_Instance_Data:
     def __init__ (self):
@@ -1162,7 +1162,7 @@ def ohmjs_instantiate (reg,owner,name,template_data):
 
 def ohmjs_maybe (eh,inst,causingMsg):
     if  None!=inst.pathname_0D_ and  None!=inst.grammar_name and  None!=inst.grammar_filename and  None!=inst.semantics_filename and  None!=inst.s:
-        cmd = [f"{inst.pathname_0D_}/std/ohmjs.js",f"{inst.grammar_name}",f"{inst.grammar_filename}",f"{inst.semantics_filename}"]
+        cmd = [ str(inst.pathname_0D_) + "/std/ohmjs.js" ,inst.grammar_name,inst.grammar_filename,inst.semantics_filename]
         [captured_output,err] = run_command (eh,cmd,inst.s)
         if err ==  None:
             err = ""
@@ -1198,7 +1198,7 @@ def ohmjs_handle (eh,msg):
         inst.s = clone_string (msg.datum.srepr ())
         ohmjs_maybe (eh,inst,msg)
     else:
-        emsg = f"!!! ERROR: OhmJS got an illegal message port {msg.port}"
+        emsg =  str("!!! ERROR: OhmJS got an illegal message port ") + msg.port
         send_string (eh,"✗",emsg,msg)
     
 
@@ -1220,7 +1220,7 @@ def run (pregistry,root_project,root_0D,arg,main_container_name,diagram_source_f
     set_environment (root_project,root_0D)
     main_container = get_component_instance (pregistry,main_container_name,owner= None)
     if  None == main_container:
-        load_error (f"Couldn't find container with page name {main_container_name} in files {diagram_source_files} (check tab names, or disable compression?)")
+        load_error ( str("Couldn't find container with page name ") +  str(main_container_name) +  str(" in files ") +  str(diagram_source_files) + " (check tab names, or disable compression?)"    )
     
     if show_hierarchy:
         dump_hierarchy (main_container)
