@@ -19,17 +19,27 @@ pattern =
 
 fmtstring =
   | "f" dq innard dq -- f
+  | "f" sq sqinnard sq -- fsq
   | lq innard rq -- u
 
-dq = "\""
+dq = ("\\\"" | rawdq)
+rawdq = "\""
+sq = ("\\'" | rawsq)
+rawsq = "'"
 lq = "“"
 rq = "”"
 
 innard =
   | "{" interpolation "}" innard -- rec_interpolation
   | "{" interpolation "}" -- bottom_interpolation
-  | ~"}" ~dq ~lq ~rq char innard -- rec_default
-  | ~"}" ~dq ~lq ~rq char -- bottom_default
+  | ~"}" ~rawdq ~lq ~rq char innard -- rec_default
+  | ~"}" ~rawdq ~lq ~rq char -- bottom_default
+
+sqinnard =
+  | "{" interpolation "}" sqinnard -- rec_interpolation
+  | "{" interpolation "}" -- bottom_interpolation
+  | ~"}" ~rawsq ~lq ~rq char sqinnard -- rec_default
+  | ~"}" ~rawsq ~lq ~rq char -- bottom_default
 
 interpolation =
   | "{" interpolation "}" -- nested
@@ -37,6 +47,7 @@ interpolation =
 
 char =
   | "'" -- sq
+  | "\"" -- dq
   | any -- default
   
 ident = first rest*
@@ -111,6 +122,26 @@ _.set_top (return_value_stack, `“${innard}”`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
+fmtstring_fsq : function (__f, _lsq, _innard, _rsq, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_f,lsq,innard,rsq
+let _f = undefined;
+let lsq = undefined;
+let innard = undefined;
+let rsq = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "fmtstring_fsq");
+_f = __f.rwr ()
+lsq = _lsq.rwr ()
+innard = _innard.rwr ()
+rsq = _rsq.rwr ()
+
+_.set_top (return_value_stack, `“${innard}”`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
 fmtstring_u : function (_luq, _innard, _ruq, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=luq,innard,ruq
@@ -136,6 +167,20 @@ let c = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "dq");
+c = _c.rwr ()
+
+_.set_top (return_value_stack, `${c}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+sq : function (_c, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=c
+let c = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "sq");
 c = _c.rwr ()
 
 _.set_top (return_value_stack, `${c}`);
@@ -239,6 +284,74 @@ _.set_top (return_value_stack, `◦${c}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
+sqinnard_rec_interpolation : function (_lb, _v, _rb, _rec, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=lb,v,rb,rec
+let lb = undefined;
+let v = undefined;
+let rb = undefined;
+let rec = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "sqinnard_rec_interpolation");
+lb = _lb.rwr ()
+v = _v.rwr ()
+rb = _rb.rwr ()
+rec = _rec.rwr ()
+
+_.set_top (return_value_stack, `⎨${v}⎬${rec}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+sqinnard_bottom_interpolation : function (_lb, _v, _rb, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=lb,v,rb
+let lb = undefined;
+let v = undefined;
+let rb = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "sqinnard_bottom_interpolation");
+lb = _lb.rwr ()
+v = _v.rwr ()
+rb = _rb.rwr ()
+
+_.set_top (return_value_stack, `⎨${v}⎬`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+sqinnard_rec_default : function (_c, _rec, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=c,rec
+let c = undefined;
+let rec = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "sqinnard_rec_default");
+c = _c.rwr ()
+rec = _rec.rwr ()
+
+_.set_top (return_value_stack, `◦${c}${rec}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+sqinnard_bottom_default : function (_c, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=c
+let c = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "sqinnard_bottom_default");
+c = _c.rwr ()
+
+_.set_top (return_value_stack, `◦${c}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
 interpolation_nested : function (_lb, _i, _rb, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=lb,i,rb
@@ -282,7 +395,21 @@ rule_name_stack.push ("");
 _.set_top (rule_name_stack, "char_sq");
 c = _c.rwr ()
 
-_.set_top (return_value_stack, `\'`);
+_.set_top (return_value_stack, `\\'`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+char_dq : function (_c, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=c
+let c = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "char_dq");
+c = _c.rwr ()
+
+_.set_top (return_value_stack, `\\"`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

@@ -733,138 +733,138 @@ import sys
                 ( ( equal  template  nil) 
                   (progn
                     (load_error  (concatenate 'string (format nil "~a" "Registry Error: Can't find component ") (concatenate 'string (format nil "~a" template_name) " (does it need to be declared in components_to_include_in_project?")))
-                      
-                      (return-from get_component_instance  nil)))
-                  (t 
-                    (progn
-                      (let ((owner_name ""))
-                        (let ((instance_name template_name))
-                          (cond 
-                            ((not (equal  nil owner)) 
-                              (progn
-                                (let ((owner_name (cdr (assoc 'name owner))))
-                                  (let ((instance_name (concatenate 'string (format nil "~a" owner_name) (concatenate 'string (format nil "~a" ".") template_name))))))))
-                            (t 
-                              (progn
-                                (let ((instance_name template_name))))))
-                          (let ((instance (funcall (cdr (assoc 'instantiator template))  reg  owner  instance_name  (cdr (assoc 'template_data template)))))
-                            (setf (cdr (assoc 'depth instance)) (calculate_depth  instance))
-                            
-                            (return-from get_component_instance instance)))))))))))
-        (t 
-          (progn
-            (load_error  (concatenate 'string (format nil "~a" "Registry Error: Can't find component ") (concatenate 'string (format nil "~a" template_name) " (does it need to be declared in components_to_include_in_project?")))
-              
-              (return-from get_component_instance  nil)))))))
-  (defun calculate_depth (eh)
-    (progn
-      (cond 
-        (( equal  (cdr (assoc 'owner eh))  nil) 
-          (progn
-            
-            (return-from calculate_depth 0)))
-        (t 
-          (progn
-            
-            (return-from calculate_depth (+ 1 (calculate_depth  (cdr (assoc 'owner eh))))))))))
-  (defun dump_registry (reg)
-    (progn
-      (print )
-      (print  "*** PALETTE ***")
-      for c in (cdr (assoc 'templates reg)):
-      (progn
-        (print  (cdr (assoc 'name c))))
-      (print  "***************")
-      (print )))
-  (defun print_stats (reg)
-    (progn
-      (print  (concatenate 'string (format nil "~a" "registry statistics: ") (cdr (assoc 'stats reg))))))
-  (defun mangle_name (s)
-    (progn
-      
-      (return-from mangle_name s)))
-  import subprocess
-  (defun generate_shell_components (reg container_list)
-    (progn
-      (cond 
-        ((not (equal  nil container_list)) 
-          (progn
-            for diagram in container_list:
-            (progn
-              for child_descriptor in (gethash 'children diagram):
-              (progn
-                (cond 
-                  ((first_char_is  (gethash 'name child_descriptor)  "$") 
-                    (progn
-                      (let ((name (gethash 'name child_descriptor)))
-                        (let ((cmd (funcall (cdr (assoc 'strip (subseq name 1))) )))
-                          (let ((generated_leaf (Template  name  shell_out_instantiate  cmd)))
-                            (register_component  reg  generated_leaf))))))
-                  ((first_char_is  (gethash 'name child_descriptor)  "'") 
-                    (progn
-                      (let ((name (gethash 'name child_descriptor)))
-                        (let ((s (subseq name 1)))
-                          (let ((generated_leaf (Template  name  string_constant_instantiate  s)))
-                            (register_component  reg  generated_leaf   t))))))))))))))
-  (defun first_char (s)
-    (progn
-      
-      (return-from first_char (car s))))
-  (defun first_char_is (s c)
-    (progn
-      
-      (return-from first_char_is ( equal  c (first_char  s)))))
-  (defun run_command (eh cmd s)
-    (progn
-      (let ((ret (funcall (cdr (assoc 'run subprocess))  cmd   t  s  'utf_8')))
-        (cond 
-          ((not  ( equal  (cdr (assoc 'returncode ret)) 0)) 
-            (progn
-              (cond 
-                ((not (equal (cdr (assoc 'stderr ret))  nil)) 
-                  (progn
                     
-                    (return-from run_command (values ""  (cdr (assoc 'stderr ret))))))
+                    (return-from get_component_instance  nil)))
                 (t 
                   (progn
-                    
-                    (return-from run_command (values ""  (concatenate 'string (format nil "~a" "error in shell_out ") (cdr (assoc 'returncode ret))))))))))
-          (t 
-            (progn
-              
-              (return-from run_command (values (cdr (assoc 'stdout ret))   nil))))))))
-  import queue
-  import sys
-  (defun new-Eh ()
-    (list
-      (cons 'name "")
-      (cons 'inq (funcall (cdr (assoc 'Queue queue)) ))
-      (cons 'outq (funcall (cdr (assoc 'Queue queue)) ))
-      (cons 'owner  nil)
-      (cons 'saved_messages (funcall (cdr (assoc 'LifoQueue queue)) ))
-      (cons 'inject injector_NIY)
-      (cons 'children  nil)
-      (cons 'visit_ordering (funcall (cdr (assoc 'Queue queue)) ))
-      (cons 'connections  nil)
-      (cons 'routings (funcall (cdr (assoc 'Queue queue)) ))
-      (cons 'handler  nil)
-      (cons 'instance_data  nil)
-      (cons 'state "idle")
-      (cons 'kind  nil)
-      (cons 'trace  nil)
-      (cons 'depth 0)))
-  
-  (defun make_container (name owner)
+                    (let ((owner_name ""))
+                      (let ((instance_name template_name))
+                        (cond 
+                          ((not (equal  nil owner)) 
+                            (progn
+                              (let ((owner_name (cdr (assoc 'name owner))))
+                                (let ((instance_name (concatenate 'string (format nil "~a" owner_name) (concatenate 'string (format nil "~a" ".") template_name))))))))
+                          (t 
+                            (progn
+                              (let ((instance_name template_name))))))
+                        (let ((instance (funcall (cdr (assoc 'instantiator template))  reg  owner  instance_name  (cdr (assoc 'template_data template)))))
+                          (setf (cdr (assoc 'depth instance)) (calculate_depth  instance))
+                          
+                          (return-from get_component_instance instance)))))))))))
+      (t 
+        (progn
+          (load_error  (concatenate 'string (format nil "~a" "Registry Error: Can't find component ") (concatenate 'string (format nil "~a" template_name) " (does it need to be declared in components_to_include_in_project?")))
+          
+          (return-from get_component_instance  nil)))))))
+(defun calculate_depth (eh)
+  (progn
+    (cond 
+      (( equal  (cdr (assoc 'owner eh))  nil) 
+        (progn
+          
+          (return-from calculate_depth 0)))
+      (t 
+        (progn
+          
+          (return-from calculate_depth (+ 1 (calculate_depth  (cdr (assoc 'owner eh))))))))))
+(defun dump_registry (reg)
+  (progn
+    (print )
+    (print  "*** PALETTE ***")
+    for c in (cdr (assoc 'templates reg)):
     (progn
-      (let ((eh (Eh )))
-        (setf (cdr (assoc 'name eh)) name)
-        (setf (cdr (assoc 'owner eh)) owner)
-        (setf (cdr (assoc 'handler eh)) container_handler)
-        (setf (cdr (assoc 'inject eh)) container_injector)
-        (setf (cdr (assoc 'state eh)) "idle")
-        (setf (cdr (assoc 'kind eh)) "container")
-        
-        (return-from make_container eh))))))))))
+      (print  (cdr (assoc 'name c))))
+    (print  "***************")
+    (print )))
+(defun print_stats (reg)
+  (progn
+    (print  (concatenate 'string (format nil "~a" "registry statistics: ") (cdr (assoc 'stats reg))))))
+(defun mangle_name (s)
+  (progn
+    
+    (return-from mangle_name s)))
+import subprocess
+(defun generate_shell_components (reg container_list)
+  (progn
+    (cond 
+      ((not (equal  nil container_list)) 
+        (progn
+          for diagram in container_list:
+          (progn
+            for child_descriptor in (gethash 'children diagram):
+            (progn
+              (cond 
+                ((first_char_is  (gethash 'name child_descriptor)  "$") 
+                  (progn
+                    (let ((name (gethash 'name child_descriptor)))
+                      (let ((cmd (funcall (cdr (assoc 'strip (subseq name 1))) )))
+                        (let ((generated_leaf (Template  name  shell_out_instantiate  cmd)))
+                          (register_component  reg  generated_leaf))))))
+                ((first_char_is  (gethash 'name child_descriptor)  "'") 
+                  (progn
+                    (let ((name (gethash 'name child_descriptor)))
+                      (let ((s (subseq name 1)))
+                        (let ((generated_leaf (Template  name  string_constant_instantiate  s)))
+                          (register_component  reg  generated_leaf   t))))))))))))))
+(defun first_char (s)
+  (progn
+    
+    (return-from first_char (car s))))
+(defun first_char_is (s c)
+  (progn
+    
+    (return-from first_char_is ( equal  c (first_char  s)))))
+(defun run_command (eh cmd s)
+  (progn
+    (let ((ret (funcall (cdr (assoc 'run subprocess))  cmd   t  s  'utf_8')))
+      (cond 
+        ((not  ( equal  (cdr (assoc 'returncode ret)) 0)) 
+          (progn
+            (cond 
+              ((not (equal (cdr (assoc 'stderr ret))  nil)) 
+                (progn
+                  
+                  (return-from run_command (values ""  (cdr (assoc 'stderr ret))))))
+              (t 
+                (progn
+                  
+                  (return-from run_command (values ""  (concatenate 'string (format nil "~a" "error in shell_out ") (cdr (assoc 'returncode ret))))))))))
+        (t 
+          (progn
+            
+            (return-from run_command (values (cdr (assoc 'stdout ret))   nil))))))))
+import queue
+import sys
+(defun new-Eh ()
+  (list
+    (cons 'name "")
+    (cons 'inq (funcall (cdr (assoc 'Queue queue)) ))
+    (cons 'outq (funcall (cdr (assoc 'Queue queue)) ))
+    (cons 'owner  nil)
+    (cons 'saved_messages (funcall (cdr (assoc 'LifoQueue queue)) ))
+    (cons 'inject injector_NIY)
+    (cons 'children  nil)
+    (cons 'visit_ordering (funcall (cdr (assoc 'Queue queue)) ))
+    (cons 'connections  nil)
+    (cons 'routings (funcall (cdr (assoc 'Queue queue)) ))
+    (cons 'handler  nil)
+    (cons 'instance_data  nil)
+    (cons 'state "idle")
+    (cons 'kind  nil)
+    (cons 'trace  nil)
+    (cons 'depth 0)))
+
+(defun make_container (name owner)
+  (progn
+    (let ((eh (Eh )))
+      (setf (cdr (assoc 'name eh)) name)
+      (setf (cdr (assoc 'owner eh)) owner)
+      (setf (cdr (assoc 'handler eh)) container_handler)
+      (setf (cdr (assoc 'inject eh)) container_injector)
+      (setf (cdr (assoc 'state eh)) "idle")
+      (setf (cdr (assoc 'kind eh)) "container")
+      
+      (return-from make_container eh))))))))))
 (defun make_leaf (name owner instance_data handler)
   (progn
     (let ((eh (Eh )))

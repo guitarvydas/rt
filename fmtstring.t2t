@@ -7,17 +7,27 @@ pattern =
 
 fmtstring =
   | "f" dq innard dq -- f
+  | "f" sq sqinnard sq -- fsq
   | lq innard rq -- u
 
-dq = "\""
+dq = ("\\\"" | rawdq)
+rawdq = "\""
+sq = ("\\'" | rawsq)
+rawsq = "'"
 lq = "“"
 rq = "”"
 
 innard =
   | "{" interpolation "}" innard -- rec_interpolation
   | "{" interpolation "}" -- bottom_interpolation
-  | ~"}" ~dq ~lq ~rq char innard -- rec_default
-  | ~"}" ~dq ~lq ~rq char -- bottom_default
+  | ~"}" ~rawdq ~lq ~rq char innard -- rec_default
+  | ~"}" ~rawdq ~lq ~rq char -- bottom_default
+
+sqinnard =
+  | "{" interpolation "}" sqinnard -- rec_interpolation
+  | "{" interpolation "}" -- bottom_interpolation
+  | ~"}" ~rawsq ~lq ~rq char sqinnard -- rec_default
+  | ~"}" ~rawsq ~lq ~rq char -- bottom_default
 
 interpolation =
   | "{" interpolation "}" -- nested
@@ -25,6 +35,7 @@ interpolation =
 
 char =
   | "'" -- sq
+  | "\"" -- dq
   | any -- default
   
 ident = first rest*
@@ -39,9 +50,11 @@ pattern_fmtstring [s] = ‛«s»’
 pattern_default [x] = ‛«x»’
 
 fmtstring_f [_f ldq innard rdq] = ‛“«innard»”’
+fmtstring_fsq [_f lsq innard rsq] = ‛“«innard»”’
 fmtstring_u [luq innard ruq] = ‛“«innard»”’
 
 dq [c] = ‛«c»’
+sq [c] = ‛«c»’
 lq [c] = ‛«c»’
 rq [c] = ‛«c»’
 
@@ -50,10 +63,16 @@ innard_bottom_interpolation [lb v rb] = ‛⎨«v»⎬’
 innard_rec_default [c rec] = ‛◦«c»«rec»’
 innard_bottom_default [c] = ‛◦«c»’
 
+sqinnard_rec_interpolation [lb v rb rec] = ‛⎨«v»⎬«rec»’
+sqinnard_bottom_interpolation [lb v rb] = ‛⎨«v»⎬’
+sqinnard_rec_default [c rec] = ‛◦«c»«rec»’
+sqinnard_bottom_default [c] = ‛◦«c»’
+
 interpolation_nested [lb i rb] = ‛«lb»«i»«rb»’
 interpolation_default [i rec?] = ‛«i»«rec»’
 
-char_sq [c] = ‛\'’
+char_sq [c] = ‛\\'’
+char_dq [c] = ‛\\"’
 char_default [c] = ‛«c»’
 
 ident [first rest*] = ‛«first»«rest»’

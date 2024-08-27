@@ -4,7 +4,7 @@
 SRC=test.rt
 D2J=./das2json/mac/das2json
 
-dev: commonlisp
+dev: python
 
 commonlisp: 0D2cl.mjs support.mjs
 	${D2J} cl-t2t.drawio

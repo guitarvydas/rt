@@ -213,8 +213,12 @@
     | "f'" notsq* "'" -- fsqstring
     | "\"" notdq* "\"" -- dqstring
     | "'" notsq* "'" -- sqstring
-  notdq = ~"\"" any
-  notsq = ~"'" any
+  notdq =
+    | "\\" any -- escaped
+    | ~"\"" any -- raw
+  notsq = 
+    | "\\" any -- escaped
+    | ~"\"" any -- raw
 
 
   comment = "#" notnl* nl

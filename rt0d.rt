@@ -265,7 +265,6 @@ defn log_send_string (sender, sender_port, msg, cause_msg) {
 
 defn fmt_send (desc, indent) {
     return ""
-    #return f'\n{indent}⋯ {desc@component.name}."{desc@cause_port}" ∴ {desc@component.name}."{desc@port}" {format_message (desc@message)}'
 }
 
 defn fmt_send_string (desc, indent) {

@@ -213,7 +213,7 @@ defn format_message (m) {
     if m = ϕ {
         return "ϕ" }
     else {
-        return f'⟪"{m.port}"⦂"{m.datum.srepr ()}"⟫' }
+        return “◦⟪◦\"⎨m.port⎬◦\"◦⦂◦\"⎨m.datum.srepr ()⎬◦\"◦⟫” }
 }
 
 # dynamic routing descriptors
@@ -265,7 +265,6 @@ defn log_send_string (sender, sender_port, msg, cause_msg) {
 
 defn fmt_send (desc, indent) {
     return ""
-    #return f'\n{indent}⋯ {desc@component.name}."{desc@cause_port}" ∴ {desc@component.name}."{desc@port}" {format_message (desc@message)}'
 }
 
 defn fmt_send_string (desc, indent) {
@@ -314,7 +313,7 @@ defn log_inject (receiver, port, msg) {
 }
 
 defn fmt_inject (desc, indent) {
-    return f'\n{indent}⟹  {desc@component.name}."{desc@port}" {format_message (desc@message)}'
+    return “◦\◦n⎨indent⎬◦⟹◦ ◦ ⎨desc@component.name⎬◦.◦\"⎨desc@port⎬◦\"◦ ⎨format_message (desc@message)⎬”
 }
 
 ####
@@ -337,7 +336,7 @@ defn log_down (container, source_port, source_message, target, target_port, targ
 }
 
 defn fmt_down (desc, indent) {
-    return f'\n{indent}↓ {desc@container.name}."{desc@source_port}" ➔ {desc@target.name}."{desc@target_port}" {format_message (desc@target_message)}'
+    return “◦\◦n⎨indent⎬◦↓◦ ⎨desc@container.name⎬◦.◦\"⎨desc@source_port⎬◦\"◦ ◦➔◦ ⎨desc@target.name⎬◦.◦\"⎨desc@target_port⎬◦\"◦ ⎨format_message (desc@target_message)⎬”
 }
 
 ####
@@ -360,7 +359,7 @@ defn log_up (source, source_port, source_message, container, target_port, target
 }
 
 defn fmt_up (desc, indent) {
-    return f'\n{indent}↑ {desc@source.name}."{desc@source_port}" ➔ {desc@container.name}."{desc@container_port}" {format_message (desc@container_message)}'
+    return “◦\◦n⎨indent⎬◦↑◦ ⎨desc@source.name⎬◦.◦\"⎨desc@source_port⎬◦\"◦ ◦➔◦ ⎨desc@container.name⎬◦.◦\"⎨desc@container_port⎬◦\"◦ ⎨format_message (desc@container_message)⎬”
 }
 
 defn make_Across_Descriptor (container, source, source_port, source_message, target, target_port, target_message) {
@@ -383,7 +382,7 @@ defn log_across (container, source, source_port, source_message, target, target_
 }
 
 defn fmt_across (desc, indent) {
-    return f'\n{indent}→ {desc@source.name}."{desc@source_port}" ➔ {desc@target.name}."{desc@target_port}"  {format_message (desc@target_message)}'
+    return “◦\◦n⎨indent⎬◦→◦ ⎨desc@source.name⎬◦.◦\"⎨desc@source_port⎬◦\"◦ ◦➔◦ ⎨desc@target.name⎬◦.◦\"⎨desc@target_port⎬◦\"◦ ◦ ⎨format_message (desc@target_message)⎬”
 }
 
 ####
@@ -405,7 +404,7 @@ defn log_through (container, source_port, source_message, target_port, message) 
 }
 
 defn fmt_through (desc, indent) {
-    return f'\n{indent}⇶ {desc @container.name}."{desc@source_port}" ➔ {desc@container.name}."{desc@target_port}" {format_message (desc@message)}'
+    return “◦\◦n⎨indent⎬◦⇶◦ ⎨desc @container.name⎬◦.◦\"⎨desc@source_port⎬◦\"◦ ◦➔◦ ⎨desc@container.name⎬◦.◦\"⎨desc@target_port⎬◦\"◦ ⎨format_message (desc@message)⎬”
 }
 
 ####
@@ -452,9 +451,9 @@ defn log_inout_recursively (container, component, in_message, out_messages ∷ [
 defn fmt_inout (desc, indent) {
     outm ≡ desc@out_message
     if ϕ = outm {
-        return f'\n{indent}  ⊥'}
+        return strcons ("\n", strcons (indent, "  ⊥"))}
     else {
-        return f'\n{indent}  ∴ {desc@component.name} {format_message (outm)}'}
+        return strcons ("\n", strcons (indent, strcons ("  ∴ ", strcons (desc@component.name, strcons (" ", format_message (outm))))))}
 }
 
 defn log_tick (container, component, in_message) {
@@ -704,7 +703,7 @@ defn route (container, from_component, message) {
         dump_possible_connections (container)
         print_routing_trace (container)
         print ("***")
-        print (strcons (container.name, strcons (": message '", strcons (message.port, strcons ("' from ", strcons (fromname, " dropped on floor..."))))))
+        print (“⎨container.name⎬◦:◦ ◦m◦e◦s◦s◦a◦g◦e◦ ◦\'⎨message.port⎬◦\'◦ ◦f◦r◦o◦m◦ ⎨fromname⎬◦ ◦d◦r◦o◦p◦p◦e◦d◦ ◦o◦n◦ ◦f◦l◦o◦o◦r◦.◦.◦.”)
         print ("***")
         exit () }
 }
@@ -823,7 +822,7 @@ defn get_component_instance (reg, full_name, owner) {
     if template_name in reg.templates {
         template ≡ reg.templates[template_name]
         if (template = ϕ) {
-            load_error (strcons ("Registry Error: Can't find component ", strcons (template_name, " (does it need to be declared in components_to_include_in_project?")))
+            load_error (“◦R◦e◦g◦i◦s◦t◦r◦y◦ ◦E◦r◦r◦o◦r◦:◦ ◦C◦a◦n◦\'◦t◦ ◦f◦i◦n◦d◦ ◦c◦o◦m◦p◦o◦n◦e◦n◦t◦ ⎨template_name⎬◦ ◦(◦d◦o◦e◦s◦ ◦i◦t◦ ◦n◦e◦e◦d◦ ◦t◦o◦ ◦b◦e◦ ◦d◦e◦c◦l◦a◦r◦e◦d◦ ◦i◦n◦ ◦c◦o◦m◦p◦o◦n◦e◦n◦t◦s◦_◦t◦o◦_◦i◦n◦c◦l◦u◦d◦e◦_◦i◦n◦_◦p◦r◦o◦j◦e◦c◦t◦?”)
             return ϕ}
         else {
             owner_name ≡ ""
@@ -837,7 +836,7 @@ defn get_component_instance (reg, full_name, owner) {
             instance.depth ⇐ calculate_depth (instance)
             return instance }}
     else {
-            load_error (strcons ("Registry Error: Can't find component ", strcons (template_name, " (does it need to be declared in components_to_include_in_project?")))
+            load_error (“◦R◦e◦g◦i◦s◦t◦r◦y◦ ◦E◦r◦r◦o◦r◦:◦ ◦C◦a◦n◦\'◦t◦ ◦f◦i◦n◦d◦ ◦c◦o◦m◦p◦o◦n◦e◦n◦t◦ ⎨template_name⎬◦ ◦(◦d◦o◦e◦s◦ ◦i◦t◦ ◦n◦e◦e◦d◦ ◦t◦o◦ ◦b◦e◦ ◦d◦e◦c◦l◦a◦r◦e◦d◦ ◦i◦n◦ ◦c◦o◦m◦p◦o◦n◦e◦n◦t◦s◦_◦t◦o◦_◦i◦n◦c◦l◦u◦d◦e◦_◦i◦n◦_◦p◦r◦o◦j◦e◦c◦t◦?”)
             return ϕ}
 }
 defn calculate_depth (eh) {
@@ -1055,7 +1054,7 @@ defn put_output (eh, msg) {
 }
 
 defn injector_NIY (eh, msg) {
-    print (f'Injector not implemented for this component "{eh.name}" kind ∷ {eh.kind} port ∷ "{msg.port}"')
+    print (“◦I◦n◦j◦e◦c◦t◦o◦r◦ ◦n◦o◦t◦ ◦i◦m◦p◦l◦e◦m◦e◦n◦t◦e◦d◦ ◦f◦o◦r◦ ◦t◦h◦i◦s◦ ◦c◦o◦m◦p◦o◦n◦e◦n◦t◦ ◦\"⎨eh.name⎬◦\"◦ ◦k◦i◦n◦d◦ ◦∷◦ ⎨eh.kind⎬◦ ◦p◦o◦r◦t◦ ◦∷◦ ◦\"⎨msg.port⎬◦\"”)
     exit ()
 }
 
@@ -1522,7 +1521,7 @@ defn run (pregistry, root_project, root_0D, arg, main_container_name, diagram_so
     # get entrypoint container
     deftemp main_container ⇐ get_component_instance(pregistry, main_container_name, owner ∷ ϕ)
     if ϕ = main_container{
-        load_error (strcons ("Couldn't find container with page name ", strcons (main_container_name, strcons (" in files ", strcons (diagram_source_files, " (check tab names, or disable compression?)")))))}
+        load_error (“◦C◦o◦u◦l◦d◦n◦\'◦t◦ ◦f◦i◦n◦d◦ ◦c◦o◦n◦t◦a◦i◦n◦e◦r◦ ◦w◦i◦t◦h◦ ◦p◦a◦g◦e◦ ◦n◦a◦m◦e◦ ⎨main_container_name⎬◦ ◦i◦n◦ ◦f◦i◦l◦e◦s◦ ⎨diagram_source_files⎬◦ ◦(◦c◦h◦e◦c◦k◦ ◦t◦a◦b◦ ◦n◦a◦m◦e◦s◦,◦ ◦o◦r◦ ◦d◦i◦s◦a◦b◦l◦e◦ ◦c◦o◦m◦p◦r◦e◦s◦s◦i◦o◦n◦?◦)”)}
     if show_hierarchy{
         dump_hierarchy (main_container)}
     if show_connections{

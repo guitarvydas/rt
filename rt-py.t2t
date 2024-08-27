@@ -213,8 +213,12 @@
     | "f'" notsq* "'" -- fsqstring
     | "\"" notdq* "\"" -- dqstring
     | "'" notsq* "'" -- sqstring
-  notdq = ~"\"" any
-  notsq = ~"'" any
+  notdq =
+    | "\\" any -- escaped
+    | ~"\"" any -- raw
+  notsq = 
+    | "\\" any -- escaped
+    | ~"\"" any -- raw
 
 
   comment = "#" notnl* nl
@@ -362,8 +366,10 @@ string_fdqstring [ _193 notdq* _194] =‛«_193»«notdq»«_194»’
 string_fsqstring [ _195 notsq* _196] =‛«_195»«notsq»«_196»’
 string_dqstring [ _197 notdq* _198] =‛«_197»«notdq»«_198»’
 string_sqstring [ _199 notsq* _200] =‛«_199»«notsq»«_200»’
-notdq [ any] = ‛«any»’
-notsq [ any] = ‛«any»’
+notdq_escaped [_bs any] = ‛«_bs»«any»’
+notdq_raw [ any] = ‛«any»’
+notsq_escaped [_bs any] = ‛«_bs»«any»’
+notsq_raw [ any] = ‛«any»’
 comment [ _203 notnl* nl] = ‛«_203»«notnl»«nl»’
 nl [ _204] = ‛«_204»’
 notnl [ any] = ‛«any»’

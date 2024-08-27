@@ -225,8 +225,12 @@ rt {
     | "f'" notsq* "'" -- fsqstring
     | "\"" notdq* "\"" -- dqstring
     | "'" notsq* "'" -- sqstring
-  notdq = ~"\"" any
-  notsq = ~"'" any
+  notdq =
+    | "\\" any -- escaped
+    | ~"\"" any -- raw
+  notsq = 
+    | "\\" any -- escaped
+    | ~"\"" any -- raw
 
 
   comment = "#" notnl* nl
@@ -2226,13 +2230,29 @@ _.set_top (return_value_stack, `${_199}${notsq}${_200}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-notdq : function (_any, ) {
+notdq_escaped : function (__bs, _any, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_bs,any
+let _bs = undefined;
+let any = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "notdq_escaped");
+_bs = __bs.rwr ()
+any = _any.rwr ()
+
+_.set_top (return_value_stack, `${_bs}${any}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+notdq_raw : function (_any, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=any
 let any = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "notdq");
+_.set_top (rule_name_stack, "notdq_raw");
 any = _any.rwr ()
 
 _.set_top (return_value_stack, `${any}`);
@@ -2240,13 +2260,29 @@ _.set_top (return_value_stack, `${any}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-notsq : function (_any, ) {
+notsq_escaped : function (__bs, _any, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_bs,any
+let _bs = undefined;
+let any = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "notsq_escaped");
+_bs = __bs.rwr ()
+any = _any.rwr ()
+
+_.set_top (return_value_stack, `${_bs}${any}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+notsq_raw : function (_any, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=any
 let any = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "notsq");
+_.set_top (rule_name_stack, "notsq_raw");
 any = _any.rwr ()
 
 _.set_top (return_value_stack, `${any}`);
