@@ -122,6 +122,7 @@ rt {
       | kw<"argvcdr"> "(" digit ")" -- nthargvcdr
       | kw<"nthargv"> "(" digit ")" -- nthargv
       | kw<"stringcdr"> "(" Exp ")" -- stringcdr
+      | kw<"strcons"> "(" Exp "," Exp ")" -- strcons
       | "+" Primary -- pos
       | "-" Primary -- neg
       | phi -- phi
@@ -175,6 +176,7 @@ rt {
       | kw<"stringcdr">
       | kw<"argvcdr">
       | kw<"nthargv">
+      | kw<"strcons">
       )
       
     ident  = ~keyword identHead identTail*
@@ -1601,6 +1603,30 @@ _.set_top (return_value_stack, `(subseq ${e} 1)`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
+Atom_strcons : function (__strcons, _lp, _e1, __comma, _e2, _rp, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_strcons,lp,e1,_comma,e2,rp
+let _strcons = undefined;
+let lp = undefined;
+let e1 = undefined;
+let _comma = undefined;
+let e2 = undefined;
+let rp = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "Atom_strcons");
+_strcons = __strcons.rwr ()
+lp = _lp.rwr ()
+e1 = _e1.rwr ()
+_comma = __comma.rwr ()
+e2 = _e2.rwr ()
+rp = _rp.rwr ()
+
+_.set_top (return_value_stack, `(concatenate 'string (format nil "~a" ${e1}) ${e2})`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
 Atom_pos : function (__86, _Primary, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=_86,Primary
@@ -2363,7 +2389,7 @@ function main (src) {
 	var generated_code = cstSemantics (cst).rwr ();
 	return generated_code;
     } else {
-	return parser.trace (src).toString ();
+        return cst.message;	
     }
 }
 

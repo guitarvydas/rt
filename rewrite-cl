@@ -99,6 +99,7 @@ Atom_cdr [ _83 _84 e _85 ] =‛(cdr «e»)’
 Atom_nthargvcdr [ _83 lb n rb ] =‛(nthcdr *argv* «n»)’
 Atom_nthargv [ _83 _84 n _85 ] =‛(nth *argv* «n»)’
 Atom_stringcdr [ _83 _84 e _85 ] =‛(subseq «e» 1)’
+Atom_strcons [ _strcons lp e1 _comma e2 rp] =‛(concatenate 'string (format nil "~a" «e1») «e2»)’
 Atom_pos [ _86 Primary ] =‛(+ «Primary» 0)’
 Atom_neg [ _87 Primary ] =‛(- 0 «Primary»)’
 Atom_phi [ phi] =‛ nil’
