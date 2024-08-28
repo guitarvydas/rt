@@ -3,11 +3,27 @@
 main = pattern+
 
 pattern =
+  | "f\"" (~"\"" fchar)* "\"" -- fdqstring
   | "\"" (~"\"" any)* "\"" -- dqstring
+  | "f'" (~"'" fchar)* "'" -- fsqstring
+  | "'" (~"'" any)* "'" -- sqstring
   | any -- default
 
+fchar =
+  | "{" -- leftbrace
+  | "}" -- rightbrace
+  | any -- default
+  
 % rewrite
 main [p+] = ‛«p»’
 
+pattern_fdqstring [fdq1 cs* dq2] = ‛\‛«cs»\’’
 pattern_dqstring [dq1 cs* dq2] = ‛\‛«cs»\’’
+pattern_fsqstring [fsq1 cs* sq2] = ‛\‛«cs»\’’
+pattern_sqstring [sq1 cs* sq2] = ‛\‛«cs»\’’
 pattern_default [x] = ‛«x»’
+
+fchar_leftbrace [c] = ‛\«’
+fchar_rightbrace [c] = ‛\»’
+fchar_default [c] = ‛«c»’
+
