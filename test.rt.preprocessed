@@ -1,5 +1,3 @@
-defn h (c) {
-    x = “◦a◦b◦c◦"◦d◦e◦f”
-    x = “◦a◦b◦c◦"◦d◦e◦f”
+defn f () {
+  return “◦⟪◦"⎨m⎬” }
 }
-

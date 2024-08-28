@@ -59,7 +59,7 @@ defn srepr_datum_string (d) {
 }
 
 defn raw_datum_string (d) {
-  return bytearray (d.data,'UTF_8')
+  return bytearray (d.data,"UTF_8")
 }
 
 defn new_datum_bang () {
@@ -129,7 +129,7 @@ defn reclaim_datum_bytes (src) {
 }
 
 defn srepr_datum_bytes (d) {
-    return d.data.decode ('utf_8')
+    return d.data.decode ("utf_8")
 }
 defn raw_datum_bytes (d) {
     return d.data
@@ -274,7 +274,7 @@ defn fmt_send_string (desc, indent) {
 ####
 defn make_Forward_Descriptor (component, port, message, cause_port, cause_message) {
     rdesc ≡ make_Routing_Descriptor (action ∷ drSend, component ∷ component, port ∷ port, message ∷ message)
-    fmt_forward ≡ λ (desc) : ''
+    fmt_forward ≡ λ (desc) : ""
     return {
         "action": drForward,
         "component": rdesc@component,
@@ -469,11 +469,11 @@ defn routing_trace_all (container) {
 
 defn recursive_routing_trace (container, lis, indent) {
     if [] = lis {
-        return ''}
+        return ""}
     else {
         desc ≡ first (lis)
         formatted ≡ desc@fmt (desc, indent)
-        return formatted + recursive_routing_trace (container, rest (lis), indent + '  ')}
+        return formatted + recursive_routing_trace (container, rest (lis), indent + "  ")}
 }
 
 defconst enumDown ≡ 0
@@ -777,7 +777,7 @@ defobj Template (name, template_data, instantiator) {
 }
 defn read_and_convert_json_file (filename) {
     try {
-        fil ≡ open(filename, 'r')
+        fil ≡ open(filename, "r")
         json_data ≡ fil.read()
         routings ≡ json.loads(json_data)
 	fil.close ()
@@ -898,7 +898,7 @@ defn first_char_is (s, c) {
 # this needs to be rewritten to use the low_level "shell_out" component, this can be done solely as a diagram without using python code here
 # I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped
 defn run_command (eh, cmd, s) {
-    ret ≡ subprocess.run (cmd, capture_output ∷ ⊤, input ∷ s, encoding ∷ 'utf_8')
+    ret ≡ subprocess.run (cmd, capture_output ∷ ⊤, input ∷ s, encoding ∷ "utf_8")
     if  not (ret.returncode = 0){
         if ret.stderr != ϕ{
             return ["", ret.stderr]}
@@ -1343,7 +1343,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files, 
         all_containers_within_single_file ≡ json2internal (diagram_source)
         generate_shell_components (reg, all_containers_within_single_file)
         for container in all_containers_within_single_file{
-            register_component (reg, Template (name ∷ container ['name'] , template_data ∷ container, instantiator ∷ container_instantiator))}}
+            register_component (reg, Template (name ∷ container ["name"] , template_data ∷ container, instantiator ∷ container_instantiator))}}
     initialize_stock_components (reg)
     project_specific_components_subroutine (root_project, root_0D, reg) # add user specified components (probably only leaves)
     return reg

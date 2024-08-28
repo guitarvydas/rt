@@ -129,6 +129,8 @@
 
 
 
+    reservedCharacter = ("⇐" | "•" | "ϕ" | "≡" | "∷" | "⊥" | "⊤" | "λ" )
+
 
 
     keyword = (
@@ -138,7 +140,7 @@
       | kw<"defobj">
       | kw<"defvar">
       | kw<"defn">
-      | "•"
+      | reservedCharacter
       | kw<"useglobal">
       | kw<"pass">
       | kw<"return">
@@ -208,10 +210,17 @@
   boolNeq = "!="
 
   phi = "ϕ"
-  string = "“" notq* "”"
+  string =
+    | "“" notq* "”" -- unicodequote
+    | "\"" notdq* "\"" -- doublequote
+    
   notq = 
     | "\"" -- dq
     | ~"“" ~"”" any -- default
+    
+  notdq = 
+    | "\\\"" -- dq
+    | ~"\"" ~"\"" any -- default
     
   comment = "#" notnl* nl
   nl = "\n"
@@ -354,9 +363,12 @@ boolEq [op] = ‛==’
 boolNeq [op] = ‛!=’
 phi [ _192] = ‛ None’
 
-string [lq notq* rq] = ‛"«notq»"’
+string_unicodequote [lq notq* rq] = ‛"«notq»"’
+string_doublequote [lq notdq* rq] = ‛"«notdq»"’
 notq_dq [dq] = ‛\\\"’
 notq_default [c] = ‛«c»’
+notdq_dq [dq] = ‛\\\"’
+notdq_default [c] = ‛«c»’
 
 comment [ _203 notnl* nl] = ‛«_203»«notnl»«nl»’
 nl [ _204] = ‛«_204»’

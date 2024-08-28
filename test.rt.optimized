@@ -1,6 +1,4 @@
-defn h (c) {
-    x = “abc"def”
-    x = “abc"def”
+defn f () {
+  return strcons (“⟪"”, m) }
 }
-
 

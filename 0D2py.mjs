@@ -141,6 +141,8 @@ rt {
 
 
 
+    reservedCharacter = ("⇐" | "•" | "ϕ" | "≡" | "∷" | "⊥" | "⊤" | "λ" )
+
 
 
     keyword = (
@@ -150,7 +152,7 @@ rt {
       | kw<"defobj">
       | kw<"defvar">
       | kw<"defn">
-      | "•"
+      | reservedCharacter
       | kw<"useglobal">
       | kw<"pass">
       | kw<"return">
@@ -220,10 +222,17 @@ rt {
   boolNeq = "!="
 
   phi = "ϕ"
-  string = "“" notq* "”"
+  string =
+    | "“" notq* "”" -- unicodequote
+    | "\"" notdq* "\"" -- doublequote
+    
   notq = 
     | "\"" -- dq
     | ~"“" ~"”" any -- default
+    
+  notdq = 
+    | "\\\"" -- dq
+    | ~"\"" ~"\"" any -- default
     
   comment = "#" notnl* nl
   nl = "\n"
@@ -2150,7 +2159,7 @@ _.set_top (return_value_stack, ` None`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-string : function (_lq, _notq, _rq, ) {
+string_unicodequote : function (_lq, _notq, _rq, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=lq,notq,rq
 let lq = undefined;
@@ -2158,12 +2167,30 @@ let notq = undefined;
 let rq = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "string");
+_.set_top (rule_name_stack, "string_unicodequote");
 lq = _lq.rwr ()
 notq = _notq.rwr ().join ('')
 rq = _rq.rwr ()
 
 _.set_top (return_value_stack, `"${notq}"`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+string_doublequote : function (_lq, _notdq, _rq, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=lq,notdq,rq
+let lq = undefined;
+let notdq = undefined;
+let rq = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "string_doublequote");
+lq = _lq.rwr ()
+notdq = _notdq.rwr ().join ('')
+rq = _rq.rwr ()
+
+_.set_top (return_value_stack, `"${notdq}"`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -2189,6 +2216,34 @@ let c = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
 _.set_top (rule_name_stack, "notq_default");
+c = _c.rwr ()
+
+_.set_top (return_value_stack, `${c}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+notdq_dq : function (_dq, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=dq
+let dq = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "notdq_dq");
+dq = _dq.rwr ()
+
+_.set_top (return_value_stack, `\\\"`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
+notdq_default : function (_c, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=c
+let c = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "notdq_default");
 c = _c.rwr ()
 
 _.set_top (return_value_stack, `${c}`);

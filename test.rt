@@ -1,4 +1,3 @@
-defn h (c) {
-    x = f"abc\"def"
-    x = f'abc\"def'
+defn f () {
+  return ‛⟪"«m»}’ }
 }

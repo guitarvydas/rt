@@ -1,0 +1,13 @@
+% grammar string
+
+main = pattern+
+
+pattern =
+  | "\"" (~"\"" any)* "\"" -- dqstring
+  | any -- default
+
+% rewrite
+main [p+] = ‛«p»’
+
+pattern_dqstring [dq1 cs* dq2] = ‛\‛«cs»\’’
+pattern_default [x] = ‛«x»’
