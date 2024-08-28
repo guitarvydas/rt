@@ -208,19 +208,11 @@
   boolNeq = "!="
 
   phi = "ϕ"
-  string =
-    | "f\"" notdq* "\"" -- fdqstring
-    | "f'" notsq* "'" -- fsqstring
-    | "\"" notdq* "\"" -- dqstring
-    | "'" notsq* "'" -- sqstring
-  notdq =
-    | "\\" any -- escaped
-    | ~"\"" any -- raw
-  notsq = 
-    | "\\" any -- escaped
-    | ~"\"" any -- raw
-
-
+  string = "“" notq* "”"
+  notq = 
+    | "\"" -- dq
+    | ~"“" ~"”" any -- default
+    
   comment = "#" notnl* nl
   nl = "\n"
   notnl = ~nl any

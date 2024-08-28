@@ -46,6 +46,7 @@ interpolation =
   | ~"{" ~"}" any interpolation? -- default
 
 char =
+  | "\\" any -- escaped
   | "'" -- sq
   | "\"" -- dq
   | any -- default
@@ -386,6 +387,22 @@ _.set_top (return_value_stack, `${i}${rec}`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
+char_escaped : function (__bs, _c, ) {
+//** foreach_arg (let ☐ = undefined;)
+//** argnames=_bs,c
+let _bs = undefined;
+let c = undefined;
+return_value_stack.push ("");
+rule_name_stack.push ("");
+_.set_top (rule_name_stack, "char_escaped");
+_bs = __bs.rwr ()
+c = _c.rwr ()
+
+_.set_top (return_value_stack, `${c}`);
+
+rule_name_stack.pop ();
+return return_value_stack.pop ();
+},
 char_sq : function (_c, ) {
 //** foreach_arg (let ☐ = undefined;)
 //** argnames=c
@@ -395,7 +412,7 @@ rule_name_stack.push ("");
 _.set_top (rule_name_stack, "char_sq");
 c = _c.rwr ()
 
-_.set_top (return_value_stack, `\\'`);
+_.set_top (return_value_stack, `'`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -409,7 +426,7 @@ rule_name_stack.push ("");
 _.set_top (rule_name_stack, "char_dq");
 c = _c.rwr ()
 
-_.set_top (return_value_stack, `\\"`);
+_.set_top (return_value_stack, `"`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

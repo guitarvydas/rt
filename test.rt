@@ -1,3 +1,4 @@
 defn h (c) {
-    x = f"\""
+    x = f"abc\"def"
+    x = f'abc\"def'
 }

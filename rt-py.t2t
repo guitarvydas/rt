@@ -208,19 +208,11 @@
   boolNeq = "!="
 
   phi = "ϕ"
-  string =
-    | "f\"" notdq* "\"" -- fdqstring
-    | "f'" notsq* "'" -- fsqstring
-    | "\"" notdq* "\"" -- dqstring
-    | "'" notsq* "'" -- sqstring
-  notdq =
-    | "\\" any -- escaped
-    | ~"\"" any -- raw
-  notsq = 
-    | "\\" any -- escaped
-    | ~"\"" any -- raw
-
-
+  string = "“" notq* "”"
+  notq = 
+    | "\"" -- dq
+    | ~"“" ~"”" any -- default
+    
   comment = "#" notnl* nl
   nl = "\n"
   notnl = ~nl any
@@ -362,14 +354,10 @@ boolEq [op] = ‛==’
 boolNeq [op] = ‛!=’
 phi [ _192] = ‛ None’
 
-string_fdqstring [ _193 notdq* _194] =‛«_193»«notdq»«_194»’
-string_fsqstring [ _195 notsq* _196] =‛«_195»«notsq»«_196»’
-string_dqstring [ _197 notdq* _198] =‛«_197»«notdq»«_198»’
-string_sqstring [ _199 notsq* _200] =‛«_199»«notsq»«_200»’
-notdq_escaped [_bs any] = ‛«_bs»«any»’
-notdq_raw [ any] = ‛«any»’
-notsq_escaped [_bs any] = ‛«_bs»«any»’
-notsq_raw [ any] = ‛«any»’
+string [lq notq* rq] = ‛"«notq»"’
+notq_dq [dq] = ‛\\\"’
+notq_default [c] = ‛«c»’
+
 comment [ _203 notnl* nl] = ‛«_203»«notnl»«nl»’
 nl [ _204] = ‛«_204»’
 notnl [ any] = ‛«any»’

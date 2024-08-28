@@ -220,19 +220,11 @@ rt {
   boolNeq = "!="
 
   phi = "ϕ"
-  string =
-    | "f\"" notdq* "\"" -- fdqstring
-    | "f'" notsq* "'" -- fsqstring
-    | "\"" notdq* "\"" -- dqstring
-    | "'" notsq* "'" -- sqstring
-  notdq =
-    | "\\" any -- escaped
-    | ~"\"" any -- raw
-  notsq = 
-    | "\\" any -- escaped
-    | ~"\"" any -- raw
-
-
+  string = "“" notq* "”"
+  notq = 
+    | "\"" -- dq
+    | ~"“" ~"”" any -- default
+    
   comment = "#" notnl* nl
   nl = "\n"
   notnl = ~nl any
@@ -2158,134 +2150,48 @@ _.set_top (return_value_stack, ` None`);
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-string_fdqstring : function (__193, _notdq, __194, ) {
+string : function (_lq, _notq, _rq, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=_193,notdq,_194
-let _193 = undefined;
-let notdq = undefined;
-let _194 = undefined;
+//** argnames=lq,notq,rq
+let lq = undefined;
+let notq = undefined;
+let rq = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "string_fdqstring");
-_193 = __193.rwr ()
-notdq = _notdq.rwr ().join ('')
-_194 = __194.rwr ()
+_.set_top (rule_name_stack, "string");
+lq = _lq.rwr ()
+notq = _notq.rwr ().join ('')
+rq = _rq.rwr ()
 
-_.set_top (return_value_stack, `${_193}${notdq}${_194}`);
+_.set_top (return_value_stack, `"${notq}"`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-string_fsqstring : function (__195, _notsq, __196, ) {
+notq_dq : function (_dq, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=_195,notsq,_196
-let _195 = undefined;
-let notsq = undefined;
-let _196 = undefined;
+//** argnames=dq
+let dq = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "string_fsqstring");
-_195 = __195.rwr ()
-notsq = _notsq.rwr ().join ('')
-_196 = __196.rwr ()
+_.set_top (rule_name_stack, "notq_dq");
+dq = _dq.rwr ()
 
-_.set_top (return_value_stack, `${_195}${notsq}${_196}`);
+_.set_top (return_value_stack, `\\\"`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
 },
-string_dqstring : function (__197, _notdq, __198, ) {
+notq_default : function (_c, ) {
 //** foreach_arg (let ☐ = undefined;)
-//** argnames=_197,notdq,_198
-let _197 = undefined;
-let notdq = undefined;
-let _198 = undefined;
+//** argnames=c
+let c = undefined;
 return_value_stack.push ("");
 rule_name_stack.push ("");
-_.set_top (rule_name_stack, "string_dqstring");
-_197 = __197.rwr ()
-notdq = _notdq.rwr ().join ('')
-_198 = __198.rwr ()
+_.set_top (rule_name_stack, "notq_default");
+c = _c.rwr ()
 
-_.set_top (return_value_stack, `${_197}${notdq}${_198}`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-string_sqstring : function (__199, _notsq, __200, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=_199,notsq,_200
-let _199 = undefined;
-let notsq = undefined;
-let _200 = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "string_sqstring");
-_199 = __199.rwr ()
-notsq = _notsq.rwr ().join ('')
-_200 = __200.rwr ()
-
-_.set_top (return_value_stack, `${_199}${notsq}${_200}`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-notdq_escaped : function (__bs, _any, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=_bs,any
-let _bs = undefined;
-let any = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "notdq_escaped");
-_bs = __bs.rwr ()
-any = _any.rwr ()
-
-_.set_top (return_value_stack, `${_bs}${any}`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-notdq_raw : function (_any, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=any
-let any = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "notdq_raw");
-any = _any.rwr ()
-
-_.set_top (return_value_stack, `${any}`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-notsq_escaped : function (__bs, _any, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=_bs,any
-let _bs = undefined;
-let any = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "notsq_escaped");
-_bs = __bs.rwr ()
-any = _any.rwr ()
-
-_.set_top (return_value_stack, `${_bs}${any}`);
-
-rule_name_stack.pop ();
-return return_value_stack.pop ();
-},
-notsq_raw : function (_any, ) {
-//** foreach_arg (let ☐ = undefined;)
-//** argnames=any
-let any = undefined;
-return_value_stack.push ("");
-rule_name_stack.push ("");
-_.set_top (rule_name_stack, "notsq_raw");
-any = _any.rwr ()
-
-_.set_top (return_value_stack, `${any}`);
+_.set_top (return_value_stack, `${c}`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

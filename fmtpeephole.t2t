@@ -38,8 +38,8 @@ pattern_str [lb p rb] = ‛«p»’
 pattern_default [x] = ‛«x»’
 
 
-Strtop_charrunrec [run rec] = ‛strcons ("«run»", «rec»)’
-Strtop_charrunsingle [run] = ‛"«run»"’
+Strtop_charrunrec [run rec] = ‛strcons (“«run»”, «rec»)’
+Strtop_charrunsingle [run] = ‛“«run»”’
 Strtop_interpolationrec [i rec] = ‛strcons («i», «rec»)’
 Strtop_interpolationsingle [i] = ‛«i»’
 

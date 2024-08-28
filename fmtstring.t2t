@@ -34,6 +34,7 @@ interpolation =
   | ~"{" ~"}" any interpolation? -- default
 
 char =
+  | "\\" any -- escaped
   | "'" -- sq
   | "\"" -- dq
   | any -- default
@@ -71,8 +72,9 @@ sqinnard_bottom_default [c] = ‛◦«c»’
 interpolation_nested [lb i rb] = ‛«lb»«i»«rb»’
 interpolation_default [i rec?] = ‛«i»«rec»’
 
-char_sq [c] = ‛\\'’
-char_dq [c] = ‛\\"’
+char_escaped [_bs c] = ‛«c»’
+char_sq [c] = ‛'’
+char_dq [c] = ‛"’
 char_default [c] = ‛«c»’
 
 ident [first rest*] = ‛«first»«rest»’

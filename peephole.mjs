@@ -104,7 +104,7 @@ _.set_top (rule_name_stack, "Strtop_charrunrec");
 run = _run.rwr ()
 rec = _rec.rwr ()
 
-_.set_top (return_value_stack, `strcons ("${run}", ${rec})`);
+_.set_top (return_value_stack, `strcons (“${run}”, ${rec})`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();
@@ -118,7 +118,7 @@ rule_name_stack.push ("");
 _.set_top (rule_name_stack, "Strtop_charrunsingle");
 run = _run.rwr ()
 
-_.set_top (return_value_stack, `"${run}"`);
+_.set_top (return_value_stack, `“${run}”`);
 
 rule_name_stack.pop ();
 return return_value_stack.pop ();

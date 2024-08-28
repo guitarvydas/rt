@@ -1,7 +1,8 @@
 
 
 def h (c):
-    x == "\""
+    x == "abc\"def"
+    x == "abc\"def"
 
 
 
