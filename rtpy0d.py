@@ -168,25 +168,6 @@ def format_message (m):
         return f'⟪"{m.port}"⦂"{m.datum.srepr ()}"⟫'
     
 
-<<<<<<< HEAD
-
-drInject = "inject"
-
-drSend = "send"
-
-drInOut = "inout"
-
-drForward = "forward"
-
-drDown = "down"
-
-drUp = "up"
-
-drAcross = "across"
-
-drThrough = "through"
-def make_Routing_Descriptor (action= None,component= None,port= None,message= None):
-=======
 drInject = "inject"
 drSend = "send"
 drInOut = "inout"
@@ -196,7 +177,6 @@ drUp = "up"
 drAcross = "across"
 drThrough = "through"
 def make_Routing_Descriptor (action,component,port,message):
->>>>>>> cl
     return {"action":action,"component":component,"port":port,"message":message}
 
 def make_Send_Descriptor (component,port,message,cause_port,cause_message):
