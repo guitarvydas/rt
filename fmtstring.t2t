@@ -1,0 +1,61 @@
+% grammar fmtstring
+main = pattern+
+
+pattern =
+  | fmtstring -- fmtstring
+  | any -- default
+
+fmtstring =
+  | "f" dq innard dq -- f
+  | lq innard rq -- u
+
+dq = "\""
+lq = "“"
+rq = "”"
+
+innard =
+  | "{" interpolation "}" innard -- rec_interpolation
+  | "{" interpolation "}" -- bottom_interpolation
+  | ~"}" ~dq ~lq ~rq char innard -- rec_default
+  | ~"}" ~dq ~lq ~rq char -- bottom_default
+
+interpolation =
+  | "{" interpolation "}" -- nested
+  | ~"{" ~"}" any interpolation? -- default
+
+char =
+  | "'" -- sq
+  | any -- default
+  
+ident = first rest*
+first = letter | "_"
+rest = alnum | "_"
+
+
+% rewrite
+main [pattern+] = ‛«pattern»’
+
+pattern_fmtstring [s] = ‛«s»’
+pattern_default [x] = ‛«x»’
+
+fmtstring_f [_f ldq innard rdq] = ‛“«innard»”’
+fmtstring_u [luq innard ruq] = ‛“«innard»”’
+
+dq [c] = ‛«c»’
+lq [c] = ‛«c»’
+rq [c] = ‛«c»’
+
+innard_rec_interpolation [lb v rb rec] = ‛⎨«v»⎬«rec»’
+innard_bottom_interpolation [lb v rb] = ‛⎨«v»⎬’
+innard_rec_default [c rec] = ‛◦«c»«rec»’
+innard_bottom_default [c] = ‛◦«c»’
+
+interpolation_nested [lb i rb] = ‛«lb»«i»«rb»’
+interpolation_default [i rec?] = ‛«i»«rec»’
+
+char_sq [c] = ‛\'’
+char_default [c] = ‛«c»’
+
+ident [first rest*] = ‛«first»«rest»’
+first [c] = ‛«c»’
+rest [c] = ‛«c»’

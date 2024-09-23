@@ -2,7 +2,9 @@
 // replace developer indents with actual indents
 // replace developer newlines with actual newlines
 function scrubber (s) {
-    return decodeURI (s.replace (/❲/g, '').replace (/\?❳/g, '_Q').replace (/❳/g, ''))
+    console.error (s);
+    return decodeURI (s.replace (/❲/g, '')
+		      .replace (/❳/g, ''))
 	.replace (/☞/g,' ')
 	.replace (/☜/g,'')
     
@@ -10,11 +12,6 @@ function scrubber (s) {
 
 	.replace (/“/g,'"')
 	.replace (/”/g,'"')
-
-	.replace (/-/g,'_')
-	.replace (/e\*/g,'e_A')
-	.replace (/#t/g,'True')
-	.replace (/#f/g,'False')
 
 	.replace (/⎰/g,'')
 	.replace (/⎱/g,' ')

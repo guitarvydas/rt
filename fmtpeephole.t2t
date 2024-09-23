@@ -1,0 +1,59 @@
+% grammar fmtpeephole
+
+main = pattern+
+
+pattern =
+  | "“"  applySyntactic<Strtop> "”" -- str
+  | any -- default
+
+Strtop =
+  | CharRun Strtop -- charrunrec
+  | CharRun -- charrunsingle
+  | interpolation Strtop -- interpolationrec
+  | interpolation -- interpolationsingle
+  
+CharRun =
+  | char CharRun -- run
+  | char -- single
+
+char = q (~reserved any)
+
+interpolation = "⎨" istuff* "⎬"
+istuff =
+  | "⎨" istuff* "⎬" -- rec
+  | ~"⎨" ~"⎬" any -- default
+
+q = "◦"
+reserved = q | "⎨" | "⎬"
+
+ident = first rest*
+first = letter | "_"
+rest = alnum | "_"
+
+% rewrite
+
+main [pattern+] = ‛«pattern»’
+
+pattern_str [lb p rb] = ‛«p»’
+pattern_default [x] = ‛«x»’
+
+
+Strtop_charrunrec [run rec] = ‛strcons ("«run»", «rec»)’
+Strtop_charrunsingle [run] = ‛"«run»"’
+Strtop_interpolationrec [i rec] = ‛strcons («i», «rec»)’
+Strtop_interpolationsingle [i] = ‛«i»’
+
+CharRun_run [c rec] = ‛«c»«rec»’
+CharRun_single [c] = ‛«c»’
+
+char [_q c] = ‛«c»’
+interpolation [lb istuff* rb] = ‛«istuff»’
+istuff_rec [lb istuff* rb] = ‛«istuff»’
+istuff_default [c] = ‛«c»’
+
+q [c] = ‛«c»’
+reserved [c] = ‛«c»’
+
+ident [first rest*] = ‛«first»«rest»’
+first [c] = ‛«c»’
+rest [c] = ‛«c»’

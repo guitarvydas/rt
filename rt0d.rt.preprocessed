@@ -11,7 +11,7 @@ defvar digits ⇐ [
 
 defn gensym (s) {
     global counter
-    name_with_id ≡ f"{s}{subscripted_digit (counter)}"
+    name_with_id ≡ “⎨s⎬⎨subscripted_digit (counter)⎬”
     counter ⇐ counter + 1
     return name_with_id
 }
@@ -21,7 +21,7 @@ defn subscripted_digit (n) {
   if (n >=  0 and n <=  29) {
     return digits [n]
   } else {
-    return f"₊{n}"
+    return “◦₊⎨n⎬”
   }
 }
 
@@ -218,16 +218,6 @@ defn format_message (m) {
 
 # dynamic routing descriptors
 
-<<<<<<< HEAD
-defvar drInject = "inject"
-defvar drSend = "send"
-defvar drInOut = "inout"
-defvar drForward = "forward"
-defvar drDown = "down"
-defvar drUp = "up"
-defvar drAcross = "across"
-defvar drThrough = "through"
-=======
 defconst drInject ≡ "inject"
 defconst drSend ≡ "send"
 defconst drInOut ≡ "inout"
@@ -236,17 +226,11 @@ defconst drDown ≡ "down"
 defconst drUp ≡ "up"
 defconst drAcross ≡ "across"
 defconst drThrough ≡ "through"
->>>>>>> cl
 
 # See "class_free programming" starting at 45:01 of https://www.youtube.com/watch?v=XFTOG895C7c
 
 
-<<<<<<< HEAD
-defn make_Routing_Descriptor (action=ϕ, component=ϕ, port=ϕ, message=ϕ) {
-
-=======
 defn make_Routing_Descriptor (action, component, port, message) {
->>>>>>> cl
     return {
         "action": action,
         "component": component,
@@ -308,7 +292,7 @@ defn log_forward (sender, sender_port, msg, cause_msg) {
 }
 
 defn fmt_forward (desc) {
-    print (f"*** Error fmt_forward {desc}")
+    print (“◦*◦*◦*◦ ◦E◦r◦r◦o◦r◦ ◦f◦m◦t◦_◦f◦o◦r◦w◦a◦r◦d◦ ⎨desc⎬”)
     quit ()
 }
 
@@ -522,7 +506,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
             connector.sender ⇐ Sender (me.name, me, proto_conn@source_port)
             target_component ≡ children_by_id [proto_conn@target@id]
             if (target_component = ϕ) {
-                load_error (f"internal error: .Down connection target internal error {proto_conn@target}")}
+                load_error (“◦i◦n◦t◦e◦r◦n◦a◦l◦ ◦e◦r◦r◦o◦r◦:◦ ◦.◦D◦o◦w◦n◦ ◦c◦o◦n◦n◦e◦c◦t◦i◦o◦n◦ ◦t◦a◦r◦g◦e◦t◦ ◦i◦n◦t◦e◦r◦n◦a◦l◦ ◦e◦r◦r◦o◦r◦ ⎨proto_conn@target⎬”)}
             else{
                 connector.receiver ⇐ Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
                 connectors.append (connector) }}
@@ -531,11 +515,11 @@ defn container_instantiator (reg, owner, container_name, desc) {
             source_component ≡ children_by_id [proto_conn@source@id]
             target_component ≡ children_by_id [proto_conn@target@id]
             if source_component = ϕ {
-                load_error (f"internal error: .Across connection source not ok {proto_conn@source}") }
+                load_error (“◦i◦n◦t◦e◦r◦n◦a◦l◦ ◦e◦r◦r◦o◦r◦:◦ ◦.◦A◦c◦r◦o◦s◦s◦ ◦c◦o◦n◦n◦e◦c◦t◦i◦o◦n◦ ◦s◦o◦u◦r◦c◦e◦ ◦n◦o◦t◦ ◦o◦k◦ ⎨proto_conn@source⎬”) }
             else {
                 connector.sender ⇐ Sender (source_component.name, source_component, proto_conn@source_port)
                 if target_component = ϕ {
-                    load_error (f"internal error: .Across connection target not ok {proto_conn.target}") }
+                    load_error (“◦i◦n◦t◦e◦r◦n◦a◦l◦ ◦e◦r◦r◦o◦r◦:◦ ◦.◦A◦c◦r◦o◦s◦s◦ ◦c◦o◦n◦n◦e◦c◦t◦i◦o◦n◦ ◦t◦a◦r◦g◦e◦t◦ ◦n◦o◦t◦ ◦o◦k◦ ⎨proto_conn.target⎬”) }
                 else {
                     connector.receiver ⇐ Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
                     connectors.append (connector)}}}
@@ -543,7 +527,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
             connector.direction ⇐ "up"
             source_component ≡ children_by_id [proto_conn@source@id]
             if source_component = ϕ {
-                print (f"internal error: .Up connection source not ok {proto_conn@source}") }
+                print (“◦i◦n◦t◦e◦r◦n◦a◦l◦ ◦e◦r◦r◦o◦r◦:◦ ◦.◦U◦p◦ ◦c◦o◦n◦n◦e◦c◦t◦i◦o◦n◦ ◦s◦o◦u◦r◦c◦e◦ ◦n◦o◦t◦ ◦o◦k◦ ⎨proto_conn@source⎬”) }
             else {
                 connector.sender ⇐ Sender (source_component.name, source_component, proto_conn@source_port)
                 connector.receiver ⇐ Receiver (me.name, container.outq, proto_conn@target_port, me)
@@ -720,15 +704,15 @@ defn route (container, from_component, message) {
         dump_possible_connections (container)
         print_routing_trace (container)
         print ("***")
-        print (f"{container.name}: message '{message.port}' from {fromname} dropped on floor...")
+        print (“⎨container.name⎬◦:◦ ◦m◦e◦s◦s◦a◦g◦e◦ ◦'⎨message.port⎬◦'◦ ◦f◦r◦o◦m◦ ⎨fromname⎬◦ ◦d◦r◦o◦p◦p◦e◦d◦ ◦o◦n◦ ◦f◦l◦o◦o◦r◦.◦.◦.”)
         print ("***")
         exit () }
 }
 
 defn dump_possible_connections (container) {
-    print (f"*** possible connections for {container.name}:")
+    print (“◦*◦*◦*◦ ◦p◦o◦s◦s◦i◦b◦l◦e◦ ◦c◦o◦n◦n◦e◦c◦t◦i◦o◦n◦s◦ ◦f◦o◦r◦ ⎨container.name⎬◦:”)
     for connector in container.connections {
-        print (f"{connector.direction} {connector.sender.name}.{connector.sender.port} -> {connector.receiver.name}.{connector.receiver.port}") }
+        print (“⎨connector.direction⎬◦ ⎨connector.sender.name⎬◦.⎨connector.sender.port⎬◦ ◦-◦>◦ ⎨connector.receiver.name⎬◦.⎨connector.receiver.port⎬”) }
 }
 
 defn any_child_ready (container) {
@@ -769,7 +753,7 @@ defn log_connection (container, connector, message) {
         log_through (container ∷ container, source_port ∷ connector.sender.port, source_message ∷ ϕ,
                      target_port ∷ connector.receiver.port, message ∷ message) }
     else {
-        print (f"*** FATAL error: in log_connection /{connector.direction}/ /{message.port}/ /{message.datum.srepr ()}/")
+        print (“◦*◦*◦*◦ ◦F◦A◦T◦A◦L◦ ◦e◦r◦r◦o◦r◦:◦ ◦i◦n◦ ◦l◦o◦g◦_◦c◦o◦n◦n◦e◦c◦t◦i◦o◦n◦ ◦/⎨connector.direction⎬◦/◦ ◦/⎨message.port⎬◦/◦ ◦/⎨message.datum.srepr ()⎬◦/”)
         exit () }
 }
 
@@ -800,10 +784,10 @@ defn read_and_convert_json_file (filename) {
 	fil.close ()
         return routings }
     except FileNotFoundError {
-        print (f"File not found: {filename}")
+        print (“◦F◦i◦l◦e◦ ◦n◦o◦t◦ ◦f◦o◦u◦n◦d◦:◦ ⎨filename⎬”)
         return ϕ}
     except json.JSONDecodeError as e {
-        print (f"Error decoding JSON in file: {e}")
+        print (“◦E◦r◦r◦o◦r◦ ◦d◦e◦c◦o◦d◦i◦n◦g◦ ◦J◦S◦O◦N◦ ◦i◦n◦ ◦f◦i◦l◦e◦:◦ ⎨e⎬”)
         return ϕ}
 }
 
@@ -824,7 +808,7 @@ defn make_component_registry () {
 defn register_component (reg, template, ok_to_overwrite ∷ ⊥) {
     name ≡ mangle_name (template.name)
     if name in reg.templates and not ok_to_overwrite {
-        load_error (f"Component {template.name} already declared")}
+        load_error (“◦C◦o◦m◦p◦o◦n◦e◦n◦t◦ ⎨template.name⎬◦ ◦a◦l◦r◦e◦a◦d◦y◦ ◦d◦e◦c◦l◦a◦r◦e◦d”)}
     reg.templates[name] ≡ template
     return reg
 }
@@ -839,21 +823,21 @@ defn get_component_instance (reg, full_name, owner) {
     if template_name in reg.templates {
         template ≡ reg.templates[template_name]
         if (template = ϕ) {
-            load_error (f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
+            load_error (“◦R◦e◦g◦i◦s◦t◦r◦y◦ ◦E◦r◦r◦o◦r◦:◦ ◦C◦a◦n◦'◦t◦ ◦f◦i◦n◦d◦ ◦c◦o◦m◦p◦o◦n◦e◦n◦t◦ ⎨template_name⎬◦ ◦(◦d◦o◦e◦s◦ ◦i◦t◦ ◦n◦e◦e◦d◦ ◦t◦o◦ ◦b◦e◦ ◦d◦e◦c◦l◦a◦r◦e◦d◦ ◦i◦n◦ ◦c◦o◦m◦p◦o◦n◦e◦n◦t◦s◦_◦t◦o◦_◦i◦n◦c◦l◦u◦d◦e◦_◦i◦n◦_◦p◦r◦o◦j◦e◦c◦t◦?”)
             return ϕ}
         else {
             owner_name ≡ ""
-            instance_name ≡ f"{template_name}"
+            instance_name ≡ “⎨template_name⎬”
             if ϕ != owner {
                 owner_name ≡ owner.name
-                instance_name ≡ f"{owner_name}.{template_name}"}
+                instance_name ≡ “⎨owner_name⎬◦.⎨template_name⎬”}
             else{
-                instance_name ≡ f"{template_name}"}
+                instance_name ≡ “⎨template_name⎬”}
             instance ≡ template.instantiator (reg, owner, instance_name, template.template_data)
             instance.depth ⇐ calculate_depth (instance)
             return instance }}
     else {
-            load_error (f"Registry Error: Can't find component {template_name} (does it need to be declared in components_to_include_in_project?")
+            load_error (“◦R◦e◦g◦i◦s◦t◦r◦y◦ ◦E◦r◦r◦o◦r◦:◦ ◦C◦a◦n◦'◦t◦ ◦f◦i◦n◦d◦ ◦c◦o◦m◦p◦o◦n◦e◦n◦t◦ ⎨template_name⎬◦ ◦(◦d◦o◦e◦s◦ ◦i◦t◦ ◦n◦e◦e◦d◦ ◦t◦o◦ ◦b◦e◦ ◦d◦e◦c◦l◦a◦r◦e◦d◦ ◦i◦n◦ ◦c◦o◦m◦p◦o◦n◦e◦n◦t◦s◦_◦t◦o◦_◦i◦n◦c◦l◦u◦d◦e◦_◦i◦n◦_◦p◦r◦o◦j◦e◦c◦t◦?”)
             return ϕ}
 }
 defn calculate_depth (eh) {
@@ -873,7 +857,7 @@ defn dump_registry (reg) {
 }
 
 defn print_stats (reg) {
-    print (f"registry statistics: {reg.stats}")
+    print (“◦r◦e◦g◦i◦s◦t◦r◦y◦ ◦s◦t◦a◦t◦i◦s◦t◦i◦c◦s◦:◦ ⎨reg.stats⎬”)
 }
 
 defn mangle_name (s) {
@@ -920,7 +904,7 @@ defn run_command (eh, cmd, s) {
         if ret.stderr != ϕ{
             return ["", ret.stderr]}
         else{
-            return ["", f"error in shell_out {ret.returncode}"]}}
+            return ["", “◦e◦r◦r◦o◦r◦ ◦i◦n◦ ◦s◦h◦e◦l◦l◦_◦o◦u◦t◦ ⎨ret.returncode⎬”]}}
     else{
         return [ret.stdout, ϕ]}
 }
@@ -928,7 +912,7 @@ defn run_command (eh, cmd, s) {
 # Data for an asyncronous component _ effectively, a function with input
 # and output queues of messages.
 #
-# Components can either be a user_supplied function ("leaf"), or a "container"
+# Components can either be a user_supplied function ("lea“◦)◦,◦ ◦o◦r◦ ◦a◦ ”container"
 # that routes messages to child components according to a list of connections
 # that serve as a message routing table.
 #
@@ -983,7 +967,7 @@ defn make_container (name, owner) {
 
 defn make_leaf (name, owner, instance_data, handler) {
     eh ≡ Eh ()
-    eh.name ⇐ f"{owner.name}.{name}"
+    eh.name ⇐ “⎨owner.name⎬◦.⎨name⎬”
     eh.owner ⇐ owner
     eh.handler ⇐ handler
     eh.instance_data ⇐ instance_data
@@ -1111,7 +1095,7 @@ defn probeC_instantiate (reg, owner, name, template_data) {
 
 defn probe_handler (eh, msg) {
     s ≡ msg.datum.srepr ()
-    print (f"... probe {eh.name}: {s}", file ∷ sys.stderr)
+    print (“◦.◦.◦.◦ ◦p◦r◦o◦b◦e◦ ⎨eh.name⎬◦:◦ ⎨s⎬”, file ∷ sys.stderr)
 }
 
 defn trash_instantiate (reg, owner, name, template_data) {
@@ -1162,21 +1146,21 @@ defn deracer_handler (eh, msg) {
             inst.buffer.second ⇐ msg
             inst.state ⇐ "waitingForFirst"}
         else{
-            runtime_error (f"bad msg.port (case A) for deracer {msg.port}")}}
+            runtime_error (“◦b◦a◦d◦ ◦m◦s◦g◦.◦p◦o◦r◦t◦ ◦(◦c◦a◦s◦e◦ ◦A◦)◦ ◦f◦o◦r◦ ◦d◦e◦r◦a◦c◦e◦r◦ ⎨msg.port⎬”)}}
     elif inst.state = "waitingForFirst" {
         if "1" = msg.port{
             inst.buffer.first ⇐ msg
             send_first_then_second (eh, inst)
             inst.state ⇐ "idle"}
         else{
-            runtime_error (f"bad msg.port (case B) for deracer {msg.port}")}}
+            runtime_error (“◦b◦a◦d◦ ◦m◦s◦g◦.◦p◦o◦r◦t◦ ◦(◦c◦a◦s◦e◦ ◦B◦)◦ ◦f◦o◦r◦ ◦d◦e◦r◦a◦c◦e◦r◦ ⎨msg.port⎬”)}}
     elif inst.state = "waitingForSecond"{
         if "2" = msg.port{
             inst.buffer.second ⇐ msg
             send_first_then_second (eh, inst)
             inst.state ⇐ "idle"}
         else{
-            runtime_error (f"bad msg.port (case C) for deracer {msg.port}")}}
+            runtime_error (“◦b◦a◦d◦ ◦m◦s◦g◦.◦p◦o◦r◦t◦ ◦(◦c◦a◦s◦e◦ ◦C◦)◦ ◦f◦o◦r◦ ◦d◦e◦r◦a◦c◦e◦r◦ ⎨msg.port⎬”)}}
     else{
         runtime_error ("bad state for deracer {eh.state}")}
 }
@@ -1197,11 +1181,11 @@ defn low_level_read_text_file_handler (eh, msg) {
         if data!= ϕ{
             send_string (eh, "", data, msg)}
         else{
-            emsg ≡ f"read error on file {fname}"
+            emsg ≡ “◦r◦e◦a◦d◦ ◦e◦r◦r◦o◦r◦ ◦o◦n◦ ◦f◦i◦l◦e◦ ⎨fname⎬”
             send_string (eh, "✗", emsg, msg)}
         f.close ()}
     else{
-        emsg ≡ f"open error on file {fname}"
+        emsg ≡ “◦o◦p◦e◦n◦ ◦e◦r◦r◦o◦r◦ ◦o◦n◦ ◦f◦i◦l◦e◦ ⎨fname⎬”
         send_string (eh, "✗", emsg, msg)}
 }
 
@@ -1214,7 +1198,7 @@ defn ensure_string_datum_handler (eh, msg) {
     if "string" = msg.datum.kind (){
         forward (eh, "", msg)}
     else{
-        emsg ≡ f"*** ensure: type error (expected a string datum) but got {msg.datum}"
+        emsg ≡ “◦*◦*◦*◦ ◦e◦n◦s◦u◦r◦e◦:◦ ◦t◦y◦p◦e◦ ◦e◦r◦r◦o◦r◦ ◦(◦e◦x◦p◦e◦c◦t◦e◦d◦ ◦a◦ ◦s◦t◦r◦i◦n◦g◦ ◦d◦a◦t◦u◦m◦)◦ ◦b◦u◦t◦ ◦g◦o◦t◦ ⎨msg.datum⎬”
         send_string (eh, "✗", emsg, msg)}
 }
 
@@ -1241,7 +1225,7 @@ defn syncfilewrite_handler (eh, msg) {
             f.close ()
             send (eh, "done", new_datum_bang (), msg)}
         else{
-            send_string (eh, "✗", f"open error on file {inst.filename}", msg)}}
+            send_string (eh, "✗", “◦o◦p◦e◦n◦ ◦e◦r◦r◦o◦r◦ ◦o◦n◦ ◦f◦i◦l◦e◦ ⎨inst.filename⎬”, msg)}}
 }
 
 defobj StringConcat_Instance_Data () {
@@ -1267,7 +1251,7 @@ defn stringconcat_handler (eh, msg) {
         inst.count ⇐ inst.count + 1
         maybe_stringconcat (eh, inst, msg)}
     else{
-        runtime_error (f"bad msg.port for stringconcat: {msg.port}")}
+        runtime_error (“◦b◦a◦d◦ ◦m◦s◦g◦.◦p◦o◦r◦t◦ ◦f◦o◦r◦ ◦s◦t◦r◦i◦n◦g◦c◦o◦n◦c◦a◦t◦:◦ ⎨msg.port⎬”)}
 }
 
 defn maybe_stringconcat (eh, inst, msg) {
@@ -1390,22 +1374,22 @@ defn trace_outputs (main_container) {
 
 defn dump_hierarchy (main_container) {
     print ()
-    print (f"___ Hierarchy ___{(build_hierarchy (main_container))}")
+    print (“◦_◦_◦_◦ ◦H◦i◦e◦r◦a◦r◦c◦h◦y◦ ◦_◦_◦_⎨(build_hierarchy (main_container))⎬”)
 }
 
 defn build_hierarchy (c) {
     deftemp s ⇐ ""
     for child in c.children{
-        s ⇐ f"{s}{build_hierarchy (child)}"}
+        s ⇐ “⎨s⎬⎨build_hierarchy (child)⎬”}
     deftemp indent ⇐ ""
     for i in range (c.depth){
         indent ⇐ indent + "  "}
-    return f"\n{indent}({c.name}{s})"
+    return “◦\◦n⎨indent⎬◦(⎨c.name⎬⎨s⎬◦)”
 }
 
 defn dump_connections (c) {
     print ()
-    print (f"___ connections ___")
+    print (“◦_◦_◦_◦ ◦c◦o◦n◦n◦e◦c◦t◦i◦o◦n◦s◦ ◦_◦_◦_”)
     dump_possible_connections (c)
     for child in c.children{
         print ()
@@ -1448,7 +1432,7 @@ defvar rand ⇐ 0
 defn fakepipename_handler (eh, msg) {
     global rand
     rand ⇐ rand + 1 # not very random, but good enough _ 'rand' must be unique within a single run
-    send_string (eh, "", f"/tmp/fakepipe{rand}", msg)
+    send_string (eh, "", “◦/◦t◦m◦p◦/◦f◦a◦k◦e◦p◦i◦p◦e⎨rand⎬”, msg)
 }
 
 defobj OhmJS_Instance_Data () {
@@ -1467,7 +1451,7 @@ defn ohmjs_instantiate (reg, owner, name, template_data) {
 
 defn ohmjs_maybe (eh, inst, causingMsg) {
     if ϕ != inst.pathname_0D_ and ϕ != inst.grammar_name and ϕ != inst.grammar_filename and ϕ != inst.semantics_filename and ϕ != inst.s{
-        cmd ≡ [f"{inst.pathname_0D_}/std/ohmjs.js", f"{inst.grammar_name}", f"{inst.grammar_filename}", f"{inst.semantics_filename}"]
+        cmd ≡ [“⎨inst.pathname_0D_⎬◦/◦s◦t◦d◦/◦o◦h◦m◦j◦s◦.◦j◦s”, “⎨inst.grammar_name⎬”, “⎨inst.grammar_filename⎬”, “⎨inst.semantics_filename⎬”]
         [captured_output, err] ≡ run_command (eh, cmd, inst.s)
 
         if err = ϕ{
@@ -1502,7 +1486,7 @@ defn ohmjs_handle (eh, msg) {
         inst.s ⇐ clone_string (msg.datum.srepr ())
         ohmjs_maybe (eh, inst, msg)}
     else{
-        emsg ≡ f"!!! ERROR: OhmJS got an illegal message port {msg.port}"
+        emsg ≡ “◦!◦!◦!◦ ◦E◦R◦R◦O◦R◦:◦ ◦O◦h◦m◦J◦S◦ ◦g◦o◦t◦ ◦a◦n◦ ◦i◦l◦l◦e◦g◦a◦l◦ ◦m◦e◦s◦s◦a◦g◦e◦ ◦p◦o◦r◦t◦ ⎨msg.port⎬”
         send_string (eh, "✗", emsg, msg)}
 }
 
@@ -1538,7 +1522,7 @@ defn run (pregistry, root_project, root_0D, arg, main_container_name, diagram_so
     # get entrypoint container
     deftemp main_container ⇐ get_component_instance(pregistry, main_container_name, owner ∷ ϕ)
     if ϕ = main_container{
-        load_error (f"Couldn't find container with page name {main_container_name} in files {diagram_source_files} (check tab names, or disable compression?)")}
+        load_error (“◦C◦o◦u◦l◦d◦n◦'◦t◦ ◦f◦i◦n◦d◦ ◦c◦o◦n◦t◦a◦i◦n◦e◦r◦ ◦w◦i◦t◦h◦ ◦p◦a◦g◦e◦ ◦n◦a◦m◦e◦ ⎨main_container_name⎬◦ ◦i◦n◦ ◦f◦i◦l◦e◦s◦ ⎨diagram_source_files⎬◦ ◦(◦c◦h◦e◦c◦k◦ ◦t◦a◦b◦ ◦n◦a◦m◦e◦s◦,◦ ◦o◦r◦ ◦d◦i◦s◦a◦b◦l◦e◦ ◦c◦o◦m◦p◦r◦e◦s◦s◦i◦o◦n◦?◦)”)}
     if show_hierarchy{
         dump_hierarchy (main_container)}
     if show_connections{
@@ -1556,6 +1540,7 @@ defn run (pregistry, root_project, root_0D, arg, main_container_name, diagram_so
     if show_all_outputs{
         print ("___ done ___")}
 }
+
 
 
 

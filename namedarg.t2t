@@ -1,0 +1,35 @@
+% grammar namedarg
+
+main = pattern+
+
+pattern =
+  | call -- call
+  | any -- default
+
+call = ident spaces "(" stuff* ")"
+
+stuff =
+  | "(" stuff* ")" -- nested
+  | "=" -- eq
+  | ~")" any -- default
+  
+ident = firstc restc*
+firstc = letter | "_"
+restc = alnum | "_"
+
+
+% rewrite
+main [p+] = ‛«p»’
+
+pattern_call [x] = ‛«x»’
+pattern_default [x] = ‛«x»’
+
+call [id _ws2 lp stuff* rp] = ‛«id»«_ws2»«lp»«stuff»«rp»’
+
+stuff_nested [lp s* rp] = ‛«lp»«s»«rp»’
+stuff_eq [x] = ‛ ∷ ’
+stuff_default [x] = ‛«x»’
+
+ident [f r*] = ‛«f»«r»’
+firstc [c] = ‛«c»’
+restc [c] = ‛«c»’

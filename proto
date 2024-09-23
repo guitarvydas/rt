@@ -1,0 +1,69 @@
+
+defclass Datum {
+  .data = ϕ
+  .clone = ϕ
+  .reclaim = ϕ
+  .srepr = ϕ
+  .kind = ϕ
+  .raw = ϕ
+}
+
+---- python ----
+defclass Datum:
+    def __init__ (self):
+        self.data = None
+        self.clone = None
+        self.reclaim = None
+        self.srepr = None
+        self.kind = None
+        self.raw = None
+
+
+---- cl ----
+(defun new-Datum () (list (cons 'data nil) (cons 'clone nil) (cons 'reclaim nil) (cons srepr nil) (cons kind nil) (cons 'raw nil)))
+
+------
+
+defclass Sender (name, component, port) {
+    .name = name
+    .component = component # from
+    .port = port # from's port
+    }
+
+defclass Sender:
+    def __init__ (self, name component, port):
+        self.name = name
+	self.component = component
+	self.port = port
+
+(defun new-Sender (name component port)
+  (list (cons 'name name) (cons 'component component) (cons 'port port)))
+
+------
+
+        print (f"{container.name}: message '{message.port}' from {fromname} dropped on floor...")
+    return f"₊{n}"
+    print (f"*** Error fmt_forward {desc}")
+        print (f"File not found: {filename}")
+            instance_name = f"{template_name}"
+    eh.name = f"{owner.name}.{name}"
+
+“owner.name.srepr () :: "." :: name.srepr ()”
+(format nil "~a.~a" (name owner) name)
+*** --> need pre-pass to convert all f"..." to :: style strings
+
+---
+
+*** rewrite x != y --> not (x == y)
+
+---
+
+The culmination of FP is: text-to-text transpilation. "t2t" is just another way of saying "referential transparency". In hardware design, there is yet another phrase that means the same thing "pin for pin combatibility".
+
+All of the rules and restrictions lead to t2t. If you separate t2t out of a PL, you get something quite simple (Microsoft Word is almost good enough (but not quite), Lisp macros are closer but they don't work with text unless you convert the text into lists and atoms).
+
+When you force-fit t2t into a PL, you get bloatware and gotchas that spawn ad-hoc hacks (like "priority inheritance", spawned by the Mars Pathfinder fiasco).
+
+Force-fitting bits of technology into one big blog, called a programming language, looks at first like a good idea, but, it breaks down when the blob becomes too big and complicated and acquires too many hacks (kinda like emacs :-).
+
+What did we learn from Unix? Normalization - everything must look like a pipe, even hardware devices. Do we see that lesson played out in our programming languages and IDEs? VSCode makes it painful to redirect stdin and stdout. Plumbing partial solutions together with FIFOs is not supported - you are encouraged to use LIFOs (which hurt plumb-ability).

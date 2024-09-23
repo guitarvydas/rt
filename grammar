@@ -1,64 +1,70 @@
-rt {
+% grammar rt 
+
   Main = TopLevel+
   TopLevel =
     | Defvar -- defvar
+    | Defconst -- defconst
     | Defn -- defn
-    | Defclass -- defclass
+    | Defobj -- defobj
     | Import -- import
 
    kw<s> = s ~identTail
 
-   Defvar = kw<"defvar"> Assignment
+   Defvar = kw<"defvar"> Lval "⇐" Exp
+   Defconst = kw<"defconst"> Lval "≡" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
-   Defclass = kw<"defclass"> ident "{" Definit "}"
+   Defobj = kw<"defobj"> ident ObjFormals "{" InitStatement+ "}"
    Import = kw<"import"> ident
 
-   StatementBlock = "{" Statement+ "}"
+   StatementBlock = "{" Rec_Statement "}"
 
-   Definit = kw<"definit"> "(" kw<"self"> ":" ident CommaFormal* ")" "{" InitStatement+ "}"
-
-   Statement =
-     | kw<"global"> ident CommaIdent* -- globals
-     | IfStatement -- if
-     | kw<"pass"> -- pass
+   Rec_Statement =
+     | Deftemp -- deftemp
+     | Defsynonym -- defsynonym     
+     | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
+     | IfStatement  -- if
+     | kw<"pass"> Rec_Statement? -- pass
      | kw<"return"> ReturnExp -- return
      | ForStatement -- for
-     | WhileStatement -- while
+     | WhileStatement  -- while
      | TryStatement -- try
      | Assignment -- assignment
-     | Lval  -- call
+     | Lval Rec_Statement? -- call
    CommaIdent = "," ident
 
-   InitStatement = kw<"self"> "." ident "=" Exp
+   Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
+   Defsynonym = Lval "≡" Exp Rec_Statement?
 
-   IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement?
+   InitStatement = "•" ident "⇐" Exp
+
+   IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
    ElseStatement = kw<"else"> StatementBlock
 
-   ForStatement = kw<"for"> ident kw<"in"> Exp StatementBlock
-   WhileStatement = kw<"while"> Exp StatementBlock
+   ForStatement = kw<"for"> ident kw<"in"> Exp StatementBlock Rec_Statement?
+   WhileStatement = kw<"while"> Exp StatementBlock Rec_Statement?
 
-   TryStatement = kw<"try"> StatementBlock ExceptBlock+
+   TryStatement = kw<"try"> StatementBlock ExceptBlock+ Rec_Statement?
    ExceptBlock =
      | kw<"except"> Exp kw<"as"> ident StatementBlock -- as
      | kw<"except"> ident StatementBlock -- basic
    
    Assignment = 
-     | Lval "+=" Exp -- pluseq
-     | "[" Lval CommaLval+ "]" "=" Exp -- multiple
-     | Lval "=" Exp -- single
+     | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
+     | Lval "⇐" Exp Rec_Statement? -- single
 
    CommaLval = "," Lval
 
     ReturnExp =
-      | "[" Exp CommaExp+ "]" -- multiple
-      | Exp -- single
+      | "[" Exp CommaExp+ "]" Rec_Statement? -- multiple
+      | Exp Rec_Statement? -- single
 
     CommaExp = "," Exp
     
     Exp =  BooleanExp
 
     BooleanExp =
+      | BooleanExp boolNeq BooleanNot -- boolopneq
       | BooleanExp boolOp BooleanNot -- boolop
       | BooleanNot -- basic
 
@@ -77,41 +83,62 @@ rt {
       | ExpExp -- basic
 
     ExpExp =
-      | PriExp "^" ExpExp  -- power
-      | PriExp -- basic
+      | Primary "^" ExpExp  -- power
+      | Primary -- basic
 
-    PriExp =
-      | "(" Exp ")"  -- paren
+    Primary =
+      | Primary "@" ident -- lookupident
+      | Primary "@" Primary -- lookup
+      | Primary "." ident -- field
+      | Primary "[" Exp "]" -- index
+      | Primary "[" digit+ ":" "]" -- nthslice
+      | ident Actuals -- identcall
+      | Primary Actuals -- call
+      | Atom -- atom
+
+    Atom =
       | "[" "]" -- emptylistconst
-      | "[" PriExpComma+ "]" -- listconst
       | "{" "}" -- emptydict
+      | "(" Exp ")" -- paren
+      | "[" PrimaryComma+ "]" -- listconst
       | "{" PairComma+ "}" -- dict
       | "λ" LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
-      | "+" PriExp   -- pos
-      | "-" PriExp   -- neg
+      | kw<"car"> "(" Exp ")" -- car
+      | kw<"cdr"> "(" Exp ")" -- cdr
+      | kw<"argvcdr"> "(" digit ")" -- nthargvcdr
+      | kw<"nthargv"> "(" digit ")" -- nthargv
+      | kw<"stringcdr"> "(" Exp ")" -- stringcdr
+      | kw<"strcons"> "(" Exp "," Exp ")" -- strcons
+      | "+" Primary -- pos
+      | "-" Primary -- neg
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
       | kw<"range"> "(" Exp ")" -- range
       | string -- string
       | number -- number
-      | ident PrimaryTail -- identwithtail
       | ident -- ident
 
-    PriExpComma = PriExp ","?
+
+
+    PrimaryComma = Primary ","?
     PairComma = Pair ","?
     
-    Lval = Exp PrimaryTail?
+    Lval = Exp
+
+
+
 
 
     keyword = (
         kw<"fresh">
+      | kw<"defconst">
+      | kw<"deftemp">
+      | kw<"defobj">
       | kw<"defvar">
       | kw<"defn">
-      | kw<"defclass">
-      | kw<"definit">
-      | kw<"self">
+      | "•"
       | kw<"useglobal">
       | kw<"pass">
       | kw<"return">
@@ -130,6 +157,13 @@ rt {
       | kw<"try">
       | kw<"except">
       | kw<"as">
+      | kw<"λ">
+      | kw<"car">
+      | kw<"cdr">
+      | kw<"stringcdr">
+      | kw<"argvcdr">
+      | kw<"nthargv">
+      | kw<"strcons">
       )
       
     ident  = ~keyword identHead identTail*
@@ -140,11 +174,17 @@ rt {
     Formals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
+    ObjFormals =
+      | "(" ")" -- noformals
+      | "(" Formal CommaFormal* ")" -- withformals
     LambdaFormals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
 
-    Formal = ident ("=" Exp)?
+    Formal = 
+       | ident "∷" Exp -- defaultvalue
+       | ident -- plain
+       
     CommaFormal = "," Formal
     
     Actuals = 
@@ -154,34 +194,19 @@ rt {
    Actual = ParamName? Exp
    CommaActual = "," Actual
 
-   ParamName = ident "="
+   ParamName = ident "∷"
 
     number =
       | digit* "." digit+  -- fract
       | digit+             -- whole
 
     Pair = string ":" Exp ","?
-
-  PrimaryTail =
-    | MethodCall PrimaryTail? -- methodcall
-    | OffsetRef PrimaryTail? -- offsetref
-    | FieldLookup PrimaryTail? -- lookup
-    | Slice PrimaryTail? -- slice
-
-  MethodCall = Actuals
   
-  OffsetRef = "." ident
 
-  FieldLookup =
-    | "[" "0" "]" -- slicefirst
-    | "[" Exp "]" -- lookup
+  boolOp = (boolEq | boolNeq | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">)
+  boolEq = "="
+  boolNeq = "!="
 
-  Slice =
-    | "[" ":" "]" -- slicewhole
-    | "[" "1" ":" "]" -- slicerest
-    | "[" digit+ ":" "]" -- nthslice
-
-  boolOp = ("==" | "!=" | "<=" | ">=" | ">" | "<" | kw<"and"> | kw<"or"> | kw<"in">) 
   phi = "ϕ"
   string =
     | "f\"" notdq* "\"" -- fdqstring
@@ -196,5 +221,3 @@ rt {
   nl = "\n"
   notnl = ~nl any
   space += comment
-
-}
