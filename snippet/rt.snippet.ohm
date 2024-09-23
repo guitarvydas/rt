@@ -1,0 +1,30 @@
+    PriExp =
+      | "(" Exp ")"  -- paren
+      | Exp "." ident Actuals -- methodcall
+      | Exp "." PriExp -- rec
+      | Exp "@" ident Actuals -- dictlookup
+      | Exp Actuals -- functioncall
+      | Exp "[" ":" "]" -- slicewhole
+      | Exp "[" "0" "]" -- top
+      | Exp "[" "1" ":" "]" -- slicerest
+      | Exp "[" digit+ ":" "]" -- slicenth
+      | Exp "[" Exp "]" -- indexed
+      | "[" PriExpComma+ "]" -- listconst
+      | "{" PairComma+ "}" -- dict
+      | "+" Exp   -- pos
+      | "-" Exp   -- neg
+      | "[" "]" -- emptylistconst
+      | "{" "}" -- emptydict
+      | "λ" LambdaFormals? ":" Exp -- lambda
+      | kw<"fresh"> "(" ident ")" -- fresh
+      | phi -- phi
+      | "⊤" -- true
+      | "⊥" -- false
+      | kw<"range"> "(" Exp ")" -- range
+      | string -- string
+      | number -- number
+      | ident -- ident
+
+
+
+

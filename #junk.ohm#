@@ -1,0 +1,15 @@
+  PrimaryTail =
+    | "@" ident PrimaryTail? -- dictlookup
+    | MethodCall PrimaryTail? -- methodcall
+    | OffsetRef PrimaryTail? -- offsetref
+    | FieldLookup PrimaryTail? -- lookup
+    | Slice PrimaryTail? -- slice
+
+  FieldLookup =
+    | "[" "0" "]" -- slicefirst
+    | "[" Exp "]" -- lookup
+
+  Slice =
+    | "[" ":" "]" -- slicewhole
+    | "[" "1" ":" "]" -- slicerest
+    | "[" digit+ ":" "]" -- nthslice

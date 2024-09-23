@@ -21,7 +21,7 @@ def start_function (root_project, root_0D, arg, main_container):
 ## Leaf components for this project...
 def components_to_include_in_project (root_project, root_0D, reg):
     pass
-#     register_component (reg, Template (name = "Decode", instantiator = decode))
+#     register_component (reg, Template ("Decode", ϕ, decode))
 
 
 

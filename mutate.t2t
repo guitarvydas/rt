@@ -1,0 +1,26 @@
+% grammar remmutate
+
+main = pattern+
+
+pattern =
+  | mutate -- mutate
+  | any -- default
+
+mutate = ident "." ident spaces "=" 
+
+ident = firstc restc*
+firstc = letter | "_"
+restc = alnum | "_"
+
+
+% rewrite
+main [p+] = ‛«p»’
+
+pattern_mutate [d] = ‛«d»’
+pattern_default [x] = ‛«x»’
+
+mutate [id1 _dot id2 ws eq] = ‛«id1».«id2»«ws»⇐’
+
+ident [f r*] = ‛«f»«r»’
+firstc [c] = ‛«c»’
+restc [c] = ‛«c»’
