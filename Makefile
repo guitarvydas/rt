@@ -6,13 +6,13 @@ D2J=./das2json/mac/das2json
 
 dev: python
 
-commonlisp: 0D2cl.mjs support.mjs
+commonlisp: 0D2cl.mjs support.mjs ${SRC}
 	${D2J} cl-t2t.drawio
 	${D2J} 0D/python/std/transpile.drawio
 	python3 main.py . 0D/python ${SRC} main cl-t2t.drawio.json transpile.drawio.json >rtcl0d.lisp
 	cat rtcl0d.lisp
 
-python: 0D2py.mjs support.mjs t2t.mjs preprocess
+python: 0D2py.mjs support.mjs t2t.mjs ${SRC}
 	${D2J} py-t2t.drawio
 	${D2J} 0D/python/std/transpile.drawio
 	python3 main.py . 0D/python ${SRC}.optimized main py-t2t.drawio.json transpile.drawio.json >rtpy0d.py
@@ -40,12 +40,6 @@ t2t.mjs : ../t2t/t2t.mjs
 support.mjs : ../t2t/support.mjs
 	cp ../t2t/support.mjs .
 
-
-preprocess: t2t.mjs fmtstring.t2t
-	node t2t.mjs <fmtstring.t2t >preprocess.mjs
-	node t2t.mjs <fmtpeephole.t2t >peephole.mjs
-	node preprocess.mjs <${SRC} >${SRC}.preprocessed
-	node peephole.mjs <${SRC}.preprocessed >${SRC}.optimized
 
 #########
 
