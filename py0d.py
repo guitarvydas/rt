@@ -1262,7 +1262,7 @@ def parse_command_line_args ():
         diagram_source_files = sys.argv [5:]
         return [root_project, root_0D, arg, main_container_name, diagram_source_files]
 
-def initialize_component_palette (root_project, root_0D, diagram_source_files, project_specific_components_subroutine):
+def initialize_component_palette (root_project, root_0D, diagram_source_files):
     reg = make_component_registry ()
     for diagram_source in diagram_source_files:
         all_containers_within_single_file = json2internal (diagram_source)
@@ -1270,7 +1270,6 @@ def initialize_component_palette (root_project, root_0D, diagram_source_files, p
         for container in all_containers_within_single_file:
             register_component (reg, Template (name=container ['name'] , template_data=container, instantiator=container_instantiator))
     initialize_stock_components (reg)
-    project_specific_components_subroutine (root_project, root_0D, reg) # add user specified components (probably only leaves)
     return reg
 
 
@@ -1426,11 +1425,26 @@ def initialize_stock_components (reg):
     # register_component (reg, string_constant ("RWR"))
     # register_component (reg, string_constant ("0d/python/std/rwr.ohm"))
     # register_component (reg, string_constant ("0d/python/std/rwr.sem.js"))
-def run (pregistry, root_project, root_0D, arg, main_container_name, diagram_source_files, injectfn,
-              show_hierarchy=True, show_connections=True, show_traces=True, show_all_outputs=True):
-    set_environment (root_project, root_0D)
+
+def initialize ():
+    arg_array = parse_command_line_args ()
+    root_of_project = arg_array [0] 
+    root_of_0D = arg_array [1]
+    arg = arg_array [2]
+    main_container_name = arg_array [3]
+    diagram_names = arg_array [4]
+    palette = initialize_component_palette (root_project, root_0D, diagram_names)
+    return [palette, [root_of_project, root_of_0D, main_container_name, diagram_names, arg]]
+
+def start (palette, env, show_hierarchy=False, show_connections=False, show_traces=False, show_all_outputs=False):
+    root_of_project = env [0]
+    root_of_0D = env [1]
+    main_container_name = env [2]
+    diagram_names = env [3]
+    arg = env [4]
+    set_environment (root_of_project, root_of_0D)
     # get entrypoint container
-    main_container = get_component_instance(pregistry, main_container_name, owner=None)
+    main_container = get_component_instance(palette, main_container_name, owner=None)
     if None == main_container:
         load_error (f"Couldn't find container with page name {main_container_name} in files {diagram_source_files} (check tab names, or disable compression?)")
     if show_hierarchy:
@@ -1438,15 +1452,17 @@ def run (pregistry, root_project, root_0D, arg, main_container_name, diagram_sou
     if show_connections:
         dump_connections (main_container)
     if not load_errors:
-        injectfn (root_project, root_0D, arg, main_container)
-    if show_all_outputs:
-        dump_outputs (main_container)
-    else:
-        print_error_maybe (main_container)
-        print_specific_output (main_container, port="", stderr=False)
-    if show_traces:
-        print ("--- routing traces ---")
-        print (routing_trace_all (main_container))
-    if show_all_outputs:
-        print ("--- done ---")
+        arg = new_datum_string (arg)
+        msg = make_message("", arg)
+        inject (main_container, msg)
+        if show_all_outputs:
+            dump_outputs (main_container)
+        else:
+            print_error_maybe (main_container)
+            print_specific_output (main_container, port="", stderr=False)
+            if show_traces:
+                print ("--- routing traces ---")
+                print (routing_trace_all (main_container))
+        if show_all_outputs:
+            print ("--- done ---")
 
