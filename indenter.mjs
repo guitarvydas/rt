@@ -16,8 +16,8 @@ function indenter (str) {
  // lisp pretty-printing, which allows easier debugging of the transpiled code
  // then, for Python, we convert the bracketing into indentation...
  function indent1 (s) {
-     let opens = (s.match (/\(/g) || []).length;
-     let closes = (s.match (/\)/g) || []).length;
+   let opens = (s.match (/⤷/g) || []).length;
+   let closes = (s.match (/⤶/g) || []).length;
      // let r0 = s.trim ();
      let r0 = s;
    let r1 = r0.replace (/⤷/g, '');
@@ -27,7 +27,7 @@ function indenter (str) {
    let diff = opens - closes;
    if (diff > 0) {
        while (diff > 0) {
-           indentation.push ('  ');
+           indentation.push ('    ');
            diff -=1;
        }
    } else {
@@ -39,7 +39,7 @@ function indenter (str) {
    return r;
  }
 
-let fs = require('fs');
+import * as fs from 'fs';
 let inp = fs.readFileSync(0, 'utf-8');
 let outp = indenter (inp);
 console.log (outp);

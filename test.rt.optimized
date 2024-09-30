@@ -1,6 +1,0 @@
-defn h (c) {
-    s ⇐ strcons (s, b(c))
-    return strcons ("\n", strcons (i, strcons ("(", strcons (c.n, strcons (s, ")")))))
-}
-
-

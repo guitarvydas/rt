@@ -1,4 +1,4 @@
-% grammar rt 
+rt {
 
   Main = TopLevel+
   TopLevel =
@@ -221,3 +221,5 @@
   nl = "\n"
   notnl = ~nl any
   space += comment
+
+}

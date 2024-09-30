@@ -1,0 +1,17 @@
+internalize {
+  text = char+
+  char =
+    | dq (~dq any)* dq -- string
+    | "//" (~nl any)* nl -- comment
+    | "❲" wordchar+ "❳" -- word
+    | id -- ident
+    | ~"❲" ~"❳" any -- any
+
+  wordchar =
+    | "❲" wordchar+ "❳" -- rec
+    | ~"❲" ~"❳" any -- bottom
+
+  id = (letter | "_") (letter | digit | "_")*
+  dq = "\""
+  nl = "\n"
+}
