@@ -1561,3 +1561,14 @@ defn start (palette, env, show_hierarchy∷False, show_connections∷False, show
 
 
 
+⌈ utility functions ⌉
+defn send_int (eh, port, i, causing_message) {
+    datum ≡ new_datum_int (i)
+    send (eh, port, datum, causing_message)
+}
+
+defn send_bang (eh, port, causing_message) {
+    datum ≡ new_datum_bang ()
+    send (eh, port, datum, causing_message)            
+}
+  
