@@ -1,6 +1,19 @@
-defn gensym (s) {
-    global counter
-    name_with_id ≡ strcons (s, subscripted_digit (counter))
-    counter ⇐ counter + 1
-    return name_with_id
+defobj Datum () {
+      • data ⇐ ϕ
+      • clone ⇐ ϕ
+      • reclaim ⇐ ϕ
+      • srepr ⇐ ϕ
+      • kind ⇐ ϕ
+      • raw ⇐ ϕ
 }
+defn new_datum_string (s) {
+    d ≡ fresh (Datum)
+    d.data ⇐ s
+    d.clone ⇐ λ: clone_datum_string (d)
+    d.reclaim ⇐ λ: reclaim_datum_string (d)    
+    d.srepr ⇐ λ: srepr_datum_string (d)
+    d.raw ⇐ λ: raw_datum_string (d)    
+    d.kind ⇐ λ: "string"
+    return d
+}
+

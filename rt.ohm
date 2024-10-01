@@ -100,7 +100,7 @@ rt {
       | "(" Exp ")" -- paren
       | "[" PrimaryComma+ "]" -- listconst
       | "{" PairComma+ "}" -- dict
-      | "λ" LambdaFormals? ":" Exp -- lambda
+      | lambda LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
       | kw<"car"> "(" Exp ")" -- car
       | kw<"cdr"> "(" Exp ")" -- cdr
@@ -161,7 +161,6 @@ rt {
   boolEq = "="
   boolNeq = "!="
 
-  phi = "ϕ"
   string = "“" stringchar* "”"
   stringchar = 
     | "“" stringchar* "”" -- rec
@@ -190,15 +189,19 @@ rt {
       | kw<"try">
       | kw<"except">
       | kw<"as">
-      | kw<"λ">
       | kw<"car">
       | kw<"cdr">
       | kw<"stringcdr">
       | kw<"argvcdr">
       | kw<"nthargv">
       | kw<"strcons">
+      | lambda
+      | phi
       )
       
+  lambda = "λ" | kw<"%CE%BB">
+  phi = "ϕ" | kw<"%CF%95">
+
   kw<s> = "❲" s "❳"
   ident  = ~keyword "❲" idchar+ "❳"
   idchar =
