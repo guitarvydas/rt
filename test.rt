@@ -1,4 +1,5 @@
-defn h (c) {
-    s ⇐ f"{s}{b(c)}"
-    return f"\n{i}({c.n}{s})"
+defn test () {
+    for child_desc in desc@children {
+        f (x)
+    }
 }

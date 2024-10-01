@@ -1010,7 +1010,7 @@ def probeC_instantiate (reg, owner, name, template_data):
 
 def probe_handler (eh, msg):
     s = msg.datum.srepr ()
-    print (f"... probe {eh.name}: {s}", file=sys.stderr)
+    print (f"\x1B[31mprobe {eh.name}:\x1B[0m {s}", file=sys.stderr)
 
     
 def trash_instantiate (reg, owner, name, template_data):      
@@ -1413,7 +1413,7 @@ def initialize_stock_components (reg):
     register_component (reg, Template ( name = "?C", instantiator = probeC_instantiate))
     register_component (reg, Template ( name = "trash", instantiator = trash_instantiate))
 
-    register_component (reg, Template ( name = "Low Level Read Text File", instantiator = low_level_read_text_file_instantiate))
+    register_component (reg, Template ( name = "Read Text File", instantiator = low_level_read_text_file_instantiate))
     register_component (reg, Template ( name = "Ensure String Datum", instantiator = ensure_string_datum_instantiate))
 
     register_component (reg, Template ( name = "syncfilewrite", instantiator = syncfilewrite_instantiate))
