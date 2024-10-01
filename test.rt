@@ -1,11 +1,9 @@
-defobj Connector () {
-        • direction ⇐ ϕ ⌈ down, across, up, through⌉
-        • sender ⇐ ϕ
-        • receiver ⇐ ϕ
-}
-
-defn raw_datum_string (d) {
-    set_environment (root_project, root_0D)
-    ⌈ get entrypoint container⌉
-  return bytearray (d.data,“UTF_8”)
+defn initialize () {
+    root_of_project ≡ nthargv (0) 
+    root_of_0D ≡ nthargv (1)
+    arg ≡ nthargv (2)
+    main_container_name ≡ nthargv (3)
+    diagram_names ≡ nthargv (4)
+    palette ≡ initialize_component_palette (root_project, root_0D, diagram_names)
+    return [palette, [root_of_project, root_of_0D, main_container_name, diagram_names, arg]]
 }
