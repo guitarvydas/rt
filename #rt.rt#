@@ -1574,11 +1574,6 @@ defn initialize_stock_components (reg) {
     register_component (reg, Template ( "stringconcat", ϕ, stringconcat_instantiate))
     # for fakepipe
     register_component (reg, Template ( "fakepipename", ϕ, fakepipename_instantiate))
-    # for transpiler (ohmjs)
-    register_component (reg, Template ( "OhmJS", ϕ, ohmjs_instantiate))
-    # register_component (reg, ϕ, string_constant ("RWR"))
-    # register_component (reg, ϕ, string_constant ("0d/python/std/rwr.ohm"))
-    # register_component (reg, ϕ, string_constant ("0d/python/std/rwr.sem.js"))
 }
 
 defn run (pregistry, root_project, root_0D, arg, main_container_name, diagram_source_files, injectfn,

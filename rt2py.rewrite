@@ -7,6 +7,8 @@ TopLevel_defconst [ Defconst] =‛«Defconst»’
 TopLevel_defn [ Defn] =‛«Defn»’
 TopLevel_defobj [ Defobj] =‛«Defobj»’
 TopLevel_import [ Import] =‛«Import»’
+TopLevel_comment [s] =‛«s»’
+
 kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e] = ‛\n«lval» = «e»’
 Defconst [ __ lval _eq e] = ‛\n«lval» = «e»’
@@ -17,6 +19,7 @@ StatementBlock [ _11 Statement _12] = ‛⤷«Statement»⤶\n’
 
 Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
 CommaIdent [_comma ident] = ‛, «ident»’
+Rec_Statement_comment [s rec?] =‛\n«s»«rec»’
 Rec_Statement_if [ IfStatement] =‛«IfStatement»’
 Rec_Statement_pass [ _27 scope?] =‛\npass«scope»’
 Rec_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
@@ -30,7 +33,7 @@ Deftemp [_deftemp lval _mutate e rec?] = ‛\n«lval» = «e»«rec»’
 Defsynonym [ lval _eqv e rec?] = ‛\n«lval» = «e»«rec»’
 
 
-InitStatement [ _mark ident _33 Exp] = ‛\nself.«ident» = «Exp»’
+InitStatement [ _mark ident _33 Exp cmt? ] = ‛\nself.«ident» = «Exp» «cmt»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛elif «Exp»:«StatementBlock»’
 ElseStatement [ _39 StatementBlock] = ‛else:«StatementBlock»’

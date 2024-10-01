@@ -338,6 +338,10 @@
             {
                 "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
                 "id": 5
+            },
+            {
+                "name": "?A",
+                "id": 10
             }
         ],
         "connections": [
@@ -355,15 +359,15 @@
                 "target_port": ""
             },
             {
-                "dir": 2,
+                "dir": 1,
                 "source": {
                     "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
                     "id": 5
                 },
                 "source_port": "",
                 "target": {
-                    "name": "",
-                    "id": 0
+                    "name": "?A",
+                    "id": 10
                 },
                 "target_port": ""
             },
@@ -379,6 +383,19 @@
                     "id": 0
                 },
                 "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
+                    "id": 5
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
             }
         ]
     },

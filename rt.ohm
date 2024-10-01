@@ -7,6 +7,7 @@ rt {
     | Defn -- defn
     | Defobj -- defobj
     | Import -- import
+    | comment -- comment
 
    Defvar = kw<"defvar"> Lval "⇐" Exp
    Defconst = kw<"defconst"> Lval "≡" Exp
@@ -17,6 +18,7 @@ rt {
    StatementBlock = "{" Rec_Statement "}"
 
    Rec_Statement =
+     | comment Rec_Statement? -- comment
      | Deftemp -- deftemp
      | Defsynonym -- defsynonym     
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
@@ -33,7 +35,7 @@ rt {
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
    Defsynonym = Lval "≡" Exp Rec_Statement?
 
-   InitStatement = "•" ident "⇐" Exp
+   InitStatement = "•" ident "⇐" Exp comment?
 
    IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
@@ -212,7 +214,5 @@ rt {
   commentchar = 
     | "⌈" commentchar* "⌉" -- rec
     | ~"⌈" ~"⌉" any -- other
-    
-  space += comment
 
 }

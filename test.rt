@@ -1,3 +1,11 @@
+defobj Connector () {
+        • direction ⇐ ϕ ⌈ down, across, up, through⌉
+        • sender ⇐ ϕ
+        • receiver ⇐ ϕ
+}
+
 defn raw_datum_string (d) {
+    set_environment (root_project, root_0D)
+    ⌈ get entrypoint container⌉
   return bytearray (d.data,"UTF_8")
 }
