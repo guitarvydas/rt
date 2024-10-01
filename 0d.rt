@@ -509,7 +509,7 @@ defn fmt_inout (desc, indent) {
     if ϕ = outm {
         return strcons (“\n”, strcons (indent, “  ⊥”))
     } else {
-        return strcons (“\ny, 
+        return strcons (“\n”, 
                  strcons (indent,
 		   strcons (“  ∴ ”,
 		     strcons (desc@component.name,
