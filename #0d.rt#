@@ -1519,7 +1519,6 @@ defn initialize () {
     return [palette, [root_of_project, root_of_0D, main_container_name, diagram_names, arg]]
 }
 
-**************
 defn start (palette, env, show_hierarchy∷False, show_connections∷False, show_traces∷False, show_all_outputs∷False) {
     root_of_project ≡ env [0]
     root_of_0D ≡ env [1]
