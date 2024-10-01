@@ -1,15 +1,23 @@
 internalize {
   text = char+
   char =
-    | dq (~dq any)* dq -- string
-    | "#" (~nl any)* nl -- comment
+    | "“" stringchar* "”" -- string
+    | "⌈" commentchar* "⌉" -- comment
     | "❲" wordchar+ "❳" -- word
     | id -- ident
     | ~"❲" ~"❳" any -- any
 
+  stringchar =
+    | "“" stringchar+ "”" -- rec
+    | ~"“" ~"”" any -- other
+
+  commentchar =
+    | "⌈" commentchar+ "⌉" -- rec
+    | ~"⌈" ~"⌉" any -- other
+
   wordchar =
     | "❲" wordchar+ "❳" -- rec
-    | ~"❲" ~"❳" any -- bottom
+    | ~"❲" ~"❳" any -- other
 
   id = (letter | "_") (letter | digit | "_")*
   dq = "\""
