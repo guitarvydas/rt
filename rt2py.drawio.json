@@ -336,7 +336,7 @@
         "name": "RT to Python",
         "children": [
             {
-                "name": "$ node t2t.mjs rt.ohm rt2<br>py.rewrite -",
+                "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
                 "id": 5
             }
         ],
@@ -349,7 +349,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ node t2t.mjs rt.ohm rt2<br>py.rewrite -",
+                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
                     "id": 5
                 },
                 "target_port": ""
@@ -357,7 +357,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2<br>py.rewrite -",
+                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
                     "id": 5
                 },
                 "source_port": "",
@@ -370,7 +370,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2<br>py.rewrite -",
+                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
                     "id": 5
                 },
                 "source_port": "\u2717",

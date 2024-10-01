@@ -1,4 +1,4 @@
-% rewrite
+% rewrite rt {
 
 Main [ TopLevel+] = ‛«TopLevel»’
 
@@ -106,10 +106,6 @@ PrimaryComma [ Primary _94?] = ‛«Primary»«_94»’
 PairComma [ Pair _95?] = ‛«Pair»«_95»’
 Lval [ Exp ] = ‛«Exp»’
 keyword [ _144] = ‛«_144»’
-ident [ identHead identTail*] = ‛«identHead»«identTail»’
-identHead [ _146] = ‛«_146»’
-identTail [ _147] = ‛«_147»’
-
 Formals_noformals [ _148 _149] =‛«_148»«_149»’
 Formals_withformals [ _150 Formal CommaFormal* _151] =‛«_150»«Formal»«CommaFormal»«_151»’
 ObjFormals_noformals [ _148 _149] =‛’
@@ -135,14 +131,18 @@ boolEq [op] = ‛==’
 boolNeq [op] = ‛!=’
 phi [ _192] = ‛ None’
 
-string_fdqstring [ _193 notdq* _194] =‛«_193»«notdq»«_194»’
-string_fsqstring [ _195 notsq* _196] =‛«_195»«notsq»«_196»’
-string_dqstring [ _197 notdq* _198] =‛«_197»«notdq»«_198»’
-string_sqstring [ _199 notsq* _200] =‛«_199»«notsq»«_200»’
-notdq [ any] = ‛«any»’
-notsq [ any] = ‛«any»’
-comment [ _203 notnl* nl] = ‛«_203»«notnl»«nl»’
-nl [ _204] = ‛«_204»’
-notnl [ any] = ‛«any»’
-space [ comment] = ‛«comment»’
+string [lb cs* rb] = ‛«lb»«cs»«rb»’
+stringchar_rec [lb cs* rb] = ‛«lb»«cs»«rb»’
+stringchar_other [c] = ‛«c»’
 
+
+kw [lb s rb] = ‛«lb»«s»«rb»’
+ident [lb cs* rb] = ‛«lb»«cs»«rb»’
+idchar_rec [lb cs* rb] = ‛«lb»«cs»«rb»’
+idchar_other [c] = ‛«c»’
+
+comment [lb cs* rb] = ‛«lb»«cs»«rb»’
+commentchar_rec [lb cs* rb] = ‛«lb»«cs»«rb»’
+commentchar_other [c] = ‛«c»’
+
+}

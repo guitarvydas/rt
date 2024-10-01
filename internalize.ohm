@@ -2,7 +2,7 @@ internalize {
   text = char+
   char =
     | dq (~dq any)* dq -- string
-    | "//" (~nl any)* nl -- comment
+    | "#" (~nl any)* nl -- comment
     | "❲" wordchar+ "❳" -- word
     | id -- ident
     | ~"❲" ~"❳" any -- any

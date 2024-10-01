@@ -8,8 +8,6 @@ rt {
     | Defobj -- defobj
     | Import -- import
 
-   kw<s> = s ~identTail
-
    Defvar = kw<"defvar"> Lval "⇐" Exp
    Defconst = kw<"defconst"> Lval "≡" Exp
    Defn = kw<"defn"> ident Formals StatementBlock
@@ -127,50 +125,6 @@ rt {
     
     Lval = Exp
 
-
-
-
-
-    keyword = (
-        kw<"fresh">
-      | kw<"defconst">
-      | kw<"deftemp">
-      | kw<"defobj">
-      | kw<"defvar">
-      | kw<"defn">
-      | "•"
-      | kw<"useglobal">
-      | kw<"pass">
-      | kw<"return">
-      | kw<"if">
-      | kw<"elif">
-      | kw<"else">
-      | kw<"and">
-      | kw<"or">
-      | kw<"in">
-      | kw<"not">
-      | kw<"range">
-      | kw<"while">
-      | kw<"f\"">
-      | kw<"f'">
-      | kw<"import">
-      | kw<"try">
-      | kw<"except">
-      | kw<"as">
-      | kw<"λ">
-      | kw<"car">
-      | kw<"cdr">
-      | kw<"stringcdr">
-      | kw<"argvcdr">
-      | kw<"nthargv">
-      | kw<"strcons">
-      )
-      
-    ident  = ~keyword identHead identTail*
-
-    identHead = ( "_" | letter )
-    identTail = ( alnum | identHead )
-
     Formals =
       | "(" ")" -- noformals
       | "(" Formal CommaFormal* ")" -- withformals
@@ -208,18 +162,54 @@ rt {
   boolNeq = "!="
 
   phi = "ϕ"
-  string =
-    | "f\"" notdq* "\"" -- fdqstring
-    | "f'" notsq* "'" -- fsqstring
-    | "\"" notdq* "\"" -- dqstring
-    | "'" notsq* "'" -- sqstring
-  notdq = ~"\"" any
-  notsq = ~"'" any
+  string = "“" stringchar* "”"
+  stringchar = 
+    | "“" stringchar* "”" -- rec
+    | ~"“" ~"”" any -- other
 
+    keyword = (
+        kw<"fresh">
+      | kw<"defconst">
+      | kw<"deftemp">
+      | kw<"defobj">
+      | kw<"defvar">
+      | kw<"defn">
+      | kw<"useglobal">
+      | kw<"pass">
+      | kw<"return">
+      | kw<"if">
+      | kw<"elif">
+      | kw<"else">
+      | kw<"and">
+      | kw<"or">
+      | kw<"in">
+      | kw<"not">
+      | kw<"range">
+      | kw<"while">
+      | kw<"import">
+      | kw<"try">
+      | kw<"except">
+      | kw<"as">
+      | kw<"λ">
+      | kw<"car">
+      | kw<"cdr">
+      | kw<"stringcdr">
+      | kw<"argvcdr">
+      | kw<"nthargv">
+      | kw<"strcons">
+      )
+      
+  kw<s> = "❲" s "❳"
+  ident  = ~keyword "❲" idchar+ "❳"
+  idchar =
+    | "❲" idchar+ "❳" -- rec
+    | ~"❲" ~"❳" any -- other
 
-  comment = "#" notnl* nl
-  nl = "\n"
-  notnl = ~nl any
+  comment = "⌈" commentchar* "⌉"
+  commentchar = 
+    | "⌈" commentchar* "⌉" -- rec
+    | ~"⌈" ~"⌉" any -- other
+    
   space += comment
 
 }
