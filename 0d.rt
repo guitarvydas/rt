@@ -1500,60 +1500,6 @@ defn fakepipename_handler (eh, msg) {
     send_string (eh, “”, strcons (“/tmp/fakepipe”, rand), msg)
 }
 
-defobj OhmJS_Instance_Data () {
-        • pathname_0D_ ⇐ ϕ
-        • grammar_name ⇐ ϕ
-        • grammar_filename ⇐ ϕ
-        • semantics_filename ⇐ ϕ
-        • s ⇐ ϕ
-}
-
-defn ohmjs_instantiate (reg, owner, name, template_data) {
-    instance_name ≡ gensym (“OhmJS”)
-    inst ≡ OhmJS_Instance_Data () ⌈ all fields have zero value before any messages are received⌉
-    return make_leaf (instance_name, owner, inst, ohmjs_handle)
-}
-
-defn ohmjs_maybe (eh, inst, causingMsg) {
-    if ϕ != inst.pathname_0D_ and ϕ != inst.grammar_name and ϕ != inst.grammar_filename and ϕ != inst.semantics_filename and ϕ != inst.s{
-        cmd ≡ [strcons (inst.pathname_0D_, “/std/ohmjs.js”), inst.grammar_name, inst.grammar_filename, inst.semantics_filename]
-        [captured_output, err] ≡ run_command (eh, cmd, inst.s)
-
-        if err = ϕ{
-            err ≡ “”}
-        errstring ≡ trimws (err)
-        if len (errstring) = 0{
-            send_string (eh, “”, trimws (captured_output), causingMsg)}
-        else{
-            send_string (eh, “✗”, errstring, causingMsg)}
-        inst.pathname_0D_ ⇐ ϕ
-        inst.grammar_name ⇐ ϕ
-        inst.grammar_filename ⇐ ϕ
-        inst.semantics_filename ⇐ ϕ
-        inst.s ⇐ ϕ}
-}
-
-defn ohmjs_handle (eh, msg) {
-    deftemp inst ⇐ eh.instance_data
-    if msg.port = “0D path”{
-        inst.pathname_0D_ ⇐ clone_string (msg.datum.srepr ())
-        ohmjs_maybe (eh, inst, msg)}
-    elif msg.port = “grammar name”{
-        inst.grammar_name ⇐ clone_string (msg.datum.srepr ())
-        ohmjs_maybe (eh, inst, msg)}
-    elif msg.port = “grammar”{
-        inst.grammar_filename ⇐ clone_string (msg.datum.srepr ())
-        ohmjs_maybe (eh, inst, msg)}
-    elif msg.port = “semantics”{
-        inst.semantics_filename ⇐ clone_string (msg.datum.srepr ())
-        ohmjs_maybe (eh, inst, msg)}
-    elif msg.port = “input”{
-        inst.s ⇐ clone_string (msg.datum.srepr ())
-        ohmjs_maybe (eh, inst, msg)}
-    else{
-        emsg ≡ strcons (“!!! ERROR: OhmJS got an illegal message port ”, msg.port)
-        send_string (eh, “✗”, emsg, msg)}
-}
 
 ⌈ all of the the built_in leaves are listed here⌉
 ⌈ future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project⌉
