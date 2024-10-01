@@ -101,9 +101,9 @@ Atom_phi [ phi] =‛ None’
 Atom_true [ _88] =‛ True’
 Atom_false [ _89] =‛ False’
 Atom_range [ _91 _92 Exp _93] =‛«_91»«_92»«Exp»«_93»’
-Atom_string [ string] =‛«string»’
-Atom_number [ number] =‛«number»’
-Atom_ident [ ident ] =‛«ident»’
+Atom_string [ string] =‛ «string»’
+Atom_number [ number] =‛ «number»’
+Atom_ident [ ident ] =‛ «ident»’
 
 PrimaryComma [ Primary _94?] = ‛«Primary»«_94»’
 PairComma [ Pair _95?] = ‛«Pair»«_95»’
