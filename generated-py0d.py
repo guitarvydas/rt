@@ -590,18 +590,17 @@ class Template:
 
 def read_and_convert_json_file (filename):
     try:
-    
-        fil = open ( filename, "r")
-        json_data =  fil.read ()
-        routings =  json.loads ( json_data)
+        fil = open(filename, "r")
+        json_data = fil.read()
+        routings = json.loads(json_data)
         fil.close ()
-        return  routings
+        return routings 
     except FileNotFoundError:
-        print ( str( "File not found: ") +  filename )
-        return  None
-    except  json.JSONDecodeError as e:
-        print ( str( "Error decoding JSON in file: ") +  e )
-        return  None
+        print (f"File not found: '{filename}'")
+        return None
+    except json.JSONDecodeError as e:
+        print ("Error decoding JSON in file: '{e}'")
+        return None
     
 
 def json2internal (container_xml):
@@ -934,23 +933,18 @@ def low_level_read_text_file_instantiate (reg,owner,name,template_data):
 def low_level_read_text_file_handler (eh,msg):
     fname =  msg.datum.srepr ()
     try:
-    
-        f = open ( fname)
-    except  Exception as e:
-        f =  None
-    
-    if  f!= None:
-        data =  f.read ()
-        if  data!= None:
-            send_string ( eh, "", data, msg)
+        f = open (fname)
+    except Exception as e:
+        f = None
+    if f != None:
+        data = f.read ()
+        if data!= None:
+            send_string (eh, "", data, msg)
         else:
-            emsg =  str( "read error on file ") +  fname
-            send_string ( eh, "✗", emsg, msg)
-        
+            send_string (eh, "✗", f"read error on file '{fname}'", msg)
         f.close ()
     else:
-        emsg =  str( "open error on file ") +  fname
-        send_string ( eh, "✗", emsg, msg)
+        send_string (eh, "✗", f"open error on file '{fname}'", msg)
     
 
 def ensure_string_datum_instantiate (reg,owner,name,template_data):

@@ -836,19 +836,9 @@ defobj Template (name, template_data, instantiator) {
         • template_data ⇐ template_data
         • instantiator ⇐ instantiator
 }
+
 defn read_and_convert_json_file (filename) {
-    try {
-        fil ≡ open(filename, “r”)
-        json_data ≡ fil.read()
-        routings ≡ json.loads(json_data)
-	fil.close ()
-        return routings }
-    except FileNotFoundError {
-        print (strcons (“File not found: ”, filename))
-        return ϕ}
-    except json.JSONDecodeError as e {
-        print (strcons (“Error decoding JSON in file: ”, e))
-        return ϕ}
+    # read_and_convert_json_file (filename)
 }
 
 defn json2internal (container_xml) {

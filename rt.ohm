@@ -28,7 +28,6 @@ rt {
      | kw<"return"> ReturnExp -- return
      | ForStatement -- for
      | WhileStatement  -- while
-     | TryStatement -- try
      | Assignment -- assignment
      | Lval Rec_Statement? -- call
    CommaIdent = "," ident
@@ -49,11 +48,6 @@ rt {
    ForStatement = kw<"for"> ident kw<"in"> Exp StatementBlock Rec_Statement?
    WhileStatement = kw<"while"> Exp StatementBlock Rec_Statement?
 
-   TryStatement = kw<"try"> StatementBlock ExceptBlock+ Rec_Statement?
-   ExceptBlock =
-     | kw<"except"> Exp kw<"as"> ident StatementBlock -- as
-     | kw<"except"> ident StatementBlock -- basic
-   
    Assignment = 
      | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
      | Lval "⇐" Exp Rec_Statement? -- single
@@ -193,8 +187,6 @@ rt {
       | kw<"range">
       | kw<"while">
       | kw<"import">
-      | kw<"try">
-      | kw<"except">
       | kw<"as">
       | kw<"car">
       | kw<"cdr">
