@@ -20,6 +20,7 @@ StatementBlock [ _11 Statement _12] = ‛⤷«Statement»⤶\n’
 Rec_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
 CommaIdent [_comma ident] = ‛, «ident»’
 Rec_Statement_comment [s rec?] =‛\n«s»«rec»’
+Rec_Statement_macro [m] = ‛«m»’
 Rec_Statement_if [ IfStatement] =‛«IfStatement»’
 Rec_Statement_pass [ _27 scope?] =‛\npass«scope»’
 Rec_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
@@ -28,6 +29,23 @@ Rec_Statement_while [ WhileStatement] =‛«WhileStatement»’
 Rec_Statement_try [ TryStatement] =‛«TryStatement»’
 Rec_Statement_assignment [ Assignment] =‛«Assignment»’
 Rec_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
+
+Macro_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
+    try:⤷
+        f ≡ open («fname»)⤶
+    except Exception as e:⤷
+        f ≡ ϕ⤶
+    if f != ϕ:⤷
+        data ≡ f.read ()
+        if data!= ϕ:⤷
+            send_string (eh, «ok», data, «msg»)⤶
+        else:⤷
+            send_string (eh, «err», f“read error on file '«fname»'", «msg»)⤶
+        f.close ()⤶
+    else⤷
+        send_string (eh, «err», f“open error on file '«fname»'", «msg»)⤶
+’
+
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n«lval» = «e»«rec»’
 Defsynonym [ lval _eqv e rec?] = ‛\n«lval» = «e»«rec»’
@@ -147,5 +165,12 @@ idchar_other [c] = ‛«c»’
 comment [lb cs* rb] = ‛«lb»«cs»«rb»’
 commentchar_rec [lb cs* rb] = ‛«lb»«cs»«rb»’
 commentchar_other [c] = ‛«c»’
+
+eh [id] = ‛«id»’
+fname [id] = ‛«id»’
+msg [id] = ‛«id»’
+ok [p] = ‛«p»’
+err [p] = ‛«p»’
+port [s] = ‛«s»’
 
 }

@@ -19,6 +19,7 @@ rt {
 
    Rec_Statement =
      | comment Rec_Statement? -- comment
+     | Macro -- macro
      | Deftemp -- deftemp
      | Defsynonym -- defsynonym     
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
@@ -31,6 +32,9 @@ rt {
      | Assignment -- assignment
      | Lval Rec_Statement? -- call
    CommaIdent = "," ident
+
+   Macro =
+     | "#" "❲low_level_read_text_file_handler❳" "(" eh "," msg "," fname "," ok "," err ")" -- read
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
    Defsynonym = Lval "≡" Exp Rec_Statement?
@@ -215,4 +219,11 @@ rt {
     | "⌈" commentchar* "⌉" -- rec
     | ~"⌈" ~"⌉" any -- other
 
+  eh = ident
+  fname = ident
+  msg = ident
+  ok = port
+  err = port
+  port = string
+  
 }

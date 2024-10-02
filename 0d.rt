@@ -1237,21 +1237,7 @@ defn low_level_read_text_file_instantiate (reg, owner, name, template_data) {
 
 defn low_level_read_text_file_handler (eh, msg) {
     fname ≡ msg.datum.srepr ()
-    try{
-        f ≡ open (fname)}
-    except Exception as e{
-        f ≡ ϕ}
-    if f != ϕ{
-        data ≡ f.read ()
-        if data!= ϕ{
-            send_string (eh, “”, data, msg)}
-        else{
-            emsg ≡ strcons (“read error on file ”, fname)
-            send_string (eh, “✗”, emsg, msg)}
-        f.close ()}
-    else{
-        emsg ≡ strcons (“open error on file ”, fname)
-        send_string (eh, “✗”, emsg, msg)}
+    # low_level_read_text_file_handler (eh, msg, fname, “”, “✗”)
 }
 
 defn ensure_string_datum_instantiate (reg, owner, name, template_data) {

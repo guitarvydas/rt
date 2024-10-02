@@ -27,7 +27,7 @@ function indenter (str) {
    let diff = opens - closes;
    if (diff > 0) {
        while (diff > 0) {
-           indentation.push ('    ');
+           indentation.push ('  ');
            diff -=1;
        }
    } else {

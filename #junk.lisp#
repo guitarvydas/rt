@@ -1,0 +1,18 @@
+(defun Message (port datum)
+  (list
+    (cons 'port port)
+    (cons 'datum datum)))
+
+(defun clone_port (s)
+  (return-from clone_port (clone_string s)))
+
+(defun make_message (port datum)
+  (let ((p (clone_string port)))
+    (let ((m (Message p (funcall (assoc 'clone datum)))))
+      (return-from make_message m))))
+
+(defun xyz ()
+  (cond
+    (x (setf a 1))
+    (y (setf a 2))
+    (t (setf a 4))))
