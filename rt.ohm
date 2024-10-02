@@ -35,6 +35,7 @@ rt {
 
    Macro =
      | "#" "❲low_level_read_text_file_handler❳" "(" eh "," msg "," fname "," ok "," err ")" -- read
+     | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
    Defsynonym = Lval "≡" Exp Rec_Statement?

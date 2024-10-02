@@ -32,20 +32,34 @@ Rec_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
 
 Macro_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
     try:⤷
-        f ≡ open («fname»)⤶
+        f = open («fname»)⤶
     except Exception as e:⤷
-        f ≡ ϕ⤶
-    if f != ϕ:⤷
+        f ≡ None⤶
+    if f != None:⤷
         data ≡ f.read ()
-        if data!= ϕ:⤷
+        if data!= None:⤷
             send_string (eh, «ok», data, «msg»)⤶
         else:⤷
-            send_string (eh, «err», f“read error on file '«fname»'", «msg»)⤶
+            send_string (eh, «err», f"read error on file '{«fname»}'", «msg»)⤶
         f.close ()⤶
     else⤷
-        send_string (eh, «err», f“open error on file '«fname»'", «msg»)⤶
+        send_string (eh, «err», f"open error on file '{«fname»}'", «msg»)⤶
 ’
 
+Macro_racjf [_octothorpe _racjf lp fname rp] = ‛
+    try:⤷
+        fil = open(fname, “r”)
+        json_data = fil.read()
+        routings = json.loads(json_data)
+	fil.close ()
+        return routings ⤶
+    except FileNotFoundError:⤷
+        print (f"File not found: '{«fname»}'")
+        return None⤶
+    except json.JSONDecodeError as e:⤷
+        print ("Error decoding JSON in file: '{e}'"))
+        return None⤶
+’
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n«lval» = «e»«rec»’
 Defsynonym [ lval _eqv e rec?] = ‛\n«lval» = «e»«rec»’

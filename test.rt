@@ -34,3 +34,7 @@ defn low_level_read_text_file_handler (eh, msg) {
     fname ≡ msg.datum.srepr ()
     # low_level_read_text_file_handler (eh, msg, fname, “”, “✗”)
 }
+
+defn read_and_convert_json_file (filename) {
+    # read_and_convert_json_file (filename)
+}
