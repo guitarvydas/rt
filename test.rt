@@ -1,3 +1,6 @@
+defn clone_datum_bang (d) {
+    return new_datum_bang ()
+}
 defobj Message (port, datum) {
         • port ⇐ port
         • datum ⇐ datum
