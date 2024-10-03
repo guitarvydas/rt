@@ -785,7 +785,6 @@ return return_value_stack.pop ();
 
 
 function transpile_t2t (grammar_spec, rewrite_spec) {
-    console.error (ohm.grammar);
     let parser = ohm.grammar (grammar_spec);
     let cst = parser.match (rewrite_spec);
     if (cst.succeeded ()) {

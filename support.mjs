@@ -35,6 +35,8 @@ let _ = {
 
     insert_grammar_here : function () { return dslGrammar; },
     
+    enter_rule: function (name) {rule_name_stack.push (""); set_top (rule_name_stack, name); },
+    exit_rule:function  () {rule_name_stack.pop ();},
 
     encodews : function (s) { return _.encodequotes (encodeURIComponent (s)); },
     encodequotes : function (s) { 
