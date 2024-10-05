@@ -9,6 +9,10 @@ let _ = {
     argnames : [],
     evaled_args : [],
 
+    return_value_stack : [],
+    rule_name_stack : [],
+    depth_prefix : ' ',
+    
     reset_stacks : function () { 
         _.argnames = [];
         _.evaled_args = [];
@@ -35,11 +39,14 @@ let _ = {
 
     insert_grammar_here : function () { return dslGrammar; },
     
-    enter_rule: function (name) {
-	rule_name_stack.push ("");
-	set_top (rule_name_stack, name);
-	error.log (`enter {name}`);},
-    exit_rule:function  () {rule_name_stack.pop ();},
+    enter_rule : function (name) { _.return_value_stack.push (""); _.rule_name_stack.push (""); _.set_top (_.rule_name_stack, name);},
+    set_return : function (v) { _.set_top (_.return_value_stack, v); },
+    exit_rule : function (name) { _.rule_name_stack.pop (); return _.return_value_stack.pop ()},
+
+    // verbose versions
+    // enter_rule : function (name) { console.error (_.depth_prefix, ["enter", name]); _.depth_prefix += ' '; _.return_value_stack.push (""); _.rule_name_stack.push (""); _.set_top (_.rule_name_stack, name);},
+    // set_return : function (v) { _.set_top (_.return_value_stack, v); },
+    // exit_rule : function (name) { _.depth_prefix = _.depth_prefix.substr (1); console.error (_.depth_prefix, ["exit", name]); _.rule_name_stack.pop (); return _.return_value_stack.pop ()},
 
     encodews : function (s) { return _.encodequotes (encodeURIComponent (s)); },
     encodequotes : function (s) { 
