@@ -659,11 +659,12 @@ def route (container, from_component, message):
                 was_sent = True
     if not (was_sent): 
         print ("\n\n*** Error: ***")
-        dump_possible_connections (container)
-        print_routing_trace (container)
-        print ("***")
+        # uncomment these lines for verbose error message
+        # dump_possible_connections (container)
+        # print_routing_trace (container)
+        # print ("***")
         print (f"{container.name}: message '{message.port}' from {fromname} dropped on floor...")
-        print ("***")
+        # print ("***")
         exit ()
 
 def dump_possible_connections (container):      
@@ -836,11 +837,11 @@ def run_command (eh, cmd, s):
     ret = subprocess.run (cmd, capture_output=True, input=s, encoding='utf-8')
     if  not (ret.returncode == 0):
         if ret.stderr != None:
-            return ["", ret.stderr]
+            return [False, "", ret.stderr]
         else:
-            return ["", f"error in shell_out {ret.returncode}"]
+            return [False, "", f"error in shell_out {ret.returncode}"]
     else:
-        return [ret.stdout, None]
+        return [True, ret.stdout, ret.stderr]
     
 # Data for an asyncronous component - effectively, a function with input
 # and output queues of messages.
@@ -1213,11 +1214,14 @@ def shell_out_instantiate (reg, owner, name, template_data):
 def shell_out_handler (eh, msg):
     cmd = eh.instance_data
     s = msg.datum.srepr ()
-    [stdout, stderr] = run_command (eh, cmd, s)
-    if stderr != None:
-        send_string (eh, "✗", stderr, msg)
-    else:
+    [success, stdout, stderr] = run_command (eh, cmd, s)
+    if success:
         send_string (eh, "", stdout, msg)
+        if stderr != None and len (stderr) != 0:
+            # output to stderr when success, is debug output, send it to port "👀"
+            send_string (eh, "👀", stderr, msg)
+    else:
+        send_string (eh, "✗", stderr, msg)
 
 ####
 
