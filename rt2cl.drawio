@@ -272,7 +272,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="QfMkjQi60-kuk4cKw3E2" name="RT to Common Lisp">
-    <mxGraphModel dx="978" dy="591" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+    <mxGraphModel dx="1430" dy="625" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -319,7 +319,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="Apn0ms_BU9joJsDJkQgn-1" value="?B" style="rounded=1;whiteSpace=wrap;html=1;sketch=0;container=1;recursiveResize=0;verticalAlign=bottom;arcSize=6;fontStyle=0;autosize=0;points=[];absoluteArcSize=1;shadow=0;strokeColor=#d79b00;fillColor=#FFFFFF;fontFamily=Helvetica;fontSize=11;dashed=1;opacity=30;align=right;textOpacity=30;gradientColor=#EA6B66;fontColor=default;" vertex="1" parent="1">
-          <mxGeometry x="790" y="430" width="40" height="50" as="geometry">
+          <mxGeometry x="960" y="458.5" width="40" height="50" as="geometry">
             <mxRectangle x="-98" y="-1230" width="99" height="26" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
@@ -338,7 +338,7 @@
           <mxGeometry x="107" y="36" width="35.25" height="25" as="geometry" />
         </mxCell>
         <mxCell id="Apn0ms_BU9joJsDJkQgn-6" value="$ grep -v &quot;nameRest&quot;" style="rounded=1;whiteSpace=wrap;html=1;sketch=0;container=1;recursiveResize=0;verticalAlign=top;arcSize=6;fontStyle=1;autosize=0;points=[];absoluteArcSize=1;shadow=1;strokeColor=#666666;fillColor=#FFFFFF;fontColor=#333333;connectable=0;gradientColor=#FFF2CC;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
-          <mxGeometry x="556.5" y="440" width="127" height="87" as="geometry">
+          <mxGeometry x="520" y="440" width="127" height="87" as="geometry">
             <mxRectangle x="-98" y="-1230" width="99" height="26" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
@@ -351,15 +351,29 @@
         <mxCell id="Apn0ms_BU9joJsDJkQgn-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Apn0ms_BU9joJsDJkQgn-5" target="Apn0ms_BU9joJsDJkQgn-7">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="Apn0ms_BU9joJsDJkQgn-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Apn0ms_BU9joJsDJkQgn-8" target="Apn0ms_BU9joJsDJkQgn-2">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <mxCell id="RybCDVvAgoM5EoYZS_LS-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="RybCDVvAgoM5EoYZS_LS-1" target="Apn0ms_BU9joJsDJkQgn-4">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="225" y="489" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="PjjQ6_94QWNTfwh6HJ0n-1" value="$ grep -v &quot;raw_character&quot;" style="rounded=1;whiteSpace=wrap;html=1;sketch=0;container=1;recursiveResize=0;verticalAlign=top;arcSize=6;fontStyle=1;autosize=0;points=[];absoluteArcSize=1;shadow=1;strokeColor=#666666;fillColor=#FFFFFF;fontColor=#333333;connectable=0;gradientColor=#FFF2CC;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="730" y="440" width="127" height="87" as="geometry">
+            <mxRectangle x="-98" y="-1230" width="99" height="26" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PjjQ6_94QWNTfwh6HJ0n-2" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=0;points=[[0,0.5,0,0,0],[1,0.5,0,0,0]];arcSize=50;fontFamily=Helvetica;fontSize=11;fontColor=default;" vertex="1" parent="PjjQ6_94QWNTfwh6HJ0n-1">
+          <mxGeometry x="-13" y="36" width="39.25" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="PjjQ6_94QWNTfwh6HJ0n-3" value="" style="rounded=1;whiteSpace=wrap;html=1;sketch=0;points=[[0,0.5,0,0,0],[1,0.5,0,0,0]];fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;arcSize=50;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="PjjQ6_94QWNTfwh6HJ0n-1">
+          <mxGeometry x="107" y="36" width="35.25" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="PjjQ6_94QWNTfwh6HJ0n-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="Apn0ms_BU9joJsDJkQgn-8" target="PjjQ6_94QWNTfwh6HJ0n-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="PjjQ6_94QWNTfwh6HJ0n-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="PjjQ6_94QWNTfwh6HJ0n-3" target="Apn0ms_BU9joJsDJkQgn-2">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

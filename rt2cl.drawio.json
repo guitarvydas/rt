@@ -302,12 +302,12 @@
         "name": "RT to Common Lisp",
         "children": [
             {
-                "name": "$ grep -v \"nameRest\"",
-                "id": 3
-            },
-            {
                 "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
                 "id": 5
+            },
+            {
+                "name": "$ grep -v \"raw_character\"",
+                "id": 12
             },
             {
                 "name": "?B",
@@ -316,6 +316,10 @@
             {
                 "name": "$ grep -v \"char_any\"",
                 "id": 15
+            },
+            {
+                "name": "$ grep -v \"nameRest\"",
+                "id": 18
             }
         ],
         "connections": [
@@ -341,20 +345,7 @@
                 "source_port": "",
                 "target": {
                     "name": "$ grep -v \"nameRest\"",
-                    "id": 3
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "$ grep -v \"nameRest\"",
-                    "id": 3
-                },
-                "source_port": "",
-                "target": {
-                    "name": "?B",
-                    "id": 13
+                    "id": 18
                 },
                 "target_port": ""
             },
@@ -368,6 +359,32 @@
                 "target": {
                     "name": "$ grep -v \"char_any\"",
                     "id": 15
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "$ grep -v \"nameRest\"",
+                    "id": 18
+                },
+                "source_port": "",
+                "target": {
+                    "name": "$ grep -v \"raw_character\"",
+                    "id": 12
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "$ grep -v \"raw_character\"",
+                    "id": 12
+                },
+                "source_port": "",
+                "target": {
+                    "name": "?B",
+                    "id": 13
                 },
                 "target_port": ""
             },
