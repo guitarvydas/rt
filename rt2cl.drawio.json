@@ -119,7 +119,7 @@
                 "id": 3
             },
             {
-                "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                "name": "$ ./ndsl internalize.ohm internalize.rewrite",
                 "id": 5
             },
             {
@@ -149,7 +149,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite",
                     "id": 5
                 },
                 "target_port": ""
@@ -157,7 +157,7 @@
             {
                 "dir": 1,
                 "source": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite",
                     "id": 5
                 },
                 "source_port": "\ud83d\udc40",
@@ -170,7 +170,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite",
                     "id": 5
                 },
                 "source_port": "",
@@ -183,7 +183,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite",
                     "id": 5
                 },
                 "source_port": "\u2717",
@@ -251,7 +251,7 @@
         "name": "Decode For Common Lisp",
         "children": [
             {
-                "name": "$ node t2t.mjs cldecode.ohm cldecode.rewrite -",
+                "name": "$ ./ndsl cldecode.ohm cldecode.rewrite",
                 "id": 5
             }
         ],
@@ -264,7 +264,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ node t2t.mjs cldecode.ohm cldecode.rewrite -",
+                    "name": "$ ./ndsl cldecode.ohm cldecode.rewrite",
                     "id": 5
                 },
                 "target_port": ""
@@ -272,7 +272,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs cldecode.ohm cldecode.rewrite -",
+                    "name": "$ ./ndsl cldecode.ohm cldecode.rewrite",
                     "id": 5
                 },
                 "source_port": "",
@@ -285,7 +285,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs cldecode.ohm cldecode.rewrite -",
+                    "name": "$ ./ndsl cldecode.ohm cldecode.rewrite",
                     "id": 5
                 },
                 "source_port": "\u2717",
@@ -306,7 +306,7 @@
                 "id": 4
             },
             {
-                "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
+                "name": "$ ./ndsl rt.ohm rt2cl.rewrite",
                 "id": 6
             },
             {
@@ -335,7 +335,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
+                    "name": "$ ./ndsl rt.ohm rt2cl.rewrite",
                     "id": 6
                 },
                 "target_port": ""
@@ -369,7 +369,7 @@
             {
                 "dir": 1,
                 "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
+                    "name": "$ ./ndsl rt.ohm rt2cl.rewrite",
                     "id": 6
                 },
                 "source_port": "\ud83d\udc40",
@@ -408,7 +408,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
+                    "name": "$ ./ndsl rt.ohm rt2cl.rewrite",
                     "id": 6
                 },
                 "source_port": "",
@@ -421,7 +421,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
+                    "name": "$ ./ndsl rt.ohm rt2cl.rewrite",
                     "id": 6
                 },
                 "source_port": "\u2717",

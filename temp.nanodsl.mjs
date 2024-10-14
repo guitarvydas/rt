@@ -1,0 +1,154 @@
+'use strict'
+
+import * as ohm from 'ohm-js';
+
+let verbose = false;
+
+function top (stack) { let v = stack.pop (); stack.push (v); return v; }
+
+function set_top (stack, v) { stack.pop (); stack.push (v); return v; }
+
+let return_value_stack = [];
+let rule_name_stack = [];
+let depth_prefix = ' ';
+
+function enter_rule (name) {
+    if (verbose) {
+	console.error (depth_prefix, ["enter", name]);
+	depth_prefix += ' ';
+    }
+    return_value_stack.push ("");
+    rule_name_stack.push (name);
+}
+
+function set_return (v) {
+    set_top (return_value_stack, v);
+}
+
+function exit_rule (name) {
+    if (verbose) {
+	depth_prefix = depth_prefix.substr (1);
+	console.error (depth_prefix, ["exit", name]);
+    }
+    rule_name_stack.pop ();
+    return return_value_stack.pop ()
+}
+
+const grammar = String.raw`
+pydecode {
+  text = char+
+  char =
+    | "“" (~"“" ~"”" any)* "”"  -- string
+    | "⌈" (~"⌈" ~"⌉" any)* "⌉"   -- comment
+    | "❲"                       -- ulb
+    | "%E2%9D%B2"               -- encodedulb
+    | "❳"                       -- urb
+    | "%E2%9D%B3"               -- encodedurb
+    | "%20"                     -- space
+    | "%09"                     -- tab
+    | "%0A"                     -- newline
+    | any                       -- other
+}
+`;
+
+let args = {};
+function resetArgs () {
+    args = {};
+}
+function memoArg (name, accessorString) {
+    args [name] = accessorString;
+};
+function fetchArg (name) {
+    return args [name];
+}
+
+function encodews (s) { return encodequotes (encodeURIComponent (s)); }
+
+function encodequotes (s) { 
+    let rs = s.replace (/"/g, '%22').replace (/'/g, '%27');
+    return rs;
+}
+
+
+let parameters = {};
+function pushParameter (name, v) {
+    parameters [name].push (v);
+}
+function popParameter (name) {
+    parameters [name].pop ();
+}
+function getParameter (name) {
+    return parameters [name];
+}
+
+
+let _rewrite = {
+
+text : function (chars,) {
+enter_rule ("text");
+    set_return (`${chars.rwr ().join ('')}`);
+return exit_rule ("text");
+},
+char_string : function (lq,cs,rq,) {
+enter_rule ("char_string");
+    set_return (`"${cs.rwr ().join ('')}"`);
+return exit_rule ("char_string");
+},
+char_comment : function (lb,cs,rb,) {
+enter_rule ("char_comment");
+    set_return (`\n#| ${cs.rwr ().join ('')} |#`);
+return exit_rule ("char_comment");
+},
+char_ulb : function (c,) {
+enter_rule ("char_ulb");
+    set_return (``);
+return exit_rule ("char_ulb");
+},
+char_encodedulb : function (c,) {
+enter_rule ("char_encodedulb");
+    set_return (`-L`);
+return exit_rule ("char_encodedulb");
+},
+char_urb : function (c,) {
+enter_rule ("char_urb");
+    set_return (``);
+return exit_rule ("char_urb");
+},
+char_encodedurb : function (c,) {
+enter_rule ("char_encodedurb");
+    set_return (`R-`);
+return exit_rule ("char_encodedurb");
+},
+char_space : function (c,) {
+enter_rule ("char_space");
+    set_return (`-`);
+return exit_rule ("char_space");
+},
+char_tab : function (c,) {
+enter_rule ("char_tab");
+    set_return (`-TAB-`);
+return exit_rule ("char_tab");
+},
+char_newline : function (c,) {
+enter_rule ("char_newline");
+    set_return (`-NL-`);
+return exit_rule ("char_newline");
+},
+char_other : function (c,) {
+enter_rule ("char_other");
+    set_return (`${c.rwr ()}`);
+return exit_rule ("char_other");
+},
+_terminal: function () { return this.sourceString; },
+_iter: function (...children) { return children.map(c => c.rwr ()); }
+}
+import * as fs from 'fs';
+const argv = process.argv.slice(2);
+let srcFilename = argv[0];
+if ('-' == srcFilename) { srcFilename = 0 }
+let src = fs.readFileSync(srcFilename, 'utf-8');
+let parser = ohm.grammar (grammar);
+let cst = parser.match (src);
+let sem = parser.createSemantics ();
+sem.addOperation ('rwr', _rewrite);
+console.log (sem (cst).rwr ());

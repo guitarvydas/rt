@@ -1,767 +1,275 @@
+'use strict'
 
-        'use strict'
+import * as ohm from 'ohm-js';
 
-        import {_} from './support.mjs';
-        import * as ohm from 'ohm-js';
+let verbose = false;
 
-        let return_value_stack = [];
-        let rule_name_stack = [];
+function top (stack) { let v = stack.pop (); stack.push (v); return v; }
 
-        const grammar = String.raw`
-    t2t {
-  main = applySyntactic<ParameterDef>* rewriteDef
+function set_top (stack, v) { stack.pop (); stack.push (v); return v; }
 
-  ParameterDef = "% parameter" name
-  rewriteDef = "% rewrite" spaces name spaces "{" spaces rewriteRule+ spaces "}" spaces
+let return_value_stack = [];
+let rule_name_stack = [];
+let depth_prefix = ' ';
 
+function enter_rule (name) {
+    if (verbose) {
+	console.error (depth_prefix, ["enter", name]);
+	depth_prefix += ' ';
+    }
+    return_value_stack.push ("");
+    rule_name_stack.push (name);
+}
 
-  // just pass the grammar through to OhmJS - it parses and checks the grammar
-  rule =
-    | "\"" "% parameter" "\"" -- parameter_as_string
-    | "\"" "% rewrite" "\"" -- rewrite_as_string
-    | ~"% parameter" ~"% rewrite" any -- basic
+function set_return (v) {
+    set_top (return_value_stack, v);
+}
 
-  name  (a name)
-    = nameFirst nameRest*
+function exit_rule (name) {
+    if (verbose) {
+	depth_prefix = depth_prefix.substr (1);
+	console.error (depth_prefix, ["exit", name]);
+    }
+    rule_name_stack.pop ();
+    return return_value_stack.pop ()
+}
 
-  nameFirst
-    = "_"
-    | letter
+const grammar = String.raw`
+t2t {
+  main = parameterDef* rewriteDef
 
-  nameRest
-    = "_"
-    | alnum
+  parameterDef = "%" s_ "parameter" s_ name s_
+  rewriteDef = "%" s_ "rewrite" s_ name s_ "{" rewriteRule+ "}" s_
 
+  rewriteRule = s_ ruleName s_ "[" s_ (argDef s_)* "]" s_ "=" s_ rewriteScope s_
 
-  // rewrite parsing section
-  rewriteRule = 
-    | rwRuleName spaces "[" spaces (rwParameterDef spaces)+ "]" spaces before spaces "=" spaces rewriteScope spaces -- withbefore
-    | rwRuleName spaces "[" spaces (rwParameterDef spaces)+ "]" spaces "=" spaces rewriteScopeRaw spaces -- plain_no_scope
-    | rwRuleName spaces "[" spaces (rwParameterDef spaces)+ "]" spaces "=" spaces rewriteScope spaces -- plain
-
-  rwRuleName = name
-  rwArgDef = name
-  rwIterArgDef = name ("+" | "*" | "?")
-  rwParenthesizedIterArgDef = "(" rwParenArgDef+ ")" ("+" | "*" | "?")
-  rwParameterDef = (rwParenthesizedIterArgDef | rwIterArgDef | rwArgDef)
-  rwParenArgDef = name spaces
-
-  rwArgRef = name
+  argDef = 
+    | "(" parenarg+ ")" ("+" | "*" | "?")  -- parenthesized
+    | name ("+" | "*" | "?")               -- iter
+    | name                                 -- plain
 
   rewriteScope =
-    | "⎡" spaces "⎨" spaces name spaces rewriteFormatString spaces "⎬" spaces rewriteScope spaces "⎦" spaces -- within_support_wrapper
-    | "⎡" spaces name spaces "=" spaces rewriteFormatString spaces rewriteScope spaces "⎦" spaces -- with_parameter
-    | rewriteScopeRaw -- raw
-  rewriteScopeRaw = #rewriteFormatString
+    | "⎡" s_ "⎨" s_ name s_ argstring* s_ "⎬" s_ rewriteScope s_ "⎦"      -- call
+    | "⎡" s_  name s_ "=" s_ rewriteFormatString  s_ rewriteScope s_ "⎦"  -- parameterbinding
+    | rewriteFormatString                                                 -- plain
   
-  rewriteFormatString = "‛" formatChar* "’"
-  formatChar =
-    | "⎨" spaces name spaces supportArgsForInterpolation spaces "⎬" -- support_interpolation
-    | "⟪" rwArgRef "⟫" -- parameter_interpolation
-    | "«" rwArgRef "»" -- arg_interpolation
-    | "\\" any -- escaped
-    | ~"‛" ~"’" ~"⎡" ~"⎦" ~"⟪" ~"⟫" ~"«" ~"»" any -- raw_character
+  rewriteFormatString = "‛" formatItem* "’"
+  formatItem =
+    | "⎨" s_ name s_ argstring* "⎬" -- supportCall
+    | "⟪" parameterRef "⟫"                         -- parameter
+    | "«" argRef "»"                               -- arg
+    | "\\" any                                     -- escapedCharacter
+    | ~"‛" ~"’" ~"⎡" ~"⎦" ~"⟪" ~"⟫" ~"«" ~"»" any  -- rawCharacter
 
-  before = "⎨" spaces name spaces supportArgsForBefore spaces "⎬"
+  parenarg = name s_
+  argstring =  rewriteFormatString s_
+  argRef = name
+  parameterRef = name
+  ruleName = name
 
-  supportArgsForInterpolation = rewriteFormatString wsRewriteFormatString_for_interpolation*
-  wsRewriteFormatString_for_interpolation = spaces rewriteFormatString
-  supportArgsForBefore = rewriteFormatString wsRewriteFormatString_for_before*
-  wsRewriteFormatString_for_before = spaces rewriteFormatString
+  name (a name)
+    = nameFirst nameRest*
+  nameFirst = ("_" | letter)
+  nameRest  = ("_" | alnum)
+
+  s_ = space*
+
 }
 `;
 
-const rewrite_js = {
-main : function (_ParameterDefs, _rewriteDef, ) {
-let ParameterDefs = undefined;
-let rewriteDef = undefined;
-_.enter_rule ("main");
-ParameterDefs = _ParameterDefs.rwr ().join ('')
-rewriteDef = _rewriteDef.rwr ()
-
-
-_.set_return (`
-${ParameterDefs}
-${rewriteDef}
-
-`);
-
-return _.exit_rule ("main");
-},
-ParameterDef : function (__p, _name, ) {
-let _p = undefined;
-let name = undefined;
-_.enter_rule ("ParameterDef");
-_p = __p.rwr ()
-name = _name.rwr ()
-
-
-_.set_return (`\nlet ${name}_stack = [];${_.memo_parameter (`${name}`)}`);
-
-return _.exit_rule ("ParameterDef");
-},
-rewriteDef : function (__r, _ws, _name, _ws2, _lb, _ws3, _rewriteRules, _ws4, _rb, _ws5, ) {
-let _r = undefined;
-let ws = undefined;
-let name = undefined;
-let ws2 = undefined;
-let lb = undefined;
-let ws3 = undefined;
-let rewriteRules = undefined;
-let ws4 = undefined;
-let rb = undefined;
-let ws5 = undefined;
-_.enter_rule ("rewriteDef");
-_r = __r.rwr ()
-ws = _ws.rwr ()
-name = _name.rwr ()
-ws2 = _ws2.rwr ()
-lb = _lb.rwr ()
-ws3 = _ws3.rwr ()
-rewriteRules = _rewriteRules.rwr ().join ('')
-ws4 = _ws4.rwr ()
-rb = _rb.rwr ()
-ws5 = _ws5.rwr ()
-
-
-_.set_return (`const rewrite_js = {${rewriteRules}
-    _terminal: function () { return this.sourceString; },
-    _iter: function (...children) { return children.map(c => c.rwr ()); }
+let args = {};
+function resetArgs () {
+    args = {};
+}
+function memoArg (name, accessorString) {
+    args [name] = accessorString;
 };
-
-
-`);
-
-return _.exit_rule ("rewriteDef");
-},
-rule_parameter_as_string : function (_lq, _cs, _rq, ) {
-let lq = undefined;
-let cs = undefined;
-let rq = undefined;
-_.enter_rule ("rule_parameter_as_string");
-lq = _lq.rwr ()
-cs = _cs.rwr ()
-rq = _rq.rwr ()
-
-
-_.set_return (`"% parameter"`);
-
-return _.exit_rule ("rule_parameter_as_string");
-},
-rule_rewrite_as_string : function (_lq, _cs, _rq, ) {
-let lq = undefined;
-let cs = undefined;
-let rq = undefined;
-_.enter_rule ("rule_rewrite_as_string");
-lq = _lq.rwr ()
-cs = _cs.rwr ()
-rq = _rq.rwr ()
-
-
-_.set_return (`"% rewrite"`);
-
-return _.exit_rule ("rule_rewrite_as_string");
-},
-rule_basic : function (_cs, ) {
-let cs = undefined;
-_.enter_rule ("rule_basic");
-cs = _cs.rwr ()
-
-
-_.set_return (`${cs}`);
-
-return _.exit_rule ("rule_basic");
-},
-name : function (_nameFirst, _nameRest, ) {
-let nameFirst = undefined;
-let nameRest = undefined;
-_.enter_rule ("name");
-nameFirst = _nameFirst.rwr ()
-nameRest = _nameRest.rwr ().join ('')
-
-
-_.set_return (`${nameFirst}${nameRest}`);
-
-return _.exit_rule ("name");
-},
-nameFirst : function (_c, ) {
-let c = undefined;
-_.enter_rule ("nameFirst");
-c = _c.rwr ()
-
-
-_.set_return (`${c}`);
-
-return _.exit_rule ("nameFirst");
-},
-nameRest : function (_c, ) {
-let c = undefined;
-_.enter_rule ("nameRest");
-c = _c.rwr ()
-
-
-_.set_return (`${c}`);
-
-return _.exit_rule ("nameRest");
-},
-rewriteRule_withbefore : function (_rwName, _ws1, _lb, _ws2, _rwParameterDefs, _ws3, _rb, _ws4, _before, _ws7, __eq, _ws5, _rewriteScope, _ws6, ) {
-let rwName = undefined;
-let ws1 = undefined;
-let lb = undefined;
-let ws2 = undefined;
-let rwParameterDefs = undefined;
-let ws3 = undefined;
-let rb = undefined;
-let ws4 = undefined;
-let before = undefined;
-let ws7 = undefined;
-let _eq = undefined;
-let ws5 = undefined;
-let rewriteScope = undefined;
-let ws6 = undefined;
-let _pre = _.reset_stacks (``);
-_.enter_rule ("rewriteRule_withbefore");
-
-rwName = _rwName.rwr ()
-ws1 = _ws1.rwr ()
-lb = _lb.rwr ()
-ws2 = _ws2.rwr ()
-rwParameterDefs = _rwParameterDefs.rwr ().join ('')
-ws3 = _ws3.rwr ().join ('')
-rb = _rb.rwr ()
-ws4 = _ws4.rwr ()
-before = _before.rwr ()
-ws7 = _ws7.rwr ()
-_eq = __eq.rwr ()
-ws5 = _ws5.rwr ()
-rewriteScope = _rewriteScope.rwr ()
-ws6 = _ws6.rwr ()
-
-
-_.set_return (`
-${rwName} : function (${rwParameterDefs}) {
-${_.foreach_arg (`let ☐ = undefined;`)}
-let _pre = ${before};
-_.enter_rule ("${rwName}");
-${_.foreach_parameter (`☐_stack.push (☐_stack [☐_stack.length-1]);`)}
-${_.args_as_string (``)}
-${rewriteScope}
-${_.foreach_parameter (`☐_stack.pop ();`)}
-return _.exit_rule ("${rwName}");
-},`);
-
-
-return _.exit_rule ("rewriteRule_withbefore");
-},
-rewriteRule_plain_no_scope : function (_rwName, _ws1, _lb, _ws2, _rwParameterDefs, _ws3, _rb, _ws4, __eq, _ws5, _raw, _ws6, ) {
-let rwName = undefined;
-let ws1 = undefined;
-let lb = undefined;
-let ws2 = undefined;
-let rwParameterDefs = undefined;
-let ws3 = undefined;
-let rb = undefined;
-let ws4 = undefined;
-let _eq = undefined;
-let ws5 = undefined;
-let raw = undefined;
-let ws6 = undefined;
-let _pre = _.reset_stacks (``);
-_.enter_rule ("rewriteRule_plain_no_scope");
-
-rwName = _rwName.rwr ()
-ws1 = _ws1.rwr ()
-lb = _lb.rwr ()
-ws2 = _ws2.rwr ()
-rwParameterDefs = _rwParameterDefs.rwr ().join ('')
-ws3 = _ws3.rwr ().join ('')
-rb = _rb.rwr ()
-ws4 = _ws4.rwr ()
-_eq = __eq.rwr ()
-ws5 = _ws5.rwr ()
-raw = _raw.rwr ()
-ws6 = _ws6.rwr ()
-
-
-_.set_return (`
-${rwName} : function (${rwParameterDefs}) {
-${_.foreach_arg (`let ☐ = undefined;`)}
-_.enter_rule ("${rwName}");
-${_.args_as_string (``)}
-${raw}
-return _.exit_rule ("${rwName}");
-},`);
-
-
-return _.exit_rule ("rewriteRule_plain_no_scope");
-},
-rewriteRule_plain : function (_rwName, _ws1, _lb, _ws2, _rwParameterDefs, _ws3, _rb, _ws4, __eq, _ws5, _rewriteScope, _ws6, ) {
-let rwName = undefined;
-let ws1 = undefined;
-let lb = undefined;
-let ws2 = undefined;
-let rwParameterDefs = undefined;
-let ws3 = undefined;
-let rb = undefined;
-let ws4 = undefined;
-let _eq = undefined;
-let ws5 = undefined;
-let rewriteScope = undefined;
-let ws6 = undefined;
-let _pre = _.reset_stacks (``);
-_.enter_rule ("rewriteRule_plain");
-
-rwName = _rwName.rwr ()
-ws1 = _ws1.rwr ()
-lb = _lb.rwr ()
-ws2 = _ws2.rwr ()
-rwParameterDefs = _rwParameterDefs.rwr ().join ('')
-ws3 = _ws3.rwr ().join ('')
-rb = _rb.rwr ()
-ws4 = _ws4.rwr ()
-_eq = __eq.rwr ()
-ws5 = _ws5.rwr ()
-rewriteScope = _rewriteScope.rwr ()
-ws6 = _ws6.rwr ()
-
-
-_.set_return (`
-${rwName} : function (${rwParameterDefs}) {
-${_.foreach_arg (`let ☐ = undefined;`)}
-_.enter_rule ("${rwName}");
-${_.foreach_parameter (`☐_stack.push (☐_stack [☐_stack.length-1]);`)}
-${_.args_as_string (``)}
-${rewriteScope}
-${_.foreach_parameter (`☐_stack.pop ();`)}
-return _.exit_rule ("${rwName}");
-},`);
-
-
-return _.exit_rule ("rewriteRule_plain");
-},
-rwRuleName : function (_name, ) {
-let name = undefined;
-_.enter_rule ("rwRuleName");
-name = _name.rwr ()
-
-
-_.set_return (`${name}`);
-
-return _.exit_rule ("rwRuleName");
-},
-rwArgDef : function (_name, ) {
-let name = undefined;
-_.enter_rule ("rwArgDef");
-name = _name.rwr ()
-
-
-_.set_return (`_${name}, ${_.memo_arg (`${name}`, `☐ = _☐.rwr ()\n`)}`);
-
-return _.exit_rule ("rwArgDef");
-},
-rwIterArgDef : function (_name, _op, ) {
-let name = undefined;
-let op = undefined;
-_.enter_rule ("rwIterArgDef");
-name = _name.rwr ()
-op = _op.rwr ()
-
-
-_.set_return (`_${name}, ${_.memo_arg (`${name}`, `☐ = _☐.rwr ().join ('')\n`)}`);
-
-return _.exit_rule ("rwIterArgDef");
-},
-rwParenthesizedIterArgDef : function (_lb, _defs, _rb, _op, ) {
-let lb = undefined;
-let defs = undefined;
-let rb = undefined;
-let op = undefined;
-_.enter_rule ("rwParenthesizedIterArgDef");
-lb = _lb.rwr ()
-defs = _defs.rwr ().join ('')
-rb = _rb.rwr ()
-op = _op.rwr ()
-
-
-_.set_return (`${defs}`);
-
-return _.exit_rule ("rwParenthesizedIterArgDef");
-},
-rwParameterDef : function (_def, ) {
-let def = undefined;
-_.enter_rule ("rwParameterDef");
-def = _def.rwr ()
-
-
-_.set_return (`${def}`);
-
-return _.exit_rule ("rwParameterDef");
-},
-rwArgRef : function (_name, ) {
-let name = undefined;
-_.enter_rule ("rwArgRef");
-name = _name.rwr ()
-
-
-_.set_return (`${name}`);
-
-return _.exit_rule ("rwArgRef");
-},
-rwParenArgDef : function (_name, _ws, ) {
-let name = undefined;
-let ws = undefined;
-_.enter_rule ("rwParenArgDef");
-name = _name.rwr ()
-ws = _ws.rwr ()
-
-
-_.set_return (`_${name}, ${_.memo_arg (`${name}`, `☐ = _☐.rwr ().join ('')\n`)}`);
-
-return _.exit_rule ("rwParenArgDef");
-},
-rewriteScope_within_support_wrapper : function (_lb, _ws1, _lb2, _ws2, _name, _ws3, _s, _ws4, _rb2, _ws5, _scope, _ws6, _rb, _ws7, ) {
-let lb = undefined;
-let ws1 = undefined;
-let lb2 = undefined;
-let ws2 = undefined;
-let name = undefined;
-let ws3 = undefined;
-let s = undefined;
-let ws4 = undefined;
-let rb2 = undefined;
-let ws5 = undefined;
-let scope = undefined;
-let ws6 = undefined;
-let rb = undefined;
-let ws7 = undefined;
-_.enter_rule ("rewriteScope_within_support_wrapper");
-lb = _lb.rwr ()
-ws1 = _ws1.rwr ()
-lb2 = _lb2.rwr ()
-ws2 = _ws2.rwr ()
-name = _name.rwr ()
-ws3 = _ws3.rwr ()
-s = _s.rwr ()
-ws4 = _ws4.rwr ()
-rb2 = _rb2.rwr ()
-ws5 = _ws5.rwr ()
-scope = _scope.rwr ()
-ws6 = _ws6.rwr ()
-rb = _rb.rwr ()
-ws7 = _ws7.rwr ()
-
-
-_.set_return (`
-_.pre_${name} (\`${s}\`);
-${scope}
-_.post_${name} (\`${s}\`);`);
-
-return _.exit_rule ("rewriteScope_within_support_wrapper");
-},
-rewriteScope_with_parameter : function (_lb, _ws1, _name, _ws2, __eq, _ws3, _rewriteFormatString, _ws4, _rewriteScope, _ws5, _rb, _ws6, ) {
-let lb = undefined;
-let ws1 = undefined;
-let name = undefined;
-let ws2 = undefined;
-let _eq = undefined;
-let ws3 = undefined;
-let rewriteFormatString = undefined;
-let ws4 = undefined;
-let rewriteScope = undefined;
-let ws5 = undefined;
-let rb = undefined;
-let ws6 = undefined;
-_.enter_rule ("rewriteScope_with_parameter");
-lb = _lb.rwr ()
-ws1 = _ws1.rwr ()
-name = _name.rwr ()
-ws2 = _ws2.rwr ()
-_eq = __eq.rwr ()
-ws3 = _ws3.rwr ()
-rewriteFormatString = _rewriteFormatString.rwr ()
-ws4 = _ws4.rwr ()
-rewriteScope = _rewriteScope.rwr ()
-ws5 = _ws5.rwr ()
-rb = _rb.rwr ()
-ws6 = _ws6.rwr ()
-
-
-_.set_return (`_.set_top (${name}_stack, \`${rewriteFormatString}\`);\n${rewriteScope}`);
-
-return _.exit_rule ("rewriteScope_with_parameter");
-},
-rewriteScope_raw : function (_x, ) {
-let x = undefined;
-_.enter_rule ("rewriteScope_raw");
-x = _x.rwr ()
-
-
-_.set_return (`${x}`);
-
-return _.exit_rule ("rewriteScope_raw");
-},
-rewriteScopeRaw : function (_rewriteFormatString, ) {
-let rewriteFormatString = undefined;
-_.enter_rule ("rewriteScopeRaw");
-rewriteFormatString = _rewriteFormatString.rwr ()
-
-
-_.set_return (`\n_.set_return (\`${rewriteFormatString}\`);\n`);
-
-return _.exit_rule ("rewriteScopeRaw");
-},
-rewriteFormatString : function (_lq, _formatChars, _rq, ) {
-let lq = undefined;
-let formatChars = undefined;
-let rq = undefined;
-_.enter_rule ("rewriteFormatString");
-lq = _lq.rwr ()
-formatChars = _formatChars.rwr ().join ('')
-rq = _rq.rwr ()
-
-
-_.set_return (`${formatChars}`);
-
-return _.exit_rule ("rewriteFormatString");
-},
-formatChar_support_interpolation : function (_lb, _ws1, _name, _ws2, _interpolation_args, _ws3, _rb, ) {
-let lb = undefined;
-let ws1 = undefined;
-let name = undefined;
-let ws2 = undefined;
-let interpolation_args = undefined;
-let ws3 = undefined;
-let rb = undefined;
-_.enter_rule ("formatChar_support_interpolation");
-lb = _lb.rwr ()
-ws1 = _ws1.rwr ()
-name = _name.rwr ()
-ws2 = _ws2.rwr ()
-interpolation_args = _interpolation_args.rwr ()
-ws3 = _ws3.rwr ()
-rb = _rb.rwr ()
-
-
-_.set_return (`\$\{_.${name} (${interpolation_args})\}`);
-
-return _.exit_rule ("formatChar_support_interpolation");
-},
-formatChar_arg_interpolation : function (_lb, _rwRef, _rb, ) {
-let lb = undefined;
-let rwRef = undefined;
-let rb = undefined;
-_.enter_rule ("formatChar_arg_interpolation");
-lb = _lb.rwr ()
-rwRef = _rwRef.rwr ()
-rb = _rb.rwr ()
-
-
-_.set_return (`\$\{${rwRef}\}`);
-
-return _.exit_rule ("formatChar_arg_interpolation");
-},
-formatChar_parameter_interpolation : function (_lb, _rwRef, _rb, ) {
-let lb = undefined;
-let rwRef = undefined;
-let rb = undefined;
-_.enter_rule ("formatChar_parameter_interpolation");
-lb = _lb.rwr ()
-rwRef = _rwRef.rwr ()
-rb = _rb.rwr ()
-
-
-_.set_return (`\$\{_.top (${rwRef}_stack)\}`);
-
-return _.exit_rule ("formatChar_parameter_interpolation");
-},
-formatChar_escaped : function (__bslash, _c, ) {
-let _bslash = undefined;
-let c = undefined;
-_.enter_rule ("formatChar_escaped");
-_bslash = __bslash.rwr ()
-c = _c.rwr ()
-
-
-_.set_return (`${_bslash}${c}`);
-
-return _.exit_rule ("formatChar_escaped");
-},
-formatChar_raw_character : function (_c, ) {
-let c = undefined;
-_.enter_rule ("formatChar_raw_character");
-c = _c.rwr ()
-
-
-_.set_return (`${c}`);
-
-return _.exit_rule ("formatChar_raw_character");
-},
-before : function (_lb, _ws1, _name, _ws2, _before_args, _ws3, _rb, ) {
-let lb = undefined;
-let ws1 = undefined;
-let name = undefined;
-let ws2 = undefined;
-let before_args = undefined;
-let ws3 = undefined;
-let rb = undefined;
-_.enter_rule ("before");
-lb = _lb.rwr ()
-ws1 = _ws1.rwr ()
-name = _name.rwr ()
-ws2 = _ws2.rwr ()
-before_args = _before_args.rwr ()
-ws3 = _ws3.rwr ()
-rb = _rb.rwr ()
-
-
-_.set_return (`_.${name} (${before_args})`);
-
-return _.exit_rule ("before");
-},
-supportArgsForInterpolation : function (_s, _more, ) {
-let s = undefined;
-let more = undefined;
-_.enter_rule ("supportArgsForInterpolation");
-s = _s.rwr ()
-more = _more.rwr ().join ('')
-
-
-_.set_return (`\`${s}\`${more}`);
-
-return _.exit_rule ("supportArgsForInterpolation");
-},
-wsRewriteFormatString_for_interpolation : function (_ws, _s, ) {
-let ws = undefined;
-let s = undefined;
-_.enter_rule ("wsRewriteFormatString_for_interpolation");
-ws = _ws.rwr ()
-s = _s.rwr ()
-
-
-_.set_return (`, \`${s}\``);
-
-return _.exit_rule ("wsRewriteFormatString_for_interpolation");
-},
-supportArgsForBefore : function (_s, _more, ) {
-let s = undefined;
-let more = undefined;
-_.enter_rule ("supportArgsForBefore");
-s = _s.rwr ()
-more = _more.rwr ().join ('')
-
-
-_.set_return (`\`${s}\`${more}`);
-
-return _.exit_rule ("supportArgsForBefore");
-},
-wsRewriteFormatString_for_before : function (_ws, _s, ) {
-let ws = undefined;
-let s = undefined;
-_.enter_rule ("wsRewriteFormatString_for_before");
-ws = _ws.rwr ()
-s = _s.rwr ()
-
-
-_.set_return (`, \`${s}\``);
-
-return _.exit_rule ("wsRewriteFormatString_for_before");
-},
-    _terminal: function () { return this.sourceString; },
-    _iter: function (...children) { return children.map(c => c.rwr ()); }
-};
-
-
-
-
-
-
-
-function transpile_t2t (grammar_spec, rewrite_spec) {
-    let parser = ohm.grammar (grammar_spec);
-    let cst = parser.match (rewrite_spec);
-    if (cst.succeeded ()) {
-        let cstSemantics = parser.createSemantics ();
-        cstSemantics.addOperation ('rwr', rewrite_js);
-        var generated_code = cstSemantics (cst).rwr ();
-        return generated_code;
-    } else {
-        return cst.message;     
-    }
+function fetchArg (name) {
+    return args [name];
 }
 
+let parameters = {};
+function pushParameter (name, v) {
+    parameters [name].push (v);
+}
+function popParameter (name) {
+    parameters [name].pop ();
+}
+function getParameter (name) {
+    return parameters [name];
+}
+
+
+let _rewrite = {
+
+main : function (parameterDef_i,rewriteDef,) {
+    enter_rule ("main");
+    set_return (`let parameters = {};
+function pushParameter (name, v) {
+    parameters [name].push (v);
+}
+function popParameter (name) {
+    parameters [name].pop ();
+}
+function getParameter (name) {
+    return parameters [name];
+}
+${parameterDef_i.rwr ().join ('')}
+
+let _rewrite = {
+${rewriteDef.rwr ()}
+_terminal: function () { return this.sourceString; },
+_iter: function (...children) { return children.map(c => c.rwr ()); }
+}`);
+    return exit_rule ("main");
+},
+parameterDef : function (_pct,_1,_parameter,_2,name,_3,) {
+    enter_rule ("parameterDef");
+    set_return (`\nparameters ["${name.rwr ()}"] = [];`);
+    return exit_rule ("parameterDef");
+},
+rewriteDef : function (_pct,_1,_rewrite,_2,name,_3,_lb,rule_i,rb,_6,) {
+    enter_rule ("rewriteDef");
+    set_return (`${rule_i.rwr ().join ('')}`);
+    return exit_rule ("rewriteDef");
+},
+rewriteRule : function (_0,ruleName,_1,lb,_2,argDef_i,_3_i,rb,_4,_eq,_5,rewriteScope,_6,) {
+    enter_rule ("rewriteRule");
+     resetArgs ();
+
+    set_return (`\n${ruleName.rwr ()} : function (${argDef_i.rwr ().join ('')}) {
+enter_rule ("${ruleName.rwr ()}");${rewriteScope.rwr ()}
+return exit_rule ("${ruleName.rwr ()}");
+},`);
+    return exit_rule ("rewriteRule");
+},
+argDef_parenthesized : function (lp,names_i,rp,op,) {
+    enter_rule ("argDef_parenthesized");
+    set_return (`${names_i.rwr ().join ('')}`);
+    return exit_rule ("argDef_parenthesized");
+},
+argDef_iter : function (name,op,) {
+    enter_rule ("argDef_iter");
+     memoArg (`${name.rwr ()}`,`\$\{${name.rwr ()}.rwr ().join ('')\}`,);
+
+    set_return (`${name.rwr ()},`);
+    return exit_rule ("argDef_iter");
+},
+argDef_plain : function (name,) {
+    enter_rule ("argDef_plain");
+     memoArg (`${name.rwr ()}`,`\$\{${name.rwr ()}.rwr ()\}`,);
+
+    set_return (`${name.rwr ()},`);
+    return exit_rule ("argDef_plain");
+},
+rewriteScope_call : function (lb,_1,lb2,_a,fname,_b,arg_i,_c,rb2,_2,rewriteScope,_3,rb,) {
+    enter_rule ("rewriteScope_call");
+    set_return (`
+    ${fname.rwr ()} (${arg_i.rwr ().join ('')});
+    ${rewriteScope.rwr ()}
+`);
+    return exit_rule ("rewriteScope_call");
+},
+rewriteScope_parameterbinding : function (lb,_1,pname,_2,_eq,_3,s,_4,scope,_5,rb,) {
+    enter_rule ("rewriteScope_parameterbinding");
+    set_return (`
+    pushParameter ("${pname.rwr ()}", \`${s.rwr ()}\`);${scope.rwr ()}`);
+    return exit_rule ("rewriteScope_parameterbinding");
+},
+rewriteScope_plain : function (s,) {
+    enter_rule ("rewriteScope_plain");
+    set_return (`
+    set_return (\`${s.rwr ()}\`);`);
+    return exit_rule ("rewriteScope_plain");
+},
+rewriteFormatString : function (lq,formatItems_i,rq,) {
+    enter_rule ("rewriteFormatString");
+    set_return (`${formatItems_i.rwr ().join ('')}`);
+    return exit_rule ("rewriteFormatString");
+},
+formatItem_supportCall : function (lb,_1,name,_2,argString_i,rb,) {
+    enter_rule ("formatItem_supportCall");
+    set_return (`\$\{${name.rwr ()} (${argString_i.rwr ().join ('')})\}`);
+    return exit_rule ("formatItem_supportCall");
+},
+formatItem_parameter : function (lb,parameterRef,rb,) {
+    enter_rule ("formatItem_parameter");
+    set_return (`${parameterRef.rwr ()}`);
+    return exit_rule ("formatItem_parameter");
+},
+formatItem_arg : function (lb,argRef,rb,) {
+    enter_rule ("formatItem_arg");
+    set_return (`${argRef.rwr ()}`);
+    return exit_rule ("formatItem_arg");
+},
+formatItem_escapedCharacter : function (bslash,any,) {
+    enter_rule ("formatItem_escapedCharacter");
+    set_return (`${bslash.rwr ()}${any.rwr ()}`);
+    return exit_rule ("formatItem_escapedCharacter");
+},
+formatItem_rawCharacter : function (c,) {
+    enter_rule ("formatItem_rawCharacter");
+    set_return (`${c.rwr ()}`);
+    return exit_rule ("formatItem_rawCharacter");
+},
+parenarg : function (name,ws,) {
+    enter_rule ("parenarg");
+     memoArg (`${name.rwr ()}`,`\$\{${name.rwr ()}.rwr ().join ('')\}`,);
+
+    set_return (`${name.rwr ()},`);
+    return exit_rule ("parenarg");
+},
+argstring : function (str,ws,) {
+    enter_rule ("argstring");
+    set_return (`\`${str.rwr ()}\`,`);
+    return exit_rule ("argstring");
+},
+argRef : function (name,) {
+    enter_rule ("argRef");
+    set_return (`${fetchArg (`${name.rwr ()}`,)}`);
+    return exit_rule ("argRef");
+},
+parameterRef : function (name,) {
+    enter_rule ("parameterRef");
+    set_return (`\$\{getParameter ("${name.rwr ()}")\}`);
+    return exit_rule ("parameterRef");
+},
+ruleName : function (name,) {
+    enter_rule ("ruleName");
+    set_return (`${name.rwr ()}`);
+    return exit_rule ("ruleName");
+},
+name : function (nameFirst,nameRest_i,) {
+    enter_rule ("name");
+    set_return (`${nameFirst.rwr ()}${nameRest_i.rwr ().join ('')}`);
+    return exit_rule ("name");
+},
+nameFirst : function (c,) {
+    enter_rule ("nameFirst");
+    set_return (`${c.rwr ()}`);
+    return exit_rule ("nameFirst");
+},
+nameRest : function (c,) {
+    enter_rule ("nameRest");
+    set_return (`${c.rwr ()}`);
+    return exit_rule ("nameRest");
+},
+s_ : function (space_i,) {
+    enter_rule ("s_");
+    set_return (`${space_i.rwr ().join ('')}`);
+    return exit_rule ("s_");
+},
+_terminal: function () { return this.sourceString; },
+_iter: function (...children) { return children.map(c => c.rwr ()); }
+};
 
 import * as fs from 'fs';
 const argv = process.argv.slice(2);
-let dslGrammarFilename = argv[0];
-let dslRewriteFilename = argv[1];
-let srcFilename = argv[2];
-let dslGrammar = fs.readFileSync(dslGrammarFilename, 'utf-8');
-let dslRewrite = fs.readFileSync(dslRewriteFilename, 'utf-8');
-var generated = transpile_t2t (grammar, dslRewrite);
-if (srcFilename) {
-    var boilerplate = `
-
-    function t2t_phase2 (grammr, sem, scn) {
-        let parser = ohm.grammar (grammr);
-        let cst = parser.match (src);
-        if (cst.succeeded ()) {
-            let cstSemantics = parser.createSemantics ();
-            cstSemantics.addOperation ('rwr', sem);
-            var generated_code = cstSemantics (cst).rwr ();
-            return generated_code;
-        } else {
-            return cst.message; 
-        }
-    }
-
-    t2t_phase2 (dslGrammar, rewrite_js, src);
-    `;
-    var phase2 = generated + boilerplate;
-    if ('-' == srcFilename) { srcFilename = 0 }
-    let src = fs.readFileSync(srcFilename, 'utf-8');
-    try {
-	var result = eval (phase2);
-	console.log (result);
-    }
-    catch (e) {
-	console.log (phase2);
-	console.log (e);
-    }
-} else {
-    var pre_boilerplate = `
-        'use strict'
-
-        import {_} from './support.mjs';
-        import * as ohm from 'ohm-js';
-
-        let return_value_stack = [];
-        let rule_name_stack = [];
-
-        const grammar = String.raw${"`"}
-    `;
-    var mid_boilerplate = "`;";
-    var post_boilerplate = `
-// ~~~~~~ main ~~~~~~
-        function main (src) {
-            let parser = ohm.grammar (grammar);
-            let cst = parser.match (src);
-            if (cst.succeeded ()) {
-                let cstSemantics = parser.createSemantics ();
-                cstSemantics.addOperation ('rwr', rewrite_js);
-                var generated_code = cstSemantics (cst).rwr ();
-                return generated_code;
-            } else {
-                return cst.message;     
-            }
-        }
-
-        import * as fs from 'fs';
-	const argv = process.argv.slice (2);
-	let srcFilename = argv [0];
-        let src = fs.readFileSync(srcFilename, 'utf-8');
-        var result = main (src);
-        console.log (result);
-    `;
-    let program = pre_boilerplate + dslGrammar + mid_boilerplate + generated + post_boilerplate;
-    console.log (program);
-}
+let srcFilename = argv[0];
+if ('-' == srcFilename) { srcFilename = 0 }
+let src = fs.readFileSync(srcFilename, 'utf-8');
+let parser = ohm.grammar (grammar);
+let cst = parser.match (src);
+let sem = parser.createSemantics ();
+sem.addOperation ('rwr', _rewrite);
+console.log (sem (cst).rwr ());
