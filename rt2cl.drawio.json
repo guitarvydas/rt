@@ -302,24 +302,28 @@
         "name": "RT to Common Lisp",
         "children": [
             {
+                "name": "?C",
+                "id": 4
+            },
+            {
                 "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
-                "id": 5
+                "id": 6
             },
             {
                 "name": "$ grep -v \"raw_character\"",
-                "id": 12
-            },
-            {
-                "name": "?B",
                 "id": 13
             },
             {
+                "name": "?B",
+                "id": 14
+            },
+            {
                 "name": "$ grep -v \"char_any\"",
-                "id": 15
+                "id": 16
             },
             {
                 "name": "$ grep -v \"nameRest\"",
-                "id": 18
+                "id": 19
             }
         ],
         "connections": [
@@ -332,7 +336,20 @@
                 "source_port": "",
                 "target": {
                     "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
-                    "id": 5
+                    "id": 6
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "?C",
+                    "id": 4
                 },
                 "target_port": ""
             },
@@ -340,12 +357,12 @@
                 "dir": 1,
                 "source": {
                     "name": "$ grep -v \"char_any\"",
-                    "id": 15
+                    "id": 16
                 },
                 "source_port": "",
                 "target": {
                     "name": "$ grep -v \"nameRest\"",
-                    "id": 18
+                    "id": 19
                 },
                 "target_port": ""
             },
@@ -353,12 +370,12 @@
                 "dir": 1,
                 "source": {
                     "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
-                    "id": 5
+                    "id": 6
                 },
                 "source_port": "\ud83d\udc40",
                 "target": {
                     "name": "$ grep -v \"char_any\"",
-                    "id": 15
+                    "id": 16
                 },
                 "target_port": ""
             },
@@ -366,12 +383,12 @@
                 "dir": 1,
                 "source": {
                     "name": "$ grep -v \"nameRest\"",
-                    "id": 18
+                    "id": 19
                 },
                 "source_port": "",
                 "target": {
                     "name": "$ grep -v \"raw_character\"",
-                    "id": 12
+                    "id": 13
                 },
                 "target_port": ""
             },
@@ -379,12 +396,12 @@
                 "dir": 1,
                 "source": {
                     "name": "$ grep -v \"raw_character\"",
-                    "id": 12
+                    "id": 13
                 },
                 "source_port": "",
                 "target": {
                     "name": "?B",
-                    "id": 13
+                    "id": 14
                 },
                 "target_port": ""
             },
@@ -392,7 +409,20 @@
                 "dir": 2,
                 "source": {
                     "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
-                    "id": 5
+                    "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
+                    "id": 6
                 },
                 "source_port": "\u2717",
                 "target": {
@@ -400,19 +430,6 @@
                     "id": 0
                 },
                 "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2cl.rewrite -",
-                    "id": 5
-                },
-                "source_port": "",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": ""
             }
         ]
     },
