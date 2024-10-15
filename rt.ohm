@@ -63,7 +63,7 @@ rt {
     Exp =  BooleanAndOrIn
 
     BooleanAndOrIn =
-      | BooleanExp andOrIn BooleanExp -- andOrIn
+      | BooleanAndOrIn andOrIn BooleanExp -- andOrIn
       | BooleanExp -- default
       
     BooleanExp =
