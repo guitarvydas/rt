@@ -1281,9 +1281,10 @@ def print_error_maybe (main_container):
     error_port = "✗"
     err = fetch_first_output (main_container, error_port)
     if (err != None) and (0 < len (trimws (err.srepr ()))):
-        print ("--- !!! ERRORS !!! ---")
-        print_specific_output (main_container, error_port, False)
-
+        # print ("--- !!! ERRORS !!! ---", file=sys.stderr)
+        print ("", file=sys.stderr)
+        print_specific_output (main_container, error_port, stderr=True)
+        sys.exit (1)
 
 # debugging helpers
 

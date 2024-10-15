@@ -1,0 +1,9 @@
+
+defn A (parent, eh) {
+    if eh.state != “idle” {
+        force_tick (parent, eh)}
+}
+
+defn B (msg) {
+    return “tick” = msg.datum.kind ()
+}

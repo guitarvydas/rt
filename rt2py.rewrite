@@ -78,7 +78,9 @@ CommaLval [_comma Lval] = ‛, «Lval»’
 ReturnExp_multiple [ _60 Exp1 Exp2+ _62 rec?] =‛[«Exp1»«Exp2»]«rec»’
 ReturnExp_single [ Exp rec?] =‛«Exp»«rec»’
 CommaExp [_comma e] = ‛, «e»’
-Exp [ BooleanExp] = ‛«BooleanExp»’
+Exp [e] = ‛«e»’
+BooleanAndOrIn_andOrIn [e1 op e2] = ‛«e1»«op»«e2»’
+BooleanAndOrIn_default [e] = ‛«e»’
 
 BooleanExp_boolopneq [ BooleanExp boolOp BooleanNot] =‛«BooleanExp»«boolOp»«BooleanNot»’
 BooleanExp_boolop [ BooleanExp boolOp BooleanNot] =‛«BooleanExp»«boolOp»«BooleanNot»’
@@ -156,6 +158,7 @@ number_fract [ num* _160 den+] =‛«num»«_160»«den»’
 number_whole [ digit+] =‛«digit»’
 Pair [ string _161 Exp _162?] = ‛«string»«_161»«Exp»«_162»’
 
+andOrIn [op] = ‛ «op» ’
 boolOp [ _191] = ‛ «_191» ’
 boolEq [op] = ‛==’
 boolNeq [op] = ‛!=’

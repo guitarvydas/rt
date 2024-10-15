@@ -4,19 +4,44 @@
         "name": "main",
         "children": [
             {
-                "name": "Exhale Python",
-                "id": 3
-            },
-            {
                 "name": "Inhale",
                 "id": 6
             },
             {
+                "name": "trash",
+                "id": 10
+            },
+            {
                 "name": "RT to Python",
                 "id": 11
+            },
+            {
+                "name": "Exhale Python",
+                "id": 17
+            },
+            {
+                "name": "'temp.inhaled",
+                "id": 21
+            },
+            {
+                "name": "syncfilewrite",
+                "id": 25
             }
         ],
         "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'temp.inhaled",
+                    "id": 21
+                },
+                "target_port": ""
+            },
             {
                 "dir": 0,
                 "source": {
@@ -38,10 +63,10 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "RT to Python",
-                    "id": 11
+                    "name": "syncfilewrite",
+                    "id": 25
                 },
-                "target_port": ""
+                "target_port": "input"
             },
             {
                 "dir": 1,
@@ -52,7 +77,72 @@
                 "source_port": "",
                 "target": {
                     "name": "Exhale Python",
-                    "id": 3
+                    "id": 17
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Inhale",
+                    "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "RT to Python",
+                    "id": 11
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'temp.inhaled",
+                    "id": 21
+                },
+                "source_port": "",
+                "target": {
+                    "name": "syncfilewrite",
+                    "id": 25
+                },
+                "target_port": "filename"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "syncfilewrite",
+                    "id": 25
+                },
+                "source_port": "done",
+                "target": {
+                    "name": "trash",
+                    "id": 10
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Exhale Python",
+                    "id": 17
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Exhale Python",
+                    "id": 17
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
                 },
                 "target_port": ""
             },
@@ -81,32 +171,6 @@
                     "id": 0
                 },
                 "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Exhale Python",
-                    "id": 3
-                },
-                "source_port": "",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Exhale Python",
-                    "id": 3
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
             }
         ]
     },
@@ -115,7 +179,7 @@
         "name": "Inhale",
         "children": [
             {
-                "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                 "id": 5
             },
             {
@@ -145,7 +209,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                     "id": 5
                 },
                 "target_port": ""
@@ -153,7 +217,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                     "id": 5
                 },
                 "source_port": "\u2717",
@@ -166,7 +230,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                     "id": 5
                 },
                 "source_port": "",
@@ -234,7 +298,7 @@
         "name": "Decode For Python",
         "children": [
             {
-                "name": "$ node t2t.mjs pydecode.ohm pydecode.rewrite -",
+                "name": "$ ./ndsl pydecode.ohm pydecode.rewrite",
                 "id": 5
             }
         ],
@@ -247,7 +311,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ node t2t.mjs pydecode.ohm pydecode.rewrite -",
+                    "name": "$ ./ndsl pydecode.ohm pydecode.rewrite",
                     "id": 5
                 },
                 "target_port": ""
@@ -255,7 +319,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs pydecode.ohm pydecode.rewrite -",
+                    "name": "$ ./ndsl pydecode.ohm pydecode.rewrite",
                     "id": 5
                 },
                 "source_port": "",
@@ -268,7 +332,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs pydecode.ohm pydecode.rewrite -",
+                    "name": "$ ./ndsl pydecode.ohm pydecode.rewrite",
                     "id": 5
                 },
                 "source_port": "\u2717",
@@ -285,7 +349,7 @@
         "name": "RT to Python",
         "children": [
             {
-                "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
+                "name": "$ ./ndsl rt.ohm rt2py.rewrite",
                 "id": 5
             }
         ],
@@ -298,7 +362,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
+                    "name": "$ ./ndsl rt.ohm rt2py.rewrite",
                     "id": 5
                 },
                 "target_port": ""
@@ -306,7 +370,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
+                    "name": "$ ./ndsl rt.ohm rt2py.rewrite",
                     "id": 5
                 },
                 "source_port": "",
@@ -319,7 +383,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
+                    "name": "$ ./ndsl rt.ohm rt2py.rewrite",
                     "id": 5
                 },
                 "source_port": "\u2717",
