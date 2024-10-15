@@ -24,7 +24,7 @@ return exit_rule ("char_string");
 },
 char_comment : function (lb,cs,rb,) {
 enter_rule ("char_comment");
-    set_return (`#${cs.rwr ().join ('')}`);
+    set_return (`\n#| ${cs.rwr ().join ('')} |#`);
 return exit_rule ("char_comment");
 },
 char_ulb : function (c,) {
@@ -34,7 +34,7 @@ return exit_rule ("char_ulb");
 },
 char_encodedulb : function (c,) {
 enter_rule ("char_encodedulb");
-    set_return (`_L`);
+    set_return (`-L`);
 return exit_rule ("char_encodedulb");
 },
 char_urb : function (c,) {
@@ -44,22 +44,22 @@ return exit_rule ("char_urb");
 },
 char_encodedurb : function (c,) {
 enter_rule ("char_encodedurb");
-    set_return (`R_`);
+    set_return (`R-`);
 return exit_rule ("char_encodedurb");
 },
 char_space : function (c,) {
 enter_rule ("char_space");
-    set_return (`_`);
+    set_return (`-`);
 return exit_rule ("char_space");
 },
 char_tab : function (c,) {
 enter_rule ("char_tab");
-    set_return (`_TAB_`);
+    set_return (`-TAB-`);
 return exit_rule ("char_tab");
 },
 char_newline : function (c,) {
 enter_rule ("char_newline");
-    set_return (`_NL_`);
+    set_return (`-NL-`);
 return exit_rule ("char_newline");
 },
 char_other : function (c,) {
