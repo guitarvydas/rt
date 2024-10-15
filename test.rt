@@ -1,15 +1,9 @@
-
-defn stringconcat_handler (eh, msg) {
-    deftemp inst ⇐ eh.instance_data
-    if “1” = msg.port{
-        inst.buffer1 ⇐ clone_string (msg.datum.srepr ())
-        inst.count ⇐ inst.count + 1
-        maybe_stringconcat (eh, inst, msg)}
-    elif “2” = msg.port{
-        inst.buffer2 ⇐ clone_string (msg.datum.srepr ())
-        inst.count ⇐ inst.count + 1
-        maybe_stringconcat (eh, inst, msg)}
-    else{
-        runtime_error (strcons (“bad msg.port for stringconcat: ”, msg.port))
-    }
+defn log_inout_recursively (container, component, in_message, out_messages ∷ []) {
+    if [] = out_messages {
+        pass }
+    else {
+        m ≡ car (out_messages)
+        rest ≡ cdr (out_messages)
+        log_inout_single (container ∷ container, component ∷ component, in_message ∷ in_message, out_message ∷ m)
+        log_inout_recursively (container ∷ container, component ∷ component, in_message ∷ in_message, out_messages ∷ rest) }
 }

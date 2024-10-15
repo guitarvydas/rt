@@ -2,17 +2,17 @@
 
 (defparameter  counter  0)
 (defparameter  digits (list  "₀"  "₁"  "₂"  "₃"  "₄"  "₅"  "₆"  "₇"  "₈"  "₉"  "₁₀"  "₁₁"  "₁₂"  "₁₃"  "₁₄"  "₁₅"  "₁₆"  "₁₇"  "₁₈"  "₁₉"  "₂₀"  "₂₁"  "₂₂"  "₂₃"  "₂₄"  "₂₅"  "₂₆"  "₂₇"  "₂₈"  "₂₉" ))
-(defun gensymbol ( s)
+(defun gensymbol (&optional  s)
   (let (( name_with_id  (concatenate 'string  s (subscripted_digit   counter))))
     (setf  counter (+  counter  1))
     (return-from gensymbol  name_with_id)))
-(defun subscripted_digit ( n)
+(defun subscripted_digit (&optional  n)
   (cond 
     ((and ( >=   n  0) ( <=   n  29))
         (return-from subscripted_digit (nth  n  digits)))
     (t
         (return-from subscripted_digit  (concatenate 'string  "₊"  n)))))
-(defun Datum ()
+(defun Datum (&optional )
   (list
     (cons 'data  nil)
     (cons 'clone  nil)
@@ -21,124 +21,124 @@
     (cons 'kind  nil)
     (cons 'raw  nil) ))
 
-(defun new_datum_string ( s)
+(defun new_datum_string (&optional  s)
   (let (( d  (Datum)))
     (setf (cdr (assoc 'data  d))  s)
-    (setf (cdr (assoc 'clone  d))  #'(lambda () (clone_datum_string   d)))
-    (setf (cdr (assoc 'reclaim  d))  #'(lambda () (reclaim_datum_string   d)))
-    (setf (cdr (assoc 'srepr  d))  #'(lambda () (srepr_datum_string   d)))
-    (setf (cdr (assoc 'raw  d))  #'(lambda () (raw_datum_string   d)))
-    (setf (cdr (assoc 'kind  d))  #'(lambda ()  "string"))
+    (setf (cdr (assoc 'clone  d))  #'(lambda (&optional ) (clone_datum_string   d)))
+    (setf (cdr (assoc 'reclaim  d))  #'(lambda (&optional ) (reclaim_datum_string   d)))
+    (setf (cdr (assoc 'srepr  d))  #'(lambda (&optional ) (srepr_datum_string   d)))
+    (setf (cdr (assoc 'raw  d))  #'(lambda (&optional ) (raw_datum_string   d)))
+    (setf (cdr (assoc 'kind  d))  #'(lambda (&optional )  "string"))
     (return-from new_datum_string  d)))
-(defun clone_datum_string ( d)
+(defun clone_datum_string (&optional  d)
   (let (( d (new_datum_string  (cdr (assoc 'data  d)))))
     (return-from clone_datum_string  d)))
-(defun reclaim_datum_string ( src)
+(defun reclaim_datum_string (&optional  src)
   #| pass |#)
-(defun srepr_datum_string ( d)
+(defun srepr_datum_string (&optional  d)
   (return-from srepr_datum_string (cdr (assoc 'data  d))))
-(defun raw_datum_string ( d)
+(defun raw_datum_string (&optional  d)
   (return-from raw_datum_string (bytearray  (cdr (assoc 'data  d))  "UTF_8")))
-(defun new_datum_bang ()
+(defun new_datum_bang (&optional )
   (let (( p (Datum )))
     (setf (cdr (assoc 'data  p))  t)
-    (setf (cdr (assoc 'clone  p))  #'(lambda () (clone_datum_bang   p)))
-    (setf (cdr (assoc 'reclaim  p))  #'(lambda () (reclaim_datum_bang   p)))
-    (setf (cdr (assoc 'srepr  p))  #'(lambda () (srepr_datum_bang )))
-    (setf (cdr (assoc 'raw  p))  #'(lambda () (raw_datum_bang )))
-    (setf (cdr (assoc 'kind  p))  #'(lambda ()  "bang"))
+    (setf (cdr (assoc 'clone  p))  #'(lambda (&optional ) (clone_datum_bang   p)))
+    (setf (cdr (assoc 'reclaim  p))  #'(lambda (&optional ) (reclaim_datum_bang   p)))
+    (setf (cdr (assoc 'srepr  p))  #'(lambda (&optional ) (srepr_datum_bang )))
+    (setf (cdr (assoc 'raw  p))  #'(lambda (&optional ) (raw_datum_bang )))
+    (setf (cdr (assoc 'kind  p))  #'(lambda (&optional )  "bang"))
     (return-from new_datum_bang  p)))
-(defun clone_datum_bang ( d)
+(defun clone_datum_bang (&optional  d)
   (return-from clone_datum_bang (new_datum_bang )))
-(defun reclaim_datum_bang ( d)
+(defun reclaim_datum_bang (&optional  d)
   #| pass |#)
-(defun srepr_datum_bang ()
+(defun srepr_datum_bang (&optional )
   (return-from srepr_datum_bang  "!"))
-(defun raw_datum_bang ()
+(defun raw_datum_bang (&optional )
   (return-from raw_datum_bang nil))
-(defun new_datum_tick ()
+(defun new_datum_tick (&optional )
   (let (( p (new_datum_bang )))
-    (setf (cdr (assoc 'kind  p))  #'(lambda ()  "tick"))
-    (setf (cdr (assoc 'clone  p))  #'(lambda () (new_datum_tick )))
-    (setf (cdr (assoc 'srepr  p))  #'(lambda () (srepr_datum_tick )))
-    (setf (cdr (assoc 'raw  p))  #'(lambda () (raw_datum_tick )))
+    (setf (cdr (assoc 'kind  p))  #'(lambda (&optional )  "tick"))
+    (setf (cdr (assoc 'clone  p))  #'(lambda (&optional ) (new_datum_tick )))
+    (setf (cdr (assoc 'srepr  p))  #'(lambda (&optional ) (srepr_datum_tick )))
+    (setf (cdr (assoc 'raw  p))  #'(lambda (&optional ) (raw_datum_tick )))
     (return-from new_datum_tick  p)))
-(defun srepr_datum_tick ()
+(defun srepr_datum_tick (&optional )
   (return-from srepr_datum_tick  "."))
-(defun raw_datum_tick ()
+(defun raw_datum_tick (&optional )
   (return-from raw_datum_tick nil))
-(defun new_datum_bytes ( b)
+(defun new_datum_bytes (&optional  b)
   (let (( p (Datum )))
     (setf (cdr (assoc 'data  p))  b)
     (setf (cdr (assoc 'clone  p))  clone_datum_bytes)
-    (setf (cdr (assoc 'reclaim  p))  #'(lambda () (reclaim_datum_bytes   p)))
-    (setf (cdr (assoc 'srepr  p))  #'(lambda () (srepr_datum_bytes   b)))
-    (setf (cdr (assoc 'raw  p))  #'(lambda () (raw_datum_bytes   b)))
-    (setf (cdr (assoc 'kind  p))  #'(lambda ()  "bytes"))
+    (setf (cdr (assoc 'reclaim  p))  #'(lambda (&optional ) (reclaim_datum_bytes   p)))
+    (setf (cdr (assoc 'srepr  p))  #'(lambda (&optional ) (srepr_datum_bytes   b)))
+    (setf (cdr (assoc 'raw  p))  #'(lambda (&optional ) (raw_datum_bytes   b)))
+    (setf (cdr (assoc 'kind  p))  #'(lambda (&optional )  "bytes"))
     (return-from new_datum_bytes  p)))
-(defun clone_datum_bytes ( src)
+(defun clone_datum_bytes (&optional  src)
   (let (( p (Datum )))
     (let (( p  src))
       (setf (cdr (assoc 'data  p)) (funcall2 (cdr (assoc 'clone  src)) ))
       (return-from clone_datum_bytes  p))))
-(defun reclaim_datum_bytes ( src)
+(defun reclaim_datum_bytes (&optional  src)
   #| pass |#)
-(defun srepr_datum_bytes ( d)
+(defun srepr_datum_bytes (&optional  d)
   (return-from srepr_datum_bytes (funcall2 (cdr (assoc 'decode (cdr (assoc 'data  d))))   "UTF_8")))
-(defun raw_datum_bytes ( d)
+(defun raw_datum_bytes (&optional  d)
   (return-from raw_datum_bytes (cdr (assoc 'data  d))))
-(defun new_datum_handle ( h)
+(defun new_datum_handle (&optional  h)
   (return-from new_datum_handle (new_datum_int   h)))
-(defun new_datum_int ( i)
+(defun new_datum_int (&optional  i)
   (let (( p (Datum )))
     (setf (cdr (assoc 'data  p))  i)
-    (setf (cdr (assoc 'clone  p))  #'(lambda () (clone_int   i)))
-    (setf (cdr (assoc 'reclaim  p))  #'(lambda () (reclaim_int   i)))
-    (setf (cdr (assoc 'srepr  p))  #'(lambda () (srepr_datum_int   i)))
-    (setf (cdr (assoc 'raw  p))  #'(lambda () (raw_datum_int   i)))
-    (setf (cdr (assoc 'kind  p))  #'(lambda ()  "int"))
+    (setf (cdr (assoc 'clone  p))  #'(lambda (&optional ) (clone_int   i)))
+    (setf (cdr (assoc 'reclaim  p))  #'(lambda (&optional ) (reclaim_int   i)))
+    (setf (cdr (assoc 'srepr  p))  #'(lambda (&optional ) (srepr_datum_int   i)))
+    (setf (cdr (assoc 'raw  p))  #'(lambda (&optional ) (raw_datum_int   i)))
+    (setf (cdr (assoc 'kind  p))  #'(lambda (&optional )  "int"))
     (return-from new_datum_int  p)))
-(defun clone_int ( i)
+(defun clone_int (&optional  i)
   (let (( p (new_datum_int   i)))
     (return-from clone_int  p)))
-(defun reclaim_int ( src)
+(defun reclaim_int (&optional  src)
   #| pass |#)
-(defun srepr_datum_int ( i)
+(defun srepr_datum_int (&optional  i)
   (return-from srepr_datum_int (str   i)))
-(defun raw_datum_int ( i)
+(defun raw_datum_int (&optional  i)
   (return-from raw_datum_int  i))
 #|  Message passed to a leaf component. |#
 #|  |#
 #|  `port` refers to the name of the incoming or outgoing port of this component. |#
 #|  `datum` is the data attached to this message. |#
-(defun Message ( port datum)
+(defun Message (&optional  port datum)
   (list
     (cons 'port  port)
     (cons 'datum  datum) ))
 
-(defun clone_port ( s)
+(defun clone_port (&optional  s)
   (return-from clone_port (clone_string   s)))
 #|  Utility for making a `Message`. Used to safely “seed“ messages |#
 #|  entering the very top of a network. |#
-(defun make_message ( port datum)
+(defun make_message (&optional  port datum)
   (let (( p (clone_string   port)))
     (let (( m (Message  :port  p :datum (funcall2 (cdr (assoc 'clone  datum)) ))))
       (return-from make_message  m))))
 #|  Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations. |#
-(defun message_clone ( message)
+(defun message_clone (&optional  message)
   (let (( m (Message  :port (clone_port  (cdr (assoc 'port  message))) :datum (funcall2 (cdr (assoc 'clone (cdr (assoc 'datum  message)))) ))))
     (return-from message_clone  m)))
 #|  Frees a message. |#
-(defun destroy_message ( msg)
+(defun destroy_message (&optional  msg)
   
   #|  during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages |#
   #| pass |#)
-(defun destroy_datum ( msg)
+(defun destroy_datum (&optional  msg)
   #| pass |#)
-(defun destroy_port ( msg)
+(defun destroy_port (&optional  msg)
   #| pass |#)
 #|  |#
-(defun format_message ( m)
+(defun format_message (&optional  m)
   (cond 
     (( equal    m  nil)
         (return-from format_message  "ϕ"))
@@ -154,7 +154,7 @@
 (defparameter  drAcross  "across")
 (defparameter  drThrough  "through")
 #|  See “class_free programming“ starting at 45:01 of https://www.youtube.com/watch?v=XFTOG895C7c |#
-(defun make_Routing_Descriptor ( action component port message)
+(defun make_Routing_Descriptor (&optional  action component port message)
   (return-from make_Routing_Descriptor 
     (let ((_dict (make-hash-table :test 'equal)))
       (setf (gethash "action" _dict)  action)
@@ -163,7 +163,7 @@
       (setf (gethash "message" _dict)  message)
       _dict)))
 #|  |#
-(defun make_Send_Descriptor ( component port message cause_port cause_message)
+(defun make_Send_Descriptor (&optional  component port message cause_port cause_message)
   (let (( rdesc (make_Routing_Descriptor  :action  drSend :component  component :port  port :message  message)))
     (return-from make_Send_Descriptor 
       (let ((_dict (make-hash-table :test 'equal)))
@@ -175,22 +175,22 @@
         (setf (gethash "cause_message" _dict)  cause_message)
         (setf (gethash "fmt" _dict)  fmt_send)
         _dict))))
-(defun log_send ( sender sender_port msg cause_msg)
+(defun log_send (&optional  sender sender_port msg cause_msg)
   (let (( send_desc (make_Send_Descriptor  :component  sender :port  sender_port :message  msg :cause_port (cdr (assoc 'port  cause_msg)) :cause_message  cause_msg)))
     (append_routing_descriptor  :container (cdr (assoc 'owner  sender)) :desc  send_desc) ))
-(defun log_send_string ( sender sender_port msg cause_msg)
+(defun log_send_string (&optional  sender sender_port msg cause_msg)
   (let (( send_desc (make_Send_Descriptor   sender  sender_port  msg (cdr (assoc 'port  cause_msg))  cause_msg)))
     (append_routing_descriptor  :container (cdr (assoc 'owner  sender)) :desc  send_desc) ))
-(defun fmt_send ( desc indent)
+(defun fmt_send (&optional  desc indent)
   (return-from fmt_send  ""
     
     #| return f;\n{indent}⋯ {desc@component.name}.“{desc@cause_port}“ ∴ {desc@component.name}.“{desc@port}“ {format_message (desc@message)}' |#))
-(defun fmt_send_string ( desc indent)
+(defun fmt_send_string (&optional  desc indent)
   (return-from fmt_send_string (fmt_send   desc  indent)))
 #|  |#
-(defun make_Forward_Descriptor ( component port message cause_port cause_message)
+(defun make_Forward_Descriptor (&optional  component port message cause_port cause_message)
   (let (( rdesc (make_Routing_Descriptor  :action  drSend :component  component :port  port :message  message)))
-    (let (( fmt_forward  #'(lambda (desc)  "")))
+    (let (( fmt_forward  #'(lambda (&optional desc)  "")))
       (return-from make_Forward_Descriptor 
         (let ((_dict (make-hash-table :test 'equal)))
           (setf (gethash "action" _dict)  drForward)
@@ -201,15 +201,15 @@
           (setf (gethash "cause_message" _dict)  cause_message)
           (setf (gethash "fmt" _dict)  fmt_forward)
           _dict)))))
-(defun log_forward ( sender sender_port msg cause_msg)
+(defun log_forward (&optional  sender sender_port msg cause_msg)
   #| pass |#
   
   #|  when needed, it is too frequent to bother logging |#)
-(defun fmt_forward ( desc)
+(defun fmt_forward (&optional  desc)
   (print   (concatenate 'string  "*** Error fmt_forward "  desc))
   (quit ) )
 #|  |#
-(defun make_Inject_Descriptor ( receiver port message)
+(defun make_Inject_Descriptor (&optional  receiver port message)
   (let (( rdesc (make_Routing_Descriptor  :action  drInject :component  receiver :port  port :message  message)))
     (return-from make_Inject_Descriptor 
       (let ((_dict (make-hash-table :test 'equal)))
@@ -219,15 +219,15 @@
         (setf (gethash "message" _dict) (cdr (assoc 'message  rdesc)))
         (setf (gethash "fmt" _dict)  fmt_inject)
         _dict))))
-(defun log_inject ( receiver port msg)
+(defun log_inject (&optional  receiver port msg)
   (let (( inject_desc (make_Inject_Descriptor  :receiver  receiver :port  port :message  msg)))
     (append_routing_descriptor  :container  receiver :desc  inject_desc) ))
-(defun fmt_inject ( desc indent)
+(defun fmt_inject (&optional  desc indent)
   
   #| return f'\n{indent}⟹  {desc@component.name}.“{desc@port}“ {format_message (desc@message)}' |#
   (return-from fmt_inject  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "⟹  "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'component  desc))))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'port  desc))  (concatenate 'string  " " (format_message  (cdr (assoc 'message  desc))))))))))))
 #|  |#
-(defun make_Down_Descriptor ( container source_port source_message target target_port target_message)
+(defun make_Down_Descriptor (&optional  container source_port source_message target target_port target_message)
   (return-from make_Down_Descriptor 
     (let ((_dict (make-hash-table :test 'equal)))
       (setf (gethash "action" _dict)  drDown)
@@ -239,15 +239,15 @@
       (setf (gethash "target_message" _dict)  target_message)
       (setf (gethash "fmt" _dict)  fmt_down)
       _dict)))
-(defun log_down ( container source_port source_message target target_port target_message)
+(defun log_down (&optional  container source_port source_message target target_port target_message)
   (let (( rdesc (make_Down_Descriptor   container  source_port  source_message  target  target_port  target_message)))
     (append_routing_descriptor   container  rdesc) ))
-(defun fmt_down ( desc indent)
+(defun fmt_down (&optional  desc indent)
   
   #| return f'\n{indent}↓ {desc@container.name}.“{desc@source_port}“ ➔ {desc@target.name}.“{desc@target_port}“ {format_message (desc@target_message)}' |#
   (return-from fmt_down  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  " ↓ "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'container  desc))))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'source_port  desc))  (concatenate 'string  " ➔ "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'target  desc))))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'target_port  desc))  (concatenate 'string  " " (format_message  (cdr (assoc 'target_message  desc))))))))))))))))
 #|  |#
-(defun make_Up_Descriptor ( source source_port source_message container container_port container_message)
+(defun make_Up_Descriptor (&optional  source source_port source_message container container_port container_message)
   (return-from make_Up_Descriptor 
     (let ((_dict (make-hash-table :test 'equal)))
       (setf (gethash "action" _dict)  drUp)
@@ -259,14 +259,14 @@
       (setf (gethash "container_message" _dict)  container_message)
       (setf (gethash "fmt" _dict)  fmt_up)
       _dict)))
-(defun log_up ( source source_port source_message container target_port target_message)
+(defun log_up (&optional  source source_port source_message container target_port target_message)
   (let (( rdesc (make_Up_Descriptor   source  source_port  source_message  container  target_port  target_message)))
     (append_routing_descriptor   container  rdesc) ))
-(defun fmt_up ( desc indent)
+(defun fmt_up (&optional  desc indent)
   
   #| return f'\n{indent}↑ {desc@source.name}.“{desc@source_port}“ ➔ {desc@container.name}.“{desc@container_port}“ {format_message (desc@container_message)}' |#
   (return-from fmt_up  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "↑ "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'source  desc))))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'source_port  desc))  (concatenate 'string  " ➔ "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'container  desc))))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'container_port  desc))  (concatenate 'string  " " (format_message  (cdr (assoc 'container_message  desc))))))))))))))))
-(defun make_Across_Descriptor ( container source source_port source_message target target_port target_message)
+(defun make_Across_Descriptor (&optional  container source source_port source_message target target_port target_message)
   (return-from make_Across_Descriptor 
     (let ((_dict (make-hash-table :test 'equal)))
       (setf (gethash "action" _dict)  drAcross)
@@ -279,15 +279,15 @@
       (setf (gethash "target_message" _dict)  target_message)
       (setf (gethash "fmt" _dict)  fmt_across)
       _dict)))
-(defun log_across ( container source source_port source_message target target_port target_message)
+(defun log_across (&optional  container source source_port source_message target target_port target_message)
   (let (( rdesc (make_Across_Descriptor   container  source  source_port  source_message  target  target_port  target_message)))
     (append_routing_descriptor   container  rdesc) ))
-(defun fmt_across ( desc indent)
+(defun fmt_across (&optional  desc indent)
   
   #| return f'\n{indent}→ {desc@source.name}.“{desc@source_port}“ ➔ {desc@target.name}.“{desc@target_port}“  {format_message (desc@target_message)}' |#
   (return-from fmt_across  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "→ "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'source  desc))))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'source_port  desc))  (concatenate 'string  " ➔ "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'target  desc))))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'target_port  desc))  (concatenate 'string  "  " (format_message  (cdr (assoc 'target_message  desc))))))))))))))))
 #|  |#
-(defun make_Through_Descriptor ( container source_port source_message target_port message)
+(defun make_Through_Descriptor (&optional  container source_port source_message target_port message)
   (return-from make_Through_Descriptor 
     (let ((_dict (make-hash-table :test 'equal)))
       (setf (gethash "action" _dict)  drThrough)
@@ -298,15 +298,15 @@
       (setf (gethash "message" _dict)  message)
       (setf (gethash "fmt" _dict)  fmt_through)
       _dict)))
-(defun log_through ( container source_port source_message target_port message)
+(defun log_through (&optional  container source_port source_message target_port message)
   (let (( rdesc (make_Through_Descriptor   container  source_port  source_message  target_port  message)))
     (append_routing_descriptor   container  rdesc) ))
-(defun fmt_through ( desc indent)
+(defun fmt_through (&optional  desc indent)
   
   #| return f'\n{indent}⇶ {desc @container.name}.“{desc@source_port}“ ➔ {desc@container.name}.“{desc@target_port}“ {format_message (desc@message)}' |#
   (return-from fmt_through  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "⇶ "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'container  desc))))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'source_port  desc))  (concatenate 'string  " ➔ "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'container  desc))))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'target_port  desc))  (concatenate 'string  " " (format_message  (cdr (assoc 'message  desc))))))))))))))))
 #|  |#
-(defun make_InOut_Descriptor ( container component in_message out_port out_message)
+(defun make_InOut_Descriptor (&optional  container component in_message out_port out_message)
   (return-from make_InOut_Descriptor 
     (let ((_dict (make-hash-table :test 'equal)))
       (setf (gethash "action" _dict)  drInOut)
@@ -316,19 +316,19 @@
       (setf (gethash "out_message" _dict)  out_message)
       (setf (gethash "fmt" _dict)  fmt_inout)
       _dict)))
-(defun log_inout ( container component in_message)
+(defun log_inout (&optional  container component in_message)
   (cond 
     ((funcall2 (cdr (assoc 'empty (cdr (assoc 'outq  component)))) )
         (log_inout_no_output  :container  container :component  component :in_message  in_message) )
     (t
         (log_inout_recursively  :container  container :component  component :in_message  in_message :out_messages (list  (cdr (assoc 'queue (cdr (assoc 'outq  component)))))) )))
-(defun log_inout_no_output ( container component in_message)
+(defun log_inout_no_output (&optional  container component in_message)
   (let (( rdesc (make_InOut_Descriptor  :container  container :component  component :in_message  in_message :out_port  nil :out_message  nil)))
     (append_routing_descriptor   container  rdesc) ))
-(defun log_inout_single ( container component in_message out_message)
+(defun log_inout_single (&optional  container component in_message out_message)
   (let (( rdesc (make_InOut_Descriptor  :container  container :component  component :in_message  in_message :out_port  nil :out_message  out_message)))
     (append_routing_descriptor   container  rdesc) ))
-(defun log_inout_recursively ( container component in_message (out_messages nil))
+(defun log_inout_recursively (&optional  container component in_message (out_messages nil))
   (cond 
     (( equal   nil  out_messages)
         #| pass |#)
@@ -337,21 +337,21 @@
           (let (( rest  (cdr  out_messages)))
             (log_inout_single  :container  container :component  component :in_message  in_message :out_message  m)
             (log_inout_recursively  :container  container :component  component :in_message  in_message :out_messages  rest) )))))
-(defun fmt_inout ( desc indent)
+(defun fmt_inout (&optional  desc indent)
   (let (( outm (cdr (assoc 'out_message  desc))))
     (cond 
       (( equal    nil  outm)
           (return-from fmt_inout  (concatenate 'string  "\n"  (concatenate 'string  indent  "  ⊥"))))
       (t
           (return-from fmt_inout  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "  ∴ "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'component  desc))))  (concatenate 'string  " " (format_message   outm)))))))))))
-(defun log_tick ( container component in_message)
+(defun log_tick (&optional  container component in_message)
   #| pass |#)
 #|  |#
-(defun routing_trace_all ( container)
+(defun routing_trace_all (&optional  container)
   (let (( indent  ""))
     (let (( lis (list  (cdr (assoc 'queue (cdr (assoc 'routings  container)))))))
       (return-from routing_trace_all (recursive_routing_trace   container  lis  indent)))))
-(defun recursive_routing_trace ( container lis indent)
+(defun recursive_routing_trace (&optional  container lis indent)
   (cond 
     (( equal   nil  lis)
         (return-from recursive_routing_trace  ""))
@@ -363,7 +363,7 @@
 (defparameter  enumAcross  1)
 (defparameter  enumUp  2)
 (defparameter  enumThrough  3)
-(defun container_instantiator ( reg owner container_name desc)
+(defun container_instantiator (&optional  reg owner container_name desc)
   (let (( container (make_container   container_name  owner)))
     (let (( children nil))
       (let (( children_by_id bil))
@@ -430,7 +430,7 @@
             (setf (cdr (assoc 'connections  container))  connectors)
             (return-from container_instantiator  container)))))))
 #|  The default handler for container components. |#
-(defun container_handler ( container message)
+(defun container_handler (&optional  container message)
   (route  :container  container :from_component  container :message  message)
   
   #|  references to 'self' are replaced by the container during instantiation |#
@@ -438,14 +438,14 @@
     do
       (step_children   container  message) ))
 #|  Frees the given container and associated data. |#
-(defun destroy_container ( eh)
+(defun destroy_container (&optional  eh)
   #| pass |#)
-(defun fifo_is_empty ( fifo)
+(defun fifo_is_empty (&optional  fifo)
   (return-from fifo_is_empty (funcall2 (cdr (assoc 'empty  fifo)) )))
 #|  Routing connection for a container component. The `direction` field has |#
 #|  no affect on the default message routing system _ it is there for debugging |#
 #|  purposes, or for reading by other tools. |#
-(defun Connector ()
+(defun Connector (&optional )
   (list
     (cons 'direction  nil)
     #|  down, across, up, through |#
@@ -454,7 +454,7 @@
 
 #|  `Sender` is used to “pattern match“ which `Receiver` a message should go to, |#
 #|  based on component ID (pointer) and port name. |#
-(defun Sender ( name component port)
+(defun Sender (&optional  name component port)
   (list
     (cons 'name  name)
     (cons 'component  component)
@@ -464,7 +464,7 @@
 
 #|  `Receiver` is a handle to a destination queue, and a `port` name to assign |#
 #|  to incoming messages to this queue. |#
-(defun Receiver ( name queue port component)
+(defun Receiver (&optional  name queue port component)
   (list
     (cons 'name  name)
     (cons 'queue  queue)
@@ -475,36 +475,36 @@
     #|  to (for bootstrap debug) |#))
 
 #|  Checks if two senders match, by pointer equality and port name matching. |#
-(defun sender_eq ( s1 s2)
+(defun sender_eq (&optional  s1 s2)
   (let (( same_components ( equal   (cdr (assoc 'component  s1)) (cdr (assoc 'component  s2)))))
     (let (( same_ports ( equal   (cdr (assoc 'port  s1)) (cdr (assoc 'port  s2)))))
       (return-from sender_eq (and  same_components  same_ports)))))
 #|  Delivers the given message to the receiver of this connector. |#
-(defun deposit ( parent conn message)
+(defun deposit (&optional  parent conn message)
   (let (( new_message (make_message  :port (cdr (assoc 'port (cdr (assoc 'receiver  conn)))) :datum (cdr (assoc 'datum  message)))))
     (log_connection   parent  conn  new_message)
     (push_message   parent (cdr (assoc 'component (cdr (assoc 'receiver  conn)))) (cdr (assoc 'queue (cdr (assoc 'receiver  conn))))  new_message) ))
-(defun force_tick ( parent eh)
+(defun force_tick (&optional  parent eh)
   (let (( tick_msg (make_message   "." (new_datum_tick ))))
     (push_message   parent  eh (cdr (assoc 'inq  eh))  tick_msg)
     (return-from force_tick  tick_msg)))
-(defun push_message ( parent receiver inq m)
+(defun push_message (&optional  parent receiver inq m)
   (funcall2 (cdr (assoc 'put  inq))   m)
   (funcall2 (cdr (assoc 'put (cdr (assoc 'visit_ordering  parent))))   receiver) )
-(defun is_self ( child container)
+(defun is_self (&optional  child container)
   
   #|  in an earlier version “self“ was denoted as ϕ |#
   (return-from is_self ( equal    child  container)))
-(defun step_child ( child msg)
+(defun step_child (&optional  child msg)
   (let (( before_state (cdr (assoc 'state  child))))
     (funcall2 (cdr (assoc 'handler  child))   child  msg)
     (let (( after_state (cdr (assoc 'state  child))))
       (return-from step_child (values (and ( equal    before_state  "idle") (not (equal   after_state  "idle")))  (and (not (equal   before_state  "idle")) (not (equal   after_state  "idle"))) (and (not (equal   before_state  "idle")) ( equal    after_state  "idle")))))))
-(defun save_message ( eh msg)
+(defun save_message (&optional  eh msg)
   (funcall2 (cdr (assoc 'put (cdr (assoc 'saved_messages  eh))))   msg) )
-(defun fetch_saved_message_and_clear ( eh)
+(defun fetch_saved_message_and_clear (&optional  eh)
   (return-from fetch_saved_message_and_clear (funcall2 (cdr (assoc 'get (cdr (assoc 'saved_messages  eh)))) )))
-(defun step_children ( container causingMessage)
+(defun step_children (&optional  container causingMessage)
   (setf (cdr (assoc 'state  container))  "idle")
   (loop for child in (list  (cdr (assoc 'queue (cdr (assoc 'visit_ordering  container)))))
     do
@@ -543,15 +543,15 @@
                 (let (( msg (funcall2 (cdr (assoc 'get (cdr (assoc 'outq  child)))) )))
                   (route   container  child  msg)
                   (destroy_message   msg) ))))))
-(defun attempt_tick ( parent eh)
+(defun attempt_tick (&optional  parent eh)
   (cond 
     ((not (equal  (cdr (assoc 'state  eh))  "idle"))
         (force_tick   parent  eh) )))
-(defun is_tick ( msg)
+(defun is_tick (&optional  msg)
   (return-from is_tick ( equal    "tick" (funcall2 (cdr (assoc 'kind (cdr (assoc 'datum  msg)))) ))))
 #|  Routes a single message to all matching destinations, according to |#
 #|  the container's connection network. |#
-(defun route ( container from_component message)
+(defun route (&optional  container from_component message)
   (let (( was_sent  nil))
     
     #|  for checking that output went somewhere (at least during bootstrap) |#
@@ -582,25 +582,25 @@
             (print   (concatenate 'string (cdr (assoc 'name  container))  (concatenate 'string  ": message '"  (concatenate 'string (cdr (assoc 'port  message))  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor..."))))))
             (print   "***")
             (exit ) )))))
-(defun dump_possible_connections ( container)
+(defun dump_possible_connections (&optional  container)
   (print   (concatenate 'string  "*** possible connections for "  (concatenate 'string (cdr (assoc 'name  container))  ":")))
   (loop for connector in (cdr (assoc 'connections  container))
     do
       (print   (concatenate 'string (cdr (assoc 'direction  connector))  (concatenate 'string  " "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'sender  connector))))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'port (cdr (assoc 'sender  connector))))  (concatenate 'string  " -> "  (concatenate 'string (cdr (assoc 'name (cdr (assoc 'receiver  connector))))  (concatenate 'string  "." (cdr (assoc 'port (cdr (assoc 'receiver  connector))))))))))))) ))
-(defun any_child_ready ( container)
+(defun any_child_ready (&optional  container)
   (loop for child in (cdr (assoc 'children  container))
     do
       (cond 
         ((child_is_ready   child)
             (return-from any_child_ready  t))))
   (return-from any_child_ready  nil))
-(defun child_is_ready ( eh)
+(defun child_is_ready (&optional  eh)
   (return-from child_is_ready (or (or (or (not (funcall2 (cdr (assoc 'empty (cdr (assoc 'outq  eh)))) )) (not (funcall2 (cdr (assoc 'empty (cdr (assoc 'inq  eh)))) ))) (not (equal  (cdr (assoc 'state  eh))  "idle"))) (any_child_ready   eh))))
-(defun print_routing_trace ( eh)
+(defun print_routing_trace (&optional  eh)
   (print  (routing_trace_all   eh)) )
-(defun append_routing_descriptor ( container desc)
+(defun append_routing_descriptor (&optional  container desc)
   (funcall2 (cdr (assoc 'put (cdr (assoc 'routings  container))))   desc) )
-(defun log_connection ( container connector message)
+(defun log_connection (&optional  container connector message)
   (cond 
     (( equal    "down" (cdr (assoc 'direction  connector)))
         (log_down  :container  container :source_port (cdr (assoc 'port (cdr (assoc 'sender  connector)))) :source_message  nil :target (cdr (assoc 'component (cdr (assoc 'receiver  connector)))) :target_port (cdr (assoc 'port (cdr (assoc 'receiver  connector)))) :target_message  message) )
@@ -613,7 +613,7 @@
     (t
         (print   (concatenate 'string  "*** FATAL error: in log_connection /"  (concatenate 'string (cdr (assoc 'direction  connector))  (concatenate 'string  "/ /"  (concatenate 'string (cdr (assoc 'port  message))  (concatenate 'string  "/ /"  (concatenate 'string (funcall2 (cdr (assoc 'srepr (cdr (assoc 'datum  message)))) )  "/")))))))
         (exit ) )))
-(defun container_injector ( container message)
+(defun container_injector (&optional  container message)
   (log_inject  :receiver  container :port (cdr (assoc 'port  message)) :msg  message)
   (container_handler   container  message) )
 
