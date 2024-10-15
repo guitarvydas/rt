@@ -1,4 +1,824 @@
+❲defvar❳ ❲counter❳ ⇐ 0
+
+❲defvar❳ ❲digits❳ ⇐ [
+    “%E2%82%80”, “%E2%82%81”, “%E2%82%82”, “%E2%82%83”, “%E2%82%84”, “%E2%82%85”,
+    “%E2%82%86”, “%E2%82%87”, “%E2%82%88”, “%E2%82%89”,
+    “%E2%82%81%E2%82%80”, “%E2%82%81%E2%82%81”, “%E2%82%81%E2%82%82”, “%E2%82%81%E2%82%83”, “%E2%82%81%E2%82%84”,
+    “%E2%82%81%E2%82%85”, “%E2%82%81%E2%82%86”, “%E2%82%81%E2%82%87”, “%E2%82%81%E2%82%88”, “%E2%82%81%E2%82%89”,
+    “%E2%82%82%E2%82%80”, “%E2%82%82%E2%82%81”, “%E2%82%82%E2%82%82”, “%E2%82%82%E2%82%83”, “%E2%82%82%E2%82%84”,
+    “%E2%82%82%E2%82%85”, “%E2%82%82%E2%82%86”, “%E2%82%82%E2%82%87”, “%E2%82%82%E2%82%88”, “%E2%82%82%E2%82%89”
+]
+
+❲defn❳ ❲gensymbol❳ (❲s❳) {
+    ❲global❳ ❲counter❳
+    ❲name_with_id❳ ≡ ❲strcons❳ (❲s❳, ❲subscripted_digit❳ (❲counter❳))
+    ❲counter❳ ⇐ ❲counter❳ + 1
+    ❲return❳ ❲name_with_id❳
+}
+
+❲defn❳ ❲subscripted_digit❳ (❲n❳) {
+  ❲global❳ ❲digits❳
+  ❲if❳ (❲n❳ >=  0 ❲and❳ ❲n❳ <=  29) {
+    ❲return❳ ❲digits❳ [❲n❳]
+  } ❲else❳ {
+    ❲return❳ ❲strcons❳ (“%E2%82%8A”, ❲n❳)
+  }
+}
+
+❲defobj❳ ❲Datum❳ () {
+      • ❲data❳ ⇐ ❲%CF%95❳
+      • ❲clone❳ ⇐ ❲%CF%95❳
+      • ❲reclaim❳ ⇐ ❲%CF%95❳
+      • ❲srepr❳ ⇐ ❲%CF%95❳
+      • ❲kind❳ ⇐ ❲%CF%95❳
+      • ❲raw❳ ⇐ ❲%CF%95❳
+}
+
+❲defn❳ ❲new_datum_string❳ (❲s❳) {
+    ❲d❳ ≡ ❲fresh❳ (❲Datum❳)
+    ❲d❳.❲data❳ ⇐ ❲s❳
+    ❲d❳.❲clone❳ ⇐ ❲%CE%BB❳: ❲clone_datum_string❳ (❲d❳)
+    ❲d❳.❲reclaim❳ ⇐ ❲%CE%BB❳: ❲reclaim_datum_string❳ (❲d❳)    
+    ❲d❳.❲srepr❳ ⇐ ❲%CE%BB❳: ❲srepr_datum_string❳ (❲d❳)
+    ❲d❳.❲raw❳ ⇐ ❲%CE%BB❳: ❲raw_datum_string❳ (❲d❳)    
+    ❲d❳.❲kind❳ ⇐ ❲%CE%BB❳: “string”
+    ❲return❳ ❲d❳
+}
+
+❲defn❳ ❲clone_datum_string❳ (❲d❳) {
+  ❲d❳ ≡ ❲new_datum_string❳ (❲d❳.❲data❳)
+  ❲return❳ ❲d❳
+}
+
+❲defn❳ ❲reclaim_datum_string❳ (❲src❳) {
+  ❲pass❳
+}
+
+❲defn❳ ❲srepr_datum_string❳ (❲d❳) {
+  ❲return❳ ❲d❳.❲data❳
+}
+
+❲defn❳ ❲raw_datum_string❳ (❲d❳) {
+  ❲return❳ ❲bytearray❳ (❲d❳.❲data❳,“UTF_8”)
+}
+
+❲defn❳ ❲new_datum_bang❳ () {
+    ❲p❳ ≡ ❲Datum❳ ()
+    ❲p❳.❲data❳ ⇐ ⊤
+    ❲p❳.❲clone❳ ⇐ ❲%CE%BB❳: ❲clone_datum_bang❳ (❲p❳)
+    ❲p❳.❲reclaim❳ ⇐ ❲%CE%BB❳: ❲reclaim_datum_bang❳ (❲p❳)
+    ❲p❳.❲srepr❳ ⇐ ❲%CE%BB❳: ❲srepr_datum_bang❳ ()
+    ❲p❳.❲raw❳ ⇐ ❲%CE%BB❳: ❲raw_datum_bang❳ ()    
+    ❲p❳.❲kind❳ ⇐ ❲%CE%BB❳: “bang”
+    ❲return❳ ❲p❳
+}
+
+❲defn❳ ❲clone_datum_bang❳ (❲d❳) {
+    ❲return❳ ❲new_datum_bang❳ ()
+}
+
+❲defn❳ ❲reclaim_datum_bang❳ (❲d❳) {
+    ❲pass❳
+}
+
+❲defn❳ ❲srepr_datum_bang❳ () {
+    ❲return❳ “!”
+}
+
+❲defn❳ ❲raw_datum_bang❳ () {
+    ❲return❳ []
+}
+
+❲defn❳ ❲new_datum_tick❳ () {
+    ❲p❳ ≡ ❲new_datum_bang❳ ()
+    ❲p❳.❲kind❳ ⇐ ❲%CE%BB❳: “tick”
+    ❲p❳.❲clone❳ ⇐ ❲%CE%BB❳: ❲new_datum_tick❳ ()
+    ❲p❳.❲srepr❳ ⇐ ❲%CE%BB❳: ❲srepr_datum_tick❳ ()
+    ❲p❳.❲raw❳ ⇐ ❲%CE%BB❳: ❲raw_datum_tick❳ ()
+    ❲return❳ ❲p❳
+}
+
+❲defn❳ ❲srepr_datum_tick❳ () {
+    ❲return❳ “.”
+}
+
+❲defn❳ ❲raw_datum_tick❳ () {
+    ❲return❳ []
+}
+
+❲defn❳ ❲new_datum_bytes❳ (❲b❳) {
+    ❲p❳ ≡ ❲Datum❳ ()
+    ❲p❳.❲data❳ ⇐ ❲b❳
+    ❲p❳.❲clone❳ ⇐ ❲clone_datum_bytes❳
+    ❲p❳.❲reclaim❳ ⇐ ❲%CE%BB❳: ❲reclaim_datum_bytes❳ (❲p❳)
+    ❲p❳.❲srepr❳ ⇐ ❲%CE%BB❳: ❲srepr_datum_bytes❳ (❲b❳)
+    ❲p❳.❲raw❳ ⇐ ❲%CE%BB❳: ❲raw_datum_bytes❳ (❲b❳)
+    ❲p❳.❲kind❳ ⇐ ❲%CE%BB❳: “bytes”
+    ❲return❳ ❲p❳
+}
+
+❲defn❳ ❲clone_datum_bytes❳ (❲src❳) {
+    ❲p❳ ≡ ❲Datum❳ ()
+    ❲p❳ ≡ ❲src❳
+    ❲p❳.❲data❳ ⇐ ❲src❳.❲clone❳ ()
+    ❲return❳ ❲p❳
+}
+
+❲defn❳ ❲reclaim_datum_bytes❳ (❲src❳) {
+    ❲pass❳
+}
+
+❲defn❳ ❲srepr_datum_bytes❳ (❲d❳) {
+    ❲return❳ ❲d❳.❲data❳.❲decode❳ (“UTF_8”)
+}
+❲defn❳ ❲raw_datum_bytes❳ (❲d❳) {
+    ❲return❳ ❲d❳.❲data❳
+}
+
+❲defn❳ ❲new_datum_handle❳ (❲h❳) {
+    ❲return❳ ❲new_datum_int❳ (❲h❳)
+}
+
+❲defn❳ ❲new_datum_int❳ (❲i❳) {
+    ❲p❳ ≡ ❲Datum❳ ()
+    ❲p❳.❲data❳ ⇐ ❲i❳
+    ❲p❳.❲clone❳ ⇐ ❲%CE%BB❳: ❲clone_int❳ (❲i❳)
+    ❲p❳.❲reclaim❳ ⇐ ❲%CE%BB❳: ❲reclaim_int❳ (❲i❳)
+    ❲p❳.❲srepr❳ ⇐ ❲%CE%BB❳: ❲srepr_datum_int❳ (❲i❳)
+    ❲p❳.❲raw❳ ⇐ ❲%CE%BB❳: ❲raw_datum_int❳ (❲i❳)
+    ❲p❳.❲kind❳ ⇐ ❲%CE%BB❳: “int”
+    ❲return❳ ❲p❳
+}
+
+❲defn❳ ❲clone_int❳ (❲i❳) {
+    ❲p❳ ≡ ❲new_datum_int❳ (❲i❳)
+    ❲return❳ ❲p❳
+}
+
+❲defn❳ ❲reclaim_int❳ (❲src❳) {
+    ❲pass❳
+}
+
+❲defn❳ ❲srepr_datum_int❳ (❲i❳) {
+  ❲return❳ ❲str❳ (❲i❳)
+}
+
+❲defn❳ ❲raw_datum_int❳ (❲i❳) {
+    ❲return❳ ❲i❳
+}
+
+⌈%20Message%20passed%20to%20a%20leaf%20component.⌉
+⌈⌉
+⌈%20%60port%60%20refers%20to%20the%20name%20of%20the%20incoming%20or%20outgoing%20port%20of%20this%20component.⌉
+⌈%20%60datum%60%20is%20the%20data%20attached%20to%20this%20message.⌉
+❲defobj❳ ❲Message❳ (❲port❳, ❲datum❳) {
+        • ❲port❳ ⇐ ❲port❳
+        • ❲datum❳ ⇐ ❲datum❳
+}
+
+❲defn❳ ❲clone_port❳ (❲s❳) {
+    ❲return❳ ❲clone_string❳ (❲s❳)
+}
+
+⌈%20Utility%20for%20making%20a%20%60Message%60.%20Used%20to%20safely%20%E2%80%9Cseed%E2%80%9C%20messages⌉
+⌈%20entering%20the%20very%20top%20of%20a%20network.⌉
+❲defn❳ ❲make_message❳ (❲port❳, ❲datum❳) {
+    ❲p❳ ≡ ❲clone_string❳ (❲port❳)
+    ❲m❳ ≡ ❲Message❳ (❲port❳ ∷ ❲p❳, ❲datum❳ ∷ ❲datum❳.❲clone❳ ())
+    ❲return❳ ❲m❳
+}
+
+⌈%20Clones%20a%20message.%20Primarily%20used%20internally%20for%20%E2%80%9Cfanning%20out%E2%80%9C%20a%20message%20to%20multiple%20destinations.⌉
+❲defn❳ ❲message_clone❳ (❲message❳) {
+    ❲m❳ ≡ ❲Message❳ (❲port❳ ∷ ❲clone_port❳ (❲message❳.❲port❳), ❲datum❳ ∷ ❲message❳.❲datum❳.❲clone❳ ())
+    ❲return❳ ❲m❳
+}
+
+⌈%20Frees%20a%20message.⌉
+❲defn❳ ❲destroy_message❳ (❲msg❳) {
+    ⌈%20during%20debug%2C%20dont%20destroy%20any%20message%2C%20since%20we%20want%20to%20trace%20messages%2C%20thus%2C%20we%20need%20to%20persist%20ancestor%20messages⌉
+    ❲pass❳
+}
+
+❲defn❳ ❲destroy_datum❳ (❲msg❳) {
+    ❲pass❳
+}
+
+❲defn❳ ❲destroy_port❳ (❲msg❳) {
+    ❲pass❳
+}
+
+⌈⌉
+❲defn❳ ❲format_message❳ (❲m❳) {
+    ❲if❳ ❲m❳ = ❲%CF%95❳ {
+        ❲return❳ “%CF%95” }
+    ❲else❳ {
+        ❲return❳ ❲strcons❳ (“%E2%9F%AA”,
+	         ❲strcons❳ (❲m❳.❲port❳,
+		   ❲strcons❳ (“%E2%A6%82”,
+		     ❲strcons❳ (❲m❳.❲datum❳.❲srepr❳ (), “%E2%9F%AB”))))
+    }
+}
+
+⌈%20dynamic%20routing%20descriptors⌉
+
+❲defconst❳ ❲drInject❳ ≡ “inject”
+❲defconst❳ ❲drSend❳ ≡ “send”
+❲defconst❳ ❲drInOut❳ ≡ “inout”
+❲defconst❳ ❲drForward❳ ≡ “forward”
+❲defconst❳ ❲drDown❳ ≡ “down”
+❲defconst❳ ❲drUp❳ ≡ “up”
+❲defconst❳ ❲drAcross❳ ≡ “across”
+❲defconst❳ ❲drThrough❳ ≡ “through”
+
+⌈%20See%20%E2%80%9Cclass_free%20programming%E2%80%9C%20starting%20at%2045%3A01%20of%20https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DXFTOG895C7c⌉
+
+
+❲defn❳ ❲make_Routing_Descriptor❳ (❲action❳, ❲component❳, ❲port❳, ❲message❳) {
+    ❲return❳ {
+        “action”: ❲action❳,
+        “component”: ❲component❳,
+        “port”: ❲port❳,
+        “message”: ❲message❳
+        }
+}
+
+⌈⌉
+❲defn❳ ❲make_Send_Descriptor❳ (❲component❳, ❲port❳, ❲message❳, ❲cause_port❳, ❲cause_message❳) {
+    ❲rdesc❳ ≡ ❲make_Routing_Descriptor❳ (❲action❳ ∷ ❲drSend❳, ❲component❳ ∷ ❲component❳, ❲port❳ ∷ ❲port❳, ❲message❳ ∷ ❲message❳)
+    ❲return❳ {
+        “action”: ❲drSend❳,
+        “component”: ❲rdesc❳@❲component❳,
+        “port”: ❲rdesc❳@❲port❳,
+        “message”: ❲rdesc❳@❲message❳,
+        “cause_port”: ❲cause_port❳,
+        “cause_message”: ❲cause_message❳,
+        “fmt”: ❲fmt_send❳
+        }
+}
+
+❲defn❳ ❲log_send❳ (❲sender❳, ❲sender_port❳, ❲msg❳, ❲cause_msg❳) {
+    ❲send_desc❳ ≡ ❲make_Send_Descriptor❳ (❲component❳ ∷ ❲sender❳, ❲port❳ ∷ ❲sender_port❳, ❲message❳ ∷ ❲msg❳, ❲cause_port❳ ∷ ❲cause_msg❳.❲port❳, ❲cause_message❳ ∷ ❲cause_msg❳)
+    ❲append_routing_descriptor❳ (❲container❳ ∷ ❲sender❳.❲owner❳, ❲desc❳ ∷ ❲send_desc❳)
+}
+
+❲defn❳ ❲log_send_string❳ (❲sender❳, ❲sender_port❳, ❲msg❳, ❲cause_msg❳) {
+    ❲send_desc❳ ≡ ❲make_Send_Descriptor❳ (❲sender❳, ❲sender_port❳, ❲msg❳, ❲cause_msg❳.❲port❳, ❲cause_msg❳)
+    ❲append_routing_descriptor❳ (❲container❳ ∷ ❲sender❳.❲owner❳, ❲desc❳ ∷ ❲send_desc❳)
+}
+
+❲defn❳ ❲fmt_send❳ (❲desc❳, ❲indent❳) {
+    ❲return❳ “”
+    ⌈return%20f%27%5Cn%7Bindent%7D%E2%8B%AF%20%7Bdesc%40component.name%7D.%E2%80%9C%7Bdesc%40cause_port%7D%E2%80%9C%20%E2%88%B4%20%7Bdesc%40component.name%7D.%E2%80%9C%7Bdesc%40port%7D%E2%80%9C%20%7Bformat_message%20(desc%40message)%7D%27⌉
+}
+
+❲defn❳ ❲fmt_send_string❳ (❲desc❳, ❲indent❳) {
+    ❲return❳ ❲fmt_send❳ (❲desc❳, ❲indent❳)
+}
+
+⌈⌉
+❲defn❳ ❲make_Forward_Descriptor❳ (❲component❳, ❲port❳, ❲message❳, ❲cause_port❳, ❲cause_message❳) {
+    ❲rdesc❳ ≡ ❲make_Routing_Descriptor❳ (❲action❳ ∷ ❲drSend❳, ❲component❳ ∷ ❲component❳, ❲port❳ ∷ ❲port❳, ❲message❳ ∷ ❲message❳)
+    ❲fmt_forward❳ ≡ ❲%CE%BB❳ (❲desc❳) : “”
+    ❲return❳ {
+        “action”: ❲drForward❳,
+        “component”: ❲rdesc❳@❲component❳,
+        “port”: ❲rdesc❳@❲port❳,
+        “message”: ❲rdesc❳@❲message❳,
+        “cause_port”: ❲cause_port❳,
+        “cause_message”: ❲cause_message❳,
+        “fmt”: ❲fmt_forward❳
+        }
+}
+
+❲defn❳ ❲log_forward❳ (❲sender❳, ❲sender_port❳, ❲msg❳, ❲cause_msg❳) {
+    ❲pass❳ ⌈%20when%20needed%2C%20it%20is%20too%20frequent%20to%20bother%20logging⌉
+}
+
+❲defn❳ ❲fmt_forward❳ (❲desc❳) {
+    ❲print❳ (❲strcons❳ (“***%20Error%20fmt_forward%20”, ❲desc❳))
+    ❲quit❳ ()
+}
+
+⌈⌉
+❲defn❳ ❲make_Inject_Descriptor❳ (❲receiver❳, ❲port❳, ❲message❳) {
+    ❲rdesc❳ ≡ ❲make_Routing_Descriptor❳ (❲action❳ ∷ ❲drInject❳, ❲component❳ ∷ ❲receiver❳, ❲port❳ ∷ ❲port❳, ❲message❳ ∷ ❲message❳)
+    ❲return❳ {
+        “action”: ❲drInject❳,
+        “component”: ❲rdesc❳@❲component❳,
+        “port”: ❲rdesc❳@❲port❳,
+        “message”: ❲rdesc❳@❲message❳,
+        “fmt” : ❲fmt_inject❳
+        }
+}
+
+❲defn❳ ❲log_inject❳ (❲receiver❳, ❲port❳, ❲msg❳) {
+    ❲inject_desc❳ ≡ ❲make_Inject_Descriptor❳ (❲receiver❳ ∷ ❲receiver❳, ❲port❳ ∷ ❲port❳, ❲message❳ ∷ ❲msg❳)
+    ❲append_routing_descriptor❳ (❲container❳ ∷ ❲receiver❳, ❲desc❳ ∷ ❲inject_desc❳)
+}
+
+❲defn❳ ❲fmt_inject❳ (❲desc❳, ❲indent❳) {
+    ⌈return%20f%27%5Cn%7Bindent%7D%E2%9F%B9%20%20%7Bdesc%40component.name%7D.%E2%80%9C%7Bdesc%40port%7D%E2%80%9C%20%7Bformat_message%20(desc%40message)%7D%27⌉
+    ❲return❳ ❲strcons❳ (“%5Cn”,
+             ❲strcons❳ (❲indent❳,
+	       ❲strcons❳ (“%E2%9F%B9%20%20”,
+	         ❲strcons❳ (❲desc❳@❲component❳.❲name❳,
+		   ❲strcons❳ (“.”,
+		     ❲strcons❳ (❲desc❳@❲port❳,
+		       ❲strcons❳ (“%20”, ❲format_message❳ (❲desc❳@❲message❳))))))))
+}
+
+⌈⌉
+❲defn❳ ❲make_Down_Descriptor❳ (❲container❳, ❲source_port❳, ❲source_message❳, ❲target❳, ❲target_port❳, ❲target_message❳) {
+    ❲return❳ {
+        “action”: ❲drDown❳,
+        “container”: ❲container❳,
+        “source_port”: ❲source_port❳,
+        “source_message”: ❲source_message❳,
+        “target”: ❲target❳,
+        “target_port”: ❲target_port❳,
+        “target_message”: ❲target_message❳,
+        “fmt” : ❲fmt_down❳
+        }
+}
+
+❲defn❳ ❲log_down❳ (❲container❳, ❲source_port❳, ❲source_message❳, ❲target❳, ❲target_port❳, ❲target_message❳) {
+    ❲rdesc❳ ≡ ❲make_Down_Descriptor❳ (❲container❳, ❲source_port❳, ❲source_message❳, ❲target❳, ❲target_port❳, ❲target_message❳)
+    ❲append_routing_descriptor❳ (❲container❳, ❲rdesc❳)
+}
+
+❲defn❳ ❲fmt_down❳ (❲desc❳, ❲indent❳) {
+    ⌈return%20f%27%5Cn%7Bindent%7D%E2%86%93%20%7Bdesc%40container.name%7D.%E2%80%9C%7Bdesc%40source_port%7D%E2%80%9C%20%E2%9E%94%20%7Bdesc%40target.name%7D.%E2%80%9C%7Bdesc%40target_port%7D%E2%80%9C%20%7Bformat_message%20(desc%40target_message)%7D%27⌉
+    ❲return❳ ❲strcons❳ (“%5Cn”,
+             ❲strcons❳ (❲indent❳,
+	       ❲strcons❳ (“%20%E2%86%93%20”,
+	         ❲strcons❳ (❲desc❳@❲container❳.❲name❳,
+		   ❲strcons❳ (“.”,
+		     ❲strcons❳ (❲desc❳@❲source_port❳,
+		       ❲strcons❳ (“%20%E2%9E%94%20”,
+		         ❲strcons❳ (❲desc❳@❲target❳.❲name❳,
+			   ❲strcons❳ (“.”,
+			     ❲strcons❳ (❲desc❳@❲target_port❳,
+			       ❲strcons❳ (“%20”, ❲format_message❳ (❲desc❳@❲target_message❳))))))))))))
+}
+
+⌈⌉
+❲defn❳ ❲make_Up_Descriptor❳ (❲source❳, ❲source_port❳, ❲source_message❳, ❲container❳, ❲container_port❳, ❲container_message❳) {
+    ❲return❳ {
+        “action”: ❲drUp❳,
+        “source”: ❲source❳,
+        “source_port”: ❲source_port❳,
+        “source_message”: ❲source_message❳,
+        “container”: ❲container❳,
+        “container_port”: ❲container_port❳,
+        “container_message”: ❲container_message❳,
+        “fmt” : ❲fmt_up❳
+        }
+}
+
+❲defn❳ ❲log_up❳ (❲source❳, ❲source_port❳, ❲source_message❳, ❲container❳, ❲target_port❳, ❲target_message❳) {
+    ❲rdesc❳ ≡ ❲make_Up_Descriptor❳ (❲source❳, ❲source_port❳, ❲source_message❳, ❲container❳, ❲target_port❳, ❲target_message❳)
+    ❲append_routing_descriptor❳ (❲container❳, ❲rdesc❳)
+}
+
+❲defn❳ ❲fmt_up❳ (❲desc❳, ❲indent❳) {
+    ⌈return%20f%27%5Cn%7Bindent%7D%E2%86%91%20%7Bdesc%40source.name%7D.%E2%80%9C%7Bdesc%40source_port%7D%E2%80%9C%20%E2%9E%94%20%7Bdesc%40container.name%7D.%E2%80%9C%7Bdesc%40container_port%7D%E2%80%9C%20%7Bformat_message%20(desc%40container_message)%7D%27⌉
+    ❲return❳ ❲strcons❳ (“%5Cn”,
+             ❲strcons❳ (❲indent❳,
+	       ❲strcons❳ (“%E2%86%91%20”,
+	         ❲strcons❳ (❲desc❳@❲source❳.❲name❳,
+		   ❲strcons❳ (“.”,
+		     ❲strcons❳ (❲desc❳@❲source_port❳,
+		       ❲strcons❳ (“%20%E2%9E%94%20”,
+		         ❲strcons❳ (❲desc❳@❲container❳.❲name❳,
+			   ❲strcons❳ (“.”,
+			     ❲strcons❳ (❲desc❳@❲container_port❳,
+			       ❲strcons❳ (“%20”, ❲format_message❳ (❲desc❳@❲container_message❳))))))))))))
+}
+
+❲defn❳ ❲make_Across_Descriptor❳ (❲container❳, ❲source❳, ❲source_port❳, ❲source_message❳, ❲target❳, ❲target_port❳, ❲target_message❳) {
+    ❲return❳ {
+        “action”: ❲drAcross❳,
+        “container”: ❲container❳,
+        “source”: ❲source❳,
+        “source_port”: ❲source_port❳,
+        “source_message”: ❲source_message❳,
+        “target”: ❲target❳,
+        “target_port”: ❲target_port❳,
+        “target_message”: ❲target_message❳,
+        “fmt” : ❲fmt_across❳
+        }
+}
+
+❲defn❳ ❲log_across❳ (❲container❳, ❲source❳, ❲source_port❳, ❲source_message❳, ❲target❳, ❲target_port❳, ❲target_message❳) {
+    ❲rdesc❳ ≡ ❲make_Across_Descriptor❳ (❲container❳, ❲source❳, ❲source_port❳, ❲source_message❳, ❲target❳, ❲target_port❳, ❲target_message❳)
+    ❲append_routing_descriptor❳ (❲container❳, ❲rdesc❳)
+}
+
+❲defn❳ ❲fmt_across❳ (❲desc❳, ❲indent❳) {
+    ⌈return%20f%27%5Cn%7Bindent%7D%E2%86%92%20%7Bdesc%40source.name%7D.%E2%80%9C%7Bdesc%40source_port%7D%E2%80%9C%20%E2%9E%94%20%7Bdesc%40target.name%7D.%E2%80%9C%7Bdesc%40target_port%7D%E2%80%9C%20%20%7Bformat_message%20(desc%40target_message)%7D%27⌉
+    ❲return❳ ❲strcons❳ (“%5Cn”,
+             ❲strcons❳ (❲indent❳,
+	       ❲strcons❳ (“%E2%86%92%20”,
+	         ❲strcons❳ (❲desc❳@❲source❳.❲name❳,
+		   ❲strcons❳ (“.”,
+		     ❲strcons❳ (❲desc❳@❲source_port❳,
+		       ❲strcons❳ (“%20%E2%9E%94%20”,
+		         ❲strcons❳ (❲desc❳@❲target❳.❲name❳,
+			   ❲strcons❳ (“.”,
+			     ❲strcons❳ (❲desc❳@❲target_port❳,
+			       ❲strcons❳ (“%20%20”, ❲format_message❳ (❲desc❳@❲target_message❳))))))))))))
+}
+
+⌈⌉
+❲defn❳ ❲make_Through_Descriptor❳ (❲container❳, ❲source_port❳, ❲source_message❳, ❲target_port❳, ❲message❳) {
+    ❲return❳ {
+        “action”: ❲drThrough❳,
+        “container”: ❲container❳,
+        “source_port”: ❲source_port❳,
+        “source_message”: ❲source_message❳,
+        “target_port”: ❲target_port❳,
+        “message”: ❲message❳,
+        “fmt” : ❲fmt_through❳
+        }
+}
+
+❲defn❳ ❲log_through❳ (❲container❳, ❲source_port❳, ❲source_message❳, ❲target_port❳, ❲message❳) {
+    ❲rdesc❳ ≡ ❲make_Through_Descriptor❳ (❲container❳, ❲source_port❳, ❲source_message❳, ❲target_port❳, ❲message❳)
+    ❲append_routing_descriptor❳ (❲container❳, ❲rdesc❳)
+}
+
+❲defn❳ ❲fmt_through❳ (❲desc❳, ❲indent❳) {
+    ⌈return%20f%27%5Cn%7Bindent%7D%E2%87%B6%20%7Bdesc%20%40container.name%7D.%E2%80%9C%7Bdesc%40source_port%7D%E2%80%9C%20%E2%9E%94%20%7Bdesc%40container.name%7D.%E2%80%9C%7Bdesc%40target_port%7D%E2%80%9C%20%7Bformat_message%20(desc%40message)%7D%27⌉
+    ❲return❳ ❲strcons❳ (“%5Cn”,
+             ❲strcons❳ (❲indent❳,
+	       ❲strcons❳ (“%E2%87%B6%20”,
+	         ❲strcons❳ (❲desc❳@❲container❳.❲name❳,
+		   ❲strcons❳ (“.”,
+		     ❲strcons❳ (❲desc❳@❲source_port❳,
+		       ❲strcons❳ (“%20%E2%9E%94%20”,
+		         ❲strcons❳ (❲desc❳@❲container❳.❲name❳,
+			   ❲strcons❳ (“.”,
+			     ❲strcons❳ (❲desc❳@❲target_port❳,
+			       ❲strcons❳ (“%20”, ❲format_message❳ (❲desc❳@❲message❳))))))))))))
+}
+
+⌈⌉
+❲defn❳ ❲make_InOut_Descriptor❳ (❲container❳, ❲component❳, ❲in_message❳, ❲out_port❳, ❲out_message❳) {
+    ❲return❳ {
+        “action”: ❲drInOut❳,
+        “container”: ❲container❳,
+        “component”: ❲component❳,
+        “in_message”: ❲in_message❳,
+        “out_message”: ❲out_message❳,
+        “fmt” : ❲fmt_inout❳
+        }
+}
+
+❲defn❳ ❲log_inout❳ (❲container❳, ❲component❳, ❲in_message❳) {
+    ❲if❳ ❲component❳.❲outq❳.❲empty❳ () {
+        ❲log_inout_no_output❳ (❲container❳ ∷ ❲container❳, ❲component❳ ∷ ❲component❳, ❲in_message❳ ∷ ❲in_message❳) }
+    ❲else❳ {
+        ❲log_inout_recursively❳ (❲container❳ ∷ ❲container❳, ❲component❳ ∷ ❲component❳, ❲in_message❳ ∷ ❲in_message❳, ❲out_messages❳ ∷ ❲list❳ (❲component❳.❲outq❳.❲queue❳)) }
+}
+
+❲defn❳ ❲log_inout_no_output❳ (❲container❳, ❲component❳, ❲in_message❳) {
+    ❲rdesc❳ ≡ ❲make_InOut_Descriptor❳ (❲container❳ ∷ ❲container❳, ❲component❳ ∷ ❲component❳, ❲in_message❳ ∷ ❲in_message❳,
+                                   ❲out_port❳ ∷ ❲%CF%95❳, ❲out_message❳ ∷ ❲%CF%95❳)
+    ❲append_routing_descriptor❳ (❲container❳, ❲rdesc❳)
+}
+
+❲defn❳ ❲log_inout_single❳ (❲container❳, ❲component❳, ❲in_message❳, ❲out_message❳) {
+    ❲rdesc❳ ≡ ❲make_InOut_Descriptor❳ (❲container❳ ∷ ❲container❳, ❲component❳ ∷ ❲component❳, ❲in_message❳ ∷ ❲in_message❳,
+                                   ❲out_port❳ ∷ ❲%CF%95❳, ❲out_message❳ ∷ ❲out_message❳)
+    ❲append_routing_descriptor❳ (❲container❳, ❲rdesc❳)
+}
+
+❲defn❳ ❲log_inout_recursively❳ (❲container❳, ❲component❳, ❲in_message❳, ❲out_messages❳ ∷ []) {
+    ❲if❳ [] = ❲out_messages❳ {
+        ❲pass❳ }
+    ❲else❳ {
+        ❲m❳ ≡ ❲car❳ (❲out_messages❳)
+        ❲rest❳ ≡ ❲cdr❳ (❲out_messages❳)
+        ❲log_inout_single❳ (❲container❳ ∷ ❲container❳, ❲component❳ ∷ ❲component❳, ❲in_message❳ ∷ ❲in_message❳, ❲out_message❳ ∷ ❲m❳)
+        ❲log_inout_recursively❳ (❲container❳ ∷ ❲container❳, ❲component❳ ∷ ❲component❳, ❲in_message❳ ∷ ❲in_message❳, ❲out_messages❳ ∷ ❲rest❳) }
+}
+
+❲defn❳ ❲fmt_inout❳ (❲desc❳, ❲indent❳) {
+    ❲outm❳ ≡ ❲desc❳@❲out_message❳
+    ❲if❳ ❲%CF%95❳ = ❲outm❳ {
+        ❲return❳ ❲strcons❳ (“%5Cn”, ❲strcons❳ (❲indent❳, “%20%20%E2%8A%A5”))
+    } ❲else❳ {
+        ❲return❳ ❲strcons❳ (“%5Cn”, 
+                 ❲strcons❳ (❲indent❳,
+		   ❲strcons❳ (“%20%20%E2%88%B4%20”,
+		     ❲strcons❳ (❲desc❳@❲component❳.❲name❳,
+		       ❲strcons❳ (“%20”, ❲format_message❳ (❲outm❳))))))
+    }
+}
+
+❲defn❳ ❲log_tick❳ (❲container❳, ❲component❳, ❲in_message❳) {
+    ❲pass❳
+}
+
+⌈⌉
+❲defn❳ ❲routing_trace_all❳ (❲container❳) {
+    ❲indent❳ ≡ “”
+    ❲lis❳ ≡ ❲list❳ (❲container❳.❲routings❳.❲queue❳)
+    ❲return❳ ❲recursive_routing_trace❳ (❲container❳, ❲lis❳, ❲indent❳)
+}
+
+❲defn❳ ❲recursive_routing_trace❳ (❲container❳, ❲lis❳, ❲indent❳) {
+    ❲if❳ [] = ❲lis❳ {
+        ❲return❳ “”}
+    ❲else❳ {
+        ❲desc❳ ≡ ❲first❳ (❲lis❳)
+        ❲formatted❳ ≡ ❲desc❳@❲fmt❳ (❲desc❳, ❲indent❳)
+        ❲return❳ ❲formatted❳ + ❲recursive_routing_trace❳ (❲container❳, ❲rest❳ (❲lis❳), ❲indent❳ + “%20%20”)}
+}
+
+❲defconst❳ ❲enumDown❳ ≡ 0
+❲defconst❳ ❲enumAcross❳ ≡ 1
+❲defconst❳ ❲enumUp❳ ≡ 2
+❲defconst❳ ❲enumThrough❳ ≡ 3
+
+❲defn❳ ❲container_instantiator❳ (❲reg❳, ❲owner❳, ❲container_name❳, ❲desc❳) {
+    ❲global❳ ❲enumDown❳, ❲enumUp❳, ❲enumAcross❳, ❲enumThrough❳
+    ❲container❳ ≡ ❲make_container❳ (❲container_name❳, ❲owner❳)
+    ❲children❳ ≡ []
+    ❲children_by_id❳ ≡ {} ⌈%20not%20strictly%20necessary%2C%20but%2C%20we%20can%20remove%201%20runtime%20lookup%20by%20%E2%80%9Ccompiling%20it%20out%E2%80%9C%20here⌉
+    ⌈%20collect%20children⌉
+    ❲for❳ ❲child_desc❳ ❲in❳ ❲desc❳@❲children❳ {
+        ❲child_instance❳ ≡ ❲get_component_instance❳ (❲reg❳, ❲child_desc❳@❲name❳, ❲container❳)
+        ❲children❳.❲append❳ (❲child_instance❳)
+        ❲children_by_id❳ [❲child_desc❳@❲id❳] ≡ ❲child_instance❳ }
+    ❲container❳.❲children❳ ⇐ ❲children❳
+    ❲me❳ ≡ ❲container❳
+    
+    ❲connectors❳ ≡ []
+    ❲for❳ ❲proto_conn❳ ❲in❳ ❲desc❳@❲connections❳ {
+        ❲source_component❳ ≡ ❲%CF%95❳
+        ❲target_component❳ ≡ ❲%CF%95❳
+        ❲connector❳ ≡ ❲Connector❳ ()
+        ❲if❳ ❲proto_conn❳@❲dir❳ = ❲enumDown❳ {
+            ⌈%20JSON%3A%20%7B%27dir%27%3A%200%2C%20%27source%27%3A%20%7B%27name%27%3A%20%27%27%2C%20%27id%27%3A%200%7D%2C%20%27source_port%27%3A%20%27%27%2C%20%27target%27%3A%20%7B%27name%27%3A%20%27Echo%27%2C%20%27id%27%3A%2012%7D%2C%20%27target_port%27%3A%20%27%27%7D%2C⌉
+            ❲connector❳.❲direction❳ ⇐ “down”
+            ❲connector❳.❲sender❳ ⇐ ❲Sender❳ (❲me❳.❲name❳, ❲me❳, ❲proto_conn❳@❲source_port❳)
+            ❲target_component❳ ≡ ❲children_by_id❳ [❲proto_conn❳@❲target❳@❲id❳]
+            ❲if❳ (❲target_component❳ = ❲%CF%95❳) {
+                ❲load_error❳ (❲strcons❳ (“internal%20error%3A%20.Down%20connection%20target%20internal%20error%20”, ❲proto_conn❳@❲target❳))}
+            ❲else❳{
+                ❲connector❳.❲receiver❳ ⇐ ❲Receiver❳ (❲target_component❳.❲name❳, ❲target_component❳.❲inq❳, ❲proto_conn❳@❲target_port❳, ❲target_component❳)
+                ❲connectors❳.❲append❳ (❲connector❳) }}
+        ❲elif❳ ❲proto_conn❳@❲dir❳ = ❲enumAcross❳ {
+            ❲connector❳.❲direction❳ ⇐ “across”
+            ❲source_component❳ ≡ ❲children_by_id❳ [❲proto_conn❳@❲source❳@❲id❳]
+            ❲target_component❳ ≡ ❲children_by_id❳ [❲proto_conn❳@❲target❳@❲id❳]
+            ❲if❳ ❲source_component❳ = ❲%CF%95❳ {
+                ❲load_error❳ (❲strcons❳ (“internal%20error%3A%20.Across%20connection%20source%20not%20ok%20”, ❲proto_conn❳@❲source❳)) }
+            ❲else❳ {
+                ❲connector❳.❲sender❳ ⇐ ❲Sender❳ (❲source_component❳.❲name❳, ❲source_component❳, ❲proto_conn❳@❲source_port❳)
+                ❲if❳ ❲target_component❳ = ❲%CF%95❳ {
+                    ❲load_error❳ (❲strcons❳ (“internal%20error%3A%20.Across%20connection%20target%20not%20ok%20”, ❲proto_conn❳.❲target❳)) }
+                ❲else❳ {
+                    ❲connector❳.❲receiver❳ ⇐ ❲Receiver❳ (❲target_component❳.❲name❳, ❲target_component❳.❲inq❳, ❲proto_conn❳@❲target_port❳, ❲target_component❳)
+                    ❲connectors❳.❲append❳ (❲connector❳)}}}
+        ❲elif❳ ❲proto_conn❳@❲dir❳ = ❲enumUp❳ {
+            ❲connector❳.❲direction❳ ⇐ “up”
+            ❲source_component❳ ≡ ❲children_by_id❳ [❲proto_conn❳@❲source❳@❲id❳]
+            ❲if❳ ❲source_component❳ = ❲%CF%95❳ {
+                ❲print❳ (❲strcons❳ (“internal%20error%3A%20.Up%20connection%20source%20not%20ok%20”, ❲proto_conn❳@❲source❳)) }
+            ❲else❳ {
+                ❲connector❳.❲sender❳ ⇐ ❲Sender❳ (❲source_component❳.❲name❳, ❲source_component❳, ❲proto_conn❳@❲source_port❳)
+                ❲connector❳.❲receiver❳ ⇐ ❲Receiver❳ (❲me❳.❲name❳, ❲container❳.❲outq❳, ❲proto_conn❳@❲target_port❳, ❲me❳)
+                ❲connectors❳.❲append❳ (❲connector❳) }}
+        ❲elif❳ ❲proto_conn❳@❲dir❳ = ❲enumThrough❳ {
+            ❲connector❳.❲direction❳ ⇐ “through”
+            ❲connector❳.❲sender❳ ⇐ ❲Sender❳ (❲me❳.❲name❳, ❲me❳, ❲proto_conn❳@❲source_port❳)
+            ❲connector❳.❲receiver❳ ⇐ ❲Receiver❳ (❲me❳.❲name❳, ❲container❳.❲outq❳, ❲proto_conn❳@❲target_port❳, ❲me❳)
+            ❲connectors❳.❲append❳ (❲connector❳) }}
+            
+    ❲container❳.❲connections❳ ⇐ ❲connectors❳
+    ❲return❳ ❲container❳
+}
+
+⌈%20The%20default%20handler%20for%20container%20components.⌉
+❲defn❳ ❲container_handler❳ (❲container❳, ❲message❳) {
+    ❲route❳ (❲container❳ ∷ ❲container❳, ❲from_component❳ ∷ ❲container❳, ❲message❳ ∷ ❲message❳) ⌈%20references%20to%20%27self%27%20are%20replaced%20by%20the%20container%20during%20instantiation⌉
+    ❲while❳ ❲any_child_ready❳ (❲container❳) {
+        ❲step_children❳ (❲container❳, ❲message❳)}
+}
+
+⌈%20Frees%20the%20given%20container%20and%20associated%20data.⌉
+❲defn❳ ❲destroy_container❳ (❲eh❳) {
+    ❲pass❳
+}
+
+❲defn❳ ❲fifo_is_empty❳ (❲fifo❳) {
+    ❲return❳ ❲fifo❳.❲empty❳ ()
+}
+
+⌈%20Routing%20connection%20for%20a%20container%20component.%20The%20%60direction%60%20field%20has⌉
+⌈%20no%20affect%20on%20the%20default%20message%20routing%20system%20_%20it%20is%20there%20for%20debugging⌉
+⌈%20purposes%2C%20or%20for%20reading%20by%20other%20tools.⌉
+
+❲defobj❳ ❲Connector❳ () {
+        • ❲direction❳ ⇐ ❲%CF%95❳ ⌈%20down%2C%20across%2C%20up%2C%20through⌉
+        • ❲sender❳ ⇐ ❲%CF%95❳
+        • ❲receiver❳ ⇐ ❲%CF%95❳
+}
+
+⌈%20%60Sender%60%20is%20used%20to%20%E2%80%9Cpattern%20match%E2%80%9C%20which%20%60Receiver%60%20a%20message%20should%20go%20to%2C⌉
+⌈%20based%20on%20component%20ID%20(pointer)%20and%20port%20name.⌉
+
+❲defobj❳ ❲Sender❳ (❲name❳, ❲component❳, ❲port❳) {
+        • ❲name❳ ⇐ ❲name❳
+        • ❲component❳ ⇐ ❲component❳ ⌈%20from⌉
+        • ❲port❳ ⇐ ❲port❳ ⌈%20from%27s%20port⌉
+}
+
+⌈%20%60Receiver%60%20is%20a%20handle%20to%20a%20destination%20queue%2C%20and%20a%20%60port%60%20name%20to%20assign⌉
+⌈%20to%20incoming%20messages%20to%20this%20queue.⌉
+
+❲defobj❳ ❲Receiver❳ (❲name❳, ❲queue❳, ❲port❳, ❲component❳) {
+        • ❲name❳ ⇐ ❲name❳
+        • ❲queue❳ ⇐ ❲queue❳ ⌈%20queue%20(input%20%7C%20output)%20of%20receiver⌉
+        • ❲port❳ ⇐ ❲port❳ ⌈%20destination%20port⌉
+        • ❲component❳ ⇐ ❲component❳ ⌈%20to%20(for%20bootstrap%20debug)⌉
+}
+
+⌈%20Checks%20if%20two%20senders%20match%2C%20by%20pointer%20equality%20and%20port%20name%20matching.⌉
+❲defn❳ ❲sender_eq❳ (❲s1❳, ❲s2❳) {
+    ❲same_components❳ ≡ (❲s1❳.❲component❳ = ❲s2❳.❲component❳)
+    ❲same_ports❳ ≡ (❲s1❳.❲port❳ = ❲s2❳.❲port❳)
+    ❲return❳ ❲same_components❳ ❲and❳ ❲same_ports❳
+}
+
+⌈%20Delivers%20the%20given%20message%20to%20the%20receiver%20of%20this%20connector.⌉
+
+❲defn❳ ❲deposit❳ (❲parent❳, ❲conn❳, ❲message❳) {
+    ❲new_message❳ ≡ ❲make_message❳ (❲port❳ ∷ ❲conn❳.❲receiver❳.❲port❳, ❲datum❳ ∷ ❲message❳.❲datum❳)
+    ❲log_connection❳ (❲parent❳, ❲conn❳, ❲new_message❳)
+    ❲push_message❳ (❲parent❳, ❲conn❳.❲receiver❳.❲component❳, ❲conn❳.❲receiver❳.❲queue❳, ❲new_message❳)
+}
+
+❲defn❳ ❲force_tick❳ (❲parent❳, ❲eh❳) {
+    ❲tick_msg❳ ≡ ❲make_message❳ (“.”, ❲new_datum_tick❳ ())
+    ❲push_message❳ (❲parent❳, ❲eh❳, ❲eh❳.❲inq❳, ❲tick_msg❳)
+    ❲return❳ ❲tick_msg❳
+}
+
+❲defn❳ ❲push_message❳ (❲parent❳, ❲receiver❳, ❲inq❳, ❲m❳) {
+    ❲inq❳.❲put❳ (❲m❳)
+    ❲parent❳.❲visit_ordering❳.❲put❳ (❲receiver❳)
+}
+
+❲defn❳ ❲is_self❳ (❲child❳, ❲container❳) {
+    ⌈%20in%20an%20earlier%20version%20%E2%80%9Cself%E2%80%9C%20was%20denoted%20as%20%CF%95⌉
+    ❲return❳ ❲child❳ = ❲container❳
+}
+
+❲defn❳ ❲step_child❳ (❲child❳, ❲msg❳) {
+    ❲before_state❳ ≡ ❲child❳.❲state❳
+    ❲child❳.❲handler❳(❲child❳, ❲msg❳)
+    ❲after_state❳ ≡ ❲child❳.❲state❳
+    ❲return❳ [❲before_state❳ = “idle” ❲and❳ ❲after_state❳ != “idle”, 
+            ❲before_state❳ != “idle” ❲and❳ ❲after_state❳ != “idle”,
+            ❲before_state❳ != “idle” ❲and❳ ❲after_state❳ = “idle”]
+}
+
+❲defn❳ ❲save_message❳ (❲eh❳, ❲msg❳) {
+    ❲eh❳.❲saved_messages❳.❲put❳ (❲msg❳)
+}
+
+❲defn❳ ❲fetch_saved_message_and_clear❳ (❲eh❳) {
+    ❲return❳ ❲eh❳.❲saved_messages❳.❲get❳ ()
+}
+
+❲defn❳ ❲step_children❳ (❲container❳, ❲causingMessage❳) {
+    ❲container❳.❲state❳ ⇐ “idle”
+    ❲for❳ ❲child❳ ❲in❳ ❲list❳ (❲container❳.❲visit_ordering❳.❲queue❳) {
+        ⌈%20child%20%3D%20container%20represents%20self%2C%20skip%20it⌉
+        ❲if❳ (❲not❳ (❲is_self❳ (❲child❳, ❲container❳))){
+            ❲if❳ (❲not❳ (❲child❳.❲inq❳.❲empty❳ ())){
+                ❲msg❳ ≡ ❲child❳.❲inq❳.❲get❳ ()
+                [❲began_long_run❳, ❲continued_long_run❳, ❲ended_long_run❳] ⇐ ❲step_child❳ (❲child❳, ❲msg❳)
+                ❲if❳ ❲began_long_run❳ {
+                    ❲save_message❳ (❲child❳, ❲msg❳)}
+                ❲elif❳ ❲continued_long_run❳ {
+                    ❲pass❳ }
+                ❲elif❳ ❲ended_long_run❳ {
+                    ❲log_inout❳ (❲container❳ ∷ ❲container❳, ❲component❳ ∷ ❲child❳, ❲in_message❳ ∷ ❲fetch_saved_message_and_clear❳ (❲child❳))}
+                ❲else❳ {
+                    ❲log_inout❳ (❲container❳ ∷ ❲container❳, ❲component❳ ∷ ❲child❳, ❲in_message❳ ∷ ❲msg❳)}
+                ❲destroy_message❳(❲msg❳)}
+            ❲else❳ {
+                ❲if❳ ❲child❳.❲state❳ !=  “idle” {
+                    ❲msg❳ ≡ ❲force_tick❳ (❲container❳, ❲child❳)
+                    ❲child❳.❲handler❳(❲child❳, ❲msg❳)
+                    ❲log_tick❳ (❲container❳ ∷ ❲container❳, ❲component❳ ∷ ❲child❳, ❲in_message❳ ∷ ❲msg❳)
+                    ❲destroy_message❳(❲msg❳)}}
+            
+            ❲if❳ ❲child❳.❲state❳ = “active” {
+                ⌈%20if%20child%20remains%20active%2C%20then%20the%20container%20must%20remain%20active%20and%20must%20propagate%20%E2%80%9Cticks%E2%80%9C%20to%20child⌉
+                ❲container❳.❲state❳ ⇐ “active”}
+            
+            ❲while❳ (❲not❳ (❲child❳.❲outq❳.❲empty❳ ())) {
+                ❲msg❳ ≡ ❲child❳.❲outq❳.❲get❳ ()
+                ❲route❳(❲container❳, ❲child❳, ❲msg❳)
+                ❲destroy_message❳(❲msg❳)}}}
+
+
+}
+
+❲defn❳ ❲attempt_tick❳ (❲parent❳, ❲eh❳) {
+    ❲if❳ ❲eh❳.❲state❳ != “idle” {
+        ❲force_tick❳ (❲parent❳, ❲eh❳)}
+}
+
+❲defn❳ ❲is_tick❳ (❲msg❳) {
+    ❲return❳ “tick” = ❲msg❳.❲datum❳.❲kind❳ ()
+}
+
+⌈%20Routes%20a%20single%20message%20to%20all%20matching%20destinations%2C%20according%20to⌉
+⌈%20the%20container%27s%20connection%20network.⌉
+
+❲defn❳ ❲route❳ (❲container❳, ❲from_component❳, ❲message❳) {
+    ❲deftemp❳ ❲was_sent❳ ⇐ ⊥ ⌈%20for%20checking%20that%20output%20went%20somewhere%20(at%20least%20during%20bootstrap)⌉
+    ❲deftemp❳ ❲fromname❳ ⇐ “”
+    ❲if❳ ❲is_tick❳ (❲message❳){
+        ❲for❳ ❲child❳ ❲in❳ ❲container❳.❲children❳ {
+            ❲attempt_tick❳ (❲container❳, ❲child❳, ❲message❳) }
+        ❲was_sent❳ ⇐ ⊤ }
+    ❲else❳ {
+        ❲if❳ (❲not❳ (❲is_self❳ (❲from_component❳, ❲container❳))) {
+            ❲fromname❳ ⇐ ❲from_component❳.❲name❳ }
+        ❲from_sender❳ ≡ ❲Sender❳ (❲name❳ ∷ ❲fromname❳, ❲component❳ ∷ ❲from_component❳, ❲port❳ ∷ ❲message❳.❲port❳)
+        
+        ❲for❳ ❲connector❳ ❲in❳ ❲container❳.❲connections❳ {
+            ❲if❳ ❲sender_eq❳ (❲from_sender❳, ❲connector❳.❲sender❳) {
+                ❲deposit❳ (❲container❳, ❲connector❳, ❲message❳)
+                ❲was_sent❳ ⇐ ⊤}}}
+    ❲if❳ ❲not❳ (❲was_sent❳) {
+        ❲print❳ (“%5Cn%5Cn***%20Error%3A%20***”)
+        ❲dump_possible_connections❳ (❲container❳)
+        ❲print_routing_trace❳ (❲container❳)
+        ❲print❳ (“***”)
+        ❲print❳ (❲strcons❳ (❲container❳.❲name❳, ❲strcons❳ (“%3A%20message%20%27”, ❲strcons❳ (❲message❳.❲port❳, ❲strcons❳ (“%27%20from%20”, ❲strcons❳ (❲fromname❳, “%20dropped%20on%20floor...”))))))
+        ❲print❳ (“***”)
+        ❲exit❳ () }
+}
+
+❲defn❳ ❲dump_possible_connections❳ (❲container❳) {
+    ❲print❳ (❲strcons❳ (“***%20possible%20connections%20for%20”, ❲strcons❳ (❲container❳.❲name❳, “%3A”)))
+    ❲for❳ ❲connector❳ ❲in❳ ❲container❳.❲connections❳ {
+        ❲print❳ (❲strcons❳ (❲connector❳.❲direction❳, ❲strcons❳ (“%20”, ❲strcons❳ (❲connector❳.❲sender❳.❲name❳, ❲strcons❳ (“.”, ❲strcons❳ (❲connector❳.❲sender❳.❲port❳, ❲strcons❳ (“%20-%3E%20”, ❲strcons❳ (❲connector❳.❲receiver❳.❲name❳, ❲strcons❳ (“.”, ❲connector❳.❲receiver❳.❲port❳))))))))) }
+}
+
+❲defn❳ ❲any_child_ready❳ (❲container❳) {
+    ❲for❳ ❲child❳ ❲in❳ ❲container❳.❲children❳ {
+        ❲if❳ ❲child_is_ready❳(❲child❳) {
+            ❲return❳ ⊤}}
+    ❲return❳ ⊥
+}
+
 ❲defn❳ ❲child_is_ready❳ (❲eh❳) {
     ❲return❳ (❲not❳ (❲eh❳.❲outq❳.❲empty❳ ())) ❲or❳ (❲not❳ (❲eh❳.❲inq❳.❲empty❳ ())) ❲or❳ ( ❲eh❳.❲state❳ != “idle”) ❲or❳ (❲any_child_ready❳ (❲eh❳))
+}
+
+❲defn❳ ❲print_routing_trace❳ (❲eh❳) {
+    ❲print❳ (❲routing_trace_all❳ (❲eh❳))
+}
+
+❲defn❳ ❲append_routing_descriptor❳ (❲container❳, ❲desc❳) {
+    ❲container❳.❲routings❳.❲put❳ (❲desc❳)
+}
+
+❲defn❳ ❲log_connection❳ (❲container❳, ❲connector❳, ❲message❳) {
+    ❲if❳ “down” = ❲connector❳.❲direction❳{
+        ❲log_down❳ (❲container❳ ∷ ❲container❳,
+	          ❲source_port❳ ∷ ❲connector❳.❲sender❳.❲port❳,
+		  ❲source_message❳ ∷ ❲%CF%95❳,
+		  ❲target❳ ∷ ❲connector❳.❲receiver❳.❲component❳,
+		  ❲target_port❳ ∷ ❲connector❳.❲receiver❳.❲port❳,
+                  ❲target_message❳ ∷ ❲message❳) }
+    ❲elif❳ “up” = ❲connector❳.❲direction❳ {
+        ❲log_up❳ (❲source❳ ∷ ❲connector❳.❲sender❳.❲component❳, ❲source_port❳ ∷ ❲connector❳.❲sender❳.❲port❳, ❲source_message❳ ∷ ❲%CF%95❳, ❲container❳ ∷ ❲container❳, ❲target_port❳ ∷ ❲connector❳.❲receiver❳.❲port❳,
+                  ❲target_message❳ ∷ ❲message❳) }
+    ❲elif❳ “across” = ❲connector❳.❲direction❳ {
+        ❲log_across❳ (❲container❳ ∷ ❲container❳,
+                    ❲source❳ ∷ ❲connector❳.❲sender❳.❲component❳, ❲source_port❳ ∷ ❲connector❳.❲sender❳.❲port❳, ❲source_message❳ ∷ ❲%CF%95❳,
+                    ❲target❳ ∷ ❲connector❳.❲receiver❳.❲component❳, ❲target_port❳ ∷ ❲connector❳.❲receiver❳.❲port❳, ❲target_message❳ ∷ ❲message❳) }
+    ❲elif❳ “through” = ❲connector❳.❲direction❳ {
+        ❲log_through❳ (❲container❳ ∷ ❲container❳, ❲source_port❳ ∷ ❲connector❳.❲sender❳.❲port❳, ❲source_message❳ ∷ ❲%CF%95❳,
+                     ❲target_port❳ ∷ ❲connector❳.❲receiver❳.❲port❳, ❲message❳ ∷ ❲message❳) }
+    ❲else❳ {
+        ❲print❳ (❲strcons❳ (“***%20FATAL%20error%3A%20in%20log_connection%20%2F”, ❲strcons❳ (❲connector❳.❲direction❳, ❲strcons❳ (“%2F%20%2F”, ❲strcons❳ (❲message❳.❲port❳, ❲strcons❳ (“%2F%20%2F”, ❲strcons❳ (❲message❳.❲datum❳.❲srepr❳ (), “%2F”)))))))
+        ❲exit❳ () }
+}
+
+❲defn❳ ❲container_injector❳ (❲container❳, ❲message❳) {
+    ❲log_inject❳ (❲receiver❳ ∷ ❲container❳, ❲port❳ ∷ ❲message❳.❲port❳, ❲msg❳ ∷ ❲message❳)
+    ❲container_handler❳ (❲container❳, ❲message❳)
 }
 

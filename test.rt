@@ -1,3 +1,15 @@
-defn child_is_ready (eh) {
-    return (not (eh.outq.empty ())) or (not (eh.inq.empty ())) or ( eh.state != “idle”) or (any_child_ready (eh))
+
+defn stringconcat_handler (eh, msg) {
+    deftemp inst ⇐ eh.instance_data
+    if “1” = msg.port{
+        inst.buffer1 ⇐ clone_string (msg.datum.srepr ())
+        inst.count ⇐ inst.count + 1
+        maybe_stringconcat (eh, inst, msg)}
+    elif “2” = msg.port{
+        inst.buffer2 ⇐ clone_string (msg.datum.srepr ())
+        inst.count ⇐ inst.count + 1
+        maybe_stringconcat (eh, inst, msg)}
+    else{
+        runtime_error (strcons (“bad msg.port for stringconcat: ”, msg.port))
+    }
 }
