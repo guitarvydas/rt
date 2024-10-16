@@ -1,4 +1,4 @@
-rt {
+semantics {
 
   Main = TopLevel+
   TopLevel =
@@ -37,7 +37,9 @@ rt {
      | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
-   Defsynonym = Lval "≡" Exp Rec_Statement?
+   Defsynonym =
+     | ident "≡" Exp Rec_Statement? -- legal
+     | Lval "≡" Exp Rec_Statement? -- illegal
 
    InitStatement = "•" ident "⇐" Exp comment?
 
@@ -217,12 +219,16 @@ rt {
     | "⌈" commentchar* "⌉" -- rec
     | ~"⌈" ~"⌉" any -- other
 
+  errorMessage = "‽" errorchar* "⸘"
+  errorchar = 
+    | "‽" errorchar* "⸘" -- rec
+    | ~"‽" ~"⸘" any -- other
+
   eh = ident
   fname = ident
   msg = ident
   ok = port
   err = port
   port = string
-
   
 }

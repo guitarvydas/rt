@@ -5,4 +5,6 @@ function encodequotes (s) {
     return rs;
 }
 
-
+function semanticError (message, expr) {
+    throw Error ('*** Semantic Error ***', message, error);
+}

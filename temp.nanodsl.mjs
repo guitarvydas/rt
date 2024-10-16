@@ -69,7 +69,9 @@ function encodequotes (s) {
     return rs;
 }
 
-
+function semanticError (message, expr) {
+    throw Error ('*** Semantic Error ***', message, error);
+}
 let parameters = {};
 function pushParameter (name, v) {
     parameters [name].push (v);
@@ -96,7 +98,7 @@ return exit_rule ("char_string");
 },
 char_comment : function (lb,cs,rb,) {
 enter_rule ("char_comment");
-    set_return (`\n#| ${cs.rwr ().join ('')} |#`);
+    set_return (`#${cs.rwr ().join ('')}`);
 return exit_rule ("char_comment");
 },
 char_ulb : function (c,) {
@@ -106,7 +108,7 @@ return exit_rule ("char_ulb");
 },
 char_encodedulb : function (c,) {
 enter_rule ("char_encodedulb");
-    set_return (`-L`);
+    set_return (`_L`);
 return exit_rule ("char_encodedulb");
 },
 char_urb : function (c,) {
@@ -116,22 +118,22 @@ return exit_rule ("char_urb");
 },
 char_encodedurb : function (c,) {
 enter_rule ("char_encodedurb");
-    set_return (`R-`);
+    set_return (`R_`);
 return exit_rule ("char_encodedurb");
 },
 char_space : function (c,) {
 enter_rule ("char_space");
-    set_return (`-`);
+    set_return (`_`);
 return exit_rule ("char_space");
 },
 char_tab : function (c,) {
 enter_rule ("char_tab");
-    set_return (`-TAB-`);
+    set_return (`_TAB_`);
 return exit_rule ("char_tab");
 },
 char_newline : function (c,) {
 enter_rule ("char_newline");
-    set_return (`-NL-`);
+    set_return (`_NL_`);
 return exit_rule ("char_newline");
 },
 char_other : function (c,) {

@@ -8,8 +8,8 @@ SRC=test.rt
 D2J=./das2json/mac/das2json
 
 
-#all: generated-2py
-all: generated-2cl
+all: generated-2py
+#all: generated-2cl
 
 generated-2cl: rt2cl.drawio py0d.py *.ohm *.rewrite ${SRC}
 	${D2J} rt2cl.drawio

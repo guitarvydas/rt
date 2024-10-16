@@ -1,4 +1,4 @@
-% rewrite rt {
+% rewrite emitPython {
 
 Main [ TopLevel+] = ‛«TopLevel»’
 
@@ -61,7 +61,8 @@ Macro_racjf [_octothorpe _racjf lp fname rp] = ‛
 ’
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n«lval» = «e»«rec»’
-Defsynonym [ lval _eqv e rec?] = ‛\n«lval» = «e»«rec»’
+Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» ⌈ <<< «err»⌉ = «e»«rec»’
+Defsynonym_legal [id _eqv e rec?] = ‛\n«id» = «e»«rec»’
 
 
 InitStatement [ _mark ident _33 Exp cmt? ] = ‛\nself.«ident» = «Exp» «cmt»’
@@ -177,6 +178,10 @@ idchar_other [c] = ‛«c»’
 comment [lb cs* rb] = ‛«lb»«cs»«rb»’
 commentchar_rec [lb cs* rb] = ‛«lb»«cs»«rb»’
 commentchar_other [c] = ‛«c»’
+
+errorMessage [ _239 errorchar* _240] = ‛«_239»«errorchar»«_240»’
+errorchar_rec [ _241 errorchar* _242] =‛«_241»«errorchar»«_242»’
+errorchar_other [ any] =‛«any»’
 
 eh [id] = ‛«id»’
 fname [id] = ‛«id»’
