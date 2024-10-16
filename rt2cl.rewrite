@@ -97,7 +97,7 @@ ExpExp_basic [ Primary] =‛«Primary»’
 
 Primary_lookupident [p _at key] = ‛(cdr (assoc '«key» «p»))’
 Primary_lookup [p _at key] = ‛(cdr (assoc «key» «p»))’
-Primary_field [p _dot key] = ‛(cdr (assoc '«key» «p»))’ 
+Primary_field [p _dot key] = ‛(fieldf '«key» «p»)’ 
 Primary_index [p lb e rb] = ‛(nth «e» «p»)’ 
 Primary_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
 Primary_identcall [id actuals] = ‛(«id» «actuals»)’
@@ -107,7 +107,7 @@ Primary_atom [a] = ‛«a»’
 
 
 Atom_emptylistconst [ _72 _73] =‛nil’
-Atom_emptydict [ _76 _77] =‛bil’
+Atom_emptydict [ _76 _77] =‛nil’
 Atom_paren [ _70 Exp _71] =‛«Exp»’
 Atom_listconst [ _74 PrimaryComma+ _75] =‛(list «PrimaryComma»)’
 
