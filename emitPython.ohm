@@ -37,7 +37,9 @@ rt {
      | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
-   Defsynonym = Lval "≡" Exp Rec_Statement?
+   Defsynonym =
+     | Lval errorMessage? "≡" Exp Rec_Statement? -- illegal
+     | ident "≡" Exp Rec_Statement? -- legal
 
    InitStatement = "•" ident "⇐" Exp comment?
 
@@ -216,6 +218,11 @@ rt {
   commentchar = 
     | "⌈" commentchar* "⌉" -- rec
     | ~"⌈" ~"⌉" any -- other
+
+  errorMessage = "‽" errorchar* "⸘"
+  errorchar = 
+    | "‽" errorchar* "⸘" -- rec
+    | ~"‽" ~"⸘" any -- other
 
   eh = ident
   fname = ident
