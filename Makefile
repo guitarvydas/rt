@@ -24,7 +24,7 @@ rt2cldsl: rt2cldsl.drawio py0d.py *.ohm *.rewrite ${SRC}
 generated-2py: rt2py.drawio py0d.py *.ohm *.rewrite ${SRC}
 	${D2J} rt2py.drawio
 	python3 main.py . 0D/python ${SRC} main rt2py.drawio.json >generated-py0d.py
-	@grep '<<<' generated-py0d.py
+	@grep -n --color=always '<<<.*>>>' generated-py0d.py
 
 
 ## house-keeping
