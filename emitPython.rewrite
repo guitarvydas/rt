@@ -61,7 +61,7 @@ Macro_racjf [_octothorpe _racjf lp fname rp] = ‛
 ’
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n«lval» = «e»«rec»’
-Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» <<< ⌈«err»⌉ >>> = «e»«rec»’
+Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec»’
 Defsynonym_legal [id _eqv e rec?] = ‛\n«id» = «e»«rec»’
 
 

@@ -27,6 +27,11 @@ enter_rule ("char_comment");
     set_return (`#${cs.rwr ().join ('')}`);
 return exit_rule ("char_comment");
 },
+char_errormessage : function (lb,cs,rb,) {
+enter_rule ("char_errormessage");
+    set_return (` *** ${cs.rwr ().join ('')} *** `);
+return exit_rule ("char_errormessage");
+},
 char_ulb : function (c,) {
 enter_rule ("char_ulb");
     set_return (``);

@@ -12,6 +12,10 @@
 
 - status: 
   - found bug in t2t wrt setting up parameters for passing information down into the parse tree
-  - bug manifests itself as "undefined" in the output code
-  - action: 
+  - bug manifests itself as "undefined" in the output code when `make` is run
+```
+(defun clone_datum_bang ( d)
+  (return-from undefined (new_datum_bang )))
+```
+- action: 
 	- revamped t2t and t2t build process (https://github.com/guitarvydas/t2t)

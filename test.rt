@@ -1,3 +1,7 @@
+defn clone_datum_string (d) {
+  d ≡ new_datum_string (d.data)
+  return d
+}
 defn f (x) {
     x [77] ≡ 42
 }

@@ -2,7 +2,8 @@ pydecode {
   text = char+
   char =
     | "“" (~"“" ~"”" any)* "”"  -- string
-    | "⌈" (~"⌈" ~"⌉" any)* "⌉"   -- comment
+    | "⌈" (~"⌈" ~"⌉" any)* "⌉"  -- comment
+    | "⎝" (~"⎝" ~"⎠" any)* "⎠"  -- errormessage
     | "❲"                       -- ulb
     | "%E2%9D%B2"               -- encodedulb
     | "❳"                       -- urb
