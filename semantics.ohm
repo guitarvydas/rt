@@ -12,24 +12,25 @@ semantics {
    Defvar = kw<"defvar"> Lval "⇐" Exp line?
    Defconst = kw<"defconst"> Lval "≡" Exp line?
    Defn = kw<"defn"> ident Formals StatementBlock line?
-   Defobj = kw<"defobj"> ident ObjFormals "{" line? InitStatement+ "}" line?
+   Defobj = kw<"defobj"> ident ObjFormals line? "{" line? InitStatement+ "}" line?
    Import = kw<"import"> ident line?
 
-   StatementBlock = "{" line? Rec_Statement line? "}"
+   StatementBlock = line? "{" line? Rec_Statement line? "}"
 
-   Rec_Statement =
-     | comment line? Rec_Statement? -- comment
+   Rec_Statement = line? R_Statement
+   R_Statement =
+     | comment Rec_Statement? -- comment
      | Macro -- macro
      | Deftemp -- deftemp
      | Defsynonym -- defsynonym     
-     | kw<"global"> ident CommaIdent* line? Rec_Statement? -- globals
+     | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
      | IfStatement  -- if
-     | kw<"pass"> line? Rec_Statement? -- pass
+     | kw<"pass"> Rec_Statement? -- pass
      | kw<"return"> ReturnExp -- return
      | ForStatement -- for
      | WhileStatement  -- while
      | Assignment -- assignment
-     | Lval line? Rec_Statement? -- call
+     | Lval Rec_Statement? -- call
    CommaIdent = "," ident
 
    Macro =
@@ -51,14 +52,14 @@ semantics {
    WhileStatement = kw<"while"> Exp StatementBlock Rec_Statement?
 
    Assignment = 
-     | "[" Lval CommaLval+ "]" "⇐" Exp line? Rec_Statement? -- multiple
-     | Lval "⇐" Exp line? Rec_Statement? -- single
+     | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
+     | Lval "⇐" Exp Rec_Statement? -- single
 
    CommaLval = "," Lval
 
     ReturnExp =
-      | "[" Exp CommaExp+ "]" line? Rec_Statement? -- multiple
-      | Exp line? Rec_Statement? -- single
+      | "[" Exp CommaExp+ "]" Rec_Statement? -- multiple
+      | Exp Rec_Statement? -- single
 
     CommaExp = "," Exp
     
@@ -231,5 +232,6 @@ semantics {
   err = port
   port = string
   
-  line = "❲" (~"❲" ~"❳" any)* "❳"
+  line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
 }
+

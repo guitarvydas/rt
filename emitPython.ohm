@@ -7,29 +7,29 @@ emitPython {
     | Defn -- defn
     | Defobj -- defobj
     | Import -- import
-    | comment -- comment
+    | comment line? -- comment
 
-   Defvar = kw<"defvar"> Lval "⇐" Exp
-   Defconst = kw<"defconst"> Lval "≡" Exp
-   Defn = kw<"defn"> ident Formals StatementBlock
-   Defobj = kw<"defobj"> ident ObjFormals "{" InitStatement+ "}"
-   Import = kw<"import"> ident
+   Defvar = kw<"defvar"> Lval "⇐" Exp line?
+   Defconst = kw<"defconst"> Lval "≡" Exp line?
+   Defn = kw<"defn"> ident Formals StatementBlock line?
+   Defobj = kw<"defobj"> ident ObjFormals "{" line? InitStatement+ "}" line?
+   Import = kw<"import"> ident line?
 
-   StatementBlock = "{" Rec_Statement "}"
+   StatementBlock = "{" line? Rec_Statement line? "}"
 
    Rec_Statement =
-     | comment Rec_Statement? -- comment
+     | comment line? Rec_Statement? -- comment
      | Macro -- macro
      | Deftemp -- deftemp
      | Defsynonym -- defsynonym     
-     | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
+     | kw<"global"> ident CommaIdent* line? Rec_Statement? -- globals
      | IfStatement  -- if
-     | kw<"pass"> Rec_Statement? -- pass
+     | kw<"pass"> line? Rec_Statement? -- pass
      | kw<"return"> ReturnExp -- return
      | ForStatement -- for
      | WhileStatement  -- while
      | Assignment -- assignment
-     | Lval Rec_Statement? -- call
+     | Lval line? Rec_Statement? -- call
    CommaIdent = "," ident
 
    Macro =
@@ -41,7 +41,7 @@ emitPython {
      | Lval errorMessage "≡" Exp Rec_Statement? -- illegal
      | ident "≡" Exp Rec_Statement? -- legal
 
-   InitStatement = "•" ident "⇐" Exp comment?
+   InitStatement = "•" ident "⇐" Exp comment? line?
 
    IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
@@ -51,14 +51,14 @@ emitPython {
    WhileStatement = kw<"while"> Exp StatementBlock Rec_Statement?
 
    Assignment = 
-     | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
-     | Lval "⇐" Exp Rec_Statement? -- single
+     | "[" Lval CommaLval+ "]" "⇐" Exp line? Rec_Statement? -- multiple
+     | Lval "⇐" Exp line? Rec_Statement? -- single
 
    CommaLval = "," Lval
 
     ReturnExp =
-      | "[" Exp CommaExp+ "]" Rec_Statement? -- multiple
-      | Exp Rec_Statement? -- single
+      | "[" Exp CommaExp+ "]" line? Rec_Statement? -- multiple
+      | Exp line? Rec_Statement? -- single
 
     CommaExp = "," Exp
     
@@ -231,5 +231,6 @@ emitPython {
   err = port
   port = string
 
+  line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
   
 }

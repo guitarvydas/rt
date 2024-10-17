@@ -44,29 +44,29 @@ emitPython {
     | Defn -- defn
     | Defobj -- defobj
     | Import -- import
-    | comment -- comment
+    | comment line? -- comment
 
-   Defvar = kw<"defvar"> Lval "⇐" Exp
-   Defconst = kw<"defconst"> Lval "≡" Exp
-   Defn = kw<"defn"> ident Formals StatementBlock
-   Defobj = kw<"defobj"> ident ObjFormals "{" InitStatement+ "}"
-   Import = kw<"import"> ident
+   Defvar = kw<"defvar"> Lval "⇐" Exp line?
+   Defconst = kw<"defconst"> Lval "≡" Exp line?
+   Defn = kw<"defn"> ident Formals StatementBlock line?
+   Defobj = kw<"defobj"> ident ObjFormals "{" line? InitStatement+ "}" line?
+   Import = kw<"import"> ident line?
 
-   StatementBlock = "{" Rec_Statement "}"
+   StatementBlock = "{" line? Rec_Statement line? "}"
 
    Rec_Statement =
-     | comment Rec_Statement? -- comment
+     | comment line? Rec_Statement? -- comment
      | Macro -- macro
      | Deftemp -- deftemp
      | Defsynonym -- defsynonym     
-     | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
+     | kw<"global"> ident CommaIdent* line? Rec_Statement? -- globals
      | IfStatement  -- if
-     | kw<"pass"> Rec_Statement? -- pass
+     | kw<"pass"> line? Rec_Statement? -- pass
      | kw<"return"> ReturnExp -- return
      | ForStatement -- for
      | WhileStatement  -- while
      | Assignment -- assignment
-     | Lval Rec_Statement? -- call
+     | Lval line? Rec_Statement? -- call
    CommaIdent = "," ident
 
    Macro =
@@ -78,7 +78,7 @@ emitPython {
      | Lval errorMessage "≡" Exp Rec_Statement? -- illegal
      | ident "≡" Exp Rec_Statement? -- legal
 
-   InitStatement = "•" ident "⇐" Exp comment?
+   InitStatement = "•" ident "⇐" Exp comment? line?
 
    IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
@@ -88,14 +88,14 @@ emitPython {
    WhileStatement = kw<"while"> Exp StatementBlock Rec_Statement?
 
    Assignment = 
-     | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
-     | Lval "⇐" Exp Rec_Statement? -- single
+     | "[" Lval CommaLval+ "]" "⇐" Exp line? Rec_Statement? -- multiple
+     | Lval "⇐" Exp line? Rec_Statement? -- single
 
    CommaLval = "," Lval
 
     ReturnExp =
-      | "[" Exp CommaExp+ "]" Rec_Statement? -- multiple
-      | Exp Rec_Statement? -- single
+      | "[" Exp CommaExp+ "]" line? Rec_Statement? -- multiple
+      | Exp line? Rec_Statement? -- single
 
     CommaExp = "," Exp
     
@@ -268,6 +268,7 @@ emitPython {
   err = port
   port = string
 
+  line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
   
 }
 `;
@@ -341,9 +342,9 @@ enter_rule ("TopLevel_import");
     set_return (`${Import.rwr ()}`);
 return exit_rule ("TopLevel_import");
 },
-TopLevel_comment : function (s,) {
+TopLevel_comment : function (s,line,) {
 enter_rule ("TopLevel_comment");
-    set_return (`${s.rwr ()}`);
+    set_return (`${s.rwr ()}${line.rwr ().join ('')}`);
 return exit_rule ("TopLevel_comment");
 },
 kw : function (s,) {
@@ -351,39 +352,39 @@ enter_rule ("kw");
     set_return (`${s.rwr ()}`);
 return exit_rule ("kw");
 },
-Defvar : function (__,lval,_eq,e,) {
+Defvar : function (__,lval,_eq,e,line,) {
 enter_rule ("Defvar");
-    set_return (`\n${lval.rwr ()} = ${e.rwr ()}`);
+    set_return (`\n${lval.rwr ()} = ${e.rwr ()}${line.rwr ().join ('')}`);
 return exit_rule ("Defvar");
 },
-Defconst : function (__,lval,_eq,e,) {
+Defconst : function (__,lval,_eq,e,line,) {
 enter_rule ("Defconst");
-    set_return (`\n${lval.rwr ()} = ${e.rwr ()}`);
+    set_return (`\n${lval.rwr ()} = ${e.rwr ()}${line.rwr ().join ('')}`);
 return exit_rule ("Defconst");
 },
-Defn : function (_4,ident,Formals,StatementBlock,) {
+Defn : function (_4,ident,Formals,StatementBlock,line,) {
 enter_rule ("Defn");
-    set_return (`\ndef ${ident.rwr ()} ${Formals.rwr ()}:${StatementBlock.rwr ()}`);
+    set_return (`\ndef ${ident.rwr ()} ${Formals.rwr ()}:${StatementBlock.rwr ()}${line.rwr ().join ('')}`);
 return exit_rule ("Defn");
 },
-Defobj : function (_defobj,ident,Formals,lb,init,rb,) {
+Defobj : function (_defobj,ident,Formals,lb,line,init,rb,line2,) {
 enter_rule ("Defobj");
-    set_return (`\nclass ${ident.rwr ()}:⤷\ndef __init__ (self${Formals.rwr ()}):⤷${init.rwr ().join ('')}⤶⤶\n`);
+    set_return (`\nclass ${ident.rwr ()}:⤷\ndef __init__ (self${Formals.rwr ()}):${line.rwr ().join ('')}⤷${init.rwr ().join ('')}${line2.rwr ().join ('')}⤶⤶\n`);
 return exit_rule ("Defobj");
 },
-Import : function (_10,ident,) {
+Import : function (_10,ident,line,) {
 enter_rule ("Import");
-    set_return (`\nimport ${ident.rwr ()}`);
+    set_return (`\nimport ${ident.rwr ()}${line.rwr ().join ('')}`);
 return exit_rule ("Import");
 },
-StatementBlock : function (_11,Statement,_12,) {
+StatementBlock : function (_11,line,Statement,line2,_12,) {
 enter_rule ("StatementBlock");
-    set_return (`⤷${Statement.rwr ()}⤶\n`);
+    set_return (`${line.rwr ().join ('')}⤷${Statement.rwr ()}${line2.rwr ().join ('')}⤶\n`);
 return exit_rule ("StatementBlock");
 },
-Rec_Statement_globals : function (_24,ident1,cidents,scope,) {
+Rec_Statement_globals : function (_24,ident1,cidents,line,scope,) {
 enter_rule ("Rec_Statement_globals");
-    set_return (`\nglobal ${ident1.rwr ()}${cidents.rwr ().join ('')}${scope.rwr ().join ('')}`);
+    set_return (`\nglobal ${ident1.rwr ()}${cidents.rwr ().join ('')}${line.rwr ().join ('')}${scope.rwr ().join ('')}`);
 return exit_rule ("Rec_Statement_globals");
 },
 CommaIdent : function (_comma,ident,) {
@@ -391,9 +392,9 @@ enter_rule ("CommaIdent");
     set_return (`, ${ident.rwr ()}`);
 return exit_rule ("CommaIdent");
 },
-Rec_Statement_comment : function (s,rec,) {
+Rec_Statement_comment : function (s,line,rec,) {
 enter_rule ("Rec_Statement_comment");
-    set_return (`\n${s.rwr ()}${rec.rwr ().join ('')}`);
+    set_return (`\n${s.rwr ()}${line.rwr ().join ('')}${rec.rwr ().join ('')}`);
 return exit_rule ("Rec_Statement_comment");
 },
 Rec_Statement_macro : function (m,) {
@@ -406,9 +407,9 @@ enter_rule ("Rec_Statement_if");
     set_return (`${IfStatement.rwr ()}`);
 return exit_rule ("Rec_Statement_if");
 },
-Rec_Statement_pass : function (_27,scope,) {
+Rec_Statement_pass : function (_27,line,scope,) {
 enter_rule ("Rec_Statement_pass");
-    set_return (`\npass${scope.rwr ().join ('')}`);
+    set_return (`\npass${line.rwr ().join ('')}${scope.rwr ().join ('')}`);
 return exit_rule ("Rec_Statement_pass");
 },
 Rec_Statement_return : function (_29,ReturnExp,) {
@@ -431,9 +432,9 @@ enter_rule ("Rec_Statement_assignment");
     set_return (`${Assignment.rwr ()}`);
 return exit_rule ("Rec_Statement_assignment");
 },
-Rec_Statement_call : function (Lval,scope,) {
+Rec_Statement_call : function (Lval,line,scope,) {
 enter_rule ("Rec_Statement_call");
-    set_return (`\n${Lval.rwr ()}${scope.rwr ().join ('')}`);
+    set_return (`\n${Lval.rwr ()}${line.rwr ().join ('')}${scope.rwr ().join ('')}`);
 return exit_rule ("Rec_Statement_call");
 },
 Macro_read : function (_octothorpe,_read,lp,eh,_comma1,msg,_comma2,fname,_comma3,ok,_comma4,err,rp,) {
@@ -488,9 +489,9 @@ enter_rule ("Defsynonym_legal");
     set_return (`\n${id.rwr ()} = ${e.rwr ()}${rec.rwr ().join ('')}`);
 return exit_rule ("Defsynonym_legal");
 },
-InitStatement : function (_mark,ident,_33,Exp,cmt,) {
+InitStatement : function (_mark,ident,_33,Exp,cmt,line,) {
 enter_rule ("InitStatement");
-    set_return (`\nself.${ident.rwr ()} = ${Exp.rwr ()} ${cmt.rwr ().join ('')}`);
+    set_return (`\nself.${ident.rwr ()} = ${Exp.rwr ()} ${cmt.rwr ().join ('')}${line.rwr ().join ('')}`);
 return exit_rule ("InitStatement");
 },
 IfStatement : function (_35,Exp,StatementBlock,ElifStatement,ElseStatement,rec,) {
@@ -518,14 +519,14 @@ enter_rule ("WhileStatement");
     set_return (`\nwhile ${Exp.rwr ()}:${StatementBlock.rwr ()}${rec.rwr ().join ('')}`);
 return exit_rule ("WhileStatement");
 },
-Assignment_multiple : function (_55,Lval1,Lval2,_57,_58,Exp,rec,) {
+Assignment_multiple : function (_55,Lval1,Lval2,_57,_58,Exp,line,rec,) {
 enter_rule ("Assignment_multiple");
-    set_return (`\n[${Lval1.rwr ()}${Lval2.rwr ().join ('')}] = ${Exp.rwr ()}${rec.rwr ().join ('')}`);
+    set_return (`\n[${Lval1.rwr ()}${Lval2.rwr ().join ('')}] = ${Exp.rwr ()}${line.rwr ().join ('')}${rec.rwr ().join ('')}`);
 return exit_rule ("Assignment_multiple");
 },
-Assignment_single : function (Lval,_59,Exp,rec,) {
+Assignment_single : function (Lval,_59,Exp,line,rec,) {
 enter_rule ("Assignment_single");
-    set_return (`\n${Lval.rwr ()} = ${Exp.rwr ()}${rec.rwr ().join ('')}`);
+    set_return (`\n${Lval.rwr ()} = ${Exp.rwr ()}${line.rwr ().join ('')}${rec.rwr ().join ('')}`);
 return exit_rule ("Assignment_single");
 },
 CommaLval : function (_comma,Lval,) {
@@ -533,14 +534,14 @@ enter_rule ("CommaLval");
     set_return (`, ${Lval.rwr ()}`);
 return exit_rule ("CommaLval");
 },
-ReturnExp_multiple : function (_60,Exp1,Exp2,_62,rec,) {
+ReturnExp_multiple : function (_60,Exp1,Exp2,_62,line,rec,) {
 enter_rule ("ReturnExp_multiple");
-    set_return (`[${Exp1.rwr ()}${Exp2.rwr ().join ('')}]${rec.rwr ().join ('')}`);
+    set_return (`[${Exp1.rwr ()}${Exp2.rwr ().join ('')}]${line.rwr ().join ('')}${rec.rwr ().join ('')}`);
 return exit_rule ("ReturnExp_multiple");
 },
-ReturnExp_single : function (Exp,rec,) {
+ReturnExp_single : function (Exp,line,rec,) {
 enter_rule ("ReturnExp_single");
-    set_return (`${Exp.rwr ()}${rec.rwr ().join ('')}`);
+    set_return (`${Exp.rwr ()}${line.rwr ().join ('')}${rec.rwr ().join ('')}`);
 return exit_rule ("ReturnExp_single");
 },
 CommaExp : function (_comma,e,) {
@@ -1002,6 +1003,11 @@ port : function (s,) {
 enter_rule ("port");
     set_return (`${s.rwr ()}`);
 return exit_rule ("port");
+},
+line : function (lb,cs,rb,) {
+enter_rule ("line");
+    set_return (`${lb.rwr ()}${cs.rwr ().join ('')}${rb.rwr ()}`);
+return exit_rule ("line");
 },
 _terminal: function () { return this.sourceString; },
 _iter: function (...children) { return children.map(c => c.rwr ()); }
