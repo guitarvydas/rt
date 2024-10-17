@@ -13,21 +13,22 @@ kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e line?] = ‛\n«lval» = «e»«line»’
 Defconst [ __ lval _eq e line?] = ‛\n«lval» = «e»«line»’
 Defn [ _4 ident Formals StatementBlock line?] = ‛\ndef «ident» «Formals»:«StatementBlock»«line»’
-Defobj [ _defobj ident Formals lb line? init+ rb line2?] = ‛\nclass «ident»:⤷\ndef __init__ (self«Formals»):«line»⤷«init»«line2»⤶⤶\n’
+Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛\nclass «ident»:⤷\ndef __init__ (self«Formals»):«line1»⤷«line2»«init»«line3»⤶⤶\n’
 Import [ _10 ident line?] = ‛\nimport «ident»«line»’
-StatementBlock [ _11 line? Statement line2? _12] = ‛«line»⤷«Statement»«line2»⤶\n’
+StatementBlock [ line1? _11 line2? Statement line3? _12] = ‛«line2»⤷«Statement»«line3»⤶\n’
 
-Rec_Statement_globals [ _24 ident1  cidents* line? scope?] =‛\nglobal «ident1»«cidents»«line»«scope»’
+Rec_Statement [line? R_Statement] = ‛«line»«R_Statement»’
+R_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
+R_Statement_comment [s rec?] =‛\n«s»«rec»’
+R_Statement_macro [m] = ‛«m»’
+R_Statement_if [ IfStatement] =‛«IfStatement»’
+R_Statement_pass [ _27 scope?] =‛\npass«scope»’
+R_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
+R_Statement_for [ ForStatement] =‛«ForStatement»’
+R_Statement_while [ WhileStatement] =‛«WhileStatement»’
+R_Statement_assignment [ Assignment] =‛«Assignment»’
+R_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
 CommaIdent [_comma ident] = ‛, «ident»’
-Rec_Statement_comment [s line? rec?] =‛\n«s»«line»«rec»’
-Rec_Statement_macro [m] = ‛«m»’
-Rec_Statement_if [ IfStatement] =‛«IfStatement»’
-Rec_Statement_pass [ _27 line? scope?] =‛\npass«line»«scope»’
-Rec_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
-Rec_Statement_for [ ForStatement] =‛«ForStatement»’
-Rec_Statement_while [ WhileStatement] =‛«WhileStatement»’
-Rec_Statement_assignment [ Assignment] =‛«Assignment»’
-Rec_Statement_call [ Lval line? scope?] =‛\n«Lval»«line»«scope»’
 
 Macro_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
     try:⤷
@@ -72,12 +73,12 @@ ElseStatement [ _39 StatementBlock] = ‛else:«StatementBlock»’
 ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor «ident» in «Exp»:«StatementBlock»«rec»’
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile «Exp»:«StatementBlock»«rec»’
 
-Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp line? rec?] =‛\n[«Lval1»«Lval2»] = «Exp»«line»«rec»’
-Assignment_single [ Lval _59 Exp line? rec?] =‛\n«Lval» = «Exp»«line»«rec»’
+Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp rec?] =‛\n[«Lval1»«Lval2»] = «Exp»«rec»’
+Assignment_single [ Lval _59 Exp rec?] =‛\n«Lval» = «Exp»«rec»’
 CommaLval [_comma Lval] = ‛, «Lval»’
 
-ReturnExp_multiple [ _60 Exp1 Exp2+ _62 line? rec?] =‛[«Exp1»«Exp2»]«line»«rec»’
-ReturnExp_single [ Exp line? rec?] =‛«Exp»«line»«rec»’
+ReturnExp_multiple [ _60 Exp1 Exp2+ _62 rec?] =‛[«Exp1»«Exp2»]«rec»’
+ReturnExp_single [ Exp rec?] =‛«Exp»«rec»’
 CommaExp [_comma e] = ‛, «e»’
 Exp [e] = ‛«e»’
 BooleanAndOrIn_andOrIn [e1 op e2] = ‛«e1»«op»«e2»’
