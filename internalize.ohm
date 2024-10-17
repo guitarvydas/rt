@@ -1,6 +1,7 @@
 internalize {
   text = char+
   char =
+    | nl -- nl
     | "“" stringchar* "”" -- string
     | "⌈" commentchar* "⌉" -- comment
     | "❲" wordchar+ "❳" -- word

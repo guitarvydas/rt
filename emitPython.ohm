@@ -1,4 +1,4 @@
-rt {
+emitPython {
 
   Main = TopLevel+
   TopLevel =

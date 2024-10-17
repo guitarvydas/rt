@@ -1,4 +1,4 @@
-function encodews (s) { return encodequotes (encodeURIComponent (s)); }
+function encodews (s) { return _.encodequotes (encodeURIComponent (s)); }
 
 function encodequotes (s) { 
     let rs = s.replace (/"/g, '%22').replace (/'/g, '%27');
@@ -7,8 +7,9 @@ function encodequotes (s) {
 
 let linenumber = 1;
 function getlineinc () {
-    linenumber += 1;
-    return `${linenumber}`;
+    let n = linenumber;
+    linenumer += 1;
+    return `${n}`;
 }
 
 

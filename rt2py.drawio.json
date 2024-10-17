@@ -192,6 +192,10 @@
         "name": "Inhale",
         "children": [
             {
+                "name": "?",
+                "id": 3
+            },
+            {
                 "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                 "id": 5
             },
@@ -224,6 +228,19 @@
                 "target": {
                     "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                     "id": 5
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
+                    "id": 5
+                },
+                "source_port": "",
+                "target": {
+                    "name": "?",
+                    "id": 3
                 },
                 "target_port": ""
             },

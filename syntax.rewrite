@@ -7,45 +7,45 @@ TopLevel_defconst [ Defconst] =‛«Defconst»’
 TopLevel_defn [ Defn] =‛«Defn»’
 TopLevel_defobj [ Defobj] =‛«Defobj»’
 TopLevel_import [ Import] =‛«Import»’
-TopLevel_comment [ comment] =‛«comment»’
-Defvar [ _2 Lval _3 Exp] = ‛«_2»«Lval»«_3»«Exp»’
-Defconst [ _5 Lval _6 Exp] = ‛«_5»«Lval»«_6»«Exp»’
-Defn [ _8 ident Formals StatementBlock] = ‛«_8»«ident»«Formals»«StatementBlock»’
-Defobj [ _10 ident ObjFormals _11 InitStatement+ _12] = ‛«_10»«ident»«ObjFormals»«_11»«InitStatement»«_12»’
-Import [ _14 ident] = ‛«_14»«ident»’
-StatementBlock [ _15 Rec_Statement _16] = ‛«_15»«Rec_Statement»«_16»’
+TopLevel_comment [ comment line?] =‛«comment»«line»’
+Defvar [ _2 Lval _3 Exp line?] = ‛«_2»«Lval»«_3»«Exp»«line»’
+Defconst [ _5 Lval _6 Exp line?] = ‛«_5»«Lval»«_6»«Exp»«line»’
+Defn [ _8 ident Formals StatementBlock line?] = ‛«_8»«ident»«Formals»«StatementBlock»«line»’
+Defobj [ _10 ident ObjFormals _11 line? InitStatement+ _12 line2?] = ‛«_10»«ident»«ObjFormals»«_11»«line»«InitStatement»«_12»«line2»’
+Import [ _14 ident line?] = ‛«_14»«ident»«line»’
+StatementBlock [ _15 line? Rec_Statement line2? _16] = ‛«_15»«line»«Rec_Statement»«line2»«_16»’
 
-Rec_Statement_comment [ comment Rec_Statement?] =‛«comment»«Rec_Statement»’
+Rec_Statement_comment [ comment line? Rec_Statement?] =‛«comment»«line»«Rec_Statement»’
 Rec_Statement_macro [ Macro] =‛«Macro»’
 Rec_Statement_deftemp [ Deftemp] =‛«Deftemp»’
 Rec_Statement_defsynonym [ Defsynonym] =‛«Defsynonym»’
-Rec_Statement_globals [ _18 ident CommaIdent* Rec_Statement?] =‛«_18»«ident»«CommaIdent»«Rec_Statement»’
+Rec_Statement_globals [ _18 ident CommaIdent* line? Rec_Statement?] =‛«_18»«ident»«CommaIdent»«line»«Rec_Statement»’
 Rec_Statement_if [ IfStatement] =‛«IfStatement»’
-Rec_Statement_pass [ _20 Rec_Statement?] =‛«_20»«Rec_Statement»’
+Rec_Statement_pass [ _20 line? Rec_Statement?] =‛«_20»«line»«Rec_Statement»’
 Rec_Statement_return [ _22 ReturnExp] =‛«_22»«ReturnExp»’
 Rec_Statement_for [ ForStatement] =‛«ForStatement»’
 Rec_Statement_while [ WhileStatement] =‛«WhileStatement»’
 Rec_Statement_assignment [ Assignment] =‛«Assignment»’
-Rec_Statement_call [ Lval Rec_Statement?] =‛«Lval»«Rec_Statement»’
+Rec_Statement_call [ Lval line? Rec_Statement?] =‛«Lval»«line»«Rec_Statement»’
 CommaIdent [ _23 ident] = ‛«_23»«ident»’
 
 Macro_read [ _24 _25 _26 eh _27 msg _28 fname _29 ok _30 err _31] =‛«_24»«_25»«_26»«eh»«_27»«msg»«_28»«fname»«_29»«ok»«_30»«err»«_31»’
 Macro_racjf [ _32 _33 _34 fname _35] =‛«_32»«_33»«_34»«fname»«_35»’
 Deftemp [ _37 Lval _38 Exp Rec_Statement?] = ‛«_37»«Lval»«_38»«Exp»«Rec_Statement»’
 Defsynonym [ Lval _39 Exp Rec_Statement?] = ‛«Lval»«_39»«Exp»«Rec_Statement»’
-InitStatement [ _40 ident _41 Exp comment?] = ‛«_40»«ident»«_41»«Exp»«comment»’
+InitStatement [ _40 ident _41 Exp comment? line?] = ‛«_40»«ident»«_41»«Exp»«comment»«line»’
 IfStatement [ _43 Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?] = ‛«_43»«Exp»«StatementBlock»«ElifStatement»«ElseStatement»«Rec_Statement»’
 ElifStatement [ _45 Exp StatementBlock] = ‛«_45»«Exp»«StatementBlock»’
 ElseStatement [ _47 StatementBlock] = ‛«_47»«StatementBlock»’
 ForStatement [ _49 ident _51 Exp StatementBlock Rec_Statement?] = ‛«_49»«ident»«_51»«Exp»«StatementBlock»«Rec_Statement»’
 WhileStatement [ _53 Exp StatementBlock Rec_Statement?] = ‛«_53»«Exp»«StatementBlock»«Rec_Statement»’
 
-Assignment_multiple [ _54 Lval CommaLval+ _55 _56 Exp Rec_Statement?] =‛«_54»«Lval»«CommaLval»«_55»«_56»«Exp»«Rec_Statement»’
-Assignment_single [ Lval _57 Exp Rec_Statement?] =‛«Lval»«_57»«Exp»«Rec_Statement»’
+Assignment_multiple [ _54 Lval CommaLval+ _55 _56 Exp line? Rec_Statement?] =‛«_54»«Lval»«CommaLval»«_55»«_56»«Exp»«line»«Rec_Statement»’
+Assignment_single [ Lval _57 Exp line? Rec_Statement?] =‛«Lval»«_57»«Exp»«line»«Rec_Statement»’
 CommaLval [ _58 Lval] = ‛«_58»«Lval»’
 
-ReturnExp_multiple [ _59 Exp CommaExp+ _60 Rec_Statement?] =‛«_59»«Exp»«CommaExp»«_60»«Rec_Statement»’
-ReturnExp_single [ Exp Rec_Statement?] =‛«Exp»«Rec_Statement»’
+ReturnExp_multiple [ _59 Exp CommaExp+ _60 line? Rec_Statement?] =‛«_59»«Exp»«CommaExp»«_60»«line»«Rec_Statement»’
+ReturnExp_single [ Exp line? Rec_Statement?] =‛«Exp»«line»«Rec_Statement»’
 CommaExp [ _61 Exp] = ‛«_61»«Exp»’
 Exp [ BooleanAndOrIn] = ‛«BooleanAndOrIn»’
 
@@ -154,4 +154,6 @@ msg [ ident] = ‛«ident»’
 ok [ port] = ‛«port»’
 err [ port] = ‛«port»’
 port [ string] = ‛«string»’
+
+line [lb cs* rb] = ‛«lb»«cs»«rb»’
 }

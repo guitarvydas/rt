@@ -7,12 +7,12 @@ semantics {
     | Defn -- defn
     | Defobj -- defobj
     | Import -- import
-    | comment -- comment
+    | comment line? -- comment
 
-   Defvar = kw<"defvar"> Lval "⇐" Exp
-   Defconst = kw<"defconst"> Lval "≡" Exp
-   Defn = kw<"defn"> ident Formals StatementBlock
-   Defobj = kw<"defobj"> ident ObjFormals "{" InitStatement+ "}"
+   Defvar = kw<"defvar"> Lval "⇐" Exp line?
+   Defconst = kw<"defconst"> Lval "≡" Exp line?
+   Defn = kw<"defn"> ident Formals StatementBlock line?
+   Defobj = kw<"defobj"> ident ObjFormals "{" InitStatement+ "}" line?
    Import = kw<"import"> ident
 
    StatementBlock = "{" Rec_Statement "}"

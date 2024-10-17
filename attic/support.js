@@ -5,10 +5,7 @@ function encodequotes (s) {
     return rs;
 }
 
-let linenumber = 1;
-function getlineinc () {
-    linenumber += 1;
-    return `${linenumber}`;
+function semanticError (message, expr) {
+    throw Error ('*** Semantic Error ***', message, error);
 }
-
 
