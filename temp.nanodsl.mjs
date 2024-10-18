@@ -41,6 +41,7 @@ pydecode {
     | "“" (~"“" ~"”" any)* "”"  -- string
     | "⌈" (~"⌈" ~"⌉" any)* "⌉"  -- comment
     | "⎝" (~"⎝" ~"⎠" any)* "⎠"  -- errormessage
+    | "⎩" (~"⎩" ~"⎭" any)* "⎭"  -- line
     | "❲"                       -- ulb
     | "%E2%9D%B2"               -- encodedulb
     | "❳"                       -- urb
@@ -50,6 +51,7 @@ pydecode {
     | "%0A"                     -- newline
     | any                       -- other
 }
+
 `;
 
 let args = {};
@@ -70,7 +72,7 @@ function encodequotes (s) {
     return rs;
 }
 
-let linenumber = 1;
+let linenumber = 0;
 function getlineinc () {
     linenumber += 1;
     return `${linenumber}`;
@@ -108,8 +110,13 @@ return exit_rule ("char_comment");
 },
 char_errormessage : function (lb,cs,rb,) {
 enter_rule ("char_errormessage");
-    set_return (` *** ${cs.rwr ().join ('')} *** `);
+    set_return (` >>> ${cs.rwr ().join ('')} <<< `);
 return exit_rule ("char_errormessage");
+},
+char_line : function (lb,cs,rb,) {
+enter_rule ("char_line");
+    set_return (`\t\t#line ${cs.rwr ().join ('')}`);
+return exit_rule ("char_line");
 },
 char_ulb : function (c,) {
 enter_rule ("char_ulb");

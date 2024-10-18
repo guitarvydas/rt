@@ -5,7 +5,7 @@ function encodequotes (s) {
     return rs;
 }
 
-let linenumber = 1;
+let linenumber = 0;
 function getlineinc () {
     linenumber += 1;
     return `${linenumber}`;

@@ -1,8 +1,8 @@
 defn clone_datum_string (d) {
-  d ≡ new_datum_string (d.data)
+  d [88] ≡ new_datum_string (d.data)
   return d
 }
 ⌈  test comment ⌉
 defn f (x) {
-    x [77] ≡ 42
+    x [99] ≡ 42
 }

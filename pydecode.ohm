@@ -4,6 +4,7 @@ pydecode {
     | "“" (~"“" ~"”" any)* "”"  -- string
     | "⌈" (~"⌈" ~"⌉" any)* "⌉"  -- comment
     | "⎝" (~"⎝" ~"⎠" any)* "⎠"  -- errormessage
+    | "⎩" (~"⎩" ~"⎭" any)* "⎭"  -- line
     | "❲"                       -- ulb
     | "%E2%9D%B2"               -- encodedulb
     | "❳"                       -- urb
@@ -13,3 +14,4 @@ pydecode {
     | "%0A"                     -- newline
     | any                       -- other
 }
+

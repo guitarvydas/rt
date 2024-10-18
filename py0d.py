@@ -1,3 +1,8 @@
+import os
+import json
+import sys
+
+
 counter = 0
 
 def gensym (s):
@@ -710,9 +715,6 @@ def log_connection (container, connector, message):
 def container_injector (container, message):
     log_inject (receiver=container, port=message.port, msg=message)
     container_handler (container, message)
-import os
-import json
-import sys
 
 class Component_Registry:
     def __init__ (self):
@@ -940,8 +942,13 @@ def output_list (eh):
 
 # Utility for printing an array of messages.
 def print_output_list (eh):
+    print (f"print_output_list {eh.outq.queue}", file=sys.stderr)
     for m in list (eh.outq.queue):
+        print (f'print_output_list 2 {m} {format_message (m)}', file=sys.stderr)
         print (format_message (m))
+    sys.stdout.flush ()
+    print (f'print_output_list 3 {sys.stdout} {sys.stderr}', file=sys.stderr)
+    print (f'print_output_list 42', file=sys.stdout)
 
 def spaces (n):
     s = ""
