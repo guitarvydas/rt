@@ -1,10 +1,23 @@
 import sys
 import re
 
+def move_line_to_column_140(line):
+    # Move '#line' to the 140th column by inserting spaces if necessary
+    match = re.search(r'(#line.*)', line)
+    if match:
+        before = line[:match.start()]  # Text before '#line'
+        line_length_before = len(before)
+        spaces_needed = 140 - line_length_before
+        if spaces_needed > 0:
+            # Add the required spaces to move '#line' to the 140th column
+            return before + ' ' * spaces_needed + match.group(1)
+    return line
+
 def highlight_substring(line):
     # Highlight the substring between '>>>' and '<<<' in bright red
     line = re.sub(r'(>>>.*?<<<)', r'\033[91m\1\033[0m', line)
-    # Highlight any substring starting with '#line' until the end of the line in gray
+    # Move '#line' to the 140th column and highlight it in bright red
+    line = move_line_to_column_140(line)
     line = re.sub(r'(#line.*)', r'\033[91m\1\033[0m', line)
     return line
 

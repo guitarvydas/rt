@@ -115,7 +115,7 @@ return exit_rule ("char_errormessage");
 },
 char_line : function (lb,cs,rb,) {
 enter_rule ("char_line");
-    set_return (`\t\t#line ${cs.rwr ().join ('')}`);
+    set_return (`#line ${cs.rwr ().join ('')}`);
 return exit_rule ("char_line");
 },
 char_ulb : function (c,) {

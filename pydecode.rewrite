@@ -3,7 +3,7 @@
   char_string [lq cs* rq] = ‛"«cs»"’
   char_comment [lb cs* rb] = ‛#«cs»’
   char_errormessage [lb cs* rb] = ‛ >>> «cs» <<< ’
-  char_line [lb cs* rb] = ‛\t\t#line «cs»’
+  char_line [lb cs* rb] = ‛#line «cs»’
   char_ulb [c] = ‛’
   char_encodedulb [c] = ‛_L’
   char_urb [c] = ‛’
