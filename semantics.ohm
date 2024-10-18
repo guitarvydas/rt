@@ -8,6 +8,7 @@ semantics {
     | Defobj -- defobj
     | Import -- import
     | comment line? -- comment
+    | line -- line
 
    Defvar = kw<"defvar"> Lval "⇐" Exp line?
    Defconst = kw<"defconst"> Lval "≡" Exp line?
