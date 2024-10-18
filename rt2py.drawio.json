@@ -243,7 +243,7 @@
         "name": "Syntax Check",
         "children": [
             {
-                "name": "$ ./ndsl rt.ohm syntax.rewrite",
+                "name": "$ ./ndsl syntax.ohm syntax.rewrite",
                 "id": 5
             }
         ],
@@ -256,7 +256,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ ./ndsl rt.ohm syntax.rewrite",
+                    "name": "$ ./ndsl syntax.ohm syntax.rewrite",
                     "id": 5
                 },
                 "target_port": ""
@@ -264,7 +264,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ ./ndsl rt.ohm syntax.rewrite",
+                    "name": "$ ./ndsl syntax.ohm syntax.rewrite",
                     "id": 5
                 },
                 "source_port": "",
@@ -277,7 +277,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ ./ndsl rt.ohm syntax.rewrite",
+                    "name": "$ ./ndsl syntax.ohm syntax.rewrite",
                     "id": 5
                 },
                 "source_port": "\u2717",

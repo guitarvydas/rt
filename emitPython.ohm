@@ -107,7 +107,7 @@ emitPython {
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren
-      | "[" PrimaryComma+ "]" -- listconst
+      | "[" line? PrimaryComma+ "]" -- listconst
       | "{" PairComma+ "}" -- dict
       | lambda LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
@@ -129,7 +129,7 @@ emitPython {
 
 
 
-    PrimaryComma = Primary ","?
+    PrimaryComma = Primary ","? line?
     PairComma = Pair ","?
     
     Lval = Exp

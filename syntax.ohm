@@ -1,4 +1,4 @@
-rt {
+syntax {
 
   Main = TopLevel+
   TopLevel =
@@ -8,6 +8,7 @@ rt {
     | Defobj -- defobj
     | Import -- import
     | comment line? -- comment
+    | line -- line
 
    Defvar = kw<"defvar"> Lval "⇐" Exp line?
    Defconst = kw<"defconst"> Lval "≡" Exp line?
@@ -104,7 +105,7 @@ rt {
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren
-      | "[" PrimaryComma+ "]" -- listconst
+      | "[" line? PrimaryComma+ "]" -- listconst
       | "{" PairComma+ "}" -- dict
       | lambda LambdaFormals? ":" Exp -- lambda
       | kw<"fresh"> "(" ident ")" -- fresh
@@ -126,7 +127,7 @@ rt {
 
 
 
-    PrimaryComma = Primary ","?
+    PrimaryComma = Primary ","? line?
     PairComma = Pair ","?
     
     Lval = Exp
