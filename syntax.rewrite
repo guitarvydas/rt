@@ -102,17 +102,17 @@ PairComma [ Pair _126?] = ‛«Pair»«_126»’
 Lval [ Exp] = ‛«Exp»’
 
 Formals_noformals [ _127 _128] =‛«_127»«_128»’
-Formals_withformals [ _129 Formal CommaFormal* _130] =‛«_129»«Formal»«CommaFormal»«_130»’
+Formals_withformals [ _129 FormalComma* _130] =‛«_129»«FormalComma»«_130»’
 
 ObjFormals_noformals [ _131 _132] =‛«_131»«_132»’
-ObjFormals_withformals [ _133 Formal CommaFormal* _134] =‛«_133»«Formal»«CommaFormal»«_134»’
+ObjFormals_withformals [ _133 FormalComma* _134] =‛«_133»«FormalComma»«_134»’
 
 LambdaFormals_noformals [ _135 _136] =‛«_135»«_136»’
-LambdaFormals_withformals [ _137 Formal CommaFormal* _138] =‛«_137»«Formal»«CommaFormal»«_138»’
+LambdaFormals_withformals [ _137 FormalComma* _138] =‛«_137»«FormalComma»«_138»’
 
 Formal_defaultvalue [ ident _139 Exp] =‛«ident»«_139»«Exp»’
 Formal_plain [ ident] =‛«ident»’
-CommaFormal [ _140 Formal] = ‛«_140»«Formal»’
+FormalComma [Formal comma?] = ‛«Formal»«comma»’
 
 Actuals_noactuals [ _141 _142] =‛«_141»«_142»’
 Actuals_actuals [ lb ActualComma* rb line?] =‛«lb»«ActualComma»«rb»«line»’

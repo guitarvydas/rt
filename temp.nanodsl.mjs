@@ -166,19 +166,19 @@ emitPython {
 
     Formals =
       | "(" ")" -- noformals
-      | "(" Formal CommaFormal* ")" -- withformals
+      | "(" FormalComma* ")" -- withformals
     ObjFormals =
       | "(" ")" -- noformals
-      | "(" Formal CommaFormal* ")" -- withformals
+      | "(" FormalComma* ")" -- withformals
     LambdaFormals =
       | "(" ")" -- noformals
-      | "(" Formal CommaFormal* ")" -- withformals
+      | "(" FormalComma* ")" -- withformals
 
     Formal = 
        | ident "∷" Exp -- defaultvalue
        | ident -- plain
        
-    CommaFormal = comma Formal
+    FormalComma = Formal comma
     
     Actuals = 
       | "(" ")" -- noactuals

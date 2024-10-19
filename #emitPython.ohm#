@@ -1,4 +1,4 @@
-emitPython {
+syntax {
 
   Main = TopLevel+
   TopLevel =
@@ -16,7 +16,7 @@ emitPython {
    Defobj = kw<"defobj"> ident ObjFormals line? "{" line? InitStatement+ "}" line?
    Import = kw<"import"> ident line?
 
-   StatementBlock = line? "{" line? Rec_Statement line? "}" line?
+   StatementBlock = line? "{" line? Rec_Statement "}" line?
 
    Rec_Statement = line? R_Statement line?
    R_Statement =
@@ -39,9 +39,7 @@ emitPython {
      | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
-   Defsynonym =
-     | Lval errorMessage "≡" Exp Rec_Statement? -- illegal
-     | ident "≡" Exp Rec_Statement? -- legal
+   Defsynonym = Lval "≡" Exp Rec_Statement?
 
    InitStatement = "•" ident "⇐" Exp comment? line?
 
@@ -122,26 +120,26 @@ emitPython {
 
 
 
-    PrimaryComma = Primary comma? line?
+    PrimaryComma = Primary comma?
     PairComma = Pair comma?
     
     Lval = Exp
 
     Formals =
       | "(" ")" -- noformals
-      | "(" FormalComma* ")" -- withformals
+      | "(" Formal CommaFormal* ")" -- withformals
     ObjFormals =
       | "(" ")" -- noformals
-      | "(" FormalComma* ")" -- withformals
+      | "(" Formal CommaFormal* ")" -- withformals
     LambdaFormals =
       | "(" ")" -- noformals
-      | "(" FormalComma* ")" -- withformals
+      | "(" Formal CommaFormal* ")" -- withformals
 
     Formal = 
        | ident "∷" Exp -- defaultvalue
        | ident -- plain
        
-    FormalComma = Formal comma
+    CommaFormal = comma Formal
     
     Actuals = 
       | "(" ")" -- noactuals
@@ -170,7 +168,8 @@ emitPython {
     | ~"“" ~"”" any -- other
 
     keyword = (
-        kw<"defconst">
+        kw<"fresh">
+      | kw<"defconst">
       | kw<"deftemp">
       | kw<"defobj">
       | kw<"defvar">
@@ -207,11 +206,6 @@ emitPython {
     | "⌈" commentchar* "⌉" -- rec
     | ~"⌈" ~"⌉" any -- other
 
-  errorMessage = "⎝" errorchar* "⎠"
-  errorchar = 
-    | "⎝" errorchar* "⎠" -- rec
-    | ~"⎝" ~"⎠" any -- other
-
   eh = ident
   fname = ident
   msg = ident
@@ -221,5 +215,6 @@ emitPython {
 
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
 
-  comma = line? comma line?
+  comma = line? "," line?
 }
+
