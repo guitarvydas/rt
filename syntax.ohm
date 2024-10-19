@@ -1,4 +1,4 @@
-rt {
+syntax {
 
   Main = TopLevel+
   TopLevel =
@@ -7,7 +7,8 @@ rt {
     | Defn -- defn
     | Defobj -- defobj
     | Import -- import
-    | comment line? -- comment
+    | comment -- comment
+    | line -- line
 
    Defvar = kw<"defvar"> Lval "⇐" Exp line?
    Defconst = kw<"defconst"> Lval "≡" Exp line?
@@ -15,9 +16,9 @@ rt {
    Defobj = kw<"defobj"> ident ObjFormals line? "{" line? InitStatement+ "}" line?
    Import = kw<"import"> ident line?
 
-   StatementBlock = line? "{" line? Rec_Statement line? "}" line?
+   StatementBlock = line? "{" line? Rec_Statement "}" line?
 
-   Rec_Statement = line? R_Statement
+   Rec_Statement = line? R_Statement line?
    R_Statement =
      | comment Rec_Statement? -- comment
      | Macro -- macro
@@ -31,16 +32,17 @@ rt {
      | WhileStatement  -- while
      | Assignment -- assignment
      | Lval Rec_Statement? -- call
-   CommaIdent = "," ident
+     | line Rec_Statement? -- line
+   CommaIdent = Comma ident
 
    Macro =
-     | "#" "❲low_level_read_text_file_handler❳" "(" eh "," msg "," fname "," ok "," err ")" -- read
+     | "#" "❲low_level_read_text_file_handler❳" "(" eh Comma msg Comma fname Comma ok Comma err ")" -- read
      | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
    Defsynonym = Lval "≡" Exp Rec_Statement?
 
-   InitStatement = "•" ident "⇐" Exp comment? line?
+   InitStatement = "•" ident "⇐" Exp (comment | line)*
 
    IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
@@ -53,13 +55,13 @@ rt {
      | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
      | Lval "⇐" Exp Rec_Statement? -- single
 
-   CommaLval = "," Lval
+   CommaLval = Comma Lval
 
     ReturnExp =
-      | "[" Exp CommaExp+ "]" Rec_Statement? -- multiple
+      | "[" ExpComma+ "]" Rec_Statement? -- multiple
       | Exp Rec_Statement? -- single
 
-    CommaExp = "," Exp
+    ExpComma = Exp Comma?
     
     Exp =  BooleanAndOrIn
 
@@ -91,9 +93,9 @@ rt {
       | Primary -- basic
 
     Primary =
-      | Primary "@" ident -- lookupident
+      | Primary "@" Primary -- lookupident
       | Primary "@" Primary -- lookup
-      | Primary "." ident -- field
+      | Primary "." Primary -- field
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice
       | ident Actuals -- identcall
@@ -104,16 +106,9 @@ rt {
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren
-      | "[" PrimaryComma+ "]" -- listconst
-      | "{" PairComma+ "}" -- dict
+      | "[" line? PrimaryComma+ line? "]" -- listconst
+      | "{" line? PairComma+ line? "}" -- dict
       | lambda LambdaFormals? ":" Exp -- lambda
-      | kw<"fresh"> "(" ident ")" -- fresh
-      | kw<"car"> "(" Exp ")" -- car
-      | kw<"cdr"> "(" Exp ")" -- cdr
-      | kw<"argvcdr"> "(" digit ")" -- nthargvcdr
-      | kw<"nthargv"> "(" digit ")" -- nthargv
-      | kw<"stringcdr"> "(" Exp ")" -- stringcdr
-      | kw<"strcons"> "(" Exp "," Exp ")" -- strcons
       | "+" Primary -- pos
       | "-" Primary -- neg
       | phi -- phi
@@ -126,33 +121,33 @@ rt {
 
 
 
-    PrimaryComma = Primary ","?
-    PairComma = Pair ","?
+    PrimaryComma = Primary Comma?
+    PairComma = Pair Comma?
     
     Lval = Exp
 
     Formals =
       | "(" ")" -- noformals
-      | "(" Formal CommaFormal* ")" -- withformals
+      | "(" FormalComma* ")" -- withformals
     ObjFormals =
       | "(" ")" -- noformals
-      | "(" Formal CommaFormal* ")" -- withformals
+      | "(" FormalComma* ")" -- withformals
     LambdaFormals =
       | "(" ")" -- noformals
-      | "(" Formal CommaFormal* ")" -- withformals
+      | "(" FormalComma* ")" -- withformals
 
     Formal = 
        | ident "∷" Exp -- defaultvalue
        | ident -- plain
-       
-    CommaFormal = "," Formal
+
+    FormalComma = Formal Comma?
     
     Actuals = 
       | "(" ")" -- noactuals
-      | "(" Actual CommaActual* ")" -- actuals
+      | "(" ActualComma* ")" line? -- actuals
 
    Actual = ParamName? Exp
-   CommaActual = "," Actual
+   ActualComma = Actual Comma? line?
 
    ParamName = ident "∷"
 
@@ -160,7 +155,7 @@ rt {
       | digit* "." digit+  -- fract
       | digit+             -- whole
 
-    Pair = string ":" Exp ","?
+    Pair = string ":" Exp Comma?
   
 
   andOrIn = (kw<"and"> | kw<"or"> | kw<"in">)
@@ -174,8 +169,7 @@ rt {
     | ~"“" ~"”" any -- other
 
     keyword = (
-        kw<"fresh">
-      | kw<"defconst">
+        kw<"defconst">
       | kw<"deftemp">
       | kw<"defobj">
       | kw<"defvar">
@@ -194,12 +188,6 @@ rt {
       | kw<"while">
       | kw<"import">
       | kw<"as">
-      | kw<"car">
-      | kw<"cdr">
-      | kw<"stringcdr">
-      | kw<"argvcdr">
-      | kw<"nthargv">
-      | kw<"strcons">
       | lambda
       | phi
       )
@@ -226,5 +214,7 @@ rt {
   port = string
 
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
+
+  Comma = line? "," line?
 }
 

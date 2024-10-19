@@ -1,9 +1,38 @@
+defobj Eh () {
+        • state ⇐ “idle”
+        ⌈ bootstrap debugging⌉
+}
+
+defn f () {
+    cmd ≡ stringcdr (name).strip ()
+}
+defn make_Routing_Descriptor (action, component, port, message) {
+    return {
+        “action”: action,
+        “component”: component,
+        “port”: port,
+        “message”: message
+        }
+}
+
+defn f () {
+    return [before_state = “idle” and after_state != “idle”, 
+            before_state != “idle” and after_state != “idle”,
+            before_state != “idle” and after_state = “idle”]
+}
+
+defn fmt_inout (desc, indent) {
+    s (“\n”, 
+		        x)
+}
+
 defn clone_datum_string (d) {
-  d [88] ≡ new_datum_string (d.data)
+  d ≡ new_datum_string (d.data)
+
   return d
 }
 
 ⌈  test comment ⌉
 defn f (x) {
-    x [99] ≡ 42
+    x ≡ 42
 }
