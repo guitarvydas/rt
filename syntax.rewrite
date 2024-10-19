@@ -15,9 +15,9 @@ Defconst [ _5 Lval _6 Exp line?] = ‛«_5»«Lval»«_6»«Exp»«line»’
 Defn [ _8 ident Formals StatementBlock line?] = ‛«_8»«ident»«Formals»«StatementBlock»«line»’
 Defobj [ _10 ident ObjFormals line1? _11 line2? InitStatement+ _12 line3?] = ‛«_10»«ident»«ObjFormals»«line1»«_11»«line2»«InitStatement»«_12»«line3»’
 Import [ _14 ident line?] = ‛«_14»«ident»«line»’
-StatementBlock [ line1? _15 line2 Rec_Statement line3? _16 line4?] = ‛«line1»«_15»«line2»«Rec_Statement»«line3»«_16»«line4»’
+StatementBlock [ line1? lb line2 Rec_Statement rb line4?] = ‛«line1»«lb»«line2»«Rec_Statement»«rb»«line4»’
 
-Rec_Statement [line? r_stmt] = ‛«line»«r_stmt»’
+Rec_Statement [line1? r_stmt line2?] = ‛«line1»«r_stmt»«line2»’
 R_Statement_comment [ comment Rec_Statement?] =‛«comment»«Rec_Statement»’
 R_Statement_macro [ Macro] =‛«Macro»’
 R_Statement_deftemp [ Deftemp] =‛«Deftemp»’
@@ -85,16 +85,9 @@ Primary_atom [ Atom] =‛«Atom»’
 Atom_emptylistconst [ _77 _78] =‛«_77»«_78»’
 Atom_emptydict [ _79 _80] =‛«_79»«_80»’
 Atom_paren [ _81 Exp _82] =‛«_81»«Exp»«_82»’
-Atom_listconst [ _83 line? PrimaryComma+ _84] =‛«_83»«line»«PrimaryComma»«_84»’
-Atom_dict [ _85 PairComma+ _86] =‛«_85»«PairComma»«_86»’
+Atom_listconst [ _83 line? PrimaryComma+ line2? _84] =‛«_83»«line»«PrimaryComma»«line2»«_84»’
+Atom_dict [ _85 line? PairComma+ line2? _86] =‛«_85»«line»«PairComma»«line2»«_86»’
 Atom_lambda [ lambda LambdaFormals? _87 Exp] =‛«lambda»«LambdaFormals»«_87»«Exp»’
-Atom_fresh [ _89 _90 ident _91] =‛«_89»«_90»«ident»«_91»’
-Atom_car [ _93 _94 Exp _95] =‛«_93»«_94»«Exp»«_95»’
-Atom_cdr [ _97 _98 Exp _99] =‛«_97»«_98»«Exp»«_99»’
-Atom_nthargvcdr [ _101 _102 digit _103] =‛«_101»«_102»«digit»«_103»’
-Atom_nthargv [ _105 _106 digit _107] =‛«_105»«_106»«digit»«_107»’
-Atom_stringcdr [ _109 _110 Exp _111] =‛«_109»«_110»«Exp»«_111»’
-Atom_strcons [ _113 _114 Exp1 _115 Exp2 _116] =‛«_113»«_114»«Exp1»«_115»«Exp2»«_116»’
 Atom_pos [ _117 Primary] =‛«_117»«Primary»’
 Atom_neg [ _118 Primary] =‛«_118»«Primary»’
 Atom_phi [ phi] =‛«phi»’
@@ -104,7 +97,7 @@ Atom_range [ _122 _123 Exp _124] =‛«_122»«_123»«Exp»«_124»’
 Atom_string [ string] =‛«string»’
 Atom_number [ number] =‛«number»’
 Atom_ident [ ident] =‛«ident»’
-PrimaryComma [ Primary _125? line?] = ‛«Primary»«_125»«line»’
+PrimaryComma [ Primary _125?] = ‛«Primary»«_125»’
 PairComma [ Pair _126?] = ‛«Pair»«_126»’
 Lval [ Exp] = ‛«Exp»’
 
@@ -122,9 +115,9 @@ Formal_plain [ ident] =‛«ident»’
 CommaFormal [ _140 Formal] = ‛«_140»«Formal»’
 
 Actuals_noactuals [ _141 _142] =‛«_141»«_142»’
-Actuals_actuals [ _143 Actual CommaActual* _144] =‛«_143»«Actual»«CommaActual»«_144»’
+Actuals_actuals [ lb ActualComma* rb line?] =‛«lb»«ActualComma»«rb»«line»’
 Actual [ ParamName? Exp] = ‛«ParamName»«Exp»’
-CommaActual [ _145 Actual] = ‛«_145»«Actual»’
+ActualComma [Actual comma? line?] = ‛«Actual»«comma»«line»’
 ParamName [ ident _146] = ‛«ident»«_146»’
 
 number_fract [ digit* _147 denominatordigit+] =‛«digit»«_147»«denominatordigit»’
@@ -159,4 +152,6 @@ err [ port] = ‛«port»’
 port [ string] = ‛«string»’
 
 line [lb cs* rb] = ‛«lb»«cs»«rb»’
+
+comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
 }

@@ -35,7 +35,7 @@ function exit_rule (name) {
 }
 
 const grammar = String.raw`
-syntax {
+semantics {
 
   Main = TopLevel+
   TopLevel =
@@ -53,7 +53,7 @@ syntax {
    Defobj = kw<"defobj"> ident ObjFormals line? "{" line? InitStatement+ "}" line?
    Import = kw<"import"> ident line?
 
-   StatementBlock = line? "{" line? Rec_Statement line? "}" line?
+   StatementBlock = line? "{" line? Rec_Statement line? "}"
 
    Rec_Statement = line? R_Statement
    R_Statement =
@@ -76,7 +76,9 @@ syntax {
      | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
-   Defsynonym = Lval "≡" Exp Rec_Statement?
+   Defsynonym =
+     | ident "≡" Exp Rec_Statement? -- legal
+     | Lval "≡" Exp Rec_Statement? -- illegal
 
    InitStatement = "•" ident "⇐" Exp comment? line?
 
@@ -256,13 +258,18 @@ syntax {
     | "⌈" commentchar* "⌉" -- rec
     | ~"⌈" ~"⌉" any -- other
 
+  errorMessage = "‽" errorchar* "⸘"
+  errorchar = 
+    | "‽" errorchar* "⸘" -- rec
+    | ~"‽" ~"⸘" any -- other
+
   eh = ident
   fname = ident
   msg = ident
   ok = port
   err = port
   port = string
-
+  
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
 }
 
@@ -364,7 +371,7 @@ return exit_rule ("Defn");
 },
 Defobj : function (_10,ident,ObjFormals,line1,_11,line2,InitStatement,_12,line3,) {
 enter_rule ("Defobj");
-    set_return (`${_10.rwr ()}${ident.rwr ()}${ObjFormals.rwr ()}${line1.rwr ().join ('')}${_11.rwr ()}${line2.rwr ().join ('')}${InitStatement.rwr ().join ('')}${_12.rwr ()}${line3.rwr ().join ('')}`);
+    set_return (`${_10.rwr ()}${ident.rwr ()}${ObjFormals.rwr ()}${line1.rwr ().join ('')}${_11.rwr ()}${line2.rwr ().join ('')}${InitStatement.rwr ().join ('')}${_12.rwr ()}${line2.rwr ().join ('')}`);
 return exit_rule ("Defobj");
 },
 Import : function (_14,ident,line,) {
@@ -372,14 +379,14 @@ enter_rule ("Import");
     set_return (`${_14.rwr ()}${ident.rwr ()}${line.rwr ().join ('')}`);
 return exit_rule ("Import");
 },
-StatementBlock : function (line1,_15,line2,Rec_Statement,line3,_16,line4,) {
+StatementBlock : function (line1,_15,line2,Rec_Statement,line3,_16,) {
 enter_rule ("StatementBlock");
-    set_return (`${line1.rwr ().join ('')}${_15.rwr ()}${line2.rwr ()}${Rec_Statement.rwr ()}${line3.rwr ().join ('')}${_16.rwr ()}${line4.rwr ().join ('')}`);
+    set_return (`${line1.rwr ().join ('')}${_15.rwr ()}${line2.rwr ().join ('')}${Rec_Statement.rwr ()}${line3.rwr ().join ('')}${_16.rwr ()}`);
 return exit_rule ("StatementBlock");
 },
-Rec_Statement : function (line,r_stmt,) {
+Rec_Statement : function (line,R_Statement,) {
 enter_rule ("Rec_Statement");
-    set_return (`${line.rwr ().join ('')}${r_stmt.rwr ()}`);
+    set_return (`${line.rwr ().join ('')}${R_Statement.rwr ()}`);
 return exit_rule ("Rec_Statement");
 },
 R_Statement_comment : function (comment,Rec_Statement,) {
@@ -462,10 +469,15 @@ enter_rule ("Deftemp");
     set_return (`${_37.rwr ()}${Lval.rwr ()}${_38.rwr ()}${Exp.rwr ()}${Rec_Statement.rwr ().join ('')}`);
 return exit_rule ("Deftemp");
 },
-Defsynonym : function (Lval,_39,Exp,Rec_Statement,) {
-enter_rule ("Defsynonym");
-    set_return (`${Lval.rwr ()}${_39.rwr ()}${Exp.rwr ()}${Rec_Statement.rwr ().join ('')}`);
-return exit_rule ("Defsynonym");
+Defsynonym_legal : function (id,_39,Exp,Rec_Statement,) {
+enter_rule ("Defsynonym_legal");
+    set_return (`${id.rwr ()}${_39.rwr ()}${Exp.rwr ()}${Rec_Statement.rwr ().join ('')}`);
+return exit_rule ("Defsynonym_legal");
+},
+Defsynonym_illegal : function (e,_39,Exp,Rec_Statement,) {
+enter_rule ("Defsynonym_illegal");
+    set_return (`${e.rwr ()} ⎝ error - LHS must be a single identifier for defsynonym ⎠ ${_39.rwr ()}${Exp.rwr ()}${Rec_Statement.rwr ().join ('')} `);
+return exit_rule ("Defsynonym_illegal");
 },
 InitStatement : function (_40,ident,_41,Exp,comment,line,) {
 enter_rule ("InitStatement");

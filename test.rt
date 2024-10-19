@@ -1,3 +1,8 @@
+defn fmt_inout (desc, indent) {
+    s (“\n”, 
+		        x)
+}
+
 defn clone_datum_string (d) {
   d [88] ≡ new_datum_string (d.data)
   return d
