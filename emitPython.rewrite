@@ -74,9 +74,9 @@ ElseStatement [ _39 StatementBlock] = ‛else:«StatementBlock»’
 ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor «ident» in «Exp»:«StatementBlock»«rec»’
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile «Exp»:«StatementBlock»«rec»’
 
-Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp rec?] =‛\n[«Lval1»«Lval2»] = «Exp»«rec»’
+Assignment_multiple [ _55 Lvals+ _57 _58 Exp rec?] =‛\n[«Lvals»] = «Exp»«rec»’
 Assignment_single [ Lval _59 Exp rec?] =‛\n«Lval» = «Exp»«rec»’
-CommaLval [_comma Lval] = ‛, «Lval»’
+LvalComma [Lval Comma?] = ‛«Lval»«Comma»’
 
 ReturnExp_multiple [ _60 Exps+ _62 rec?] =‛[«Exps»]«rec»’
 ReturnExp_single [ Exp rec?] =‛«Exp»«rec»’

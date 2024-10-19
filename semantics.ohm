@@ -35,7 +35,7 @@ semantics {
    CommaIdent = Comma ident
 
    Macro =
-     | "#" "❲low_level_read_text_file_handler❳" "(" eh "," msg "," fname "," ok "," err ")" -- read
+     | "#" "❲low_level_read_text_file_handler❳" "(" eh Comma msg Comma fname Comma ok Comma err ")" -- read
      | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
@@ -53,10 +53,10 @@ semantics {
    WhileStatement = kw<"while"> Exp StatementBlock Rec_Statement?
 
    Assignment = 
-     | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
+     | "[" LvalComma+ "]" "⇐" Exp Rec_Statement? -- multiple
      | Lval "⇐" Exp Rec_Statement? -- single
 
-   CommaLval = "," Lval
+   LvalComma = Lval Comma?
 
     ReturnExp =
       | "[" ExpComma+ "]" Rec_Statement? -- multiple
@@ -156,7 +156,7 @@ semantics {
       | digit* "." digit+  -- fract
       | digit+             -- whole
 
-    Pair = string ":" Exp ","?
+    Pair = string ":" Exp Comma?
   
 
   andOrIn = (kw<"and"> | kw<"or"> | kw<"in">)

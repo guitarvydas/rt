@@ -1,3 +1,12 @@
+defn make_Routing_Descriptor (action, component, port, message) {
+    return {
+        “action”: action,
+        “component”: component,
+        “port”: port,
+        “message”: message
+        }
+}
+
 defn f () {
     return [before_state = “idle” and after_state != “idle”, 
             before_state != “idle” and after_state != “idle”,

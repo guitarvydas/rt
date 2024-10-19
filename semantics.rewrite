@@ -43,9 +43,9 @@ ElseStatement [ _47 StatementBlock] = ‛«_47»«StatementBlock»’
 ForStatement [ _49 ident _51 Exp StatementBlock Rec_Statement?] = ‛«_49»«ident»«_51»«Exp»«StatementBlock»«Rec_Statement»’
 WhileStatement [ _53 Exp StatementBlock Rec_Statement?] = ‛«_53»«Exp»«StatementBlock»«Rec_Statement»’
 
-Assignment_multiple [ _54 Lval CommaLval+ _55 _56 Exp Rec_Statement?] =‛«_54»«Lval»«CommaLval»«_55»«_56»«Exp»«Rec_Statement»’
+Assignment_multiple [ _54 LvalComma+ _55 _56 Exp Rec_Statement?] =‛«_54»«LvalComma»«_55»«_56»«Exp»«Rec_Statement»’
 Assignment_single [ Lval _57 Exp Rec_Statement?] =‛«Lval»«_57»«Exp»«Rec_Statement»’
-CommaLval [ _58 Lval] = ‛«_58»«Lval»’
+LvalComma [Lval Comma?] = ‛«Lval»«Comma»’
 
 ReturnExp_multiple [ _59 ExpComma+ _60 Rec_Statement?] =‛«_59»«ExpComma»«_60»«Rec_Statement»’
 ReturnExp_single [ Exp Rec_Statement?] =‛«Exp»«Rec_Statement»’

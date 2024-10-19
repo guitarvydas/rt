@@ -53,10 +53,10 @@ emitPython {
    WhileStatement = kw<"while"> Exp StatementBlock Rec_Statement?
 
    Assignment = 
-     | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
+     | "[" LvalComma+ "]" "⇐" Exp Rec_Statement? -- multiple
      | Lval "⇐" Exp Rec_Statement? -- single
 
-   CommaLval = Comma Lval
+   LvalComma = Lval Comma?
 
     ReturnExp =
       | "[" ExpComma+ "]" Rec_Statement? -- multiple
