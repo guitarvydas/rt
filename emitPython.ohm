@@ -32,6 +32,7 @@ emitPython {
      | WhileStatement  -- while
      | Assignment -- assignment
      | Lval Rec_Statement? -- call
+     | line Rec_Statement? -- line
    CommaIdent = Comma ident
 
    Macro =

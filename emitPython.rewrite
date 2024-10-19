@@ -29,6 +29,7 @@ R_Statement_for [ ForStatement] =‛«ForStatement»’
 R_Statement_while [ WhileStatement] =‛«WhileStatement»’
 R_Statement_assignment [ Assignment] =‛«Assignment»’
 R_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
+R_Statement_line [line rec?] = ‛«line»«rec»’
 CommaIdent [_comma ident] = ‛, «ident»’
 
 Macro_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛

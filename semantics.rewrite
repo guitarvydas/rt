@@ -12,7 +12,7 @@ TopLevel_line [line] =‛«line»’
 Defvar [ _2 Lval _3 Exp line?] = ‛«_2»«Lval»«_3»«Exp»«line»’
 Defconst [ _5 Lval _6 Exp line?] = ‛«_5»«Lval»«_6»«Exp»«line»’
 Defn [ _8 ident Formals StatementBlock line?] = ‛«_8»«ident»«Formals»«StatementBlock»«line»’
-Defobj [ _10 ident ObjFormals line1? _11 line2? InitStatement+ _12 line3?] = ‛«_10»«ident»«ObjFormals»«line1»«_11»«line2»«InitStatement»«_12»«line2»’
+Defobj [ _10 ident ObjFormals line1? _11 line2? InitStatement+ _12 line3?] = ‛«_10»«ident»«ObjFormals»«line1»«_11»«line2»«InitStatement»«_12»«line3»’
 Import [ _14 ident line?] = ‛«_14»«ident»«line»’
 StatementBlock [ line1? lb line2? Rec_Statement line3? rb line4?] = ‛«line1»«lb»«line2»«Rec_Statement»«line3»«rb»«line4»’
 
@@ -29,6 +29,7 @@ R_Statement_for [ ForStatement] =‛«ForStatement»’
 R_Statement_while [ WhileStatement] =‛«WhileStatement»’
 R_Statement_assignment [ Assignment] =‛«Assignment»’
 R_Statement_call [ Lval Rec_Statement?] =‛«Lval»«Rec_Statement»’
+R_Statement_line [line rec?] = ‛«line»«rec»’
 CommaIdent [ _23 ident] = ‛«_23»«ident»’
 
 Macro_read [ _24 _25 _26 eh _27 msg _28 fname _29 ok _30 err _31] =‛«_24»«_25»«_26»«eh»«_27»«msg»«_28»«fname»«_29»«ok»«_30»«err»«_31»’
@@ -85,7 +86,7 @@ Primary_atom [ Atom] =‛«Atom»’
 Atom_emptylistconst [ _77 _78] =‛«_77»«_78»’
 Atom_emptydict [ _79 _80] =‛«_79»«_80»’
 Atom_paren [ _81 Exp _82] =‛«_81»«Exp»«_82»’
-Atom_listconst [ lb line1? PrimaryComma+ rb line2?] =‛«lb»«line1»«PrimaryComma»«rb»«line2»’
+Atom_listconst [ lb line1? PrimaryComma+ line2? rb] =‛«lb»«line1»«PrimaryComma»«rb»«line2»’
 Atom_dict [ lb line1? PairComma+ line2? rb] =‛«lb»«line1»«PairComma»«line2»«rb»’
 Atom_lambda [ lambda LambdaFormals? _87 Exp] =‛«lambda»«LambdaFormals»«_87»«Exp»’
 Atom_pos [ _117 Primary] =‛«_117»«Primary»’
