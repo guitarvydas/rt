@@ -1,6 +1,6 @@
 
 
-def fmt_inout (desc,indent):#line 1undefined
+def fmt_inout (desc,indent):#line 1
     s ( "\n",#line 2 x)#line 3#line 4
 
 
