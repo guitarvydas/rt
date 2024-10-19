@@ -16,9 +16,9 @@ semantics {
    Defobj = kw<"defobj"> ident ObjFormals line? "{" line? InitStatement+ "}" line?
    Import = kw<"import"> ident line?
 
-   StatementBlock = line? "{" line? Rec_Statement line? "}"
+   StatementBlock = line? "{" line? Rec_Statement line? "}" line?
 
-   Rec_Statement = line? R_Statement
+   Rec_Statement = line? R_Statement line?
    R_Statement =
      | comment Rec_Statement? -- comment
      | Macro -- macro
@@ -107,16 +107,9 @@ semantics {
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren
-      | "[" line? PrimaryComma+ "]" -- listconst
-      | "{" PairComma+ "}" -- dict
+      | "[" line? PrimaryComma+ line? "]" -- listconst
+      | "{" line? PairComma+ line? "}" -- dict
       | lambda LambdaFormals? ":" Exp -- lambda
-      | kw<"fresh"> "(" ident ")" -- fresh
-      | kw<"car"> "(" Exp ")" -- car
-      | kw<"cdr"> "(" Exp ")" -- cdr
-      | kw<"argvcdr"> "(" digit ")" -- nthargvcdr
-      | kw<"nthargv"> "(" digit ")" -- nthargv
-      | kw<"stringcdr"> "(" Exp ")" -- stringcdr
-      | kw<"strcons"> "(" Exp "," Exp ")" -- strcons
       | "+" Primary -- pos
       | "-" Primary -- neg
       | phi -- phi
@@ -129,8 +122,8 @@ semantics {
 
 
 
-    PrimaryComma = Primary ","? line?
-    PairComma = Pair ","?
+    PrimaryComma = Primary comma?
+    PairComma = Pair comma?
     
     Lval = Exp
 
@@ -148,14 +141,14 @@ semantics {
        | ident "∷" Exp -- defaultvalue
        | ident -- plain
        
-    CommaFormal = "," Formal
+    CommaFormal = comma Formal
     
     Actuals = 
       | "(" ")" -- noactuals
-      | "(" Actual CommaActual* ")" -- actuals
+      | "(" ActualComma* ")" line? -- actuals
 
    Actual = ParamName? Exp
-   CommaActual = "," Actual
+   ActualComma = Actual comma? line?
 
    ParamName = ident "∷"
 
@@ -177,8 +170,7 @@ semantics {
     | ~"“" ~"”" any -- other
 
     keyword = (
-        kw<"fresh">
-      | kw<"defconst">
+        kw<"defconst">
       | kw<"deftemp">
       | kw<"defobj">
       | kw<"defvar">
@@ -197,12 +189,6 @@ semantics {
       | kw<"while">
       | kw<"import">
       | kw<"as">
-      | kw<"car">
-      | kw<"cdr">
-      | kw<"stringcdr">
-      | kw<"argvcdr">
-      | kw<"nthargv">
-      | kw<"strcons">
       | lambda
       | phi
       )
@@ -234,5 +220,7 @@ semantics {
   port = string
   
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
+
+  comma = line? "," line?
 }
 

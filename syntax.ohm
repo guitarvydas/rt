@@ -168,8 +168,7 @@ syntax {
     | ~"“" ~"”" any -- other
 
     keyword = (
-        kw<"fresh">
-      | kw<"defconst">
+        kw<"defconst">
       | kw<"deftemp">
       | kw<"defobj">
       | kw<"defvar">
