@@ -68,7 +68,7 @@ Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec�
 Defsynonym_legal [id _eqv e rec?] = ‛\n«id» = «e»«rec»’
 
 
-InitStatement [ _mark ident _33 Exp cmt? line?] = ‛\nself.«ident» = «Exp» «cmt»«line»’
+InitStatement [ _mark ident _33 Exp fluff*] = ‛\nself.«ident» = «Exp» «fluff»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛elif «Exp»:«StatementBlock»’
 ElseStatement [ _39 StatementBlock] = ‛else:«StatementBlock»’

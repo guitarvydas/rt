@@ -1,3 +1,11 @@
+defobj Eh () {
+        • state ⇐ “idle”
+        ⌈ bootstrap debugging⌉
+}
+
+defn f () {
+    cmd ≡ stringcdr (name).strip ()
+}
 defn make_Routing_Descriptor (action, component, port, message) {
     return {
         “action”: action,

@@ -44,7 +44,7 @@ semantics {
      | ident "≡" Exp Rec_Statement? -- legal
      | Lval "≡" Exp Rec_Statement? -- illegal
 
-   InitStatement = "•" ident "⇐" Exp comment? line?
+   InitStatement = "•" ident "⇐" Exp (comment | line)*
 
    IfStatement = kw<"if"> Exp StatementBlock ElifStatement* ElseStatement? Rec_Statement?
    ElifStatement = kw<"elif"> Exp StatementBlock
@@ -95,9 +95,9 @@ semantics {
       | Primary -- basic
 
     Primary =
-      | Primary "@" ident -- lookupident
+      | Primary "@" Primary -- lookupident
       | Primary "@" Primary -- lookup
-      | Primary "." ident -- field
+      | Primary "." Primary -- field
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice
       | ident Actuals -- identcall
