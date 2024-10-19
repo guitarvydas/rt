@@ -32,7 +32,7 @@ semantics {
      | WhileStatement  -- while
      | Assignment -- assignment
      | Lval Rec_Statement? -- call
-   CommaIdent = "," ident
+   CommaIdent = Comma ident
 
    Macro =
      | "#" "❲low_level_read_text_file_handler❳" "(" eh "," msg "," fname "," ok "," err ")" -- read
@@ -59,10 +59,10 @@ semantics {
    CommaLval = "," Lval
 
     ReturnExp =
-      | "[" Exp CommaExp+ "]" Rec_Statement? -- multiple
+      | "[" ExpComma+ "]" Rec_Statement? -- multiple
       | Exp Rec_Statement? -- single
 
-    CommaExp = "," Exp
+    ExpComma = Exp Comma?
     
     Exp =  BooleanAndOrIn
 
@@ -122,8 +122,8 @@ semantics {
 
 
 
-    PrimaryComma = Primary comma?
-    PairComma = Pair comma?
+    PrimaryComma = Primary Comma?
+    PairComma = Pair Comma?
     
     Lval = Exp
 
@@ -141,14 +141,14 @@ semantics {
        | ident "∷" Exp -- defaultvalue
        | ident -- plain
        
-    FormalComma = Formal comma?
+    FormalComma = Formal Comma?
     
     Actuals = 
       | "(" ")" -- noactuals
       | "(" ActualComma* ")" line? -- actuals
 
    Actual = ParamName? Exp
-   ActualComma = Actual comma? line?
+   ActualComma = Actual Comma? line?
 
    ParamName = ident "∷"
 
@@ -221,6 +221,6 @@ semantics {
   
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
 
-  comma = line? "," line?
+  Comma = line? "," line?
 }
 

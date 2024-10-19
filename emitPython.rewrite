@@ -78,9 +78,9 @@ Assignment_multiple [ _55 Lval1  Lval2+ _57 _58 Exp rec?] =‛\n[«Lval1»«Lval
 Assignment_single [ Lval _59 Exp rec?] =‛\n«Lval» = «Exp»«rec»’
 CommaLval [_comma Lval] = ‛, «Lval»’
 
-ReturnExp_multiple [ _60 Exp1 Exp2+ _62 rec?] =‛[«Exp1»«Exp2»]«rec»’
+ReturnExp_multiple [ _60 Exps+ _62 rec?] =‛[«Exps»]«rec»’
 ReturnExp_single [ Exp rec?] =‛«Exp»«rec»’
-CommaExp [_comma e] = ‛, «e»’
+ExpComma [Exp Comma?] = ‛«Exp»«Comma»’
 Exp [e] = ‛«e»’
 BooleanAndOrIn_andOrIn [e1 op e2] = ‛«e1»«op»«e2»’
 BooleanAndOrIn_default [e] = ‛«e»’
@@ -193,5 +193,5 @@ err [p] = ‛«p»’
 port [s] = ‛«s»’
 
 line [lb cs* rb] = ‛«lb»«cs»«rb»\n’
-comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
+Comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
 }

@@ -1,3 +1,9 @@
+defn f () {
+    return [before_state = “idle” and after_state != “idle”, 
+            before_state != “idle” and after_state != “idle”,
+            before_state != “idle” and after_state = “idle”]
+}
+
 defn fmt_inout (desc, indent) {
     s (“\n”, 
 		        x)
@@ -5,6 +11,7 @@ defn fmt_inout (desc, indent) {
 
 defn clone_datum_string (d) {
   d ≡ new_datum_string (d.data)
+
   return d
 }
 

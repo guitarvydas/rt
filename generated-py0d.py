@@ -1,27 +1,37 @@
 
 
-def fmt_inout (desc,indent):                                                    #line 1
+def f ():                                                                       #line 1
 
-    s ( "\n",                                                                   #line 2
-    x)                                                                          #line 3
-                                                                                #line 4
-
+    return [ before_state ==  "idle" and  after_state!= "idle",                 #line 2
+    before_state!= "idle" and  after_state!= "idle",                            #line 3
+    before_state!= "idle" and  after_state ==  "idle"]                          #line 4
                                                                                 #line 5
 
-def clone_datum_string (d):                                                     #line 6
+                                                                                #line 6
 
-    d = new_datum_string ( d.data)                                              #line 7
+def fmt_inout (desc,indent):                                                    #line 7
 
-    return  d                                                                   #line 8
-                                                                                #line 9
-
+    s ( "\n",                                                                   #line 8
+    x)                                                                          #line 9
                                                                                 #line 10
-#  test comment                                                                 #line 11
 
-def f (x):                                                                      #line 12
+                                                                                #line 11
 
-    x =  42                                                                     #line 13
+def clone_datum_string (d):                                                     #line 12
+
+    d = new_datum_string ( d.data)                                              #line 13
                                                                                 #line 14
+
+    return  d                                                                   #line 15
+                                                                                #line 16
+
+                                                                                #line 17
+#  test comment                                                                 #line 18
+
+def f (x):                                                                      #line 19
+
+    x =  42                                                                     #line 20
+                                                                                #line 21
 
 
 

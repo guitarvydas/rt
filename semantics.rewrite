@@ -47,9 +47,9 @@ Assignment_multiple [ _54 Lval CommaLval+ _55 _56 Exp Rec_Statement?] =‛«_54�
 Assignment_single [ Lval _57 Exp Rec_Statement?] =‛«Lval»«_57»«Exp»«Rec_Statement»’
 CommaLval [ _58 Lval] = ‛«_58»«Lval»’
 
-ReturnExp_multiple [ _59 Exp CommaExp+ _60 Rec_Statement?] =‛«_59»«Exp»«CommaExp»«_60»«Rec_Statement»’
+ReturnExp_multiple [ _59 ExpComma+ _60 Rec_Statement?] =‛«_59»«ExpComma»«_60»«Rec_Statement»’
 ReturnExp_single [ Exp Rec_Statement?] =‛«Exp»«Rec_Statement»’
-CommaExp [ _61 Exp] = ‛«_61»«Exp»’
+ExpComma [Exp Comma?] = ‛«Exp»«Comma»’
 Exp [ BooleanAndOrIn] = ‛«BooleanAndOrIn»’
 
 BooleanAndOrIn_andOrIn [ BooleanAndOrIn andOrIn BooleanExp] =‛«BooleanAndOrIn»«andOrIn»«BooleanExp»’
@@ -152,5 +152,5 @@ err [ port] = ‛«port»’
 port [ string] = ‛«string»’
 
 line [lb cs* rb] = ‛«lb»«cs»«rb»’
-comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
+Comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
 }

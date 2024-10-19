@@ -7,7 +7,7 @@ TopLevel_defconst [ Defconst] =‛«Defconst»’
 TopLevel_defn [ Defn] =‛«Defn»’
 TopLevel_defobj [ Defobj] =‛«Defobj»’
 TopLevel_import [ Import] =‛«Import»’
-TopLevel_comment [ comment line?] =‛«comment»«line»’
+TopLevel_comment [ comment] =‛«comment»’
 TopLevel_line [line] =‛«line»’
 
 Defvar [ _2 Lval _3 Exp line?] = ‛«_2»«Lval»«_3»«Exp»«line»’
@@ -30,6 +30,8 @@ R_Statement_for [ ForStatement] =‛«ForStatement»’
 R_Statement_while [ WhileStatement] =‛«WhileStatement»’
 R_Statement_assignment [ Assignment] =‛«Assignment»’
 R_Statement_call [ Lval Rec_Statement?] =‛«Lval»«Rec_Statement»’
+R_Statement_line [ line Rec_Statement?] =‛«line»«Rec_Statement»’
+
 CommaIdent [ _23 ident] = ‛«_23»«ident»’
 
 Macro_read [ _24 _25 _26 eh _27 msg _28 fname _29 ok _30 err _31] =‛«_24»«_25»«_26»«eh»«_27»«msg»«_28»«fname»«_29»«ok»«_30»«err»«_31»’
@@ -47,9 +49,9 @@ Assignment_multiple [ _54 Lval CommaLval+ _55 _56 Exp Rec_Statement?] =‛«_54�
 Assignment_single [ Lval _57 Exp Rec_Statement?] =‛«Lval»«_57»«Exp»«Rec_Statement»’
 CommaLval [ _58 Lval] = ‛«_58»«Lval»’
 
-ReturnExp_multiple [ _59 Exp CommaExp+ _60 Rec_Statement?] =‛«_59»«Exp»«CommaExp»«_60»«Rec_Statement»’
+ReturnExp_multiple [ _59 ExpComma+ _60 Rec_Statement?] =‛«_59»«ExpComma»«_60»«Rec_Statement»’
 ReturnExp_single [ Exp Rec_Statement?] =‛«Exp»«Rec_Statement»’
-CommaExp [ _61 Exp] = ‛«_61»«Exp»’
+ExpComma [Exp comma?] = ‛«Exp»«comma»’
 Exp [ BooleanAndOrIn] = ‛«BooleanAndOrIn»’
 
 BooleanAndOrIn_andOrIn [ BooleanAndOrIn andOrIn BooleanExp] =‛«BooleanAndOrIn»«andOrIn»«BooleanExp»’
@@ -153,5 +155,5 @@ port [ string] = ‛«string»’
 
 line [lb cs* rb] = ‛«lb»«cs»«rb»’
 
-comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
+Comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
 }

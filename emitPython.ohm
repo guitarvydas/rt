@@ -32,10 +32,10 @@ emitPython {
      | WhileStatement  -- while
      | Assignment -- assignment
      | Lval Rec_Statement? -- call
-   CommaIdent = comma ident
+   CommaIdent = Comma ident
 
    Macro =
-     | "#" "❲low_level_read_text_file_handler❳" "(" eh comma msg comma fname comma ok comma err ")" -- read
+     | "#" "❲low_level_read_text_file_handler❳" "(" eh Comma msg Comma fname Comma ok Comma err ")" -- read
      | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
@@ -56,13 +56,13 @@ emitPython {
      | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
      | Lval "⇐" Exp Rec_Statement? -- single
 
-   CommaLval = comma Lval
+   CommaLval = Comma Lval
 
     ReturnExp =
-      | "[" Exp CommaExp+ "]" Rec_Statement? -- multiple
+      | "[" ExpComma+ "]" Rec_Statement? -- multiple
       | Exp Rec_Statement? -- single
 
-    CommaExp = comma Exp
+    ExpComma = Exp Comma?
     
     Exp =  BooleanAndOrIn
 
@@ -111,7 +111,7 @@ emitPython {
       | pkw<"nthargv"> "(" Exp ")" -- nthargv
       | pkw<"nthargvcdr"> "(" Exp ")" -- nthargvcdr
       | pkw<"stringcdr"> "(" Exp ")" -- stringcdr
-      | pkw<"strcons"> "(" Exp comma Exp ")" -- strcons
+      | pkw<"strcons"> "(" Exp Comma Exp ")" -- strcons
 
     Atom =
       | "[" "]" -- emptylistconst
@@ -132,8 +132,8 @@ emitPython {
 
 
 
-    PrimaryComma = Primary comma? line?
-    PairComma = Pair comma?
+    PrimaryComma = Primary Comma? line?
+    PairComma = Pair Comma?
     
     Lval = Exp
 
@@ -151,14 +151,14 @@ emitPython {
        | ident "∷" Exp -- defaultvalue
        | ident -- plain
        
-    FormalComma = Formal comma?
+    FormalComma = Formal Comma?
     
     Actuals = 
       | "(" ")" -- noactuals
       | "(" ActualComma* ")" line? -- actuals
 
    Actual = ParamName? Exp
-   ActualComma = Actual comma? line?
+   ActualComma = Actual Comma? line?
 
    ParamName = ident "∷"
 
@@ -166,7 +166,7 @@ emitPython {
       | digit* "." digit+  -- fract
       | digit+             -- whole
 
-    Pair = string ":" Exp comma?
+    Pair = string ":" Exp Comma?
   
 
   andOrIn = (kw<"and"> | kw<"or"> | kw<"in">)
@@ -232,5 +232,5 @@ emitPython {
 
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
 
-  comma = line? "," line?
+  Comma = line? "," line?
 }
