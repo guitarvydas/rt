@@ -99,9 +99,19 @@ emitPython {
       | Primary "." ident -- field
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice
+      | Pmacro -- pmacro
       | ident Actuals -- identcall
       | Primary Actuals -- call
       | Atom -- atom
+
+    Pmacro =
+      | pkw<"fresh"> "(" ident ")" -- fresh
+      | pkw<"car"> "(" Exp ")" -- car
+      | pkw<"cdr"> "(" Exp ")" -- cdr
+      | pkw<"nthargv"> "(" Exp ")" -- nthargv
+      | pkw<"nthargvcdr"> "(" Exp ")" -- nthargvcdr
+      | pkw<"stringcdr"> "(" Exp ")" -- stringcdr
+      | pkw<"strcons"> "(" Exp comma Exp ")" -- strcons
 
     Atom =
       | "[" "]" -- emptylistconst
@@ -141,7 +151,7 @@ emitPython {
        | ident "∷" Exp -- defaultvalue
        | ident -- plain
        
-    FormalComma = Formal comma
+    FormalComma = Formal comma?
     
     Actuals = 
       | "(" ")" -- noactuals
@@ -197,6 +207,7 @@ emitPython {
   phi = ("ϕ" | kw<"%CF%95">)
 
   kw<s> = "❲" s "❳"
+  pkw<s> = "❲" s "❳"
   ident  = ~keyword "❲" idchar+ "❳"
   idchar =
     | "❲" idchar+ "❳" -- rec
@@ -221,5 +232,5 @@ emitPython {
 
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
 
-  comma = line? comma line?
+  comma = line? "," line?
 }

@@ -16,9 +16,9 @@ Defconst [ __ lval _eq e line?] = ‛\n«lval» = «e»«line»’
 Defn [ _4 ident Formals StatementBlock line?] = ‛\ndef «ident» «Formals»:«StatementBlock»«line»’
 Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛\nclass «ident»:⤷\ndef __init__ (self«Formals»):«line1»⤷«line2»«init»«line3»⤶⤶\n’
 Import [ _10 ident line?] = ‛\nimport «ident»«line»’
-StatementBlock [ line1? _11 line2? Statement line3? _12] = ‛«line2»⤷«Statement»«line3»⤶\n’
+StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1»«line2»⤷«Statement»«line3»«line4»⤶\n’
 
-Rec_Statement [line? R_Statement] = ‛«line»«R_Statement»’
+Rec_Statement [line1? R_Statement line2?] = ‛«line»«R_Statement»«line2»’
 R_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
 R_Statement_comment [s rec?] =‛\n«s»«rec»’
 R_Statement_macro [m] = ‛«m»’
@@ -108,25 +108,25 @@ Primary_lookup [p _at key] = ‛«p» [«key»]’
 Primary_field [p _dot key] = ‛«p».«key»’ 
 Primary_index [p lb e rb] = ‛«p» [«e»]’ 
 Primary_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’
+Primary_pmacro [m] = ‛«m»’
 Primary_identcall [id actuals] = ‛«id» «actuals»’
 Primary_call [p actuals] = ‛«p» «actuals»’
 Primary_atom [a] = ‛«a»’
 
-
+Pmacro_fresh [ _83 _84 ident _85] =‛ «ident» ()’
+Pmacro_car [ _83 _84 e _85 ] =‛ «e»[0] ’
+Pmacro_cdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
+Pmacro_nthargvcdr [ _83 lb n rb ] =‛ sys.argv[«n»:] ’
+Pmacro_nthargv [ _83 _84 n _85 ] =‛ sys.argv[«n»] ’
+Pmacro_stringcdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
+Pmacro_strcons [ _strcons lp e1 _comma e2 rp] =‛ str(«e1») + «e2» ’
 
 Atom_emptylistconst [ _72 _73] =‛«_72»«_73»’
 Atom_emptydict [ _76 _77] =‛«_76»«_77»’
 Atom_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’
 Atom_listconst [ _74 line1? PrimaryComma+ _75 line2] =‛«_74»«line1»«PrimaryComma»«_75»«line2»’
-Atom_dict [ _78 PairComma+ _79] =‛«_78»«PairComma»«_79»’
+Atom_dict [ _78 line1? PairComma+ line2? _79] =‛«_78»«line1»«PairComma»«line2»«_79»’
 Atom_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
-Atom_fresh [ _83 _84 ident _85] =‛ «ident» ()’
-Atom_car [ _83 _84 e _85 ] =‛ «e»[0] ’
-Atom_cdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
-Atom_nthargvcdr [ _83 lb n rb ] =‛ sys.argv[«n»:] ’
-Atom_nthargv [ _83 _84 n _85 ] =‛ sys.argv[«n»] ’
-Atom_stringcdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
-Atom_strcons [ _strcons lp e1 _comma e2 rp] =‛ str(«e1») + «e2» ’
 Atom_pos [ _86 Primary ] =‛ +«Primary»’
 Atom_neg [ _87 Primary ] =‛ -«Primary»’
 Atom_phi [ phi] =‛ None’
@@ -142,19 +142,19 @@ PairComma [ Pair _95?] = ‛«Pair»«_95»’
 Lval [ Exp ] = ‛«Exp»’
 keyword [ _144] = ‛«_144»’
 Formals_noformals [ _148 _149] =‛«_148»«_149»’
-Formals_withformals [ _150 Formal CommaFormal* _151] =‛«_150»«Formal»«CommaFormal»«_151»’
+Formals_withformals [ _150 FormalComma* _151] =‛«_150»«FormalComma»«_151»’
 ObjFormals_noformals [ _148 _149] =‛’
-ObjFormals_withformals [ _150 Formal CommaFormal* _151] =‛,«Formal»«CommaFormal»’
+ObjFormals_withformals [ _150 FormalComma* _151] =‛«FormalComma»’
 LambdaFormals_noformals [ _148 _149] =‛’
-LambdaFormals_withformals [ _150 Formal CommaFormal* _151] =‛«Formal»«CommaFormal»’
+LambdaFormals_withformals [ _150 FormalComma* _151] =‛«FormalComma»’
 Formal_defaultvalue [ ident  _152 Exp] = ‛«ident»=«Exp»’
 Formal_plain [ ident] = ‛«ident»’
-CommaFormal [ _153 Formal] = ‛«_153»«Formal»’
+FormalComma [Formal comma?] =‛«Formal»«comma»’
 
 Actuals_noactuals [ _154 _155] =‛«_154»«_155»’
-Actuals_actuals [ _156 Actual CommaActual* _157] =‛«_156»«Actual»«CommaActual»«_157»’
+Actuals_actuals [ _156 ActualComma* _157 line?] =‛«_156»«ActualComma»«_157»«line»’
 Actual [ ParamName? Exp] = ‛«ParamName»«Exp»’
-CommaActual [ _158 Actual] = ‛«_158»«Actual»’
+ActualComma [Actual comma? line?] = ‛«Actual»«comma»«line»’
 ParamName [ ident _159] = ‛«ident»=’
 
 number_fract [ num* _160 den+] =‛«num»«_160»«den»’
@@ -193,4 +193,5 @@ err [p] = ‛«p»’
 port [s] = ‛«s»’
 
 line [lb cs* rb] = ‛«lb»«cs»«rb»’
+comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
 }
