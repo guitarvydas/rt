@@ -192,6 +192,6 @@ ok [p] = ‛«p»’
 err [p] = ‛«p»’
 port [s] = ‛«s»’
 
-line [lb cs* rb] = ‛«lb»«cs»«rb»’
+line [lb cs* rb] = ‛«lb»«cs»«rb»\n’
 comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
 }
