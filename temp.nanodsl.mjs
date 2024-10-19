@@ -53,9 +53,9 @@ emitPython {
    Defobj = kw<"defobj"> ident ObjFormals line? "{" line? InitStatement+ "}" line?
    Import = kw<"import"> ident line?
 
-   StatementBlock = line? "{" line? Rec_Statement line? "}"
+   StatementBlock = line? "{" line? Rec_Statement line? "}" line?
 
-   Rec_Statement = line? R_Statement
+   Rec_Statement = line? R_Statement line?
    R_Statement =
      | comment Rec_Statement? -- comment
      | Macro -- macro
@@ -69,10 +69,10 @@ emitPython {
      | WhileStatement  -- while
      | Assignment -- assignment
      | Lval Rec_Statement? -- call
-   CommaIdent = "," ident
+   CommaIdent = comma ident
 
    Macro =
-     | "#" "❲low_level_read_text_file_handler❳" "(" eh "," msg "," fname "," ok "," err ")" -- read
+     | "#" "❲low_level_read_text_file_handler❳" "(" eh comma msg comma fname comma ok comma err ")" -- read
      | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
@@ -93,13 +93,13 @@ emitPython {
      | "[" Lval CommaLval+ "]" "⇐" Exp Rec_Statement? -- multiple
      | Lval "⇐" Exp Rec_Statement? -- single
 
-   CommaLval = "," Lval
+   CommaLval = comma Lval
 
     ReturnExp =
       | "[" Exp CommaExp+ "]" Rec_Statement? -- multiple
       | Exp Rec_Statement? -- single
 
-    CommaExp = "," Exp
+    CommaExp = comma Exp
     
     Exp =  BooleanAndOrIn
 
@@ -144,16 +144,9 @@ emitPython {
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren
-      | "[" line? PrimaryComma+ "]" -- listconst
-      | "{" PairComma+ "}" -- dict
+      | "[" line? PrimaryComma+ line? "]" -- listconst
+      | "{" line? PairComma+ line? "}" -- dict
       | lambda LambdaFormals? ":" Exp -- lambda
-      | kw<"fresh"> "(" ident ")" -- fresh
-      | kw<"car"> "(" Exp ")" -- car
-      | kw<"cdr"> "(" Exp ")" -- cdr
-      | kw<"argvcdr"> "(" digit ")" -- nthargvcdr
-      | kw<"nthargv"> "(" digit ")" -- nthargv
-      | kw<"stringcdr"> "(" Exp ")" -- stringcdr
-      | kw<"strcons"> "(" Exp "," Exp ")" -- strcons
       | "+" Primary -- pos
       | "-" Primary -- neg
       | phi -- phi
@@ -166,8 +159,8 @@ emitPython {
 
 
 
-    PrimaryComma = Primary ","? line?
-    PairComma = Pair ","?
+    PrimaryComma = Primary comma? line?
+    PairComma = Pair comma?
     
     Lval = Exp
 
@@ -185,14 +178,14 @@ emitPython {
        | ident "∷" Exp -- defaultvalue
        | ident -- plain
        
-    CommaFormal = "," Formal
+    CommaFormal = comma Formal
     
     Actuals = 
       | "(" ")" -- noactuals
-      | "(" Actual CommaActual* ")" -- actuals
+      | "(" ActualComma* ")" line? -- actuals
 
    Actual = ParamName? Exp
-   CommaActual = "," Actual
+   ActualComma = Actual comma? line?
 
    ParamName = ident "∷"
 
@@ -200,7 +193,7 @@ emitPython {
       | digit* "." digit+  -- fract
       | digit+             -- whole
 
-    Pair = string ":" Exp ","?
+    Pair = string ":" Exp comma?
   
 
   andOrIn = (kw<"and"> | kw<"or"> | kw<"in">)
@@ -214,8 +207,7 @@ emitPython {
     | ~"“" ~"”" any -- other
 
     keyword = (
-        kw<"fresh">
-      | kw<"defconst">
+        kw<"defconst">
       | kw<"deftemp">
       | kw<"defobj">
       | kw<"defvar">
@@ -234,12 +226,6 @@ emitPython {
       | kw<"while">
       | kw<"import">
       | kw<"as">
-      | kw<"car">
-      | kw<"cdr">
-      | kw<"stringcdr">
-      | kw<"argvcdr">
-      | kw<"nthargv">
-      | kw<"strcons">
       | lambda
       | phi
       )
@@ -271,7 +257,8 @@ emitPython {
   port = string
 
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
-  
+
+  comma = line? comma line?
 }
 `;
 

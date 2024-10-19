@@ -4,15 +4,11 @@
         "name": "main",
         "children": [
             {
-                "name": "syncfilewrite",
-                "id": 3
-            },
-            {
                 "name": "Inhale",
                 "id": 6
             },
             {
-                "name": "trash",
+                "name": "?C",
                 "id": 10
             },
             {
@@ -24,8 +20,8 @@
                 "id": 16
             },
             {
-                "name": "'junk.inhaled.txt",
-                "id": 21
+                "name": "?B",
+                "id": 20
             },
             {
                 "name": "Syntax Check",
@@ -34,6 +30,22 @@
             {
                 "name": "Semantics Check",
                 "id": 27
+            },
+            {
+                "name": "syncfilewrite",
+                "id": 29
+            },
+            {
+                "name": "?A",
+                "id": 31
+            },
+            {
+                "name": "trash",
+                "id": 33
+            },
+            {
+                "name": "'junk.inhaled.txt",
+                "id": 36
             }
         ],
         "connections": [
@@ -46,7 +58,7 @@
                 "source_port": "",
                 "target": {
                     "name": "'junk.inhaled.txt",
-                    "id": 21
+                    "id": 36
                 },
                 "target_port": ""
             },
@@ -66,32 +78,6 @@
             {
                 "dir": 1,
                 "source": {
-                    "name": "syncfilewrite",
-                    "id": 3
-                },
-                "source_port": "done",
-                "target": {
-                    "name": "trash",
-                    "id": 10
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "Syntax Check",
-                    "id": 23
-                },
-                "source_port": "",
-                "target": {
-                    "name": "Semantics Check",
-                    "id": 27
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
                     "name": "RT to Python",
                     "id": 11
                 },
@@ -118,13 +104,26 @@
             {
                 "dir": 1,
                 "source": {
+                    "name": "Inhale",
+                    "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Syntax Check",
+                    "id": 23
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
                     "name": "'junk.inhaled.txt",
-                    "id": 21
+                    "id": 36
                 },
                 "source_port": "",
                 "target": {
                     "name": "syncfilewrite",
-                    "id": 3
+                    "id": 29
                 },
                 "target_port": "filename"
             },
@@ -137,33 +136,72 @@
                 "source_port": "",
                 "target": {
                     "name": "syncfilewrite",
-                    "id": 3
+                    "id": 29
                 },
                 "target_port": "input"
             },
             {
                 "dir": 1,
                 "source": {
-                    "name": "Inhale",
-                    "id": 6
+                    "name": "syncfilewrite",
+                    "id": 29
                 },
-                "source_port": "",
+                "source_port": "done",
                 "target": {
-                    "name": "Syntax Check",
-                    "id": 23
+                    "name": "trash",
+                    "id": 33
                 },
                 "target_port": ""
             },
             {
-                "dir": 2,
+                "dir": 1,
                 "source": {
-                    "name": "Exhale Python",
-                    "id": 16
+                    "name": "Syntax Check",
+                    "id": 23
                 },
                 "source_port": "",
                 "target": {
-                    "name": "",
-                    "id": 0
+                    "name": "Semantics Check",
+                    "id": 27
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "RT to Python",
+                    "id": 11
+                },
+                "source_port": "",
+                "target": {
+                    "name": "?C",
+                    "id": 10
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Semantics Check",
+                    "id": 27
+                },
+                "source_port": "",
+                "target": {
+                    "name": "?B",
+                    "id": 20
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Syntax Check",
+                    "id": 23
+                },
+                "source_port": "",
+                "target": {
+                    "name": "?A",
+                    "id": 31
                 },
                 "target_port": ""
             },
@@ -205,6 +243,19 @@
                     "id": 0
                 },
                 "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Exhale Python",
+                    "id": 16
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
             },
             {
                 "dir": 2,
