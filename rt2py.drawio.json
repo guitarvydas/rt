@@ -1,7 +1,7 @@
 [
     {
         "file": "rt2py.drawio",
-        "name": "main plain",
+        "name": "main",
         "children": [
             {
                 "name": "Inhale",
@@ -172,7 +172,7 @@
     },
     {
         "file": "rt2py.drawio",
-        "name": "main",
+        "name": "main with probes",
         "children": [
             {
                 "name": "?A",
