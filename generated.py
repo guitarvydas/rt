@@ -44,7 +44,7 @@ def subscripted_digit (n):                                                      
                                                                                 #line 27
 
 class Datum:
-    def __init__ (self):                                                        #line 28
+    def __init__ (self,):                                                       #line 28
 
         self.data =  None                                                       #line 29
 
@@ -309,7 +309,7 @@ def raw_datum_int (i):                                                          
 # `datum` is the data attached to this message.                                 #line 173
 
 class Message:
-    def __init__ (selfport,datum):                                              #line 174
+    def __init__ (self,port,datum):                                             #line 174
 
         self.port =  port                                                       #line 175
 
@@ -975,7 +975,7 @@ def fifo_is_empty (fifo):                                                       
                                                                                 #line 624
 
 class Connector:
-    def __init__ (self):                                                        #line 625
+    def __init__ (self,):                                                       #line 625
 
         self.direction =  None # down, across, up, through                      #line 626
 
@@ -990,7 +990,7 @@ class Connector:
                                                                                 #line 633
 
 class Sender:
-    def __init__ (selfname,component,port):                                     #line 634
+    def __init__ (self,name,component,port):                                    #line 634
 
         self.name =  name                                                       #line 635
 
@@ -1005,7 +1005,7 @@ class Sender:
                                                                                 #line 642
 
 class Receiver:
-    def __init__ (selfname,queue,port,component):                               #line 643
+    def __init__ (self,name,queue,port,component):                              #line 643
 
         self.name =  name                                                       #line 644
 
@@ -1361,7 +1361,7 @@ import sys                                                                      
                                                                                 #line 5
 
 class Component_Registry:
-    def __init__ (self):                                                        #line 6
+    def __init__ (self,):                                                       #line 6
 
         self.templates = {}                                                     #line 7
                                                                                 #line 8
@@ -1369,7 +1369,7 @@ class Component_Registry:
                                                                                 #line 9
 
 class Template:
-    def __init__ (selfname,template_data,instantiator):                         #line 10
+    def __init__ (self,name,template_data,instantiator):                        #line 10
 
         self.name =  name                                                       #line 11
 
@@ -1656,7 +1656,7 @@ import sys                                                                      
 # Eh_States :: enum { idle, active }                                            #line 157
 
 class Eh:
-    def __init__ (self):                                                        #line 158
+    def __init__ (self,):                                                       #line 158
 
         self.name =  ""                                                         #line 159
 
@@ -1983,7 +1983,7 @@ def trash_handler (eh,msg):                                                     
 
 
 class TwoMessages:
-    def __init__ (selffirst,second):                                            #line 341
+    def __init__ (self,first,second):                                           #line 341
 
         self.first =  first                                                     #line 342
 
@@ -1994,7 +1994,7 @@ class TwoMessages:
 # Deracer_States :: enum { idle, waitingForFirst, waitingForSecond }            #line 346
 
 class Deracer_Instance_Data:
-    def __init__ (selfstate,buffer):                                            #line 347
+    def __init__ (self,state,buffer):                                           #line 347
 
         self.state =  state                                                     #line 348
 
@@ -2154,7 +2154,7 @@ def ensure_string_datum_handler (eh,msg):                                       
                                                                                 #line 421
 
 class Syncfilewrite_Data:
-    def __init__ (self):                                                        #line 422
+    def __init__ (self,):                                                       #line 422
 
         self.filename =  ""                                                     #line 423
                                                                                 #line 424
@@ -2205,7 +2205,7 @@ def syncfilewrite_handler (eh,msg):                                             
                                                                                 #line 447
 
 class StringConcat_Instance_Data:
-    def __init__ (self):                                                        #line 448
+    def __init__ (self,):                                                       #line 448
 
         self.buffer1 =  None                                                    #line 449
 

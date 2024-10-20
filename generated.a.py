@@ -44,7 +44,7 @@ def subscripted_digit (n):                                                      
                                                                                 #line 27
 
 class Datum:
-    def __init__ (self):                                                        #line 28
+    def __init__ (self,):                                                       #line 28
 
         self.data =  None                                                       #line 29
 
@@ -309,7 +309,7 @@ def raw_datum_int (i):                                                          
 # `datum` is the data attached to this message.                                 #line 173
 
 class Message:
-    def __init__ (selfport,datum):                                              #line 174
+    def __init__ (self,port,datum):                                             #line 174
 
         self.port =  port                                                       #line 175
 
@@ -975,7 +975,7 @@ def fifo_is_empty (fifo):                                                       
                                                                                 #line 624
 
 class Connector:
-    def __init__ (self):                                                        #line 625
+    def __init__ (self,):                                                       #line 625
 
         self.direction =  None # down, across, up, through                      #line 626
 
@@ -990,7 +990,7 @@ class Connector:
                                                                                 #line 633
 
 class Sender:
-    def __init__ (selfname,component,port):                                     #line 634
+    def __init__ (self,name,component,port):                                    #line 634
 
         self.name =  name                                                       #line 635
 
@@ -1005,7 +1005,7 @@ class Sender:
                                                                                 #line 642
 
 class Receiver:
-    def __init__ (selfname,queue,port,component):                               #line 643
+    def __init__ (self,name,queue,port,component):                              #line 643
 
         self.name =  name                                                       #line 644
 
