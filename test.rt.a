@@ -1,3 +1,8 @@
+defn f () {
+    diagram_names ≡ nthargvcdr (5)
+}
+
+
 defn recursive_routing_trace (container, lis, indent) {
     if [] = lis {
         return “”}

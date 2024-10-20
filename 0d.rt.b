@@ -666,7 +666,7 @@ defn initialize () {
     root_of_0D ≡ nthargv (2)
     arg ≡ nthargv (3)
     main_container_name ≡ nthargv (4)
-    diagram_names ≡ argvcdr (5)
+    diagram_names ≡ nthargvcdr (5)
     palette ≡ initialize_component_palette (root_project, root_0D, diagram_names)
     return [palette, [root_of_project, root_of_0D, main_container_name, diagram_names, arg]]
 }
