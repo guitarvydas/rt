@@ -1,3 +1,12 @@
+defn recursive_routing_trace (container, lis, indent) {
+    if [] = lis {
+        return “”}
+    else {
+        desc ≡ first (lis)
+        formatted ≡ desc@fmt (desc, indent)
+        return formatted + recursive_routing_trace (container, rest (lis), indent + “  ”)}
+}
+
 defobj Eh () {
         • state ⇐ “idle”
         ⌈ bootstrap debugging⌉

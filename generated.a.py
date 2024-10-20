@@ -1,64 +1,82 @@
 
 
-class Eh:
-    def __init__ (self):                                                        #line 1
+def recursive_routing_trace (container,lis,indent):                             #line 1
 
-        self.state =  "idle"                                                    #line 2
-        # bootstrap debugging                                                   #line 3
-                                                                                #line 4
+    if [] ==  lis:                                                              #line 2
 
-                                                                                #line 5
+        return  ""                                                              #line 3
 
-def f ():                                                                       #line 6
+    else:                                                                       #line 4
 
-    cmd =   name[1:] .strip ()                                                  #line 7
+        desc = first ( lis)                                                     #line 5
+
+        formatted =  desc ["fmt"] ( desc, indent)                               #line 6
+
+        return  formatted+recursive_routing_trace ( container,rest ( lis), indent+ "  ")#line 7
+
                                                                                 #line 8
 
+                                                                                #line 9
 
-def make_Routing_Descriptor (action,component,port,message):                    #line 9
+class Eh:
+    def __init__ (self):                                                        #line 10
 
-    return {                                                                    #line 10
-    "action": action,                                                           #line 11
-    "component": component,                                                     #line 12
-    "port": port,                                                               #line 13
-    "message": message                                                          #line 14
-    }                                                                           #line 15
-                                                                                #line 16
+        self.state =  "idle"                                                    #line 11
+        # bootstrap debugging                                                   #line 12
+                                                                                #line 13
 
+                                                                                #line 14
+
+def f ():                                                                       #line 15
+
+    cmd =   name[1:] .strip ()                                                  #line 16
                                                                                 #line 17
 
-def f ():                                                                       #line 18
 
-    return [ before_state ==  "idle" and  after_state!= "idle",                 #line 19
-    before_state!= "idle" and  after_state!= "idle",                            #line 20
-    before_state!= "idle" and  after_state ==  "idle"]                          #line 21
-                                                                                #line 22
+def make_Routing_Descriptor (action,component,port,message):                    #line 18
 
-                                                                                #line 23
+    return {                                                                    #line 19
+    "action": action,                                                           #line 20
+    "component": component,                                                     #line 21
+    "port": port,                                                               #line 22
+    "message": message                                                          #line 23
+    }                                                                           #line 24
+                                                                                #line 25
 
-def fmt_inout (desc,indent):                                                    #line 24
+                                                                                #line 26
 
-    s ( "\n",                                                                   #line 25
-    x)                                                                          #line 26
-                                                                                #line 27
+def f ():                                                                       #line 27
 
-                                                                                #line 28
-
-def clone_datum_string (d):                                                     #line 29
-
-    d = new_datum_string ( d. data)                                             #line 30
+    return [ before_state ==  "idle" and  after_state!= "idle",                 #line 28
+    before_state!= "idle" and  after_state!= "idle",                            #line 29
+    before_state!= "idle" and  after_state ==  "idle"]                          #line 30
                                                                                 #line 31
 
-    return  d                                                                   #line 32
-                                                                                #line 33
+                                                                                #line 32
 
-                                                                                #line 34
-#  test comment                                                                 #line 35
+def fmt_inout (desc,indent):                                                    #line 33
 
-def f (x):                                                                      #line 36
+    s ( "\n",                                                                   #line 34
+    x)                                                                          #line 35
+                                                                                #line 36
 
-    x =  42                                                                     #line 37
-                                                                                #line 38
+                                                                                #line 37
+
+def clone_datum_string (d):                                                     #line 38
+
+    d = new_datum_string ( d. data)                                             #line 39
+                                                                                #line 40
+
+    return  d                                                                   #line 41
+                                                                                #line 42
+
+                                                                                #line 43
+#  test comment                                                                 #line 44
+
+def f (x):                                                                      #line 45
+
+    x =  42                                                                     #line 46
+                                                                                #line 47
 
 
 

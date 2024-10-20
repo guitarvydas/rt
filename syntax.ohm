@@ -93,7 +93,7 @@ syntax {
       | Primary -- basic
 
     Primary =
-      | Primary "@" Primary -- lookupident
+      | Primary "@" ident -- lookupident
       | Primary "@" Primary -- lookup
       | Primary "." Primary -- field
       | Primary "[" Exp "]" -- index
