@@ -1,4 +1,4 @@
-% rewrite emitcl {
+% rewrite emitCLrwr {
 
 Main [ TopLevel+] = ‛«TopLevel»’
 

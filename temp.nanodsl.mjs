@@ -35,7 +35,7 @@ function exit_rule (name) {
 }
 
 const grammar = String.raw`
-emitCL {
+emitCLohm {
 
   Main = TopLevel+
   TopLevel =

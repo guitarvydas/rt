@@ -1,4 +1,4 @@
-emitCL {
+emitCLohm {
 
   Main = TopLevel+
   TopLevel =
