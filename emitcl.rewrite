@@ -61,9 +61,9 @@ Defsynonym_legal [id _eqv e rec?] = ‛\n(let ((«id» «e»))⤷«rec»⤶)’
 
 InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(cons '«ident» «Exp») «fluff»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\n(cond ⤷\n(«Exp»⤷«StatementBlock»⤶)«ElifStatement»«ElseStatement»⤶)«rec»’
-ElifStatement [ _37 Exp StatementBlock] = ‛(«Exp»⤷«StatementBlock»⤶)’
-ElseStatement [ _39 StatementBlock] = ‛(t⤷«StatementBlock»⤶)’
-ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident» in «Exp»⤷\ndo«StatementBlock»⤶«rec»’
+ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp»⤷«StatementBlock»⤶)’
+ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶)’
+ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident» in «Exp»⤷\ndo«StatementBlock»)⤶«rec»’
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
 
 Assignment_multiple [ _55 Lvals+ _57 _58 Exp rec?] =‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
