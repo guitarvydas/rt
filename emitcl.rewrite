@@ -67,7 +67,7 @@ ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident»
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
 
 Assignment_multiple [ _55 Lvals+ _57 _58 Exp rec?] =‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
-Assignment_single [ Lval _59 Exp rec?] =‛\n(setf «Lval» «Exp»)«rec»’
+Assignment_single [ Lval _59 Exp rec?] =‛\n#|B|#(setf «Lval» «Exp»)«rec»’
 LvalComma [Lval Comma?] = ‛«Lval»«Comma»’
 
 ReturnExp_multiple [ _60 Exps+ _62 rec?] =‛(values «Exp1» «Exp2»)«rec»’
@@ -95,7 +95,7 @@ MulExp_basic [ ExpExp] =‛«ExpExp»’
 ExpExp_power [ Primary _69 ExpExp] =‛(expt «Primary» «ExpExp»)’
 ExpExp_basic [ Primary] =‛«Primary»’
 
-Primary_lookupident [p _at key] = ‛(cdr (assoc '«key» «p»)’
+Primary_lookupident [p _at key] = ‛(cdr (assoc '«key» «p»))’
 Primary_lookup [p _at key] = ‛(cdr (assoc «key» «p»))’
 Primary_field [p _dot key] = ‛(cdr (assoc '«key» «p»))’ 
 Primary_index [p lb e rb] = ‛(nth «e» «p»)’ 
@@ -156,7 +156,7 @@ ParamName [ ident _159] = ‛:«ident»’
 
 number_fract [ num* _160 den+] =‛«num».«den»’
 number_whole [ digit+] =‛«digit»’
-Pair [ string _161 Exp _162?] = ‛(setf (gethash «string» ⟪freshdict⟫) ⤷«Exp»⤶)’
+Pair [ string _161 Exp _162?] = ‛\n#|B|#(setf (gethash «string» ⟪freshdict⟫) ⤷«Exp»⤶)’
 
 andOrIn [op] = ‛ «op» ’
 boolOp [ _191] = ‛ «_191» ’
