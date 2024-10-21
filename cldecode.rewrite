@@ -1,7 +1,7 @@
 % rewrite cldecode {
   text [chars+] = ‛«chars»’ 
   char_string [lq cs* rq] = ‛"«cs»"’
-  char_comment [lb cs* rb] = ‛\n#| «cs» |#’
+  char_comment [lb cs* rb] = ‛#| «cs» |#’
   char_errormessage [lb cs* rb] = ‛ >>> «cs» <<< ’
   char_line [lb cs* rb] = ‛#|line «cs»|#’
   char_ulb [c] = ‛’

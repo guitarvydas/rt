@@ -1,6 +1,6 @@
 % rewrite emitCLrwr {
 
-Main [ TopLevel+] = ‛«TopLevel»’
+Main [ TopLevel+] = ‛(load "~/quicklisp/setup.lisp")\n(ql:quickload :cl-json)\n«TopLevel»’
 
 TopLevel_defvar [ Defvar] =‛«Defvar»’
 TopLevel_defconst [ Defconst] =‛«Defconst»’
@@ -23,7 +23,7 @@ Import [ _10 ident line?] = ‛’
 StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1»«line2»⤷«Statement»«line3»«line4»⤶\n’
 
 Rec_Statement [line1? R_Statement line2?] = ‛«line1»⤷«R_Statement»⤶«line2»’
-R_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
+R_Statement_globals [ _24 ident1  cidents* scope?] =‛«scope»’
 R_Statement_comment [s rec?] =‛\n«s»«rec»’
 R_Statement_macro [m] = ‛«m»’
 R_Statement_if [ IfStatement] =‛«IfStatement»’
@@ -56,7 +56,7 @@ Macro_racjf [_octothorpe _racjf lp fname rp] = ‛
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n(let ((«lval» «e»))⤷«rec»⤶)’
 Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec»’
-Defsynonym_legal [id _eqv e rec?] = ‛\n(let ((«lval» «e»))⤷«rec»⤶)’
+Defsynonym_legal [id _eqv e rec?] = ‛\n(let ((«id» «e»))⤷«rec»⤶)’
 
 
 InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(cons '«ident» «Exp») «fluff»’
@@ -67,7 +67,7 @@ ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident»
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
 
 Assignment_multiple [ _55 Lvals+ _57 _58 Exp rec?] =‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
-Assignment_single [ Lval _59 Exp rec?] =‛\n(setf «Lval» «Exp»«rec»’
+Assignment_single [ Lval _59 Exp rec?] =‛\n(setf «Lval» «Exp»)«rec»’
 LvalComma [Lval Comma?] = ‛«Lval»«Comma»’
 
 ReturnExp_multiple [ _60 Exps+ _62 rec?] =‛(values «Exp1» «Exp2»)«rec»’
@@ -116,7 +116,7 @@ Pmacro_strcons [ _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» �
 Atom_emptylistconst [ _72 _73] =‛ nil’
 Atom_emptydict [ _76 _77] =‛ nil’
 Atom_paren [ _70 Exp _71] =‛«Exp»’
-Atom_listconst [ _74 line1? PrimaryComma+ _75 line2] =‛(list «line1» «PrimaryComma»)«line2»’
+Atom_listconst [lb line1? PrimaryComma+ line2? rb] =‛(list «line1» «PrimaryComma»)«line2»’
 
 Atom_dict [ _78 line1? PairComma+ line2? _79] = 
 ⎡ freshdict=‛_dict’
@@ -156,7 +156,7 @@ ParamName [ ident _159] = ‛:«ident»’
 
 number_fract [ num* _160 den+] =‛«num».«den»’
 number_whole [ digit+] =‛«digit»’
-Pair [ string _161 Exp _162?] = ‛(setf (gethash «string» ⟪freshdict⟫) ⤷«Exp»⤶))’
+Pair [ string _161 Exp _162?] = ‛(setf (gethash «string» ⟪freshdict⟫) ⤷«Exp»⤶)’
 
 andOrIn [op] = ‛ «op» ’
 boolOp [ _191] = ‛ «_191» ’

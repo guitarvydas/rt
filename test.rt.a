@@ -1,52 +1,12 @@
-defn f () {
-    diagram_names ≡ nthargvcdr (5)
-}
-
-
-defn recursive_routing_trace (container, lis, indent) {
-    if [] = lis {
-        return “”}
-    else {
-        desc ≡ first (lis)
-        formatted ≡ desc@fmt (desc, indent)
-        return formatted + recursive_routing_trace (container, rest (lis), indent + “  ”)}
-}
-
-defobj Eh () {
-        • state ⇐ “idle”
-        ⌈ bootstrap debugging⌉
-}
-
-defn f () {
-    cmd ≡ stringcdr (name).strip ()
-}
-defn make_Routing_Descriptor (action, component, port, message) {
+defn make_Send_Descriptor (component, port, message, cause_port, cause_message) {
+    rdesc ≡ make_Routing_Descriptor (action ∷ drSend, component ∷ component, port ∷ port, message ∷ message)
     return {
-        “action”: action,
-        “component”: component,
-        “port”: port,
-        “message”: message
+        “action”: drSend,
+        “component”: rdesc@component,
+        “port”: rdesc@port,
+        “message”: rdesc@message,
+        “cause_port”: cause_port,
+        “cause_message”: cause_message,
+        “fmt”: fmt_send
         }
-}
-
-defn f () {
-    return [before_state = “idle” and after_state != “idle”, 
-            before_state != “idle” and after_state != “idle”,
-            before_state != “idle” and after_state = “idle”]
-}
-
-defn fmt_inout (desc, indent) {
-    s (“\n”, 
-		        x)
-}
-
-defn clone_datum_string (d) {
-  d ≡ new_datum_string (d.data)
-
-  return d
-}
-
-⌈  test comment ⌉
-defn f (x) {
-    x ≡ 42
 }
