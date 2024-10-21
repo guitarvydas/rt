@@ -1,4 +1,4 @@
-pydecode {
+cldecode {
   text = char+
   char =
     | "“" (~"“" ~"”" any)* "”"  -- string

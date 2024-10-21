@@ -1,4 +1,4 @@
-% rewrite pydecode {
+% rewrite cldecode {
   text [chars+] = ‛«chars»’ 
   char_string [lq cs* rq] = ‛"«cs»"’
   char_comment [lb cs* rb] = ‛\n#| «cs» |#’
