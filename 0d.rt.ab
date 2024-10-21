@@ -1,0 +1,341 @@
+
+defn log_inout_no_output (container, component, in_message) {
+    rdesc ≡ make_InOut_Descriptor (container ∷ container, component ∷ component, in_message ∷ in_message,
+                                   out_port ∷ ϕ, out_message ∷ ϕ)
+    append_routing_descriptor (container, rdesc)
+}
+
+defn log_inout_single (container, component, in_message, out_message) {
+    rdesc ≡ make_InOut_Descriptor (container ∷ container, component ∷ component, in_message ∷ in_message,
+                                   out_port ∷ ϕ, out_message ∷ out_message)
+    append_routing_descriptor (container, rdesc)
+}
+
+defn log_inout_recursively (container, component, in_message, out_messages ∷ []) {
+    if [] = out_messages {
+        pass }
+    else {
+        m ≡ car (out_messages)
+        rest ≡ cdr (out_messages)
+        log_inout_single (container ∷ container, component ∷ component, in_message ∷ in_message, out_message ∷ m)
+        log_inout_recursively (container ∷ container, component ∷ component, in_message ∷ in_message, out_messages ∷ rest) }
+}
+
+defn fmt_inout (desc, indent) {
+    outm ≡ desc@out_message
+    if ϕ = outm {
+        return strcons (“\n”, strcons (indent, “  ⊥”))
+    } else {
+        return strcons (“\n”, 
+                 strcons (indent,
+		   strcons (“  ∴ ”,
+		     strcons (desc@component.name,
+		       strcons (“ ”, format_message (outm))))))
+    }
+}
+
+defn log_tick (container, component, in_message) {
+    pass
+}
+
+⌈⌉
+defn routing_trace_all (container) {
+    indent ≡ “”
+    lis ≡ list (container.routings.queue)
+    return recursive_routing_trace (container, lis, indent)
+}
+
+defn recursive_routing_trace (container, lis, indent) {
+    if [] = lis {
+        return “”}
+    else {
+        desc ≡ first (lis)
+        formatted ≡ desc@fmt (desc, indent)
+        return formatted + recursive_routing_trace (container, rest (lis), indent + “  ”)}
+}
+
+defconst enumDown ≡ 0
+defconst enumAcross ≡ 1
+defconst enumUp ≡ 2
+defconst enumThrough ≡ 3
+
+defn container_instantiator (reg, owner, container_name, desc) {
+    global enumDown, enumUp, enumAcross, enumThrough
+    container ≡ make_container (container_name, owner)
+    children ≡ []
+    children_by_id ≡ {} ⌈ not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here⌉
+    ⌈ collect children⌉
+    for child_desc in desc@children {
+        child_instance ≡ get_component_instance (reg, child_desc@name, container)
+        children.append (child_instance)
+        children_by_id [child_desc@id] ⇐ child_instance }
+    container.children ⇐ children
+    me ≡ container
+    
+    connectors ≡ []
+    for proto_conn in desc@connections {
+        source_component ≡ ϕ
+        target_component ≡ ϕ
+        connector ≡ Connector ()
+        if proto_conn@dir = enumDown {
+            ⌈ JSON: {'dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},⌉
+            connector.direction ⇐ “down”
+            connector.sender ⇐ Sender (me.name, me, proto_conn@source_port)
+            target_component ≡ children_by_id [proto_conn@target@id]
+            if (target_component = ϕ) {
+                load_error (strcons (“internal error: .Down connection target internal error ”, proto_conn@target))}
+            else{
+                connector.receiver ⇐ Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
+                connectors.append (connector) }}
+        elif proto_conn@dir = enumAcross {
+            connector.direction ⇐ “across”
+            source_component ≡ children_by_id [proto_conn@source@id]
+            target_component ≡ children_by_id [proto_conn@target@id]
+            if source_component = ϕ {
+                load_error (strcons (“internal error: .Across connection source not ok ”, proto_conn@source)) }
+            else {
+                connector.sender ⇐ Sender (source_component.name, source_component, proto_conn@source_port)
+                if target_component = ϕ {
+                    load_error (strcons (“internal error: .Across connection target not ok ”, proto_conn.target)) }
+                else {
+                    connector.receiver ⇐ Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
+                    connectors.append (connector)}}}
+        elif proto_conn@dir = enumUp {
+            connector.direction ⇐ “up”
+            source_component ≡ children_by_id [proto_conn@source@id]
+            if source_component = ϕ {
+                print (strcons (“internal error: .Up connection source not ok ”, proto_conn@source)) }
+            else {
+                connector.sender ⇐ Sender (source_component.name, source_component, proto_conn@source_port)
+                connector.receiver ⇐ Receiver (me.name, container.outq, proto_conn@target_port, me)
+                connectors.append (connector) }}
+        elif proto_conn@dir = enumThrough {
+            connector.direction ⇐ “through”
+            connector.sender ⇐ Sender (me.name, me, proto_conn@source_port)
+            connector.receiver ⇐ Receiver (me.name, container.outq, proto_conn@target_port, me)
+            connectors.append (connector) }}
+            
+    container.connections ⇐ connectors
+    return container
+}
+
+⌈ The default handler for container components.⌉
+defn container_handler (container, message) {
+    route (container ∷ container, from_component ∷ container, message ∷ message) ⌈ references to 'self' are replaced by the container during instantiation⌉
+    while any_child_ready (container) {
+        step_children (container, message)}
+}
+
+⌈ Frees the given container and associated data.⌉
+defn destroy_container (eh) {
+    pass
+}
+
+defn fifo_is_empty (fifo) {
+    return fifo.empty ()
+}
+
+⌈ Routing connection for a container component. The `direction` field has⌉
+⌈ no affect on the default message routing system _ it is there for debugging⌉
+⌈ purposes, or for reading by other tools.⌉
+
+defobj Connector () {
+        • direction ⇐ ϕ ⌈ down, across, up, through⌉
+        • sender ⇐ ϕ
+        • receiver ⇐ ϕ
+}
+
+⌈ `Sender` is used to “pattern match“ which `Receiver` a message should go to,⌉
+⌈ based on component ID (pointer) and port name.⌉
+
+defobj Sender (name, component, port) {
+        • name ⇐ name
+        • component ⇐ component ⌈ from⌉
+        • port ⇐ port ⌈ from's port⌉
+}
+
+⌈ `Receiver` is a handle to a destination queue, and a `port` name to assign⌉
+⌈ to incoming messages to this queue.⌉
+
+defobj Receiver (name, queue, port, component) {
+        • name ⇐ name
+        • queue ⇐ queue ⌈ queue (input | output) of receiver⌉
+        • port ⇐ port ⌈ destination port⌉
+        • component ⇐ component ⌈ to (for bootstrap debug)⌉
+}
+
+⌈ Checks if two senders match, by pointer equality and port name matching.⌉
+defn sender_eq (s1, s2) {
+    same_components ≡ (s1.component = s2.component)
+    same_ports ≡ (s1.port = s2.port)
+    return same_components and same_ports
+}
+
+⌈ Delivers the given message to the receiver of this connector.⌉
+
+defn deposit (parent, conn, message) {
+    new_message ≡ make_message (port ∷ conn.receiver.port, datum ∷ message.datum)
+    log_connection (parent, conn, new_message)
+    push_message (parent, conn.receiver.component, conn.receiver.queue, new_message)
+}
+
+defn force_tick (parent, eh) {
+    tick_msg ≡ make_message (“.”, new_datum_tick ())
+    push_message (parent, eh, eh.inq, tick_msg)
+    return tick_msg
+}
+
+defn push_message (parent, receiver, inq, m) {
+    inq.put (m)
+    parent.visit_ordering.put (receiver)
+}
+
+defn is_self (child, container) {
+    ⌈ in an earlier version “self“ was denoted as ϕ⌉
+    return child = container
+}
+
+defn step_child (child, msg) {
+    before_state ≡ child.state
+    child.handler(child, msg)
+    after_state ≡ child.state
+    return [before_state = “idle” and after_state != “idle”, 
+            before_state != “idle” and after_state != “idle”,
+            before_state != “idle” and after_state = “idle”]
+}
+
+defn save_message (eh, msg) {
+    eh.saved_messages.put (msg)
+}
+
+defn fetch_saved_message_and_clear (eh) {
+    return eh.saved_messages.get ()
+}
+
+defn step_children (container, causingMessage) {
+    container.state ⇐ “idle”
+    for child in list (container.visit_ordering.queue) {
+        ⌈ child = container represents self, skip it⌉
+        if (not (is_self (child, container))){
+            if (not (child.inq.empty ())){
+                msg ≡ child.inq.get ()
+                [began_long_run, continued_long_run, ended_long_run] ⇐ step_child (child, msg)
+                if began_long_run {
+                    save_message (child, msg)}
+                elif continued_long_run {
+                    pass }
+                elif ended_long_run {
+                    log_inout (container ∷ container, component ∷ child, in_message ∷ fetch_saved_message_and_clear (child))}
+                else {
+                    log_inout (container ∷ container, component ∷ child, in_message ∷ msg)}
+                destroy_message(msg)}
+            else {
+                if child.state !=  “idle” {
+                    msg ≡ force_tick (container, child)
+                    child.handler(child, msg)
+                    log_tick (container ∷ container, component ∷ child, in_message ∷ msg)
+                    destroy_message(msg)}}
+            
+            if child.state = “active” {
+                ⌈ if child remains active, then the container must remain active and must propagate “ticks“ to child⌉
+                container.state ⇐ “active”}
+            
+            while (not (child.outq.empty ())) {
+                msg ≡ child.outq.get ()
+                route(container, child, msg)
+                destroy_message(msg)}}}
+
+
+}
+
+defn attempt_tick (parent, eh) {
+    if eh.state != “idle” {
+        force_tick (parent, eh)}
+}
+
+defn is_tick (msg) {
+    return “tick” = msg.datum.kind ()
+}
+
+⌈ Routes a single message to all matching destinations, according to⌉
+⌈ the container's connection network.⌉
+
+defn route (container, from_component, message) {
+    deftemp was_sent ⇐ ⊥ ⌈ for checking that output went somewhere (at least during bootstrap)⌉
+    deftemp fromname ⇐ “”
+    if is_tick (message){
+        for child in container.children {
+            attempt_tick (container, child, message) }
+        was_sent ⇐ ⊤ }
+    else {
+        if (not (is_self (from_component, container))) {
+            fromname ⇐ from_component.name }
+        from_sender ≡ Sender (name ∷ fromname, component ∷ from_component, port ∷ message.port)
+        
+        for connector in container.connections {
+            if sender_eq (from_sender, connector.sender) {
+                deposit (container, connector, message)
+                was_sent ⇐ ⊤}}}
+    if not (was_sent) {
+        print (“\n\n*** Error: ***”)
+        dump_possible_connections (container)
+        print_routing_trace (container)
+        print (“***”)
+        print (strcons (container.name, strcons (“: message '”, strcons (message.port, strcons (“' from ”, strcons (fromname, “ dropped on floor...”))))))
+        print (“***”)
+        exit () }
+}
+
+defn dump_possible_connections (container) {
+    print (strcons (“*** possible connections for ”, strcons (container.name, “:”)))
+    for connector in container.connections {
+        print (strcons (connector.direction, strcons (“ ”, strcons (connector.sender.name, strcons (“.”, strcons (connector.sender.port, strcons (“ -> ”, strcons (connector.receiver.name, strcons (“.”, connector.receiver.port))))))))) }
+}
+
+defn any_child_ready (container) {
+    for child in container.children {
+        if child_is_ready(child) {
+            return ⊤}}
+    return ⊥
+}
+
+defn child_is_ready (eh) {
+    return (not (eh.outq.empty ())) or (not (eh.inq.empty ())) or ( eh.state != “idle”) or (any_child_ready (eh))
+}
+
+defn print_routing_trace (eh) {
+    print (routing_trace_all (eh))
+}
+
+defn append_routing_descriptor (container, desc) {
+    container.routings.put (desc)
+}
+
+defn log_connection (container, connector, message) {
+    if “down” = connector.direction{
+        log_down (container ∷ container,
+	          source_port ∷ connector.sender.port,
+		  source_message ∷ ϕ,
+		  target ∷ connector.receiver.component,
+		  target_port ∷ connector.receiver.port,
+                  target_message ∷ message) }
+    elif “up” = connector.direction {
+        log_up (source ∷ connector.sender.component, source_port ∷ connector.sender.port, source_message ∷ ϕ, container ∷ container, target_port ∷ connector.receiver.port,
+                  target_message ∷ message) }
+    elif “across” = connector.direction {
+        log_across (container ∷ container,
+                    source ∷ connector.sender.component, source_port ∷ connector.sender.port, source_message ∷ ϕ,
+                    target ∷ connector.receiver.component, target_port ∷ connector.receiver.port, target_message ∷ message) }
+    elif “through” = connector.direction {
+        log_through (container ∷ container, source_port ∷ connector.sender.port, source_message ∷ ϕ,
+                     target_port ∷ connector.receiver.port, message ∷ message) }
+    else {
+        print (strcons (“*** FATAL error: in log_connection /”, strcons (connector.direction, strcons (“/ /”, strcons (message.port, strcons (“/ /”, strcons (message.datum.srepr (), “/”)))))))
+        exit () }
+}
+
+defn container_injector (container, message) {
+    log_inject (receiver ∷ container, port ∷ message.port, msg ∷ message)
+    container_handler (container, message)
+}
+

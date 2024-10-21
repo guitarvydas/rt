@@ -1,1430 +1,1371 @@
 
+                                                                                                                        #|line 4|#
+                                                                                                                        #|line 5|#
 
-import os⎩1⎭
+(defun Component_Registry (&optional )                                                                                  #|line 6|#
 
-import json⎩2⎭
+  (list
+    (cons 'templates  nil)                                                                                              #|line 7|#
+    )                                                                                                                   #|line 8|#
+)
+                                                                                                                        #|line 9|#
 
-import sys⎩3⎭
-⎩4⎭
-⎩5⎭
+(defun Template (&optional  name  template_data  instantiator)                                                          #|line 10|#
 
-class Component_Registry:
-  def __init__ (self,):⎩6⎭
+  (list
+    (cons 'name  name)                                                                                                  #|line 11|#
 
-    self.templates = {} ⎩7⎭
-    ⎩8⎭
+    (cons 'template_data  template_data)                                                                                #|line 12|#
 
-⎩9⎭
+    (cons 'instantiator  instantiator)                                                                                  #|line 13|#
+    )                                                                                                                   #|line 14|#
+)
+                                                                                                                        #|line 15|#
 
-class Template:
-  def __init__ (self,name,template_data,instantiator):⎩10⎭
+(defun read_and_convert_json_file (&optional  filename)                                                                 #|line 16|#
 
-    self.name =  name ⎩11⎭
+    ;; read json from a named file and convert it into internal form (a tree of routings)
+    ;; return the routings from the function or print an error message and return nil
+    (handler-bind ((error #'(lambda (condition) nil)))
+      (with-open-file (json-stream "~/projects/rtlarson/eyeballs.json" :direction :input)
+        (json:decode-json json-stream)))
+                                                                                                                        #|line 17|#
+                                                                                                                        #|line 18|#
 
-    self.template_data =  template_data ⎩12⎭
+)
+(defun json2internal (&optional  container_xml)                                                                         #|line 20|#
 
-    self.instantiator =  instantiator ⎩13⎭
-    ⎩14⎭
+    (let ((undefined (cdr (assoc '(cdr (assoc '(basename    container_xml                                               #|line 21|#
+    )  path))  os))))
+        (let ((undefined (read_and_convert_json_file    fname                                                           #|line 22|#
+        )))
+            (return-from json2internal  routings)                                                                       #|line 23|#
+          ))                                                                                                            #|line 24|#
 
-⎩15⎭
+)
+(defun delete_decls (&optional  d)                                                                                      #|line 26|#
 
-def read_and_convert_json_file (filename):⎩16⎭
+    #| pass |#                                                                                                          #|line 27|#
+                                                                                                                        #|line 28|#
 
-  try:
-    fil = open(filename, "r")
-    json_data = fil.read()
-    routings = json.loads(json_data)
-    fil.close ()
-    return routings
-  except FileNotFoundError:
-    print (f"File not found: '{filename}'")
-    return None
-  except json.JSONDecodeError as e:
-    print ("Error decoding JSON in file: '{e}'")
-    return None
-  ⎩17⎭
-  ⎩18⎭
+)
+(defun make_component_registry (&optional )                                                                             #|line 30|#
 
-⎩19⎭
+    (return-from make_component_registry (Component_Registry ))                                                         #|line 31|#
+                                                                                                                        #|line 32|#
 
-def json2internal (container_xml):⎩20⎭
+)
+(defun register_component (&optional  reg  template  :ok_to_overwrite  nil)                                             #|line 34|#
 
-  fname =  os. path.basename ( container_xml)⎩21⎭
+    (let ((undefined (mangle_name   (cdr (assoc ' name  template))                                                      #|line 35|#
+    )))
+        (cond
+          (( and  ( in   name (cdr (assoc ' templates  reg))) (not  ok_to_overwrite))                                   #|line 36|#
 
-  routings = read_and_convert_json_file ( fname)⎩22⎭
+                (load_error    (concatenate 'string  "Component "  (concatenate 'string (cdr (assoc ' name  template))  " already declared")) )#|line 37|#
 
-  return  routings⎩23⎭
-  ⎩24⎭
+            ))
+          (setf (cdr (assoc '(nth  name  templates)  reg))  template                                                    #|line 38|#
 
-⎩25⎭
+            (return-from register_component  reg)                                                                       #|line 39|#
+          )                                                                                                             #|line 40|#
 
-def delete_decls (d):⎩26⎭
+)
+(defun register_multiple_components (&optional  reg  templates)                                                         #|line 42|#
 
-  pass⎩27⎭
-  ⎩28⎭
+    (loop for template in  templates
+      do                                                                                                                #|line 43|#
 
-⎩29⎭
+          (register_component    reg   template )                                                                       #|line 44|#
 
-def make_component_registry ():⎩30⎭
+                                                                                                                        #|line 45|#
 
-  return Component_Registry ()⎩31⎭
-  ⎩32⎭
+)
+(defun get_component_instance (&optional  reg  full_name  owner)                                                        #|line 47|#
 
-⎩33⎭
+    (let ((undefined (mangle_name    full_name                                                                          #|line 48|#
+    )))
+        (cond
+          (( in   template_name (cdr (assoc ' templates  reg)))                                                         #|line 49|#
 
-def register_component (reg,template,ok_to_overwrite= False):⎩34⎭
+                (let ((undefined (cdr (assoc '(nth  template_name  templates)  reg))))                                  #|line 50|#
 
-  name = mangle_name ( template. name)⎩35⎭
+                    (cond
+                      (( equal    template  nil)                                                                        #|line 51|#
 
-  if  name in  reg. templates and not  ok_to_overwrite:⎩36⎭
+                            (load_error    (concatenate 'string  "Registry Error: Can;t find component "  (concatenate 'string  template_name  " (does it need to be declared in components_to_include_in_project?")) #|line 52|#
+                            )
+                              (return-from get_component_instance  nil)                                                 #|line 53|#
 
-    load_error ( str( "Component ") +  str( template. name) +  " already declared"  )⎩37⎭
+                        )(t                                                                                             #|line 54|#
 
+                            (let ((undefined  ""))                                                                      #|line 55|#
 
-  reg. templates [ name] =  template⎩38⎭
+                                (let ((undefined  template_name))                                                       #|line 56|#
 
-  return  reg⎩39⎭
-  ⎩40⎭
+                                    (cond
+                                      ((not (equal   nil  owner)                                                        #|line 57|#
 
-⎩41⎭
+                                            (let ((undefined (cdr (assoc ' name  owner))))                              #|line 58|#
 
-def register_multiple_components (reg,templates):⎩42⎭
+                                                (let ((undefined  (concatenate 'string  owner_name  (concatenate 'string  "."  template_name))))))#|line 59|#
 
-  for template in  templates:⎩43⎭
+                                        )(t                                                                             #|line 60|#
 
-    register_component ( reg, template)⎩44⎭
+                                            (let ((undefined  template_name)))                                          #|line 61|#
 
-  ⎩45⎭
+                                        ))
+                                      (let ((undefined (cdr (assoc '(instantiator    reg   owner   instance_name  (cdr (assoc ' template_data  template)) #|line 62|#
+                                      )  template))))
+                                          (setf (cdr (assoc ' depth  instance)) (calculate_depth    instance            #|line 63|#
+                                          )
+                                            (return-from get_component_instance  instance))))
+                        )))                                                                                             #|line 64|#
 
-⎩46⎭
+            )(t                                                                                                         #|line 65|#
 
-def get_component_instance (reg,full_name,owner):⎩47⎭
+                (load_error    (concatenate 'string  "Registry Error: Can't find component "  (concatenate 'string  template_name  " (does it need to be declared in components_to_include_in_project?")) #|line 66|#
+                )
+                  (return-from get_component_instance  nil)                                                             #|line 67|#
 
-  template_name = mangle_name ( full_name)⎩48⎭
+            )))                                                                                                         #|line 68|#
 
-  if  template_name in  reg. templates:⎩49⎭
+)
+(defun calculate_depth (&optional  eh)                                                                                  #|line 69|#
 
-    template =  reg. templates [ template_name]⎩50⎭
+    (cond
+      (( equal   (cdr (assoc ' owner  eh))  nil)                                                                        #|line 70|#
 
-    if ( template ==  None):⎩51⎭
+            (return-from calculate_depth  0)                                                                            #|line 71|#
 
-      load_error ( str( "Registry Error: Can;t find component ") +  str( template_name) +  " (does it need to be declared in components_to_include_in_project?"  )⎩52⎭
+        )(t                                                                                                             #|line 72|#
 
-      return  None⎩53⎭
+            (return-from calculate_depth (+  1 (calculate_depth   (cdr (assoc ' owner  eh)) )))                         #|line 73|#
 
-    else:⎩54⎭
+        ))                                                                                                              #|line 74|#
 
-      owner_name =  ""⎩55⎭
+)
+(defun dump_registry (&optional  reg)                                                                                   #|line 76|#
 
-      instance_name =  template_name⎩56⎭
+    (print )                                                                                                            #|line 77|#
 
-      if  None!= owner:⎩57⎭
+      (print    "*** PALETTE ***"                                                                                       #|line 78|#
+      )
+        (loop for c in (cdr (assoc ' templates  reg))
+          do                                                                                                            #|line 79|#
 
-        owner_name =  owner. name⎩58⎭
+              (print   (cdr (assoc ' name  c)) )                                                                        #|line 80|#
 
-        instance_name =  str( owner_name) +  str( ".") +  template_name  ⎩59⎭
 
-      else:⎩60⎭
+          (print    "***************"                                                                                   #|line 81|#
+          )
+            (print )                                                                                                    #|line 82|#
+                                                                                                                        #|line 83|#
 
-        instance_name =  template_name⎩61⎭
+)
+(defun print_stats (&optional  reg)                                                                                     #|line 85|#
 
+    (print    (concatenate 'string  "registry statistics: " (cdr (assoc ' stats  reg)))                                 #|line 86|#
+    )                                                                                                                   #|line 87|#
 
-      instance =  template.instantiator ( reg, owner, instance_name, template. template_data)⎩62⎭
+)
+(defun mangle_name (&optional  s)                                                                                       #|line 89|#
 
-      instance. depth = calculate_depth ( instance)⎩63⎭
 
-      return  instance
-    ⎩64⎭
+    #|  trim name to remove code from Container component names _ deferred until later (or never) |#                    #|line 90|#
 
-  else:⎩65⎭
+      (return-from mangle_name  s)                                                                                      #|line 91|#
+                                                                                                                        #|line 92|#
 
-    load_error ( str( "Registry Error: Can't find component ") +  str( template_name) +  " (does it need to be declared in components_to_include_in_project?"  )⎩66⎭
+)
+(defun generate_shell_components (&optional  reg  container_list)                                                       #|line 95|#
 
-    return  None⎩67⎭
 
-  ⎩68⎭
+    #|  [ |#                                                                                                            #|line 96|#
 
 
-def calculate_depth (eh):⎩69⎭
+      #|      {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |##|line 97|#
 
-  if  eh. owner ==  None:⎩70⎭
 
-    return  0⎩71⎭
+        #|      {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []} |#                        #|line 98|#
 
-  else:⎩72⎭
 
-    return  1+calculate_depth ( eh. owner)⎩73⎭
+          #|  ] |#                                                                                                      #|line 99|#
 
-  ⎩74⎭
+            (cond
+              ((not (equal   nil  container_list)                                                                       #|line 100|#
 
-⎩75⎭
+                    (loop for diagram in  container_list
+                      do                                                                                                #|line 101|#
 
-def dump_registry (reg):⎩76⎭
 
-  print ()⎩77⎭
+                          #|  loop through every component in the diagram and look for names that start with “$“ |#     #|line 102|#
 
-  print ( "*** PALETTE ***")⎩78⎭
 
-  for c in  reg. templates:⎩79⎭
+                            #|  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |##|line 103|#
 
-    print ( c. name)⎩80⎭
+                              (loop for child_descriptor in (cdr (assoc 'children  diagram)
+                                do                                                                                      #|line 104|#
 
+                                    (cond
+                                      ((first_char_is   (cdr (assoc 'name  child_descriptor)   "$" )                    #|line 105|#
 
-  print ( "***************")⎩81⎭
+                                            (let ((undefined (cdr (assoc 'name  child_descriptor)))                     #|line 106|#
 
-  print ()⎩82⎭
-  ⎩83⎭
+                                                (let ((undefined (cdr (assoc '(strip )  (subseq  name 1)))))            #|line 107|#
 
-⎩84⎭
+                                                    (let ((undefined (Template  :name  name :instantiator  shell_out_instantiate :template_data  cmd #|line 108|#
+                                                    )))
+                                                        (register_component    reg   generated_leaf ))))                #|line 109|#
 
-def print_stats (reg):⎩85⎭
+                                        )((first_char_is   (cdr (assoc 'name  child_descriptor)   "'" )                 #|line 110|#
 
-  print ( str( "registry statistics: ") +  reg. stats )⎩86⎭
-  ⎩87⎭
+                                            (let ((undefined (cdr (assoc 'name  child_descriptor)))                     #|line 111|#
 
-⎩88⎭
+                                                (let ((undefined  (subseq  name 1)))                                    #|line 112|#
 
-def mangle_name (s):⎩89⎭
+                                                    (let ((undefined (Template  :name  name :instantiator  string_constant_instantiate :template_data  s #|line 113|#
+                                                    )))
+                                                        (register_component    reg   generated_leaf :ok_to_overwrite  t ))))
+                                        ))
 
+                                                                                                                        #|line 114|#
 
-  #|                                                                            #line  trim name to remove code from Container component names _ deferred until later (or never) |#⎩90⎭
+                ))                                                                                                      #|line 115|#
 
-  return  s⎩91⎭
-  ⎩92⎭
+)
+(defun first_char (&optional  s)                                                                                        #|line 117|#
 
-⎩93⎭
+    (return-from first_char  (car  s))                                                                                  #|line 118|#
+                                                                                                                        #|line 119|#
 
-import subprocess⎩94⎭
+)
+(defun first_char_is (&optional  s  c)                                                                                  #|line 121|#
 
-def generate_shell_components (reg,container_list):⎩95⎭
+    (return-from first_char_is ( equal    c (first_char    s                                                            #|line 122|#
+      )))                                                                                                               #|line 123|#
 
+)
+#|  this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here |##|line 125|#
 
-  #|                                                                            #line  [ |#⎩96⎭
+#|  I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped |##|line 126|#
 
+(defun run_command (&optional  eh  cmd  s)                                                                              #|line 127|#
 
-  #|                                                                            #line      {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |#⎩97⎭
+    (let ((undefined (cdr (assoc '(run    cmd :capture_output  t :input  s :encoding  "UTF_8"                           #|line 128|#
+    )  subprocess))))
+        (cond
+          ((not ( equal   (cdr (assoc ' returncode  ret))  0))                                                          #|line 129|#
 
+                (cond
+                  ((not (equal  (cdr (assoc ' stderr  ret))  nil)                                                       #|line 130|#
 
-  #|                                                                            #line      {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []} |#⎩98⎭
+                        (return-from run_command (values undefined undefined))                                          #|line 131|#
 
+                    )(t                                                                                                 #|line 132|#
 
-  #|                                                                            #line  ] |#⎩99⎭
+                        (return-from run_command (values undefined undefined))
+                    ))                                                                                                  #|line 133|#
 
-  if  None!= container_list:⎩100⎭
+            )(t                                                                                                         #|line 134|#
 
-    for diagram in  container_list:⎩101⎭
+                (return-from run_command (values undefined undefined))                                                  #|line 135|#
 
+            )))                                                                                                         #|line 136|#
 
-      #|                                                                        #line  loop through every component in the diagram and look for names that start with “$“ |#⎩102⎭
+)
+#|  Data for an asyncronous component _ effectively, a function with input |#                                           #|line 138|#
 
+#|  and output queues of messages. |#                                                                                   #|line 139|#
 
-      #|                                                                        #line  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |#⎩103⎭
+#|  |#                                                                                                                  #|line 140|#
 
-      for child_descriptor in  diagram ["children"]:⎩104⎭
+#|  Components can either be a user_supplied function (“lea“), or a “container“ |#                                      #|line 141|#
 
-        if first_char_is ( child_descriptor ["name"], "$"):⎩105⎭
+#|  that routes messages to child components according to a list of connections |#                                      #|line 142|#
 
-          name =  child_descriptor ["name"]⎩106⎭
+#|  that serve as a message routing table. |#                                                                           #|line 143|#
 
-          cmd =   name[1:] .strip ()⎩107⎭
+#|  |#                                                                                                                  #|line 144|#
 
-          generated_leaf = Template (name= name,instantiator= shell_out_instantiate,template_data= cmd)⎩108⎭
+#|  Child components themselves can be leaves or other containers. |#                                                   #|line 145|#
 
-          register_component ( reg, generated_leaf)⎩109⎭
+#|  |#                                                                                                                  #|line 146|#
 
-        elif first_char_is ( child_descriptor ["name"], "'"):⎩110⎭
+#|  `handler` invokes the code that is attached to this component. |#                                                   #|line 147|#
 
-          name =  child_descriptor ["name"]⎩111⎭
+#|  |#                                                                                                                  #|line 148|#
 
-          s =   name[1:] ⎩112⎭
+#|  `instance_data` is a pointer to instance data that the `leaf_handler` |#                                            #|line 149|#
 
-          generated_leaf = Template (name= name,instantiator= string_constant_instantiate,template_data= s)⎩113⎭
+#|  function may want whenever it is invoked again. |#                                                                  #|line 150|#
 
-          register_component ( reg, generated_leaf,ok_to_overwrite= True)
+#|  |#                                                                                                                  #|line 151|#
+                                                                                                                        #|line 152|#
+                                                                                                                        #|line 155|#
+                                                                                                                        #|line 156|#
 
+#|  Eh_States :: enum { idle, active } |#                                                                               #|line 157|#
 
-    ⎩114⎭
+(defun Eh (&optional )                                                                                                  #|line 158|#
 
-  ⎩115⎭
+  (list
+    (cons 'name  "")                                                                                                    #|line 159|#
 
-⎩116⎭
+    (cons 'inq (cdr (assoc '(Queue )  queue)))                                                                          #|line 160|#
 
-def first_char (s):⎩117⎭
+    (cons 'outq (cdr (assoc '(Queue )  queue)))                                                                         #|line 161|#
 
-  return   s[0] ⎩118⎭
-  ⎩119⎭
+    (cons 'owner  nil)                                                                                                  #|line 162|#
 
-⎩120⎭
+    (cons 'saved_messages (cdr (assoc '(LifoQueue )  queue)))
+    #|  stack of saved message(s) |#                                                                                    #|line 163|#
 
-def first_char_is (s,c):⎩121⎭
+    (cons 'inject  injector_NIY)                                                                                        #|line 164|#
 
-  return  c == first_char ( s)⎩122⎭
-  ⎩123⎭
+    (cons 'children  nil)                                                                                               #|line 165|#
 
-⎩124⎭
+    (cons 'visit_ordering (cdr (assoc '(Queue )  queue)))                                                               #|line 166|#
 
-#|                                                                              #line  this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here |#⎩125⎭
+    (cons 'connections  nil)                                                                                            #|line 167|#
 
-#|                                                                              #line  I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped |#⎩126⎭
+    (cons 'routings (cdr (assoc '(Queue )  queue)))                                                                     #|line 168|#
 
-def run_command (eh,cmd,s):⎩127⎭
+    (cons 'handler  nil)                                                                                                #|line 169|#
 
-  ret =  subprocess.run ( cmd,capture_output= True,input= s,encoding= "UTF_8")⎩128⎭
+    (cons 'instance_data  nil)                                                                                          #|line 170|#
 
-  if not ( ret. returncode ==  0):⎩129⎭
+    (cons 'state  "idle")                                                                                               #|line 171|#
 
-    if  ret. stderr!= None:⎩130⎭
+    #|  bootstrap debugging |#                                                                                          #|line 172|#
 
-      return [ "", ret. stderr]⎩131⎭
+    (cons 'kind  nil)
+    #|  enum { container, leaf, } |#                                                                                    #|line 173|#
 
-    else:⎩132⎭
+    (cons 'trace  nil)
+    #|  set '⊤' if logging is enabled and if this component should be traced, (⊥ means silence, no tracing for this component) |##|line 174|#
 
-      return [ "", str( "error in shell_out ") +  ret. returncode ]
-    ⎩133⎭
+    (cons 'depth  0)
+    #|  hierarchical depth of component, 0=top, 1=1st child of top, 2=1st child of 1st child of top, etc. |#            #|line 175|#
+    )                                                                                                                   #|line 176|#
+)
+                                                                                                                        #|line 177|#
 
-  else:⎩134⎭
+#|  Creates a component that acts as a container. It is the same as a `Eh` instance |#                                  #|line 178|#
 
-    return [ ret. stdout, None]⎩135⎭
+#|  whose handler function is `container_handler`. |#                                                                   #|line 179|#
 
-  ⎩136⎭
+(defun make_container (&optional  name  owner)                                                                          #|line 180|#
 
-⎩137⎭
+    (let ((undefined (Eh )))                                                                                            #|line 181|#
 
-#|                                                                              #line  Data for an asyncronous component _ effectively, a function with input |#⎩138⎭
+        (setf (cdr (assoc ' name  eh))  name                                                                            #|line 182|#
 
-#|                                                                              #line  and output queues of messages. |#⎩139⎭
+          (setf (cdr (assoc ' owner  eh))  owner                                                                        #|line 183|#
 
-#|                                                                              #line  |#⎩140⎭
+            (setf (cdr (assoc ' handler  eh))  container_handler                                                        #|line 184|#
 
-#|                                                                              #line  Components can either be a user_supplied function (“lea“), or a “container“ |#⎩141⎭
+              (setf (cdr (assoc ' inject  eh))  container_injector                                                      #|line 185|#
 
-#|                                                                              #line  that routes messages to child components according to a list of connections |#⎩142⎭
+                (setf (cdr (assoc ' state  eh))  "idle"                                                                 #|line 186|#
 
-#|                                                                              #line  that serve as a message routing table. |#⎩143⎭
+                  (setf (cdr (assoc ' kind  eh))  "container"                                                           #|line 187|#
 
-#|                                                                              #line  |#⎩144⎭
+                    (return-from make_container  eh)                                                                    #|line 188|#
+                  )                                                                                                     #|line 189|#
 
-#|                                                                              #line  Child components themselves can be leaves or other containers. |#⎩145⎭
+)
+#|  Creates a new leaf component out of a handler function, and a data parameter |#                                     #|line 191|#
 
-#|                                                                              #line  |#⎩146⎭
+#|  that will be passed back to your handler when called. |#                                                            #|line 192|#
+                                                                                                                        #|line 193|#
 
-#|                                                                              #line  `handler` invokes the code that is attached to this component. |#⎩147⎭
+(defun make_leaf (&optional  name  owner  instance_data  handler)                                                       #|line 194|#
 
-#|                                                                              #line  |#⎩148⎭
+    (let ((undefined (Eh )))                                                                                            #|line 195|#
 
-#|                                                                              #line  `instance_data` is a pointer to instance data that the `leaf_handler` |#⎩149⎭
+        (setf (cdr (assoc ' name  eh))  (concatenate 'string (cdr (assoc ' name  owner))  (concatenate 'string  "."  name))#|line 196|#
 
-#|                                                                              #line  function may want whenever it is invoked again. |#⎩150⎭
+          (setf (cdr (assoc ' owner  eh))  owner                                                                        #|line 197|#
 
-#|                                                                              #line  |#⎩151⎭
-⎩152⎭
+            (setf (cdr (assoc ' handler  eh))  handler                                                                  #|line 198|#
 
-import queue⎩153⎭
+              (setf (cdr (assoc ' instance_data  eh))  instance_data                                                    #|line 199|#
 
-import sys⎩154⎭
-⎩155⎭
-⎩156⎭
+                (setf (cdr (assoc ' state  eh))  "idle"                                                                 #|line 200|#
 
-#|                                                                              #line  Eh_States :: enum { idle, active } |#⎩157⎭
+                  (setf (cdr (assoc ' kind  eh))  "leaf"                                                                #|line 201|#
 
-class Eh:
-  def __init__ (self,):⎩158⎭
+                    (return-from make_leaf  eh)                                                                         #|line 202|#
+                  )                                                                                                     #|line 203|#
 
-    self.name =  "" ⎩159⎭
+)
+#|  Sends a message on the given `port` with `data`, placing it on the output |#                                        #|line 205|#
 
-    self.inq =  queue.Queue () ⎩160⎭
+#|  of the given component. |#                                                                                          #|line 206|#
+                                                                                                                        #|line 207|#
 
-    self.outq =  queue.Queue () ⎩161⎭
+(defun send (&optional  eh  port  datum  causingMessage)                                                                #|line 208|#
 
-    self.owner =  None ⎩162⎭
+    (let ((undefined (make_message    port   datum                                                                      #|line 209|#
+    )))
+        (log_send  :sender  eh :sender_port  port :msg  msg :cause_msg  causingMessage                                  #|line 210|#
+        )
+          (put_output    eh   msg                                                                                       #|line 211|#
+          ))                                                                                                            #|line 212|#
 
-    self.saved_messages =  queue.LifoQueue ()
-    #|                                                                          #line  stack of saved message(s) |#⎩163⎭
+)
+(defun send_string (&optional  eh  port  s  causingMessage)                                                             #|line 214|#
 
-    self.inject =  injector_NIY ⎩164⎭
+    (let ((undefined (new_datum_string    s                                                                             #|line 215|#
+    )))
+        (let ((undefined (make_message  :port  port :datum  datum                                                       #|line 216|#
+        )))
+            (log_send_string  :sender  eh :sender_port  port :msg  msg :cause_msg  causingMessage                       #|line 217|#
+            )
+              (put_output    eh   msg                                                                                   #|line 218|#
+              )))                                                                                                       #|line 219|#
 
-    self.children = [] ⎩165⎭
+)
+(defun forward (&optional  eh  port  msg)                                                                               #|line 221|#
 
-    self.visit_ordering =  queue.Queue () ⎩166⎭
+    (let ((undefined (make_message    port  (cdr (assoc ' datum  msg))                                                  #|line 222|#
+    )))
+        (log_forward  :sender  eh :sender_port  port :msg  msg :cause_msg  msg                                          #|line 223|#
+        )
+          (put_output    eh   msg                                                                                       #|line 224|#
+          ))                                                                                                            #|line 225|#
 
-    self.connections = [] ⎩167⎭
+)
+(defun inject (&optional  eh  msg)                                                                                      #|line 227|#
 
-    self.routings =  queue.Queue () ⎩168⎭
+    (cdr (assoc '(inject    eh   msg                                                                                    #|line 228|#
+    )  eh))                                                                                                             #|line 229|#
 
-    self.handler =  None ⎩169⎭
+)
+#|  Returns a list of all output messages on a container. |#                                                            #|line 231|#
 
-    self.instance_data =  None ⎩170⎭
+#|  For testing / debugging purposes. |#                                                                                #|line 232|#
+                                                                                                                        #|line 233|#
 
-    self.state =  "idle" ⎩171⎭
+(defun output_list (&optional  eh)                                                                                      #|line 234|#
 
-    #|                                                                          #line  bootstrap debugging |#⎩172⎭
+    (return-from output_list (cdr (assoc ' outq  eh)))                                                                  #|line 235|#
+                                                                                                                        #|line 236|#
 
-    self.kind =  None
-    #|                                                                          #line  enum { container, leaf, } |#⎩173⎭
+)
+#|  Utility for printing an array of messages. |#                                                                       #|line 238|#
 
-    self.trace =  False
-    #|                                                                          #line  set '⊤' if logging is enabled and if this component should be traced, (⊥ means silence, no tracing for this component) |#⎩174⎭
+(defun print_output_list (&optional  eh)                                                                                #|line 239|#
 
-    self.depth =  0
-    #|                                                                          #line  hierarchical depth of component, 0=top, 1=1st child of top, 2=1st child of 1st child of top, etc. |#⎩175⎭
-    ⎩176⎭
+    (loop for m in (list   (cdr (assoc '(cdr (assoc ' queue  outq))  eh)) )
+      do                                                                                                                #|line 240|#
 
-⎩177⎭
+          (print   (format_message    m ) )                                                                             #|line 241|#
 
-#|                                                                              #line  Creates a component that acts as a container. It is the same as a `Eh` instance |#⎩178⎭
+                                                                                                                        #|line 242|#
 
-#|                                                                              #line  whose handler function is `container_handler`. |#⎩179⎭
+)
+(defun spaces (&optional  n)                                                                                            #|line 244|#
 
-def make_container (name,owner):⎩180⎭
+    (let (( s  ""))                                                                                                     #|line 245|#
 
-  eh = Eh ()⎩181⎭
+        (loop for i in (loop for n from 0 below  n by 1 collect n)
+          do                                                                                                            #|line 246|#
 
-  eh. name =  name⎩182⎭
+              (setf  s (+  s  " ")                                                                                      #|line 247|#
 
-  eh. owner =  owner⎩183⎭
 
-  eh. handler =  container_handler⎩184⎭
+          (return-from spaces  s)                                                                                       #|line 248|#
+        )                                                                                                               #|line 249|#
 
-  eh. inject =  container_injector⎩185⎭
+)
+(defun set_active (&optional  eh)                                                                                       #|line 251|#
 
-  eh. state =  "idle"⎩186⎭
+    (setf (cdr (assoc ' state  eh))  "active"                                                                           #|line 252|#
+                                                                                                                        #|line 253|#
 
-  eh. kind =  "container"⎩187⎭
+)
+(defun set_idle (&optional  eh)                                                                                         #|line 255|#
 
-  return  eh⎩188⎭
-  ⎩189⎭
+    (setf (cdr (assoc ' state  eh))  "idle"                                                                             #|line 256|#
+                                                                                                                        #|line 257|#
 
-⎩190⎭
+)
+#|  Utility for printing a specific output message. |#                                                                  #|line 259|#
+                                                                                                                        #|line 260|#
 
-#|                                                                              #line  Creates a new leaf component out of a handler function, and a data parameter |#⎩191⎭
+(defun fetch_first_output (&optional  eh  port)                                                                         #|line 261|#
 
-#|                                                                              #line  that will be passed back to your handler when called. |#⎩192⎭
-⎩193⎭
+    (loop for msg in (list   (cdr (assoc '(cdr (assoc ' queue  outq))  eh)) )
+      do                                                                                                                #|line 262|#
 
-def make_leaf (name,owner,instance_data,handler):⎩194⎭
+          (cond
+            (( equal   (cdr (assoc ' port  msg))  port)                                                                 #|line 263|#
 
-  eh = Eh ()⎩195⎭
+                  (return-from fetch_first_output (cdr (assoc ' datum  msg)))
+              ))                                                                                                        #|line 264|#
 
-  eh. name =  str( owner. name) +  str( ".") +  name  ⎩196⎭
 
-  eh. owner =  owner⎩197⎭
+      (return-from fetch_first_output  nil)                                                                             #|line 265|#
+                                                                                                                        #|line 266|#
 
-  eh. handler =  handler⎩198⎭
+)
+(defun print_specific_output (&optional  eh  :port  ""  :stderr  nil)                                                   #|line 268|#
 
-  eh. instance_data =  instance_data⎩199⎭
+    (let (( datum (fetch_first_output    eh   port                                                                      #|line 269|#
+    )))
+        (let (( outf  nil))                                                                                             #|line 270|#
 
-  eh. state =  "idle"⎩200⎭
+            (cond
+              ((not (equal   datum  nil)                                                                                #|line 271|#
 
-  eh. kind =  "leaf"⎩201⎭
+                    (cond
+                      ( stderr
 
-  return  eh⎩202⎭
-  ⎩203⎭
+                            #|  I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in... |##|line 272|#
 
-⎩204⎭
+                              (setf  outf (cdr (assoc ' stderr  sys))                                                   #|line 273|#
 
-#|                                                                              #line  Sends a message on the given `port` with `data`, placing it on the output |#⎩205⎭
+                        )(t                                                                                             #|line 274|#
 
-#|                                                                              #line  of the given component. |#⎩206⎭
-⎩207⎭
+                            (setf  outf (cdr (assoc ' stdout  sys))                                                     #|line 275|#
 
-def send (eh,port,datum,causingMessage):⎩208⎭
+                        ))
+                      (print   (cdr (assoc '(srepr )  datum)) :file  outf )                                             #|line 276|#
 
-  msg = make_message ( port, datum)⎩209⎭
+                ))))                                                                                                    #|line 277|#
 
-  log_send (sender= eh,sender_port= port,msg= msg,cause_msg= causingMessage)⎩210⎭
+)
+(defun put_output (&optional  eh  msg)                                                                                  #|line 279|#
 
-  put_output ( eh, msg)⎩211⎭
-  ⎩212⎭
+    (cdr (assoc '(cdr (assoc '(put    msg                                                                               #|line 280|#
+    )  outq))  eh))                                                                                                     #|line 281|#
 
-⎩213⎭
+)
+(defun injector_NIY (&optional  eh  msg)                                                                                #|line 283|#
 
-def send_string (eh,port,s,causingMessage):⎩214⎭
 
-  datum = new_datum_string ( s)⎩215⎭
+    #|  print (f'Injector not implemented for this component “{eh.name}“ kind ∷ {eh.kind} port ∷ “{msg.port}“') |#      #|line 284|#
 
-  msg = make_message (port= port,datum= datum)⎩216⎭
+      (print    (concatenate 'string  "Injector not implemented for this component "  (concatenate 'string (cdr (assoc ' name  eh))  (concatenate 'string  " kind ∷ "  (concatenate 'string (cdr (assoc ' kind  eh))  (concatenate 'string  ",  port ∷ " (cdr (assoc ' port  msg))))))) #|line 289|#
+      )
+        (exit )                                                                                                         #|line 290|#
+                                                                                                                        #|line 291|#
 
-  log_send_string (sender= eh,sender_port= port,msg= msg,cause_msg= causingMessage)⎩217⎭
+)                                                                                                                       #|line 297|#
 
-  put_output ( eh, msg)⎩218⎭
-  ⎩219⎭
+(defparameter  root_project  "")                                                                                        #|line 298|#
 
-⎩220⎭
+(defparameter  root_0D  "")                                                                                             #|line 299|#
+                                                                                                                        #|line 300|#
 
-def forward (eh,port,msg):⎩221⎭
+(defun set_environment (&optional  rproject  r0D)                                                                       #|line 301|#
 
-  fwdmsg = make_message ( port, msg. datum)⎩222⎭
+    global root_project                                                                                                 #|line 302|#
 
-  log_forward (sender= eh,sender_port= port,msg= msg,cause_msg= msg)⎩223⎭
+      global root_0D                                                                                                    #|line 303|#
 
-  put_output ( eh, msg)⎩224⎭
-  ⎩225⎭
+        (setf  root_project  rproject                                                                                   #|line 304|#
 
-⎩226⎭
+          (setf  root_0D  r0D                                                                                           #|line 305|#
+                                                                                                                        #|line 306|#
 
-def inject (eh,msg):⎩227⎭
+)
+(defun probe_instantiate (&optional  reg  owner  name  template_data)                                                   #|line 308|#
 
-  eh.inject ( eh, msg)⎩228⎭
-  ⎩229⎭
+    (let ((undefined (gensymbol    "?"                                                                                  #|line 309|#
+    )))
+        (return-from probe_instantiate (make_leaf  :name  name_with_id :owner  owner :instance_data  nil :handler  probe_handler #|line 310|#
+          )))                                                                                                           #|line 311|#
 
-⎩230⎭
+)
+(defun probeA_instantiate (&optional  reg  owner  name  template_data)                                                  #|line 312|#
 
-#|                                                                              #line  Returns a list of all output messages on a container. |#⎩231⎭
+    (let ((undefined (gensymbol    "?A"                                                                                 #|line 313|#
+    )))
+        (return-from probeA_instantiate (make_leaf  :name  name_with_id :owner  owner :instance_data  nil :handler  probe_handler #|line 314|#
+          )))                                                                                                           #|line 315|#
 
-#|                                                                              #line  For testing / debugging purposes. |#⎩232⎭
-⎩233⎭
+)
+(defun probeB_instantiate (&optional  reg  owner  name  template_data)                                                  #|line 317|#
 
-def output_list (eh):⎩234⎭
+    (let ((undefined (gensymbol    "?B"                                                                                 #|line 318|#
+    )))
+        (return-from probeB_instantiate (make_leaf  :name  name_with_id :owner  owner :instance_data  nil :handler  probe_handler #|line 319|#
+          )))                                                                                                           #|line 320|#
 
-  return  eh. outq⎩235⎭
-  ⎩236⎭
+)
+(defun probeC_instantiate (&optional  reg  owner  name  template_data)                                                  #|line 322|#
 
-⎩237⎭
+    (let ((undefined (gensymbol    "?C"                                                                                 #|line 323|#
+    )))
+        (return-from probeC_instantiate (make_leaf  :name  name_with_id :owner  owner :instance_data  nil :handler  probe_handler #|line 324|#
+          )))                                                                                                           #|line 325|#
 
-#|                                                                              #line  Utility for printing an array of messages. |#⎩238⎭
+)
+(defun probe_handler (&optional  eh  msg)                                                                               #|line 327|#
 
-def print_output_list (eh):⎩239⎭
+    (let ((undefined (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))))                                               #|line 328|#
 
-  for m in list ( eh. outq. queue):⎩240⎭
+        (print    (concatenate 'string  "... probe "  (concatenate 'string (cdr (assoc ' name  eh))  (concatenate 'string  ": "  s))) :file (cdr (assoc ' stderr  sys)) #|line 329|#
+        ))                                                                                                              #|line 330|#
 
-    print (format_message ( m))⎩241⎭
+)
+(defun trash_instantiate (&optional  reg  owner  name  template_data)                                                   #|line 332|#
 
-  ⎩242⎭
+    (let ((undefined (gensymbol    "trash"                                                                              #|line 333|#
+    )))
+        (return-from trash_instantiate (make_leaf  :name  name_with_id :owner  owner :instance_data  nil :handler  trash_handler #|line 334|#
+          )))                                                                                                           #|line 335|#
 
-⎩243⎭
+)
+(defun trash_handler (&optional  eh  msg)                                                                               #|line 337|#
 
-def spaces (n):⎩244⎭
 
-  s =  ""⎩245⎭
+    #|  to appease dumped_on_floor checker |#                                                                           #|line 338|#
 
-  for i in range( n):⎩246⎭
+      #| pass |#                                                                                                        #|line 339|#
+                                                                                                                        #|line 340|#
 
-    s =  s+ " "⎩247⎭
+)
+(defun TwoMessages (&optional  first  second)                                                                           #|line 341|#
 
+  (list
+    (cons 'first  first)                                                                                                #|line 342|#
 
-  return  s⎩248⎭
-  ⎩249⎭
+    (cons 'second  second)                                                                                              #|line 343|#
+    )                                                                                                                   #|line 344|#
+)
+                                                                                                                        #|line 345|#
 
-⎩250⎭
+#|  Deracer_States :: enum { idle, waitingForFirst, waitingForSecond } |#                                               #|line 346|#
 
-def set_active (eh):⎩251⎭
+(defun Deracer_Instance_Data (&optional  state  buffer)                                                                 #|line 347|#
 
-  eh. state =  "active"⎩252⎭
-  ⎩253⎭
+  (list
+    (cons 'state  state)                                                                                                #|line 348|#
 
-⎩254⎭
+    (cons 'buffer  buffer)                                                                                              #|line 349|#
+    )                                                                                                                   #|line 350|#
+)
+                                                                                                                        #|line 351|#
 
-def set_idle (eh):⎩255⎭
+(defun reclaim_Buffers_from_heap (&optional  inst)                                                                      #|line 352|#
 
-  eh. state =  "idle"⎩256⎭
-  ⎩257⎭
+    #| pass |#                                                                                                          #|line 353|#
+                                                                                                                        #|line 354|#
 
-⎩258⎭
+)
+(defun deracer_instantiate (&optional  reg  owner  name  template_data)                                                 #|line 356|#
 
-#|                                                                              #line  Utility for printing a specific output message. |#⎩259⎭
-⎩260⎭
+    (let ((undefined (gensymbol    "deracer"                                                                            #|line 357|#
+    )))
+        (let ((undefined (Deracer_Instance_Data    "idle"  (TwoMessages    nil   nil )                                  #|line 358|#
+        )))
+            (setf (cdr (assoc ' state  inst))  "idle"                                                                   #|line 359|#
 
-def fetch_first_output (eh,port):⎩261⎭
+              (let ((undefined (make_leaf  :name  name_with_id :owner  owner :instance_data  inst :handler  deracer_handler #|line 360|#
+              )))
+                  (return-from deracer_instantiate  eh)                                                                 #|line 361|#
+                )))                                                                                                     #|line 362|#
 
-  for msg in list ( eh. outq. queue):⎩262⎭
+)
+(defun send_first_then_second (&optional  eh  inst)                                                                     #|line 364|#
 
-    if ( msg. port ==  port):⎩263⎭
+    (forward    eh   "1"  (cdr (assoc '(cdr (assoc ' first  buffer))  inst))                                            #|line 365|#
+    )
+      (forward    eh   "2"  (cdr (assoc '(cdr (assoc ' second  buffer))  inst))                                         #|line 366|#
+      )
+        (reclaim_Buffers_from_heap    inst                                                                              #|line 367|#
+        )                                                                                                               #|line 368|#
 
-      return  msg. datum
-    ⎩264⎭
+)
+(defun deracer_handler (&optional  eh  msg)                                                                             #|line 370|#
 
+    (setf  inst (cdr (assoc ' instance_data  eh))                                                                       #|line 371|#
 
-  return  None⎩265⎭
-  ⎩266⎭
+      (cond
+        (( equal   (cdr (assoc ' state  inst))  "idle")                                                                 #|line 372|#
 
-⎩267⎭
+              (cond
+                (( equal    "1" (cdr (assoc ' port  msg)))                                                              #|line 373|#
 
-def print_specific_output (eh,port= "",stderr= False):⎩268⎭
+                      (setf (cdr (assoc '(cdr (assoc ' first  buffer))  inst))  msg                                     #|line 374|#
 
-  datum = fetch_first_output ( eh, port)⎩269⎭
+                        (setf (cdr (assoc ' state  inst))  "waitingForSecond"                                           #|line 375|#
 
-  outf =  None⎩270⎭
+                  )(( equal    "2" (cdr (assoc ' port  msg)))                                                           #|line 376|#
 
-  if  datum!= None:⎩271⎭
+                      (setf (cdr (assoc '(cdr (assoc ' second  buffer))  inst))  msg                                    #|line 377|#
 
-    if  stderr:
+                        (setf (cdr (assoc ' state  inst))  "waitingForFirst"                                            #|line 378|#
 
-      #|                                                                        #line  I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in... |#⎩272⎭
+                  )(t                                                                                                   #|line 379|#
 
-      outf =  sys. stderr⎩273⎭
+                      (runtime_error    (concatenate 'string  "bad msg.port (case A) for deracer " (cdr (assoc ' port  msg))) )
+                  ))                                                                                                    #|line 380|#
 
-    else:⎩274⎭
+          )(( equal   (cdr (assoc ' state  inst))  "waitingForFirst")                                                   #|line 381|#
 
-      outf =  sys. stdout⎩275⎭
+              (cond
+                (( equal    "1" (cdr (assoc ' port  msg)))                                                              #|line 382|#
 
+                      (setf (cdr (assoc '(cdr (assoc ' first  buffer))  inst))  msg                                     #|line 383|#
 
-    print ( datum.srepr (),file= outf)⎩276⎭
+                        (send_first_then_second    eh   inst                                                            #|line 384|#
+                        )
+                          (setf (cdr (assoc ' state  inst))  "idle"                                                     #|line 385|#
 
-  ⎩277⎭
+                  )(t                                                                                                   #|line 386|#
 
-⎩278⎭
+                      (runtime_error    (concatenate 'string  "bad msg.port (case B) for deracer " (cdr (assoc ' port  msg))) )
+                  ))                                                                                                    #|line 387|#
 
-def put_output (eh,msg):⎩279⎭
+          )(( equal   (cdr (assoc ' state  inst))  "waitingForSecond")                                                  #|line 388|#
 
-  eh. outq.put ( msg)⎩280⎭
-  ⎩281⎭
+              (cond
+                (( equal    "2" (cdr (assoc ' port  msg)))                                                              #|line 389|#
 
-⎩282⎭
+                      (setf (cdr (assoc '(cdr (assoc ' second  buffer))  inst))  msg                                    #|line 390|#
 
-def injector_NIY (eh,msg):⎩283⎭
+                        (send_first_then_second    eh   inst                                                            #|line 391|#
+                        )
+                          (setf (cdr (assoc ' state  inst))  "idle"                                                     #|line 392|#
 
+                  )(t                                                                                                   #|line 393|#
 
-  #|                                                                            #line  print (f'Injector not implemented for this component “{eh.name}“ kind ∷ {eh.kind} port ∷ “{msg.port}“') |#⎩284⎭
+                      (runtime_error    (concatenate 'string  "bad msg.port (case C) for deracer " (cdr (assoc ' port  msg))) )
+                  ))                                                                                                    #|line 394|#
 
-  print ( str( "Injector not implemented for this component ") +  str( eh. name) +  str( " kind ∷ ") +  str( eh. kind) +  str( ",  port ∷ ") +  msg. port     )⎩289⎭
+          )(t                                                                                                           #|line 395|#
 
-  exit ()⎩290⎭
-  ⎩291⎭
+              (runtime_error    "bad state for deracer {eh.state}" )                                                    #|line 396|#
 
-⎩292⎭
+          ))                                                                                                            #|line 397|#
 
-import sys⎩293⎭
+)
+(defun low_level_read_text_file_instantiate (&optional  reg  owner  name  template_data)                                #|line 399|#
 
-import re⎩294⎭
+    (let ((undefined (gensymbol    "Low Level Read Text File"                                                           #|line 400|#
+    )))
+        (return-from low_level_read_text_file_instantiate (make_leaf    name_with_id   owner   nil   low_level_read_text_file_handler #|line 401|#
+          )))                                                                                                           #|line 402|#
 
-import subprocess⎩295⎭
+)
+(defun low_level_read_text_file_handler (&optional  eh  msg)                                                            #|line 404|#
 
-import shlex⎩296⎭
-⎩297⎭
+    (let ((undefined (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))))                                               #|line 405|#
 
-root_project =  ""⎩298⎭
+        ;; read text from a named file fname, send the text out on port "" else send error info on port "✗"
+        ;; given eh and msg if needed
+        (handler-bind ((error #'(lambda (condition) (send_string eh "✗" (format nil "~&~A~&" condition)))))
+          (with-open-file (stream fname)
+            (let ((contents (make-string (file-length stream))))
+              (read-sequence contents stream)
+              (send_string eh "" contents))))
+                                                                                                                        #|line 406|#
+      )                                                                                                                 #|line 407|#
 
-root_0D =  ""⎩299⎭
-⎩300⎭
+)
+(defun ensure_string_datum_instantiate (&optional  reg  owner  name  template_data)                                     #|line 409|#
 
-def set_environment (rproject,r0D):⎩301⎭
+    (let ((undefined (gensymbol    "Ensure String Datum"                                                                #|line 410|#
+    )))
+        (return-from ensure_string_datum_instantiate (make_leaf    name_with_id   owner   nil   ensure_string_datum_handler #|line 411|#
+          )))                                                                                                           #|line 412|#
 
-  global root_project⎩302⎭
+)
+(defun ensure_string_datum_handler (&optional  eh  msg)                                                                 #|line 414|#
 
-  global root_0D⎩303⎭
+    (cond
+      (( equal    "string" (cdr (assoc '(cdr (assoc '(kind )  datum))  msg)))                                           #|line 415|#
 
-  root_project =  rproject⎩304⎭
+            (forward    eh   ""   msg )                                                                                 #|line 416|#
 
-  root_0D =  r0D⎩305⎭
-  ⎩306⎭
+        )(t                                                                                                             #|line 417|#
 
-⎩307⎭
+            (let ((undefined  (concatenate 'string  "*** ensure: type error (expected a string datum) but got " (cdr (assoc ' datum  msg)))))#|line 418|#
 
-def probe_instantiate (reg,owner,name,template_data):⎩308⎭
+                (send_string    eh   "✗"   emsg   msg ))                                                                #|line 419|#
 
-  name_with_id = gensymbol ( "?")⎩309⎭
+        ))                                                                                                              #|line 420|#
 
-  return make_leaf (name= name_with_id,owner= owner,instance_data= None,handler= probe_handler)⎩310⎭
-  ⎩311⎭
+)
+(defun Syncfilewrite_Data (&optional )                                                                                  #|line 422|#
 
+  (list
+    (cons 'filename  "")                                                                                                #|line 423|#
+    )                                                                                                                   #|line 424|#
+)
+                                                                                                                        #|line 425|#
 
-def probeA_instantiate (reg,owner,name,template_data):⎩312⎭
+#|  temp copy for bootstrap, sends “done“ (error during bootstrap if not wired) |#                                      #|line 426|#
 
-  name_with_id = gensymbol ( "?A")⎩313⎭
+(defun syncfilewrite_instantiate (&optional  reg  owner  name  template_data)                                           #|line 427|#
 
-  return make_leaf (name= name_with_id,owner= owner,instance_data= None,handler= probe_handler)⎩314⎭
-  ⎩315⎭
+    (let ((undefined (gensymbol    "syncfilewrite"                                                                      #|line 428|#
+    )))
+        (let ((undefined (Syncfilewrite_Data )))                                                                        #|line 429|#
 
-⎩316⎭
+            (return-from syncfilewrite_instantiate (make_leaf    name_with_id   owner   inst   syncfilewrite_handler    #|line 430|#
+              ))))                                                                                                      #|line 431|#
 
-def probeB_instantiate (reg,owner,name,template_data):⎩317⎭
+)
+(defun syncfilewrite_handler (&optional  eh  msg)                                                                       #|line 433|#
 
-  name_with_id = gensymbol ( "?B")⎩318⎭
+    (let (( inst (cdr (assoc ' instance_data  eh))))                                                                    #|line 434|#
 
-  return make_leaf (name= name_with_id,owner= owner,instance_data= None,handler= probe_handler)⎩319⎭
-  ⎩320⎭
+        (cond
+          (( equal    "filename" (cdr (assoc ' port  msg)))                                                             #|line 435|#
 
-⎩321⎭
+                (setf (cdr (assoc ' filename  inst)) (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))                 #|line 436|#
 
-def probeC_instantiate (reg,owner,name,template_data):⎩322⎭
+            )(( equal    "input" (cdr (assoc ' port  msg)))                                                             #|line 437|#
 
-  name_with_id = gensymbol ( "?C")⎩323⎭
+                (let ((undefined (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))))                                   #|line 438|#
 
-  return make_leaf (name= name_with_id,owner= owner,instance_data= None,handler= probe_handler)⎩324⎭
-  ⎩325⎭
+                    (let (( f (open   (cdr (assoc ' filename  inst))   "w"                                              #|line 439|#
+                    )))
+                        (cond
+                          ((not (equal   f  nil)                                                                        #|line 440|#
 
-⎩326⎭
+                                (cdr (assoc '(write   (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))                #|line 441|#
+                                )  f))
+                                  (cdr (assoc '(close )  f))                                                            #|line 442|#
 
-def probe_handler (eh,msg):⎩327⎭
+                                    (send    eh   "done"  (new_datum_bang )   msg )                                     #|line 443|#
 
-  s =  msg. datum.srepr ()⎩328⎭
+                            )(t                                                                                         #|line 444|#
 
-  print ( str( "... probe ") +  str( eh. name) +  str( ": ") +  s   ,file= sys. stderr)⎩329⎭
-  ⎩330⎭
+                                (send_string    eh   "✗"   (concatenate 'string  "open error on file " (cdr (assoc ' filename  inst)))   msg )
+                            ))))                                                                                        #|line 445|#
 
-⎩331⎭
+            )))                                                                                                         #|line 446|#
 
-def trash_instantiate (reg,owner,name,template_data):⎩332⎭
+)
+(defun StringConcat_Instance_Data (&optional )                                                                          #|line 448|#
 
-  name_with_id = gensymbol ( "trash")⎩333⎭
+  (list
+    (cons 'buffer1  nil)                                                                                                #|line 449|#
 
-  return make_leaf (name= name_with_id,owner= owner,instance_data= None,handler= trash_handler)⎩334⎭
-  ⎩335⎭
+    (cons 'buffer2  nil)                                                                                                #|line 450|#
 
-⎩336⎭
+    (cons 'count  0)                                                                                                    #|line 451|#
+    )                                                                                                                   #|line 452|#
+)
+                                                                                                                        #|line 453|#
 
-def trash_handler (eh,msg):⎩337⎭
+(defun stringconcat_instantiate (&optional  reg  owner  name  template_data)                                            #|line 454|#
 
+    (let ((undefined (gensymbol    "stringconcat"                                                                       #|line 455|#
+    )))
+        (let ((undefined (StringConcat_Instance_Data )))                                                                #|line 456|#
 
-  #|                                                                            #line  to appease dumped_on_floor checker |#⎩338⎭
+            (return-from stringconcat_instantiate (make_leaf    name_with_id   owner   instp   stringconcat_handler     #|line 457|#
+              ))))                                                                                                      #|line 458|#
 
-  pass⎩339⎭
-  ⎩340⎭
+)
+(defun stringconcat_handler (&optional  eh  msg)                                                                        #|line 460|#
 
+    (let (( inst (cdr (assoc ' instance_data  eh))))                                                                    #|line 461|#
 
-class TwoMessages:
-  def __init__ (self,first,second):⎩341⎭
+        (cond
+          (( equal    "1" (cdr (assoc ' port  msg)))                                                                    #|line 462|#
 
-    self.first =  first ⎩342⎭
+                (setf (cdr (assoc ' buffer1  inst)) (clone_string   (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))  #|line 463|#
+                )
+                  (setf (cdr (assoc ' count  inst)) (+ (cdr (assoc ' count  inst))  1)                                  #|line 464|#
 
-    self.second =  second ⎩343⎭
-    ⎩344⎭
+                    (maybe_stringconcat    eh   inst   msg )                                                            #|line 465|#
 
-⎩345⎭
+            )(( equal    "2" (cdr (assoc ' port  msg)))                                                                 #|line 466|#
 
-#|                                                                              #line  Deracer_States :: enum { idle, waitingForFirst, waitingForSecond } |#⎩346⎭
+                (setf (cdr (assoc ' buffer2  inst)) (clone_string   (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))  #|line 467|#
+                )
+                  (setf (cdr (assoc ' count  inst)) (+ (cdr (assoc ' count  inst))  1)                                  #|line 468|#
 
-class Deracer_Instance_Data:
-  def __init__ (self,state,buffer):⎩347⎭
+                    (maybe_stringconcat    eh   inst   msg )                                                            #|line 469|#
 
-    self.state =  state ⎩348⎭
+            )(t                                                                                                         #|line 470|#
 
-    self.buffer =  buffer ⎩349⎭
-    ⎩350⎭
+                (runtime_error    (concatenate 'string  "bad msg.port for stringconcat: " (cdr (assoc ' port  msg)))    #|line 471|#
+                )                                                                                                       #|line 472|#
 
-⎩351⎭
+            )))                                                                                                         #|line 473|#
 
-def reclaim_Buffers_from_heap (inst):⎩352⎭
+)
+(defun maybe_stringconcat (&optional  eh  inst  msg)                                                                    #|line 475|#
 
-  pass⎩353⎭
-  ⎩354⎭
+    (cond
+      (( and  ( equal    0 (len   (cdr (assoc ' buffer1  inst)) )) ( equal    0 (len   (cdr (assoc ' buffer2  inst)) )))#|line 476|#
 
-⎩355⎭
+            (runtime_error    "something is wrong in stringconcat, both strings are 0 length" )                         #|line 477|#
 
-def deracer_instantiate (reg,owner,name,template_data):⎩356⎭
+        ))
+      (cond
+        (( >=  (cdr (assoc ' count  inst))  2)                                                                          #|line 478|#
 
-  name_with_id = gensymbol ( "deracer")⎩357⎭
+              (let (( concatenated_string  ""))                                                                         #|line 479|#
 
-  inst = Deracer_Instance_Data ( "idle",TwoMessages ( None, None))⎩358⎭
+                  (cond
+                    (( equal    0 (len   (cdr (assoc ' buffer1  inst)) ))                                               #|line 480|#
 
-  inst. state =  "idle"⎩359⎭
+                          (setf  concatenated_string (cdr (assoc ' buffer2  inst))                                      #|line 481|#
 
-  eh = make_leaf (name= name_with_id,owner= owner,instance_data= inst,handler= deracer_handler)⎩360⎭
+                      )(( equal    0 (len   (cdr (assoc ' buffer2  inst)) ))                                            #|line 482|#
 
-  return  eh⎩361⎭
-  ⎩362⎭
+                          (setf  concatenated_string (cdr (assoc ' buffer1  inst))                                      #|line 483|#
 
-⎩363⎭
+                      )(t                                                                                               #|line 484|#
 
-def send_first_then_second (eh,inst):⎩364⎭
+                          (setf  concatenated_string (+ (cdr (assoc ' buffer1  inst)) (cdr (assoc ' buffer2  inst)))    #|line 485|#
 
-  forward ( eh, "1", inst. buffer. first)⎩365⎭
+                      ))
+                    (send_string    eh   ""   concatenated_string   msg                                                 #|line 486|#
+                    )
+                      (setf (cdr (assoc ' buffer1  inst))  nil                                                          #|line 487|#
 
-  forward ( eh, "2", inst. buffer. second)⎩366⎭
+                        (setf (cdr (assoc ' buffer2  inst))  nil                                                        #|line 488|#
 
-  reclaim_Buffers_from_heap ( inst)⎩367⎭
-  ⎩368⎭
+                          (setf (cdr (assoc ' count  inst))  0)                                                         #|line 489|#
 
-⎩369⎭
+          ))                                                                                                            #|line 490|#
 
-def deracer_handler (eh,msg):⎩370⎭
+)
+#|  |#                                                                                                                  #|line 492|#
+                                                                                                                        #|line 493|#
 
-  inst =  eh. instance_data⎩371⎭
+#|  this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here |##|line 494|#
 
-  if  inst. state ==  "idle":⎩372⎭
+(defun shell_out_instantiate (&optional  reg  owner  name  template_data)                                               #|line 495|#
 
-    if  "1" ==  msg. port:⎩373⎭
+    (let ((undefined (gensymbol    "shell_out"                                                                          #|line 496|#
+    )))
+        (let ((undefined (cdr (assoc '(split    template_data                                                           #|line 497|#
+        )  shlex))))
+            (return-from shell_out_instantiate (make_leaf    name_with_id   owner   cmd   shell_out_handler             #|line 498|#
+              ))))                                                                                                      #|line 499|#
 
-      inst. buffer. first =  msg⎩374⎭
+)
+(defun shell_out_handler (&optional  eh  msg)                                                                           #|line 501|#
 
-      inst. state =  "waitingForSecond"⎩375⎭
+    (let ((undefined (cdr (assoc ' instance_data  eh))))                                                                #|line 502|#
 
-    elif  "2" ==  msg. port:⎩376⎭
+        (let ((undefined (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))))                                           #|line 503|#
 
-      inst. buffer. second =  msg⎩377⎭
+            (loop while (run_command    eh   cmd   s                                                                    #|line 504|#
+            )
+              doundefined)
+              (cond
+                ((not (equal   stderr  nil)                                                                             #|line 505|#
 
-      inst. state =  "waitingForFirst"⎩378⎭
+                      (send_string    eh   "✗"   stderr   msg )                                                         #|line 506|#
 
-    else:⎩379⎭
+                  )(t                                                                                                   #|line 507|#
 
-      runtime_error ( str( "bad msg.port (case A) for deracer ") +  msg. port )
-    ⎩380⎭
+                      (send_string    eh   ""   stdout   msg )                                                          #|line 508|#
 
-  elif  inst. state ==  "waitingForFirst":⎩381⎭
+                  ))))                                                                                                  #|line 509|#
 
-    if  "1" ==  msg. port:⎩382⎭
+)
+(defun string_constant_instantiate (&optional  reg  owner  name  template_data)                                         #|line 511|#
 
-      inst. buffer. first =  msg⎩383⎭
+    global root_project                                                                                                 #|line 512|#
 
-      send_first_then_second ( eh, inst)⎩384⎭
+      global root_0D                                                                                                    #|line 513|#
 
-      inst. state =  "idle"⎩385⎭
+        (let ((undefined (gensymbol    "strconst"                                                                       #|line 514|#
+        )))
+            (let (( s  template_data))                                                                                  #|line 515|#
 
-    else:⎩386⎭
+                (cond
+                  ((not (equal   root_project  "")                                                                      #|line 516|#
 
-      runtime_error ( str( "bad msg.port (case B) for deracer ") +  msg. port )
-    ⎩387⎭
+                        (setf  s (cdr (assoc '(sub    "_00_"   root_project   s )  re))                                 #|line 517|#
 
-  elif  inst. state ==  "waitingForSecond":⎩388⎭
+                    ))
+                  (cond
+                    ((not (equal   root_0D  "")                                                                         #|line 518|#
 
-    if  "2" ==  msg. port:⎩389⎭
+                          (setf  s (cdr (assoc '(sub    "_0D_"   root_0D   s )  re))                                    #|line 519|#
 
-      inst. buffer. second =  msg⎩390⎭
+                      ))
+                    (return-from string_constant_instantiate (make_leaf    name_with_id   owner   s   string_constant_handler #|line 520|#
+                      ))))                                                                                              #|line 521|#
 
-      send_first_then_second ( eh, inst)⎩391⎭
+)
+(defun string_constant_handler (&optional  eh  msg)                                                                     #|line 523|#
 
-      inst. state =  "idle"⎩392⎭
+    (let ((undefined (cdr (assoc ' instance_data  eh))))                                                                #|line 524|#
 
-    else:⎩393⎭
+        (send_string    eh   ""   s   msg                                                                               #|line 525|#
+        ))                                                                                                              #|line 526|#
 
-      runtime_error ( str( "bad msg.port (case C) for deracer ") +  msg. port )
-    ⎩394⎭
+)
+(defun string_make_persistent (&optional  s)                                                                            #|line 528|#
 
-  else:⎩395⎭
 
-    runtime_error ( "bad state for deracer {eh.state}")⎩396⎭
+    #|  this is here for non_GC languages like Odin, it is a no_op for GC languages like Python |#                      #|line 529|#
 
-  ⎩397⎭
+      (return-from string_make_persistent  s)                                                                           #|line 530|#
+                                                                                                                        #|line 531|#
 
-⎩398⎭
+)
+(defun string_clone (&optional  s)                                                                                      #|line 533|#
 
-def low_level_read_text_file_instantiate (reg,owner,name,template_data):⎩399⎭
+    (return-from string_clone  s)                                                                                       #|line 534|#
+                                                                                                                        #|line 535|#
 
-  name_with_id = gensymbol ( "Low Level Read Text File")⎩400⎭
+)                                                                                                                       #|line 538|#
 
-  return make_leaf ( name_with_id, owner, None, low_level_read_text_file_handler)⎩401⎭
-  ⎩402⎭
+#|  usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ... |#                                      #|line 539|#
 
-⎩403⎭
+#|  where ${_00_} is the root directory for the project |#                                                              #|line 540|#
 
-def low_level_read_text_file_handler (eh,msg):⎩404⎭
+#|  where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python) |#                                           #|line 541|#
+                                                                                                                        #|line 542|#
+                                                                                                                        #|line 543|#
+                                                                                                                        #|line 544|#
 
-  fname =  msg. datum.srepr ()⎩405⎭
+(defun initialize_component_palette (&optional  root_project  root_0D  diagram_source_files)                            #|line 545|#
 
-  try:
-    f = open (fname)
-  except Exception as e:
-    f = None
-  if f != None:
-    data = f.read ()
-    if data!= None:
-      send_string (eh, "", data, msg)
-    else:
-      send_string (eh, "✗", f"read error on file '{fname}'", msg)
-    f.close ()
-  else:
-    send_string (eh, "✗", f"open error on file '{fname}'", msg)
-  ⎩406⎭
-  ⎩407⎭
+    (let ((undefined (make_component_registry )))                                                                       #|line 546|#
 
-⎩408⎭
+        (loop for diagram_source in  diagram_source_files
+          do                                                                                                            #|line 547|#
 
-def ensure_string_datum_instantiate (reg,owner,name,template_data):⎩409⎭
+              (let ((undefined (json2internal    diagram_source                                                         #|line 548|#
+              )))
+                  (generate_shell_components    reg   all_containers_within_single_file                                 #|line 549|#
+                  )
+                    (loop for container in  all_containers_within_single_file
+                      do                                                                                                #|line 550|#
 
-  name_with_id = gensymbol ( "Ensure String Datum")⎩410⎭
+                          (register_component    reg  (Template  :name (cdr (assoc 'name  container) :template_data  container :instantiator  container_instantiator ) )
+                      )                                                                                                 #|line 551|#
 
-  return make_leaf ( name_with_id, owner, None, ensure_string_datum_handler)⎩411⎭
-  ⎩412⎭
 
-⎩413⎭
+          (initialize_stock_components    reg                                                                           #|line 552|#
+          )
+            (return-from initialize_component_palette  reg)                                                             #|line 553|#
+          )                                                                                                             #|line 554|#
 
-def ensure_string_datum_handler (eh,msg):⎩414⎭
+)
+(defun print_error_maybe (&optional  main_container)                                                                    #|line 556|#
 
-  if  "string" ==  msg. datum.kind ():⎩415⎭
+    (let ((undefined  "✗"))                                                                                             #|line 557|#
 
-    forward ( eh, "", msg)⎩416⎭
+        (let ((undefined (fetch_first_output    main_container   error_port                                             #|line 558|#
+        )))
+            (cond
+              (( and  (not (equal   err  nil) ( <   0 (len   (trimws   (cdr (assoc '(srepr )  err)) ) )))               #|line 559|#
 
-  else:⎩417⎭
+                    (print    "___ !!! ERRORS !!! ___"                                                                  #|line 560|#
+                    )
+                      (print_specific_output    main_container   error_port   nil )                                     #|line 561|#
 
-    emsg =  str( "*** ensure: type error (expected a string datum) but got ") +  msg. datum ⎩418⎭
+                ))))                                                                                                    #|line 562|#
 
-    send_string ( eh, "✗", emsg, msg)⎩419⎭
+)
+#|  debugging helpers |#                                                                                                #|line 564|#
+                                                                                                                        #|line 565|#
 
-  ⎩420⎭
+(defun dump_outputs (&optional  main_container)                                                                         #|line 566|#
 
-⎩421⎭
+    (print )                                                                                                            #|line 567|#
 
-class Syncfilewrite_Data:
-  def __init__ (self,):⎩422⎭
+      (print    "___ Outputs ___"                                                                                       #|line 568|#
+      )
+        (print_output_list    main_container                                                                            #|line 569|#
+        )                                                                                                               #|line 570|#
 
-    self.filename =  "" ⎩423⎭
-    ⎩424⎭
+)
+(defun trace_outputs (&optional  main_container)                                                                        #|line 572|#
 
-⎩425⎭
+    (print )                                                                                                            #|line 573|#
 
-#|                                                                              #line  temp copy for bootstrap, sends “done“ (error during bootstrap if not wired) |#⎩426⎭
+      (print    "___ Message Traces ___"                                                                                #|line 574|#
+      )
+        (print_routing_trace    main_container                                                                          #|line 575|#
+        )                                                                                                               #|line 576|#
 
-def syncfilewrite_instantiate (reg,owner,name,template_data):⎩427⎭
+)
+(defun dump_hierarchy (&optional  main_container)                                                                       #|line 578|#
 
-  name_with_id = gensymbol ( "syncfilewrite")⎩428⎭
+    (print )                                                                                                            #|line 579|#
 
-  inst = Syncfilewrite_Data ()⎩429⎭
+      (print    (concatenate 'string  "___ Hierarchy ___" (build_hierarchy    main_container ))                         #|line 580|#
+      )                                                                                                                 #|line 581|#
 
-  return make_leaf ( name_with_id, owner, inst, syncfilewrite_handler)⎩430⎭
-  ⎩431⎭
+)
+(defun build_hierarchy (&optional  c)                                                                                   #|line 583|#
 
-⎩432⎭
+    (let (( s  ""))                                                                                                     #|line 584|#
 
-def syncfilewrite_handler (eh,msg):⎩433⎭
+        (loop for child in (cdr (assoc ' children  c))
+          do                                                                                                            #|line 585|#
 
-  inst =  eh. instance_data⎩434⎭
+              (setf  s  (concatenate 'string  s (build_hierarchy    child ))                                            #|line 586|#
 
-  if  "filename" ==  msg. port:⎩435⎭
 
-    inst. filename =  msg. datum.srepr ()⎩436⎭
+          (let (( indent  ""))                                                                                          #|line 587|#
 
-  elif  "input" ==  msg. port:⎩437⎭
+              (loop for i in (loop for n from 0 below (cdr (assoc ' depth  c)) by 1 collect n)
+                do                                                                                                      #|line 588|#
 
-    contents =  msg. datum.srepr ()⎩438⎭
+                    (setf  indent (+  indent  "  ")                                                                     #|line 589|#
 
-    f = open ( inst. filename, "w")⎩439⎭
 
-    if  f!= None:⎩440⎭
+                (return-from build_hierarchy  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "("  (concatenate 'string (cdr (assoc ' name  c))  (concatenate 'string  s  ")"))))))#|line 590|#
+              ))                                                                                                        #|line 591|#
 
-      f.write ( msg. datum.srepr ())⎩441⎭
+)
+(defun dump_connections (&optional  c)                                                                                  #|line 593|#
 
-      f.close ()⎩442⎭
+    (print )                                                                                                            #|line 594|#
 
-      send ( eh, "done",new_datum_bang (), msg)⎩443⎭
+      (print    "___ connections ___"                                                                                   #|line 595|#
+      )
+        (dump_possible_connections    c                                                                                 #|line 596|#
+        )
+          (loop for child in (cdr (assoc ' children  c))
+            do                                                                                                          #|line 597|#
 
-    else:⎩444⎭
+                (print )                                                                                                #|line 598|#
 
-      send_string ( eh, "✗", str( "open error on file ") +  inst. filename , msg)
-    ⎩445⎭
+                  (dump_possible_connections    child )                                                                 #|line 599|#
 
-  ⎩446⎭
+                                                                                                                        #|line 600|#
 
-⎩447⎭
+)
+(defun trimws (&optional  s)                                                                                            #|line 602|#
 
-class StringConcat_Instance_Data:
-  def __init__ (self,):⎩448⎭
 
-    self.buffer1 =  None ⎩449⎭
+    #|  remove whitespace from front and back of string |#                                                              #|line 603|#
 
-    self.buffer2 =  None ⎩450⎭
+      (return-from trimws (cdr (assoc '(strip )  s)))                                                                   #|line 604|#
+                                                                                                                        #|line 605|#
 
-    self.count =  0 ⎩451⎭
-    ⎩452⎭
+)
+(defun clone_string (&optional  s)                                                                                      #|line 607|#
 
-⎩453⎭
+    (return-from clone_string  s                                                                                        #|line 608|#
+                                                                                                                        #|line 609|#
+        )                                                                                                               #|line 610|#
 
-def stringconcat_instantiate (reg,owner,name,template_data):⎩454⎭
+)
+(defparameter  load_errors  nil)                                                                                        #|line 611|#
 
-  name_with_id = gensymbol ( "stringconcat")⎩455⎭
+(defparameter  runtime_errors  nil)                                                                                     #|line 612|#
+                                                                                                                        #|line 613|#
 
-  instp = StringConcat_Instance_Data ()⎩456⎭
+(defun load_error (&optional  s)                                                                                        #|line 614|#
 
-  return make_leaf ( name_with_id, owner, instp, stringconcat_handler)⎩457⎭
-  ⎩458⎭
+    global load_errors                                                                                                  #|line 615|#
 
-⎩459⎭
+      (print    s                                                                                                       #|line 616|#
+      )
+        (quit )                                                                                                         #|line 617|#
 
-def stringconcat_handler (eh,msg):⎩460⎭
+          (setf  load_errors  t                                                                                         #|line 618|#
+                                                                                                                        #|line 619|#
 
-  inst =  eh. instance_data⎩461⎭
+)
+(defun runtime_error (&optional  s)                                                                                     #|line 621|#
 
-  if  "1" ==  msg. port:⎩462⎭
+    global runtime_errors                                                                                               #|line 622|#
 
-    inst. buffer1 = clone_string ( msg. datum.srepr ())⎩463⎭
+      (print    s                                                                                                       #|line 623|#
+      )
+        (quit )                                                                                                         #|line 624|#
 
-    inst. count =  inst. count+ 1⎩464⎭
+          (setf  runtime_errors  t                                                                                      #|line 625|#
+                                                                                                                        #|line 626|#
 
-    maybe_stringconcat ( eh, inst, msg)⎩465⎭
+)
+(defun fakepipename_instantiate (&optional  reg  owner  name  template_data)                                            #|line 628|#
 
-  elif  "2" ==  msg. port:⎩466⎭
+    (let ((undefined (gensymbol    "fakepipe"                                                                           #|line 629|#
+    )))
+        (return-from fakepipename_instantiate (make_leaf    instance_name   owner   nil   fakepipename_handler          #|line 630|#
+          )))                                                                                                           #|line 631|#
 
-    inst. buffer2 = clone_string ( msg. datum.srepr ())⎩467⎭
+)
+(defparameter  rand  0)                                                                                                 #|line 633|#
+                                                                                                                        #|line 634|#
 
-    inst. count =  inst. count+ 1⎩468⎭
+(defun fakepipename_handler (&optional  eh  msg)                                                                        #|line 635|#
 
-    maybe_stringconcat ( eh, inst, msg)⎩469⎭
+    global rand                                                                                                         #|line 636|#
 
-  else:⎩470⎭
+      (setf  rand (+  rand  1)
 
-    runtime_error ( str( "bad msg.port for stringconcat: ") +  msg. port )⎩471⎭
-    ⎩472⎭
+        #|  not very random, but good enough _ 'rand' must be unique within a single run |#                             #|line 637|#
 
-  ⎩473⎭
+          (send_string    eh   ""   (concatenate 'string  "/tmp/fakepipe"  rand)   msg                                  #|line 638|#
+          )                                                                                                             #|line 639|#
 
-⎩474⎭
+)                                                                                                                       #|line 641|#
 
-def maybe_stringconcat (eh,inst,msg):⎩475⎭
+#|  all of the the built_in leaves are listed here |#                                                                   #|line 642|#
 
-  if ( 0 == len ( inst. buffer1)) and ( 0 == len ( inst. buffer2)):⎩476⎭
+#|  future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project |##|line 643|#
+                                                                                                                        #|line 644|#
+                                                                                                                        #|line 645|#
 
-    runtime_error ( "something is wrong in stringconcat, both strings are 0 length")⎩477⎭
+(defun initialize_stock_components (&optional  reg)                                                                     #|line 646|#
 
+    (register_component    reg  (Template    "1then2"   nil   deracer_instantiate )                                     #|line 647|#
+    )
+      (register_component    reg  (Template    "?"   nil   probe_instantiate )                                          #|line 648|#
+      )
+        (register_component    reg  (Template    "?A"   nil   probeA_instantiate )                                      #|line 649|#
+        )
+          (register_component    reg  (Template    "?B"   nil   probeB_instantiate )                                    #|line 650|#
+          )
+            (register_component    reg  (Template    "?C"   nil   probeC_instantiate )                                  #|line 651|#
+            )
+              (register_component    reg  (Template    "trash"   nil   trash_instantiate )                              #|line 652|#
+              )                                                                                                         #|line 653|#
 
-  if  inst. count >=  2:⎩478⎭
+                (register_component    reg  (Template    "Low Level Read Text File"   nil   low_level_read_text_file_instantiate ) #|line 654|#
+                )
+                  (register_component    reg  (Template    "Ensure String Datum"   nil   ensure_string_datum_instantiate ) #|line 655|#
+                  )                                                                                                     #|line 656|#
 
-    concatenated_string =  ""⎩479⎭
+                    (register_component    reg  (Template    "syncfilewrite"   nil   syncfilewrite_instantiate )        #|line 657|#
+                    )
+                      (register_component    reg  (Template    "stringconcat"   nil   stringconcat_instantiate )        #|line 658|#
+                      )
 
-    if  0 == len ( inst. buffer1):⎩480⎭
+                        #|  for fakepipe |#                                                                             #|line 659|#
 
-      concatenated_string =  inst. buffer2⎩481⎭
+                          (register_component    reg  (Template    "fakepipename"   nil   fakepipename_instantiate )    #|line 660|#
+                          )                                                                                             #|line 661|#
 
-    elif  0 == len ( inst. buffer2):⎩482⎭
+)                                                                                                                       #|line 663|#
 
-      concatenated_string =  inst. buffer1⎩483⎭
+(defun initialize (&optional )                                                                                          #|line 664|#
 
-    else:⎩484⎭
+    (let ((undefined  (nth  1 argv)))                                                                                   #|line 665|#
 
-      concatenated_string =  inst. buffer1+ inst. buffer2⎩485⎭
+        (let ((undefined  (nth  2 argv)))                                                                               #|line 666|#
 
+            (let ((undefined  (nth  3 argv)))                                                                           #|line 667|#
 
-    send_string ( eh, "", concatenated_string, msg)⎩486⎭
+                (let ((undefined  (nth  4 argv)))                                                                       #|line 668|#
 
-    inst. buffer1 =  None⎩487⎭
+                    (let ((undefined  (nthcdr  5 (argv))))                                                              #|line 669|#
 
-    inst. buffer2 =  None⎩488⎭
+                        (let ((undefined (initialize_component_palette    root_project   root_0D   diagram_names        #|line 670|#
+                        )))
+                            (return-from initialize (values undefined undefined))                                       #|line 671|#
+                          ))))))                                                                                        #|line 672|#
 
-    inst. count =  0⎩489⎭
+)
+(defun start (&optional  palette  env  :show_hierarchy  False  :show_connections  False  :show_traces  False  :show_all_outputs  False)#|line 674|#
 
-  ⎩490⎭
+    (let ((undefined (nth  0  env)))                                                                                    #|line 675|#
 
-⎩491⎭
+        (let ((undefined (nth  1  env)))                                                                                #|line 676|#
 
-#|                                                                              #line  |#⎩492⎭
-⎩493⎭
+            (let ((undefined (nth  2  env)))                                                                            #|line 677|#
 
-#|                                                                              #line  this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here |#⎩494⎭
+                (let ((undefined (nth  3  env)))                                                                        #|line 678|#
 
-def shell_out_instantiate (reg,owner,name,template_data):⎩495⎭
+                    (let ((undefined (nth  4  env)))                                                                    #|line 679|#
 
-  name_with_id = gensymbol ( "shell_out")⎩496⎭
+                        (set_environment    root_of_project   root_of_0D                                                #|line 680|#
+                        )
 
-  cmd =  shlex.split ( template_data)⎩497⎭
+                          #|  get entrypoint container |#                                                               #|line 681|#
 
-  return make_leaf ( name_with_id, owner, cmd, shell_out_handler)⎩498⎭
-  ⎩499⎭
+                            (setf  main_container (get_component_instance    palette   main_container_name :owner  nil  #|line 682|#
+                            )
+                              (cond
+                                (( equal    nil  main_container)                                                        #|line 683|#
 
-⎩500⎭
+                                      (load_error    (concatenate 'string  "Couldn't find container with page name "  (concatenate 'string  main_container_name  (concatenate 'string  " in files "  (concatenate 'string  diagram_source_files  "(check tab names, or disable compression?)")))) #|line 687|#
+                                      )                                                                                 #|line 688|#
 
-def shell_out_handler (eh,msg):⎩501⎭
+                                  ))
+                                (cond
+                                  ( show_hierarchy                                                                      #|line 689|#
 
-  cmd =  eh. instance_data⎩502⎭
+                                        (dump_hierarchy    main_container                                               #|line 690|#
+                                        )                                                                               #|line 691|#
 
-  s =  msg. datum.srepr ()⎩503⎭
+                                    ))
+                                  (cond
+                                    ( show_connections                                                                  #|line 692|#
 
-  [ stdout, stderr] = run_command ( eh, cmd, s)⎩504⎭
+                                          (dump_connections    main_container                                           #|line 693|#
+                                          )                                                                             #|line 694|#
 
-  if  stderr!= None:⎩505⎭
+                                      ))
+                                    (cond
+                                      ((not  load_errors)                                                               #|line 695|#
 
-    send_string ( eh, "✗", stderr, msg)⎩506⎭
+                                            (setf  arg (new_datum_string    arg                                         #|line 696|#
+                                            )
+                                              (setf  msg (make_message    ""   arg                                      #|line 697|#
+                                              )
+                                                (inject    main_container   msg                                         #|line 698|#
+                                                )
+                                                  (cond
+                                                    ( show_all_outputs                                                  #|line 699|#
 
-  else:⎩507⎭
+                                                          (dump_outputs    main_container                               #|line 700|#
+                                                          )
+                                                      )(t                                                               #|line 701|#
 
-    send_string ( eh, "", stdout, msg)⎩508⎭
+                                                          (print_error_maybe    main_container                          #|line 702|#
+                                                          )
+                                                            (print_specific_output    main_container :port  "" :stderr  False #|line 703|#
+                                                            )
+                                                              (cond
+                                                                ( show_traces                                           #|line 704|#
 
-  ⎩509⎭
+                                                                      (print    "--- routing traces ---"                #|line 705|#
+                                                                      )
+                                                                        (print   (routing_trace_all    main_container ) #|line 706|#
+                                                                        )                                               #|line 707|#
 
-⎩510⎭
+                                                                  ))                                                    #|line 708|#
 
-def string_constant_instantiate (reg,owner,name,template_data):⎩511⎭
+                                                      ))
+                                                    (cond
+                                                      ( show_all_outputs                                                #|line 709|#
 
-  global root_project⎩512⎭
+                                                            (print    "--- done ---"                                    #|line 710|#
+                                                            )                                                           #|line 711|#
 
-  global root_0D⎩513⎭
+                                                        ))                                                              #|line 712|#
 
-  name_with_id = gensymbol ( "strconst")⎩514⎭
+                                        )))))))                                                                         #|line 713|#
 
-  s =  template_data⎩515⎭
+)                                                                                                                       #|line 715|#
+                                                                                                                        #|line 716|#
 
-  if  root_project!= "":⎩516⎭
+#|  utility functions  |#                                                                                               #|line 717|#
 
-    s =  re.sub ( "_00_", root_project, s)⎩517⎭
+(defun send_int (&optional  eh  port  i  causing_message)                                                               #|line 718|#
 
+    (let ((undefined (new_datum_int    i                                                                                #|line 719|#
+    )))
+        (send    eh   port   datum   causing_message                                                                    #|line 720|#
+        ))                                                                                                              #|line 721|#
 
-  if  root_0D!= "":⎩518⎭
+)
+(defun send_bang (&optional  eh  port  causing_message)                                                                 #|line 723|#
 
-    s =  re.sub ( "_0D_", root_0D, s)⎩519⎭
+    (let ((undefined (new_datum_bang )))                                                                                #|line 724|#
 
+        (send    eh   port   datum   causing_message                                                                    #|line 725|#
+        ))                                                                                                              #|line 726|#
 
-  return make_leaf ( name_with_id, owner, s, string_constant_handler)⎩520⎭
-  ⎩521⎭
-
-⎩522⎭
-
-def string_constant_handler (eh,msg):⎩523⎭
-
-  s =  eh. instance_data⎩524⎭
-
-  send_string ( eh, "", s, msg)⎩525⎭
-  ⎩526⎭
-
-⎩527⎭
-
-def string_make_persistent (s):⎩528⎭
-
-
-  #|                                                                            #line  this is here for non_GC languages like Odin, it is a no_op for GC languages like Python |#⎩529⎭
-
-  return  s⎩530⎭
-  ⎩531⎭
-
-⎩532⎭
-
-def string_clone (s):⎩533⎭
-
-  return  s⎩534⎭
-  ⎩535⎭
-
-⎩536⎭
-
-import sys⎩537⎭
-⎩538⎭
-
-#|                                                                              #line  usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ... |#⎩539⎭
-
-#|                                                                              #line  where ${_00_} is the root directory for the project |#⎩540⎭
-
-#|                                                                              #line  where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python) |#⎩541⎭
-⎩542⎭
-⎩543⎭
-⎩544⎭
-
-def initialize_component_palette (root_project,root_0D,diagram_source_files):⎩545⎭
-
-  reg = make_component_registry ()⎩546⎭
-
-  for diagram_source in  diagram_source_files:⎩547⎭
-
-    all_containers_within_single_file = json2internal ( diagram_source)⎩548⎭
-
-    generate_shell_components ( reg, all_containers_within_single_file)⎩549⎭
-
-    for container in  all_containers_within_single_file:⎩550⎭
-
-      register_component ( reg,Template (name= container ["name"],template_data= container,instantiator= container_instantiator))
-    ⎩551⎭
-
-
-  initialize_stock_components ( reg)⎩552⎭
-
-  return  reg⎩553⎭
-  ⎩554⎭
-
-⎩555⎭
-
-def print_error_maybe (main_container):⎩556⎭
-
-  error_port =  "✗"⎩557⎭
-
-  err = fetch_first_output ( main_container, error_port)⎩558⎭
-
-  if ( err!= None) and ( 0 < len (trimws ( err.srepr ()))):⎩559⎭
-
-    print ( "___ !!! ERRORS !!! ___")⎩560⎭
-
-    print_specific_output ( main_container, error_port, False)⎩561⎭
-
-  ⎩562⎭
-
-⎩563⎭
-
-#|                                                                              #line  debugging helpers |#⎩564⎭
-⎩565⎭
-
-def dump_outputs (main_container):⎩566⎭
-
-  print ()⎩567⎭
-
-  print ( "___ Outputs ___")⎩568⎭
-
-  print_output_list ( main_container)⎩569⎭
-  ⎩570⎭
-
-⎩571⎭
-
-def trace_outputs (main_container):⎩572⎭
-
-  print ()⎩573⎭
-
-  print ( "___ Message Traces ___")⎩574⎭
-
-  print_routing_trace ( main_container)⎩575⎭
-  ⎩576⎭
-
-⎩577⎭
-
-def dump_hierarchy (main_container):⎩578⎭
-
-  print ()⎩579⎭
-
-  print ( str( "___ Hierarchy ___") + (build_hierarchy ( main_container)) )⎩580⎭
-  ⎩581⎭
-
-⎩582⎭
-
-def build_hierarchy (c):⎩583⎭
-
-  s =  ""⎩584⎭
-
-  for child in  c. children:⎩585⎭
-
-    s =  str( s) + build_hierarchy ( child) ⎩586⎭
-
-
-  indent =  ""⎩587⎭
-
-  for i in range( c. depth):⎩588⎭
-
-    indent =  indent+ "  "⎩589⎭
-
-
-  return  str( "\n") +  str( indent) +  str( "(") +  str( c. name) +  str( s) +  ")"     ⎩590⎭
-  ⎩591⎭
-
-⎩592⎭
-
-def dump_connections (c):⎩593⎭
-
-  print ()⎩594⎭
-
-  print ( "___ connections ___")⎩595⎭
-
-  dump_possible_connections ( c)⎩596⎭
-
-  for child in  c. children:⎩597⎭
-
-    print ()⎩598⎭
-
-    dump_possible_connections ( child)⎩599⎭
-
-  ⎩600⎭
-
-⎩601⎭
-
-def trimws (s):⎩602⎭
-
-
-  #|                                                                            #line  remove whitespace from front and back of string |#⎩603⎭
-
-  return  s.strip ()⎩604⎭
-  ⎩605⎭
-
-⎩606⎭
-
-def clone_string (s):⎩607⎭
-
-  return  s⎩608⎭
-  ⎩609⎭
-  ⎩610⎭
-
-
-load_errors =  False⎩611⎭
-
-runtime_errors =  False⎩612⎭
-⎩613⎭
-
-def load_error (s):⎩614⎭
-
-  global load_errors⎩615⎭
-
-  print ( s)⎩616⎭
-
-  quit ()⎩617⎭
-
-  load_errors =  True⎩618⎭
-  ⎩619⎭
-
-⎩620⎭
-
-def runtime_error (s):⎩621⎭
-
-  global runtime_errors⎩622⎭
-
-  print ( s)⎩623⎭
-
-  quit ()⎩624⎭
-
-  runtime_errors =  True⎩625⎭
-  ⎩626⎭
-
-⎩627⎭
-
-def fakepipename_instantiate (reg,owner,name,template_data):⎩628⎭
-
-  instance_name = gensymbol ( "fakepipe")⎩629⎭
-
-  return make_leaf ( instance_name, owner, None, fakepipename_handler)⎩630⎭
-  ⎩631⎭
-
-⎩632⎭
-
-rand =  0⎩633⎭
-⎩634⎭
-
-def fakepipename_handler (eh,msg):⎩635⎭
-
-  global rand⎩636⎭
-
-  rand =  rand+ 1
-
-  #|                                                                            #line  not very random, but good enough _ 'rand' must be unique within a single run |#⎩637⎭
-
-  send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)⎩638⎭
-  ⎩639⎭
-
-⎩640⎭
-⎩641⎭
-
-#|                                                                              #line  all of the the built_in leaves are listed here |#⎩642⎭
-
-#|                                                                              #line  future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project |#⎩643⎭
-⎩644⎭
-⎩645⎭
-
-def initialize_stock_components (reg):⎩646⎭
-
-  register_component ( reg,Template ( "1then2", None, deracer_instantiate))⎩647⎭
-
-  register_component ( reg,Template ( "?", None, probe_instantiate))⎩648⎭
-
-  register_component ( reg,Template ( "?A", None, probeA_instantiate))⎩649⎭
-
-  register_component ( reg,Template ( "?B", None, probeB_instantiate))⎩650⎭
-
-  register_component ( reg,Template ( "?C", None, probeC_instantiate))⎩651⎭
-
-  register_component ( reg,Template ( "trash", None, trash_instantiate))⎩652⎭
-  ⎩653⎭
-
-  register_component ( reg,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))⎩654⎭
-
-  register_component ( reg,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate))⎩655⎭
-  ⎩656⎭
-
-  register_component ( reg,Template ( "syncfilewrite", None, syncfilewrite_instantiate))⎩657⎭
-
-  register_component ( reg,Template ( "stringconcat", None, stringconcat_instantiate))⎩658⎭
-
-
-  #|                                                                            #line  for fakepipe |#⎩659⎭
-
-  register_component ( reg,Template ( "fakepipename", None, fakepipename_instantiate))⎩660⎭
-  ⎩661⎭
-
-⎩662⎭
-⎩663⎭
-
-def initialize ():⎩664⎭
-
-  root_of_project =  sys.argv[ 1] ⎩665⎭
-
-  root_of_0D =  sys.argv[ 2] ⎩666⎭
-
-  arg =  sys.argv[ 3] ⎩667⎭
-
-  main_container_name =  sys.argv[ 4] ⎩668⎭
-
-  diagram_names =  sys.argv[ 5:] ⎩669⎭
-
-  palette = initialize_component_palette ( root_project, root_0D, diagram_names)⎩670⎭
-
-  return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]⎩671⎭
-  ⎩672⎭
-
-⎩673⎭
-
-def start (palette,env,show_hierarchy= False,show_connections= False,show_traces= False,show_all_outputs= False):⎩674⎭
-
-  root_of_project =  env [ 0]⎩675⎭
-
-  root_of_0D =  env [ 1]⎩676⎭
-
-  main_container_name =  env [ 2]⎩677⎭
-
-  diagram_names =  env [ 3]⎩678⎭
-
-  arg =  env [ 4]⎩679⎭
-
-  set_environment ( root_of_project, root_of_0D)⎩680⎭
-
-
-  #|                                                                            #line  get entrypoint container |#⎩681⎭
-
-  main_container = get_component_instance ( palette, main_container_name,owner= None)⎩682⎭
-
-  if  None ==  main_container:⎩683⎭
-
-    load_error ( str( "Couldn't find container with page name ") +  str( main_container_name) +  str( " in files ") +  str( diagram_source_files) +  "(check tab names, or disable compression?)"    )⎩687⎭
-    ⎩688⎭
-
-
-  if  show_hierarchy:⎩689⎭
-
-    dump_hierarchy ( main_container)⎩690⎭
-    ⎩691⎭
-
-
-  if  show_connections:⎩692⎭
-
-    dump_connections ( main_container)⎩693⎭
-    ⎩694⎭
-
-
-  if not  load_errors:⎩695⎭
-
-    arg = new_datum_string ( arg)⎩696⎭
-
-    msg = make_message ( "", arg)⎩697⎭
-
-    inject ( main_container, msg)⎩698⎭
-
-    if  show_all_outputs:⎩699⎭
-
-      dump_outputs ( main_container)⎩700⎭
-
-    else:⎩701⎭
-
-      print_error_maybe ( main_container)⎩702⎭
-
-      print_specific_output ( main_container,port= "",stderr= False)⎩703⎭
-
-      if  show_traces:⎩704⎭
-
-        print ( "--- routing traces ---")⎩705⎭
-
-        print (routing_trace_all ( main_container))⎩706⎭
-        ⎩707⎭
-
-      ⎩708⎭
-
-
-    if  show_all_outputs:⎩709⎭
-
-      print ( "--- done ---")⎩710⎭
-      ⎩711⎭
-
-    ⎩712⎭
-
-  ⎩713⎭
-
-⎩714⎭
-⎩715⎭
-⎩716⎭
-
-#|                                                                              #line  utility functions  |#⎩717⎭
-
-def send_int (eh,port,i,causing_message):⎩718⎭
-
-  datum = new_datum_int ( i)⎩719⎭
-
-  send ( eh, port, datum, causing_message)⎩720⎭
-  ⎩721⎭
-
-⎩722⎭
-
-def send_bang (eh,port,causing_message):⎩723⎭
-
-  datum = new_datum_bang ()⎩724⎭
-
-  send ( eh, port, datum, causing_message)⎩725⎭
-  ⎩726⎭
-
-⎩727⎭
-
+)
 
 
 

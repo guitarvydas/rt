@@ -7,6 +7,7 @@ SRC=0d.rt
 D2J=./das2json/mac/das2json
 
 
+
 #all: generated-py
 all: generated-cl
 
@@ -27,14 +28,8 @@ generated-py: rt2py.drawio py0d.py *.ohm *.rewrite ${SRC}.a ${SRC}.b
 
 generated-cl: rt2py.drawio py0d.py *.ohm *.rewrite ${SRC}.a ${SRC}.b
 	${D2J} rt2cl.drawio
-	python3 main.py . 0D/python ${SRC}.a main rt2cl.drawio.json >generated.a.lisp
-	python3 mvline.py generated.a.lisp 80 >/tmp/generated.a.lisp
-	mv /tmp/generated.a.lisp ./generated.a.lisp
-	python3 errcheck.py generated.a.lisp
-	python3 main.py . 0D/python ${SRC}.b main rt2cl.drawio.json >generated.b.lisp
-	python3 mvline.py generated.b.lisp 80 >/tmp/generated.b.lisp
-	mv /tmp/generated.b.lisp ./generated.b.lisp
-	python3 errcheck.py generated.b.lisp
+	./generate-cl-chunk.bash ${SRC}.a generated.a.lisp
+	./generate-cl-chunk.bash ${SRC}.b generated.b.lisp
 	cat generated.a.lisp generated.b.lisp >generated.lisp
 	cat generated.lisp
 

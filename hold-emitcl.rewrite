@@ -13,11 +13,10 @@ TopLevel_line [line] =‛«line»’
 kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e line?] = ‛\n(defparameter «lval» «e»)«line»’
 Defconst [ __ lval _eq e line?] = ‛\n(defparameter «lval» «e»)’
-Defn [ _4 ident Formals StatementBlock line?] = 
+Defn [ _4 ident Formals StatementBlock line?] =
   ⎡ functionName=‛«ident»’
     ‛\n(defun «ident» (&optional «Formals»)«StatementBlock»)’
   ⎦
-
 Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛\n(defun «ident» (&optional «Formals»)«line1»⤷«line2»\n(list⤷«init»⤶⤶)«line3»)\n’
 Import [ _10 ident line?] = ‛’
 StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1»«line2»⤷«Statement»«line3»«line4»⤶\n’
@@ -118,12 +117,11 @@ Atom_emptydict [ _76 _77] =‛ nil’
 Atom_paren [ _70 Exp _71] =‛«Exp»’
 Atom_listconst [ _74 line1? PrimaryComma+ _75 line2] =‛(list «line1» «PrimaryComma»)«line2»’
 
-Atom_dict [ _78 line1? PairComma+ line2? _79] = 
+Atom_dict [ _78 line1? PairComma+ line2? _79] =
 ⎡ freshdict=‛_dict’
   ‛\n(let ((_dict (make-hash-table :test 'equal)))⤷«line1»«PairComma»«line2»\n_dict⤶)’
 ⎦
-
-Atom_lambda [ _80 Formals? _81 Exp] = ‛ #'(lambda (&optional «Formals»)⤷«Exp»⤶)’
+Atom_lambda [ _80 Formals? _81 Exp] =‛ #'(lambda (&optional «Formals»)⤷«Exp»⤶)’
 Atom_pos [ _86 Primary ] =‛ +«Primary»’
 Atom_neg [ _87 Primary ] =‛ -«Primary»’
 Atom_phi [ phi] =‛ nil’

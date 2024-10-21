@@ -3,6 +3,8 @@ cldecode {
   char =
     | "“" (~"“" ~"”" any)* "”"  -- string
     | "⌈" (~"⌈" ~"⌉" any)* "⌉"   -- comment
+    | "⎝" (~"⎝" ~"⎠" any)* "⎠"  -- errormessage
+    | "⎩" (~"⎩" ~"⎭" any)* "⎭"  -- line
     | "❲"                       -- ulb
     | "%E2%9D%B2"               -- encodedulb
     | "❳"                       -- urb

@@ -1,2836 +1,2669 @@
 
 
-counter =  0⎩1⎭
-⎩2⎭
+(defparameter  counter  0)                                                                                              #|line 1|#
+                                                                                                                        #|line 2|#
 
-digits = [⎩3⎭
-"₀", "₁", "₂", "₃", "₄", "₅",⎩4⎭
-"₆", "₇", "₈", "₉",⎩5⎭
-"₁₀", "₁₁", "₁₂", "₁₃", "₁₄",⎩6⎭
-"₁₅", "₁₆", "₁₇", "₁₈", "₁₉",⎩7⎭
-"₂₀", "₂₁", "₂₂", "₂₃", "₂₄",⎩8⎭
-"₂₅", "₂₆", "₂₇", "₂₈", "₂₉"]⎩9⎭
-⎩10⎭
-⎩11⎭
+(defparameter  digits (list                                                                                             #|line 3|#
+"₀"  "₁"  "₂"  "₃"  "₄"  "₅"  "₆"  "₇"  "₈"  "₉"  "₁₀"  "₁₁"  "₁₂"  "₁₃"  "₁₄"  "₁₅"  "₁₆"  "₁₇"  "₁₈"  "₁₉"  "₂₀"  "₂₁"  "₂₂"  "₂₃"  "₂₄"  "₂₅"  "₂₆"  "₂₇"  "₂₈"  "₂₉" )])#|line 9|#
+                                                                                                                        #|line 10|#
+                                                                                                                        #|line 11|#
 
-def gensymbol (s):⎩12⎭
+(defun gensymbol (&optional  s)                                                                                         #|line 12|#
 
-  global counter⎩13⎭
+    global counter                                                                                                      #|line 13|#
 
-  name_with_id =  str( s) + subscripted_digit ( counter) ⎩14⎭
+      (let ((undefined  (concatenate 'string  s (subscripted_digit    counter ))))                                      #|line 14|#
 
-  counter =  counter+ 1⎩15⎭
+          (setf  counter (+  counter  1)                                                                                #|line 15|#
 
-  return  name_with_id⎩16⎭
-  ⎩17⎭
+            (return-from gensymbol  name_with_id)                                                                       #|line 16|#
+          )                                                                                                             #|line 17|#
 
-⎩18⎭
+)
+(defun subscripted_digit (&optional  n)                                                                                 #|line 19|#
 
-def subscripted_digit (n):⎩19⎭
+    global digits                                                                                                       #|line 20|#
 
-  global digits⎩20⎭
+      (cond
+        (( and  ( >=   n  0) ( <=   n  29))                                                                             #|line 21|#
 
-  if ( n >=  0 and  n <=  29):⎩21⎭
+              (return-from subscripted_digit (nth  n  digits))                                                          #|line 22|#
 
-    return  digits [ n]⎩22⎭
+          )(t                                                                                                           #|line 23|#
 
-  else:⎩23⎭
+              (return-from subscripted_digit  (concatenate 'string  "₊"  n))                                            #|line 24|#
+                                                                                                                        #|line 25|#
 
-    return  str( "₊") +  n ⎩24⎭
-    ⎩25⎭
+          ))                                                                                                            #|line 26|#
 
-  ⎩26⎭
+)
+(defun Datum (&optional )                                                                                               #|line 28|#
 
-⎩27⎭
+  (list
+    (cons 'data  nil)                                                                                                   #|line 29|#
 
-class Datum:
-  def __init__ (self,):⎩28⎭
+    (cons 'clone  nil)                                                                                                  #|line 30|#
 
-    self.data =  None ⎩29⎭
+    (cons 'reclaim  nil)                                                                                                #|line 31|#
 
-    self.clone =  None ⎩30⎭
+    (cons 'srepr  nil)                                                                                                  #|line 32|#
 
-    self.reclaim =  None ⎩31⎭
+    (cons 'kind  nil)                                                                                                   #|line 33|#
 
-    self.srepr =  None ⎩32⎭
+    (cons 'raw  nil)                                                                                                    #|line 34|#
+    )                                                                                                                   #|line 35|#
+)
+                                                                                                                        #|line 36|#
 
-    self.kind =  None ⎩33⎭
+(defun new_datum_string (&optional  s)                                                                                  #|line 37|#
 
-    self.raw =  None ⎩34⎭
-    ⎩35⎭
+    (let ((undefined  (Datum)))                                                                                         #|line 38|#
 
-⎩36⎭
+        (setf (cdr (assoc ' data  d))  s                                                                                #|line 39|#
 
-def new_datum_string (s):⎩37⎭
+          (setf (cdr (assoc ' clone  d))  #'(lambda (&optional )(clone_datum_string    d                                #|line 40|#
+            ))
+            (setf (cdr (assoc ' reclaim  d))  #'(lambda (&optional )(reclaim_datum_string    d                          #|line 41|#
+              ))
+              (setf (cdr (assoc ' srepr  d))  #'(lambda (&optional )(srepr_datum_string    d                            #|line 42|#
+                ))
+                (setf (cdr (assoc ' raw  d))  #'(lambda (&optional )(raw_datum_string    d                              #|line 43|#
+                  ))
+                  (setf (cdr (assoc ' kind  d))  #'(lambda (&optional ) "string")                                       #|line 44|#
 
-  d =  Datum ()⎩38⎭
+                    (return-from new_datum_string  d)                                                                   #|line 45|#
+                  )                                                                                                     #|line 46|#
 
-  d. data =  s⎩39⎭
+)
+(defun clone_datum_string (&optional  d)                                                                                #|line 48|#
 
-  d. clone =  lambda : clone_datum_string ( d)⎩40⎭
+    (let ((undefined (new_datum_string   (cdr (assoc ' data  d))                                                        #|line 49|#
+    )))
+        (return-from clone_datum_string  d)                                                                             #|line 50|#
+      )                                                                                                                 #|line 51|#
 
-  d. reclaim =  lambda : reclaim_datum_string ( d)⎩41⎭
+)
+(defun reclaim_datum_string (&optional  src)                                                                            #|line 53|#
 
-  d. srepr =  lambda : srepr_datum_string ( d)⎩42⎭
+    #| pass |#                                                                                                          #|line 54|#
+                                                                                                                        #|line 55|#
 
-  d. raw =  lambda : raw_datum_string ( d)⎩43⎭
+)
+(defun srepr_datum_string (&optional  d)                                                                                #|line 57|#
 
-  d. kind =  lambda :  "string"⎩44⎭
+    (return-from srepr_datum_string (cdr (assoc ' data  d)))                                                            #|line 58|#
+                                                                                                                        #|line 59|#
 
-  return  d⎩45⎭
-  ⎩46⎭
+)
+(defun raw_datum_string (&optional  d)                                                                                  #|line 61|#
 
-⎩47⎭
+    (return-from raw_datum_string (bytearray   (cdr (assoc ' data  d))   "UTF_8"                                        #|line 62|#
+      ))                                                                                                                #|line 63|#
 
-def clone_datum_string (d):⎩48⎭
+)
+(defun new_datum_bang (&optional )                                                                                      #|line 65|#
 
-  d = new_datum_string ( d. data)⎩49⎭
+    (let ((undefined (Datum )))                                                                                         #|line 66|#
 
-  return  d⎩50⎭
-  ⎩51⎭
+        (setf (cdr (assoc ' data  p))  t                                                                                #|line 67|#
 
-⎩52⎭
+          (setf (cdr (assoc ' clone  p))  #'(lambda (&optional )(clone_datum_bang    p                                  #|line 68|#
+            ))
+            (setf (cdr (assoc ' reclaim  p))  #'(lambda (&optional )(reclaim_datum_bang    p                            #|line 69|#
+              ))
+              (setf (cdr (assoc ' srepr  p))  #'(lambda (&optional )(srepr_datum_bang ))                                #|line 70|#
 
-def reclaim_datum_string (src):⎩53⎭
+                (setf (cdr (assoc ' raw  p))  #'(lambda (&optional )(raw_datum_bang ))                                  #|line 71|#
 
-  pass⎩54⎭
-  ⎩55⎭
+                  (setf (cdr (assoc ' kind  p))  #'(lambda (&optional ) "bang")                                         #|line 72|#
 
-⎩56⎭
+                    (return-from new_datum_bang  p)                                                                     #|line 73|#
+                  )                                                                                                     #|line 74|#
 
-def srepr_datum_string (d):⎩57⎭
+)
+(defun clone_datum_bang (&optional  d)                                                                                  #|line 76|#
 
-  return  d. data⎩58⎭
-  ⎩59⎭
+    (return-from clone_datum_bang (new_datum_bang ))                                                                    #|line 77|#
+                                                                                                                        #|line 78|#
 
-⎩60⎭
+)
+(defun reclaim_datum_bang (&optional  d)                                                                                #|line 80|#
 
-def raw_datum_string (d):⎩61⎭
+    #| pass |#                                                                                                          #|line 81|#
+                                                                                                                        #|line 82|#
 
-  return bytearray ( d. data, "UTF_8")⎩62⎭
-  ⎩63⎭
+)
+(defun srepr_datum_bang (&optional )                                                                                    #|line 84|#
 
-⎩64⎭
+    (return-from srepr_datum_bang  "!")                                                                                 #|line 85|#
+                                                                                                                        #|line 86|#
 
-def new_datum_bang ():⎩65⎭
+)
+(defun raw_datum_bang (&optional )                                                                                      #|line 88|#
 
-  p = Datum ()⎩66⎭
+    (return-from raw_datum_bang  nil)                                                                                   #|line 89|#
+                                                                                                                        #|line 90|#
 
-  p. data =  True⎩67⎭
+)
+(defun new_datum_tick (&optional )                                                                                      #|line 92|#
 
-  p. clone =  lambda : clone_datum_bang ( p)⎩68⎭
+    (let ((undefined (new_datum_bang )))                                                                                #|line 93|#
 
-  p. reclaim =  lambda : reclaim_datum_bang ( p)⎩69⎭
+        (setf (cdr (assoc ' kind  p))  #'(lambda (&optional ) "tick")                                                   #|line 94|#
 
-  p. srepr =  lambda : srepr_datum_bang ()⎩70⎭
+          (setf (cdr (assoc ' clone  p))  #'(lambda (&optional )(new_datum_tick ))                                      #|line 95|#
 
-  p. raw =  lambda : raw_datum_bang ()⎩71⎭
+            (setf (cdr (assoc ' srepr  p))  #'(lambda (&optional )(srepr_datum_tick ))                                  #|line 96|#
 
-  p. kind =  lambda :  "bang"⎩72⎭
+              (setf (cdr (assoc ' raw  p))  #'(lambda (&optional )(raw_datum_tick ))                                    #|line 97|#
 
-  return  p⎩73⎭
-  ⎩74⎭
+                (return-from new_datum_tick  p)                                                                         #|line 98|#
+              )                                                                                                         #|line 99|#
 
-⎩75⎭
+)
+(defun srepr_datum_tick (&optional )                                                                                    #|line 101|#
 
-def clone_datum_bang (d):⎩76⎭
+    (return-from srepr_datum_tick  ".")                                                                                 #|line 102|#
+                                                                                                                        #|line 103|#
 
-  return new_datum_bang ()⎩77⎭
-  ⎩78⎭
+)
+(defun raw_datum_tick (&optional )                                                                                      #|line 105|#
 
-⎩79⎭
+    (return-from raw_datum_tick  nil)                                                                                   #|line 106|#
+                                                                                                                        #|line 107|#
 
-def reclaim_datum_bang (d):⎩80⎭
+)
+(defun new_datum_bytes (&optional  b)                                                                                   #|line 109|#
 
-  pass⎩81⎭
-  ⎩82⎭
+    (let ((undefined (Datum )))                                                                                         #|line 110|#
 
-⎩83⎭
+        (setf (cdr (assoc ' data  p))  b                                                                                #|line 111|#
 
-def srepr_datum_bang ():⎩84⎭
+          (setf (cdr (assoc ' clone  p))  clone_datum_bytes                                                             #|line 112|#
 
-  return  "!"⎩85⎭
-  ⎩86⎭
+            (setf (cdr (assoc ' reclaim  p))  #'(lambda (&optional )(reclaim_datum_bytes    p                           #|line 113|#
+              ))
+              (setf (cdr (assoc ' srepr  p))  #'(lambda (&optional )(srepr_datum_bytes    b                             #|line 114|#
+                ))
+                (setf (cdr (assoc ' raw  p))  #'(lambda (&optional )(raw_datum_bytes    b                               #|line 115|#
+                  ))
+                  (setf (cdr (assoc ' kind  p))  #'(lambda (&optional ) "bytes")                                        #|line 116|#
 
-⎩87⎭
+                    (return-from new_datum_bytes  p)                                                                    #|line 117|#
+                  )                                                                                                     #|line 118|#
 
-def raw_datum_bang ():⎩88⎭
+)
+(defun clone_datum_bytes (&optional  src)                                                                               #|line 120|#
 
-  return []⎩89⎭
-  ⎩90⎭
+    (let ((undefined (Datum )))                                                                                         #|line 121|#
 
-⎩91⎭
+        (let ((undefined  src))                                                                                         #|line 122|#
 
-def new_datum_tick ():⎩92⎭
+            (setf (cdr (assoc ' data  p)) (cdr (assoc '(clone )  src))                                                  #|line 123|#
 
-  p = new_datum_bang ()⎩93⎭
+              (return-from clone_datum_bytes  p)                                                                        #|line 124|#
+            ))                                                                                                          #|line 125|#
 
-  p. kind =  lambda :  "tick"⎩94⎭
+)
+(defun reclaim_datum_bytes (&optional  src)                                                                             #|line 127|#
 
-  p. clone =  lambda : new_datum_tick ()⎩95⎭
+    #| pass |#                                                                                                          #|line 128|#
+                                                                                                                        #|line 129|#
 
-  p. srepr =  lambda : srepr_datum_tick ()⎩96⎭
+)
+(defun srepr_datum_bytes (&optional  d)                                                                                 #|line 131|#
 
-  p. raw =  lambda : raw_datum_tick ()⎩97⎭
+    (return-from srepr_datum_bytes (cdr (assoc '(cdr (assoc '(decode    "UTF_8"                                         #|line 132|#
+      )  data))  d)))                                                                                                   #|line 133|#
 
-  return  p⎩98⎭
-  ⎩99⎭
+)
+(defun raw_datum_bytes (&optional  d)                                                                                   #|line 134|#
 
-⎩100⎭
+    (return-from raw_datum_bytes (cdr (assoc ' data  d)))                                                               #|line 135|#
+                                                                                                                        #|line 136|#
 
-def srepr_datum_tick ():⎩101⎭
+)
+(defun new_datum_handle (&optional  h)                                                                                  #|line 138|#
 
-  return  "."⎩102⎭
-  ⎩103⎭
+    (return-from new_datum_handle (new_datum_int    h                                                                   #|line 139|#
+      ))                                                                                                                #|line 140|#
 
-⎩104⎭
+)
+(defun new_datum_int (&optional  i)                                                                                     #|line 142|#
 
-def raw_datum_tick ():⎩105⎭
+    (let ((undefined (Datum )))                                                                                         #|line 143|#
 
-  return []⎩106⎭
-  ⎩107⎭
+        (setf (cdr (assoc ' data  p))  i                                                                                #|line 144|#
 
-⎩108⎭
+          (setf (cdr (assoc ' clone  p))  #'(lambda (&optional )(clone_int    i                                         #|line 145|#
+            ))
+            (setf (cdr (assoc ' reclaim  p))  #'(lambda (&optional )(reclaim_int    i                                   #|line 146|#
+              ))
+              (setf (cdr (assoc ' srepr  p))  #'(lambda (&optional )(srepr_datum_int    i                               #|line 147|#
+                ))
+                (setf (cdr (assoc ' raw  p))  #'(lambda (&optional )(raw_datum_int    i                                 #|line 148|#
+                  ))
+                  (setf (cdr (assoc ' kind  p))  #'(lambda (&optional ) "int")                                          #|line 149|#
 
-def new_datum_bytes (b):⎩109⎭
+                    (return-from new_datum_int  p)                                                                      #|line 150|#
+                  )                                                                                                     #|line 151|#
 
-  p = Datum ()⎩110⎭
+)
+(defun clone_int (&optional  i)                                                                                         #|line 153|#
 
-  p. data =  b⎩111⎭
+    (let ((undefined (new_datum_int    i                                                                                #|line 154|#
+    )))
+        (return-from clone_int  p)                                                                                      #|line 155|#
+      )                                                                                                                 #|line 156|#
 
-  p. clone =  clone_datum_bytes⎩112⎭
+)
+(defun reclaim_int (&optional  src)                                                                                     #|line 158|#
 
-  p. reclaim =  lambda : reclaim_datum_bytes ( p)⎩113⎭
+    #| pass |#                                                                                                          #|line 159|#
+                                                                                                                        #|line 160|#
 
-  p. srepr =  lambda : srepr_datum_bytes ( b)⎩114⎭
+)
+(defun srepr_datum_int (&optional  i)                                                                                   #|line 162|#
 
-  p. raw =  lambda : raw_datum_bytes ( b)⎩115⎭
+    (return-from srepr_datum_int (str    i                                                                              #|line 163|#
+      ))                                                                                                                #|line 164|#
 
-  p. kind =  lambda :  "bytes"⎩116⎭
+)
+(defun raw_datum_int (&optional  i)                                                                                     #|line 166|#
 
-  return  p⎩117⎭
-  ⎩118⎭
+    (return-from raw_datum_int  i)                                                                                      #|line 167|#
+                                                                                                                        #|line 168|#
 
-⎩119⎭
+)
+#|  Message passed to a leaf component. |#                                                                              #|line 170|#
 
-def clone_datum_bytes (src):⎩120⎭
+#|  |#                                                                                                                  #|line 171|#
 
-  p = Datum ()⎩121⎭
+#|  `port` refers to the name of the incoming or outgoing port of this component. |#                                    #|line 172|#
 
-  p =  src⎩122⎭
+#|  `datum` is the data attached to this message. |#                                                                    #|line 173|#
 
-  p. data =  src.clone ()⎩123⎭
+(defun Message (&optional  port  datum)                                                                                 #|line 174|#
 
-  return  p⎩124⎭
-  ⎩125⎭
+  (list
+    (cons 'port  port)                                                                                                  #|line 175|#
 
-⎩126⎭
+    (cons 'datum  datum)                                                                                                #|line 176|#
+    )                                                                                                                   #|line 177|#
+)
+                                                                                                                        #|line 178|#
 
-def reclaim_datum_bytes (src):⎩127⎭
+(defun clone_port (&optional  s)                                                                                        #|line 179|#
 
-  pass⎩128⎭
-  ⎩129⎭
+    (return-from clone_port (clone_string    s                                                                          #|line 180|#
+      ))                                                                                                                #|line 181|#
 
-⎩130⎭
+)
+#|  Utility for making a `Message`. Used to safely “seed“ messages |#                                                   #|line 183|#
 
-def srepr_datum_bytes (d):⎩131⎭
+#|  entering the very top of a network. |#                                                                              #|line 184|#
 
-  return  d. data.decode ( "UTF_8")⎩132⎭
-  ⎩133⎭
+(defun make_message (&optional  port  datum)                                                                            #|line 185|#
 
+    (let ((undefined (clone_string    port                                                                              #|line 186|#
+    )))
+        (let ((undefined (Message  :port  p :datum (cdr (assoc '(clone )  datum))                                       #|line 187|#
+        )))
+            (return-from make_message  m)                                                                               #|line 188|#
+          ))                                                                                                            #|line 189|#
 
-def raw_datum_bytes (d):⎩134⎭
+)
+#|  Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations. |#                #|line 191|#
 
-  return  d. data⎩135⎭
-  ⎩136⎭
+(defun message_clone (&optional  message)                                                                               #|line 192|#
 
-⎩137⎭
+    (let ((undefined (Message  :port (clone_port   (cdr (assoc ' port  message)) ) :datum (cdr (assoc '(cdr (assoc '(clone )  datum))  message)) #|line 193|#
+    )))
+        (return-from message_clone  m)                                                                                  #|line 194|#
+      )                                                                                                                 #|line 195|#
 
-def new_datum_handle (h):⎩138⎭
+)
+#|  Frees a message. |#                                                                                                 #|line 197|#
 
-  return new_datum_int ( h)⎩139⎭
-  ⎩140⎭
+(defun destroy_message (&optional  msg)                                                                                 #|line 198|#
 
-⎩141⎭
 
-def new_datum_int (i):⎩142⎭
+    #|  during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages |##|line 199|#
 
-  p = Datum ()⎩143⎭
+      #| pass |#                                                                                                        #|line 200|#
+                                                                                                                        #|line 201|#
 
-  p. data =  i⎩144⎭
+)
+(defun destroy_datum (&optional  msg)                                                                                   #|line 203|#
 
-  p. clone =  lambda : clone_int ( i)⎩145⎭
+    #| pass |#                                                                                                          #|line 204|#
+                                                                                                                        #|line 205|#
 
-  p. reclaim =  lambda : reclaim_int ( i)⎩146⎭
+)
+(defun destroy_port (&optional  msg)                                                                                    #|line 207|#
 
-  p. srepr =  lambda : srepr_datum_int ( i)⎩147⎭
+    #| pass |#                                                                                                          #|line 208|#
+                                                                                                                        #|line 209|#
 
-  p. raw =  lambda : raw_datum_int ( i)⎩148⎭
+)
+#|  |#                                                                                                                  #|line 211|#
 
-  p. kind =  lambda :  "int"⎩149⎭
+(defun format_message (&optional  m)                                                                                    #|line 212|#
 
-  return  p⎩150⎭
-  ⎩151⎭
+    (cond
+      (( equal    m  nil)                                                                                               #|line 213|#
 
-⎩152⎭
+            (return-from format_message  "ϕ")                                                                           #|line 214|#
 
-def clone_int (i):⎩153⎭
+        )(t                                                                                                             #|line 215|#
 
-  p = new_datum_int ( i)⎩154⎭
+            (return-from format_message  (concatenate 'string  "⟪"  (concatenate 'string (cdr (assoc ' port  m))  (concatenate 'string  "⦂"  (concatenate 'string (cdr (assoc '(cdr (assoc '(srepr )  datum))  m))  "⟫")))))#|line 219|#
+                                                                                                                        #|line 220|#
 
-  return  p⎩155⎭
-  ⎩156⎭
+        ))                                                                                                              #|line 221|#
 
-⎩157⎭
+)
+#|  dynamic routing descriptors |#                                                                                      #|line 223|#
+                                                                                                                        #|line 224|#
 
-def reclaim_int (src):⎩158⎭
+(defparameter  drInject  "inject")
+(defparameter  drSend  "send")
+(defparameter  drInOut  "inout")
+(defparameter  drForward  "forward")
+(defparameter  drDown  "down")
+(defparameter  drUp  "up")
+(defparameter  drAcross  "across")
+(defparameter  drThrough  "through")                                                                                    #|line 233|#
 
-  pass⎩159⎭
-  ⎩160⎭
+#|  See “class_free programming“ starting at 45:01 of https://www.youtube.com/watch?v=XFTOG895C7c |#                    #|line 234|#
+                                                                                                                        #|line 235|#
+                                                                                                                        #|line 236|#
 
-⎩161⎭
+(defun make_Routing_Descriptor (&optional  action  component  port  message)                                            #|line 237|#
 
-def srepr_datum_int (i):⎩162⎭
+    (return-from make_Routing_Descriptor
+      (let ((_dict (make-hash-table :test 'equal)))                                                                     #|line 238|#
+        (setf (gethash "action" _dict)  action)) (setf (gethash "component" _dict)  component)) (setf (gethash "port" _dict)  port)) (setf (gethash "message" _dict)  message)) #|line 242|#
 
-  return str ( i)⎩163⎭
-  ⎩164⎭
+        _dict))                                                                                                         #|line 243|#
+                                                                                                                        #|line 244|#
 
-⎩165⎭
+)
+#|  |#                                                                                                                  #|line 246|#
 
-def raw_datum_int (i):⎩166⎭
+(defun make_Send_Descriptor (&optional  component  port  message  cause_port  cause_message)                            #|line 247|#
 
-  return  i⎩167⎭
-  ⎩168⎭
+    (let ((undefined (make_Routing_Descriptor  :action  drSend :component  component :port  port :message  message      #|line 248|#
+    )))
+        (return-from make_Send_Descriptor
+          (let ((_dict (make-hash-table :test 'equal)))                                                                 #|line 249|#
+            (setf (gethash "action" _dict)  drSend)) (setf (gethash "component" _dict) (cdr (assoc 'component  rdesc))) (setf (gethash "port" _dict) (cdr (assoc 'port  rdesc))) (setf (gethash "message" _dict) (cdr (assoc 'message  rdesc))) (setf (gethash "cause_port" _dict)  cause_port)) (setf (gethash "cause_message" _dict)  cause_message)) (setf (gethash "fmt" _dict)  fmt_send)) #|line 256|#
 
-⎩169⎭
+            _dict))                                                                                                     #|line 257|#
+      )                                                                                                                 #|line 258|#
 
-#|                                                                              #line  Message passed to a leaf component. |#⎩170⎭
+)
+(defun log_send (&optional  sender  sender_port  msg  cause_msg)                                                        #|line 260|#
 
-#|                                                                              #line  |#⎩171⎭
+    (let ((undefined (make_Send_Descriptor  :component  sender :port  sender_port :message  msg :cause_port (cdr (assoc ' port  cause_msg)) :cause_message  cause_msg #|line 261|#
+    )))
+        (append_routing_descriptor  :container (cdr (assoc ' owner  sender)) :desc  send_desc                           #|line 262|#
+        ))                                                                                                              #|line 263|#
 
-#|                                                                              #line  `port` refers to the name of the incoming or outgoing port of this component. |#⎩172⎭
+)
+(defun log_send_string (&optional  sender  sender_port  msg  cause_msg)                                                 #|line 265|#
 
-#|                                                                              #line  `datum` is the data attached to this message. |#⎩173⎭
+    (let ((undefined (make_Send_Descriptor    sender   sender_port   msg  (cdr (assoc ' port  cause_msg))   cause_msg   #|line 266|#
+    )))
+        (append_routing_descriptor  :container (cdr (assoc ' owner  sender)) :desc  send_desc                           #|line 267|#
+        ))                                                                                                              #|line 268|#
 
-class Message:
-  def __init__ (self,port,datum):⎩174⎭
+)
+(defun fmt_send (&optional  desc  indent)                                                                               #|line 270|#
 
-    self.port =  port ⎩175⎭
+    (return-from fmt_send  ""                                                                                           #|line 271|#
 
-    self.datum =  datum ⎩176⎭
-    ⎩177⎭
 
-⎩178⎭
+        #| return f;\n{indent}⋯ {desc@component.name}.“{desc@cause_port}“ ∴ {desc@component.name}.“{desc@port}“ {format_message (desc@message)}' |##|line 272|#
+      )                                                                                                                 #|line 273|#
 
-def clone_port (s):⎩179⎭
+)
+(defun fmt_send_string (&optional  desc  indent)                                                                        #|line 275|#
 
-  return clone_string ( s)⎩180⎭
-  ⎩181⎭
+    (return-from fmt_send_string (fmt_send    desc   indent                                                             #|line 276|#
+      ))                                                                                                                #|line 277|#
 
-⎩182⎭
+)
+#|  |#                                                                                                                  #|line 279|#
 
-#|                                                                              #line  Utility for making a `Message`. Used to safely “seed“ messages |#⎩183⎭
+(defun make_Forward_Descriptor (&optional  component  port  message  cause_port  cause_message)                         #|line 280|#
 
-#|                                                                              #line  entering the very top of a network. |#⎩184⎭
+    (let ((undefined (make_Routing_Descriptor  :action  drSend :component  component :port  port :message  message      #|line 281|#
+    )))
+        (let ((undefined  #'(lambda (&optional  desc) "")))                                                             #|line 282|#
 
-def make_message (port,datum):⎩185⎭
+            (return-from make_Forward_Descriptor
+              (let ((_dict (make-hash-table :test 'equal)))                                                             #|line 283|#
+                (setf (gethash "action" _dict)  drForward)) (setf (gethash "component" _dict) (cdr (assoc 'component  rdesc))) (setf (gethash "port" _dict) (cdr (assoc 'port  rdesc))) (setf (gethash "message" _dict) (cdr (assoc 'message  rdesc))) (setf (gethash "cause_port" _dict)  cause_port)) (setf (gethash "cause_message" _dict)  cause_message)) (setf (gethash "fmt" _dict)  fmt_forward)) #|line 290|#
 
-  p = clone_string ( port)⎩186⎭
+                _dict))                                                                                                 #|line 291|#
+          ))                                                                                                            #|line 292|#
 
-  m = Message (port= p,datum= datum.clone ())⎩187⎭
+)
+(defun log_forward (&optional  sender  sender_port  msg  cause_msg)                                                     #|line 294|#
 
-  return  m⎩188⎭
-  ⎩189⎭
+    #| pass |#
 
-⎩190⎭
+      #|  when needed, it is too frequent to bother logging |#                                                          #|line 295|#
+                                                                                                                        #|line 296|#
 
-#|                                                                              #line  Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations. |#⎩191⎭
+)
+(defun fmt_forward (&optional  desc)                                                                                    #|line 298|#
 
-def message_clone (message):⎩192⎭
+    (print    (concatenate 'string  "*** Error fmt_forward "  desc)                                                     #|line 299|#
+    )
+      (quit )                                                                                                           #|line 300|#
+                                                                                                                        #|line 301|#
 
-  m = Message (port=clone_port ( message. port),datum= message. datum.clone ())⎩193⎭
+)
+#|  |#                                                                                                                  #|line 303|#
 
-  return  m⎩194⎭
-  ⎩195⎭
+(defun make_Inject_Descriptor (&optional  receiver  port  message)                                                      #|line 304|#
 
-⎩196⎭
+    (let ((undefined (make_Routing_Descriptor  :action  drInject :component  receiver :port  port :message  message     #|line 305|#
+    )))
+        (return-from make_Inject_Descriptor
+          (let ((_dict (make-hash-table :test 'equal)))                                                                 #|line 306|#
+            (setf (gethash "action" _dict)  drInject)) (setf (gethash "component" _dict) (cdr (assoc 'component  rdesc))) (setf (gethash "port" _dict) (cdr (assoc 'port  rdesc))) (setf (gethash "message" _dict) (cdr (assoc 'message  rdesc))) (setf (gethash "fmt" _dict)  fmt_inject)) #|line 311|#
 
-#|                                                                              #line  Frees a message. |#⎩197⎭
+            _dict))                                                                                                     #|line 312|#
+      )                                                                                                                 #|line 313|#
 
-def destroy_message (msg):⎩198⎭
+)
+(defun log_inject (&optional  receiver  port  msg)                                                                      #|line 315|#
 
+    (let ((undefined (make_Inject_Descriptor  :receiver  receiver :port  port :message  msg                             #|line 316|#
+    )))
+        (append_routing_descriptor  :container  receiver :desc  inject_desc                                             #|line 317|#
+        ))                                                                                                              #|line 318|#
 
-  #|                                                                            #line  during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages |#⎩199⎭
+)
+(defun fmt_inject (&optional  desc  indent)                                                                             #|line 320|#
 
-  pass⎩200⎭
-  ⎩201⎭
 
-⎩202⎭
+    #| return f'\n{indent}⟹  {desc@component.name}.“{desc@port}“ {format_message (desc@message)}' |#                    #|line 321|#
 
-def destroy_datum (msg):⎩203⎭
+      (return-from fmt_inject  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "⟹  "  (concatenate 'string (cdr (assoc ' name (cdr (assoc 'component  desc)))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'port  desc)  (concatenate 'string  " " (format_message   (cdr (assoc 'message  desc) )))))))))#|line 328|#
+                                                                                                                        #|line 329|#
 
-  pass⎩204⎭
-  ⎩205⎭
+)
+#|  |#                                                                                                                  #|line 331|#
 
-⎩206⎭
+(defun make_Down_Descriptor (&optional  container  source_port  source_message  target  target_port  target_message)    #|line 332|#
 
-def destroy_port (msg):⎩207⎭
+    (return-from make_Down_Descriptor
+      (let ((_dict (make-hash-table :test 'equal)))                                                                     #|line 333|#
+        (setf (gethash "action" _dict)  drDown)) (setf (gethash "container" _dict)  container)) (setf (gethash "source_port" _dict)  source_port)) (setf (gethash "source_message" _dict)  source_message)) (setf (gethash "target" _dict)  target)) (setf (gethash "target_port" _dict)  target_port)) (setf (gethash "target_message" _dict)  target_message)) (setf (gethash "fmt" _dict)  fmt_down)) #|line 341|#
 
-  pass⎩208⎭
-  ⎩209⎭
+        _dict))                                                                                                         #|line 342|#
+                                                                                                                        #|line 343|#
 
-⎩210⎭
+)
+(defun log_down (&optional  container  source_port  source_message  target  target_port  target_message)                #|line 345|#
 
-#|                                                                              #line  |#⎩211⎭
+    (let ((undefined (make_Down_Descriptor    container   source_port   source_message   target   target_port   target_message #|line 346|#
+    )))
+        (append_routing_descriptor    container   rdesc                                                                 #|line 347|#
+        ))                                                                                                              #|line 348|#
 
-def format_message (m):⎩212⎭
+)
+(defun fmt_down (&optional  desc  indent)                                                                               #|line 350|#
 
-  if  m ==  None:⎩213⎭
 
-    return  "ϕ"⎩214⎭
+    #| return f'\n{indent}↓ {desc@container.name}.“{desc@source_port}“ ➔ {desc@target.name}.“{desc@target_port}“ {format_message (desc@target_message)}' |##|line 351|#
 
-  else:⎩215⎭
+      (return-from fmt_down  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  " ↓ "  (concatenate 'string (cdr (assoc ' name (cdr (assoc 'container  desc)))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'source_port  desc)  (concatenate 'string  " ➔ "  (concatenate 'string (cdr (assoc ' name (cdr (assoc 'target  desc)))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'target_port  desc)  (concatenate 'string  " " (format_message   (cdr (assoc 'target_message  desc) )))))))))))))#|line 362|#
+                                                                                                                        #|line 363|#
 
-    return  str( "⟪") +  str( m. port) +  str( "⦂") +  str( m. datum.srepr ()) +  "⟫"    ⎩219⎭
-    ⎩220⎭
+)
+#|  |#                                                                                                                  #|line 365|#
 
-  ⎩221⎭
+(defun make_Up_Descriptor (&optional  source  source_port  source_message  container  container_port  container_message)#|line 366|#
 
-⎩222⎭
+    (return-from make_Up_Descriptor
+      (let ((_dict (make-hash-table :test 'equal)))                                                                     #|line 367|#
+        (setf (gethash "action" _dict)  drUp)) (setf (gethash "source" _dict)  source)) (setf (gethash "source_port" _dict)  source_port)) (setf (gethash "source_message" _dict)  source_message)) (setf (gethash "container" _dict)  container)) (setf (gethash "container_port" _dict)  container_port)) (setf (gethash "container_message" _dict)  container_message)) (setf (gethash "fmt" _dict)  fmt_up)) #|line 375|#
 
-#|                                                                              #line  dynamic routing descriptors |#⎩223⎭
-⎩224⎭
+        _dict))                                                                                                         #|line 376|#
+                                                                                                                        #|line 377|#
 
-drInject =  "inject"⎩225⎭
+)
+(defun log_up (&optional  source  source_port  source_message  container  target_port  target_message)                  #|line 379|#
 
-drSend =  "send"⎩226⎭
+    (let ((undefined (make_Up_Descriptor    source   source_port   source_message   container   target_port   target_message #|line 380|#
+    )))
+        (append_routing_descriptor    container   rdesc                                                                 #|line 381|#
+        ))                                                                                                              #|line 382|#
 
-drInOut =  "inout"⎩227⎭
+)
+(defun fmt_up (&optional  desc  indent)                                                                                 #|line 384|#
 
-drForward =  "forward"⎩228⎭
 
-drDown =  "down"⎩229⎭
+    #| return f'\n{indent}↑ {desc@source.name}.“{desc@source_port}“ ➔ {desc@container.name}.“{desc@container_port}“ {format_message (desc@container_message)}' |##|line 385|#
 
-drUp =  "up"⎩230⎭
+      (return-from fmt_up  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "↑ "  (concatenate 'string (cdr (assoc ' name (cdr (assoc 'source  desc)))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'source_port  desc)  (concatenate 'string  " ➔ "  (concatenate 'string (cdr (assoc ' name (cdr (assoc 'container  desc)))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'container_port  desc)  (concatenate 'string  " " (format_message   (cdr (assoc 'container_message  desc) )))))))))))))#|line 396|#
+                                                                                                                        #|line 397|#
 
-drAcross =  "across"⎩231⎭
+)
+(defun make_Across_Descriptor (&optional  container  source  source_port  source_message  target  target_port  target_message)#|line 399|#
 
-drThrough =  "through"⎩232⎭
-⎩233⎭
+    (return-from make_Across_Descriptor
+      (let ((_dict (make-hash-table :test 'equal)))                                                                     #|line 400|#
+        (setf (gethash "action" _dict)  drAcross)) (setf (gethash "container" _dict)  container)) (setf (gethash "source" _dict)  source)) (setf (gethash "source_port" _dict)  source_port)) (setf (gethash "source_message" _dict)  source_message)) (setf (gethash "target" _dict)  target)) (setf (gethash "target_port" _dict)  target_port)) (setf (gethash "target_message" _dict)  target_message)) (setf (gethash "fmt" _dict)  fmt_across)) #|line 409|#
 
-#|                                                                              #line  See “class_free programming“ starting at 45:01 of https://www.youtube.com/watch?v=XFTOG895C7c |#⎩234⎭
-⎩235⎭
-⎩236⎭
+        _dict))                                                                                                         #|line 410|#
+                                                                                                                        #|line 411|#
 
-def make_Routing_Descriptor (action,component,port,message):⎩237⎭
+)
+(defun log_across (&optional  container  source  source_port  source_message  target  target_port  target_message)      #|line 413|#
 
-  return {⎩238⎭
-  "action": action,⎩239⎭
-  "component": component,⎩240⎭
-  "port": port,⎩241⎭
-  "message": message⎩242⎭
-  }⎩243⎭
-  ⎩244⎭
+    (let ((undefined (make_Across_Descriptor    container   source   source_port   source_message   target   target_port   target_message #|line 414|#
+    )))
+        (append_routing_descriptor    container   rdesc                                                                 #|line 415|#
+        ))                                                                                                              #|line 416|#
 
-⎩245⎭
+)
+(defun fmt_across (&optional  desc  indent)                                                                             #|line 418|#
 
-#|                                                                              #line  |#⎩246⎭
 
-def make_Send_Descriptor (component,port,message,cause_port,cause_message):⎩247⎭
+    #| return f'\n{indent}→ {desc@source.name}.“{desc@source_port}“ ➔ {desc@target.name}.“{desc@target_port}“  {format_message (desc@target_message)}' |##|line 419|#
 
-  rdesc = make_Routing_Descriptor (action= drSend,component= component,port= port,message= message)⎩248⎭
+      (return-from fmt_across  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "→ "  (concatenate 'string (cdr (assoc ' name (cdr (assoc 'source  desc)))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'source_port  desc)  (concatenate 'string  " ➔ "  (concatenate 'string (cdr (assoc ' name (cdr (assoc 'target  desc)))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'target_port  desc)  (concatenate 'string  "  " (format_message   (cdr (assoc 'target_message  desc) )))))))))))))#|line 430|#
+                                                                                                                        #|line 431|#
 
-  return {⎩249⎭
-  "action": drSend,⎩250⎭
-  "component": rdesc ["component"],⎩251⎭
-  "port": rdesc ["port"],⎩252⎭
-  "message": rdesc ["message"],⎩253⎭
-  "cause_port": cause_port,⎩254⎭
-  "cause_message": cause_message,⎩255⎭
-  "fmt": fmt_send⎩256⎭
-  }⎩257⎭
-  ⎩258⎭
+)
+#|  |#                                                                                                                  #|line 433|#
 
-⎩259⎭
+(defun make_Through_Descriptor (&optional  container  source_port  source_message  target_port  message)                #|line 434|#
 
-def log_send (sender,sender_port,msg,cause_msg):⎩260⎭
+    (return-from make_Through_Descriptor
+      (let ((_dict (make-hash-table :test 'equal)))                                                                     #|line 435|#
+        (setf (gethash "action" _dict)  drThrough)) (setf (gethash "container" _dict)  container)) (setf (gethash "source_port" _dict)  source_port)) (setf (gethash "source_message" _dict)  source_message)) (setf (gethash "target_port" _dict)  target_port)) (setf (gethash "message" _dict)  message)) (setf (gethash "fmt" _dict)  fmt_through)) #|line 442|#
 
-  send_desc = make_Send_Descriptor (component= sender,port= sender_port,message= msg,cause_port= cause_msg. port,cause_message= cause_msg)⎩261⎭
+        _dict))                                                                                                         #|line 443|#
+                                                                                                                        #|line 444|#
 
-  append_routing_descriptor (container= sender. owner,desc= send_desc)⎩262⎭
-  ⎩263⎭
+)
+(defun log_through (&optional  container  source_port  source_message  target_port  message)                            #|line 446|#
 
-⎩264⎭
+    (let ((undefined (make_Through_Descriptor    container   source_port   source_message   target_port   message       #|line 447|#
+    )))
+        (append_routing_descriptor    container   rdesc                                                                 #|line 448|#
+        ))                                                                                                              #|line 449|#
 
-def log_send_string (sender,sender_port,msg,cause_msg):⎩265⎭
+)
+(defun fmt_through (&optional  desc  indent)                                                                            #|line 451|#
 
-  send_desc = make_Send_Descriptor ( sender, sender_port, msg, cause_msg. port, cause_msg)⎩266⎭
 
-  append_routing_descriptor (container= sender. owner,desc= send_desc)⎩267⎭
-  ⎩268⎭
+    #| return f'\n{indent}⇶ {desc @container.name}.“{desc@source_port}“ ➔ {desc@container.name}.“{desc@target_port}“ {format_message (desc@message)}' |##|line 452|#
 
-⎩269⎭
+      (return-from fmt_through  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "⇶ "  (concatenate 'string (cdr (assoc ' name (cdr (assoc 'container  desc)))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'source_port  desc)  (concatenate 'string  " ➔ "  (concatenate 'string (cdr (assoc ' name (cdr (assoc 'container  desc)))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc 'target_port  desc)  (concatenate 'string  " " (format_message   (cdr (assoc 'message  desc) )))))))))))))#|line 463|#
+                                                                                                                        #|line 464|#
 
-def fmt_send (desc,indent):⎩270⎭
+)
+#|  |#                                                                                                                  #|line 466|#
 
-  return  ""⎩271⎭
+(defun make_InOut_Descriptor (&optional  container  component  in_message  out_port  out_message)                       #|line 467|#
 
+    (return-from make_InOut_Descriptor
+      (let ((_dict (make-hash-table :test 'equal)))                                                                     #|line 468|#
+        (setf (gethash "action" _dict)  drInOut)) (setf (gethash "container" _dict)  container)) (setf (gethash "component" _dict)  component)) (setf (gethash "in_message" _dict)  in_message)) (setf (gethash "out_message" _dict)  out_message)) (setf (gethash "fmt" _dict)  fmt_inout)) #|line 474|#
 
-  #|                                                                            #line return f;\n{indent}⋯ {desc@component.name}.“{desc@cause_port}“ ∴ {desc@component.name}.“{desc@port}“ {format_message (desc@message)}' |#⎩272⎭
-  ⎩273⎭
+        _dict))                                                                                                         #|line 475|#
+                                                                                                                        #|line 476|#
 
-⎩274⎭
+)
+(defun log_inout (&optional  container  component  in_message)                                                          #|line 478|#
 
-def fmt_send_string (desc,indent):⎩275⎭
+    (cond
+      ((cdr (assoc '(cdr (assoc '(empty )  outq))  component))                                                          #|line 479|#
 
-  return fmt_send ( desc, indent)⎩276⎭
-  ⎩277⎭
+            (log_inout_no_output  :container  container :component  component :in_message  in_message )                 #|line 480|#
 
-⎩278⎭
+        )(t                                                                                                             #|line 481|#
 
-#|                                                                              #line  |#⎩279⎭
+            (log_inout_recursively  :container  container :component  component :in_message  in_message :out_messages (list   (cdr (assoc '(cdr (assoc ' queue  outq))  component)) ) )#|line 482|#
 
-def make_Forward_Descriptor (component,port,message,cause_port,cause_message):⎩280⎭
+        ))                                                                                                              #|line 483|#
 
-  rdesc = make_Routing_Descriptor (action= drSend,component= component,port= port,message= message)⎩281⎭
+)
+(defun log_inout_no_output (&optional  container  component  in_message)                                                #|line 485|#
 
-  fmt_forward =  lambda desc:  ""⎩282⎭
+    (let ((undefined (make_InOut_Descriptor  :container  container :component  component :in_message  in_message        #|line 486|#
+    :out_port  nil :out_message  nil                                                                                    #|line 487|#
+    )))
+        (append_routing_descriptor    container   rdesc                                                                 #|line 488|#
+        ))                                                                                                              #|line 489|#
 
-  return {⎩283⎭
-  "action": drForward,⎩284⎭
-  "component": rdesc ["component"],⎩285⎭
-  "port": rdesc ["port"],⎩286⎭
-  "message": rdesc ["message"],⎩287⎭
-  "cause_port": cause_port,⎩288⎭
-  "cause_message": cause_message,⎩289⎭
-  "fmt": fmt_forward⎩290⎭
-  }⎩291⎭
-  ⎩292⎭
+)
+(defun log_inout_single (&optional  container  component  in_message  out_message)                                      #|line 491|#
 
-⎩293⎭
+    (let ((undefined (make_InOut_Descriptor  :container  container :component  component :in_message  in_message        #|line 492|#
+    :out_port  nil :out_message  out_message                                                                            #|line 493|#
+    )))
+        (append_routing_descriptor    container   rdesc                                                                 #|line 494|#
+        ))                                                                                                              #|line 495|#
 
-def log_forward (sender,sender_port,msg,cause_msg):⎩294⎭
+)
+(defun log_inout_recursively (&optional  container  component  in_message  :out_messages  nil)                          #|line 497|#
 
-  pass
+    (cond
+      (( equal    nil  out_messages)                                                                                    #|line 498|#
 
-  #|                                                                            #line  when needed, it is too frequent to bother logging |#⎩295⎭
-  ⎩296⎭
+            #| pass |#                                                                                                  #|line 499|#
 
-⎩297⎭
+        )(t                                                                                                             #|line 500|#
 
-def fmt_forward (desc):⎩298⎭
+            (let ((undefined  (car  out_messages)))                                                                     #|line 501|#
 
-  print ( str( "*** Error fmt_forward ") +  desc )⎩299⎭
+                (let ((undefined  (cdr  out_messages)))                                                                 #|line 502|#
 
-  quit ()⎩300⎭
-  ⎩301⎭
+                    (log_inout_single  :container  container :component  component :in_message  in_message :out_message  m #|line 503|#
+                    )
+                      (log_inout_recursively  :container  container :component  component :in_message  in_message :out_messages  rest )))#|line 504|#
 
-⎩302⎭
+        ))                                                                                                              #|line 505|#
 
-#|                                                                              #line  |#⎩303⎭
+)
+(defun fmt_inout (&optional  desc  indent)                                                                              #|line 507|#
 
-def make_Inject_Descriptor (receiver,port,message):⎩304⎭
+    (let ((undefined (cdr (assoc 'out_message  desc)))                                                                  #|line 508|#
 
-  rdesc = make_Routing_Descriptor (action= drInject,component= receiver,port= port,message= message)⎩305⎭
+        (cond
+          (( equal    nil  outm)                                                                                        #|line 509|#
 
-  return {⎩306⎭
-  "action": drInject,⎩307⎭
-  "component": rdesc ["component"],⎩308⎭
-  "port": rdesc ["port"],⎩309⎭
-  "message": rdesc ["message"],⎩310⎭
-  "fmt": fmt_inject⎩311⎭
-  }⎩312⎭
-  ⎩313⎭
+                (return-from fmt_inout  (concatenate 'string  "\n"  (concatenate 'string  indent  "  ⊥")))              #|line 510|#
 
-⎩314⎭
+            )(t                                                                                                         #|line 511|#
 
-def log_inject (receiver,port,msg):⎩315⎭
+                (return-from fmt_inout  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "  ∴ "  (concatenate 'string (cdr (assoc ' name (cdr (assoc 'component  desc)))  (concatenate 'string  " " (format_message    outm )))))))#|line 516|#
+                                                                                                                        #|line 517|#
 
-  inject_desc = make_Inject_Descriptor (receiver= receiver,port= port,message= msg)⎩316⎭
+            )))                                                                                                         #|line 518|#
 
-  append_routing_descriptor (container= receiver,desc= inject_desc)⎩317⎭
-  ⎩318⎭
+)
+(defun log_tick (&optional  container  component  in_message)                                                           #|line 520|#
 
-⎩319⎭
+    #| pass |#                                                                                                          #|line 521|#
+                                                                                                                        #|line 522|#
 
-def fmt_inject (desc,indent):⎩320⎭
+)
+#|  |#                                                                                                                  #|line 524|#
 
+(defun routing_trace_all (&optional  container)                                                                         #|line 525|#
 
-  #|                                                                            #line return f'\n{indent}⟹  {desc@component.name}.“{desc@port}“ {format_message (desc@message)}' |#⎩321⎭
+    (let ((undefined  ""))                                                                                              #|line 526|#
 
-  return  str( "\n") +  str( indent) +  str( "⟹  ") +  str( desc ["component"]. name) +  str( ".") +  str( desc ["port"]) +  str( " ") + format_message ( desc ["message"])       ⎩328⎭
-  ⎩329⎭
+        (let ((undefined (list   (cdr (assoc '(cdr (assoc ' queue  routings))  container))                              #|line 527|#
+        )))
+            (return-from routing_trace_all (recursive_routing_trace    container   lis   indent                         #|line 528|#
+              ))))                                                                                                      #|line 529|#
 
-⎩330⎭
+)
+(defun recursive_routing_trace (&optional  container  lis  indent)                                                      #|line 531|#
 
-#|                                                                              #line  |#⎩331⎭
+    (cond
+      (( equal    nil  lis)                                                                                             #|line 532|#
 
-def make_Down_Descriptor (container,source_port,source_message,target,target_port,target_message):⎩332⎭
+            (return-from recursive_routing_trace  "")                                                                   #|line 533|#
 
-  return {⎩333⎭
-  "action": drDown,⎩334⎭
-  "container": container,⎩335⎭
-  "source_port": source_port,⎩336⎭
-  "source_message": source_message,⎩337⎭
-  "target": target,⎩338⎭
-  "target_port": target_port,⎩339⎭
-  "target_message": target_message,⎩340⎭
-  "fmt": fmt_down⎩341⎭
-  }⎩342⎭
-  ⎩343⎭
+        )(t                                                                                                             #|line 534|#
 
-⎩344⎭
+            (let ((undefined (first    lis                                                                              #|line 535|#
+            )))
+                (let ((undefined (funcall (cdr (assoc 'fmt  desc)    desc   indent                                      #|line 536|#
+                )))
+                    (return-from recursive_routing_trace (+  formatted (recursive_routing_trace    container  (rest    lis )  (+  indent  "  ") )))))#|line 537|#
 
-def log_down (container,source_port,source_message,target,target_port,target_message):⎩345⎭
+        ))                                                                                                              #|line 538|#
 
-  rdesc = make_Down_Descriptor ( container, source_port, source_message, target, target_port, target_message)⎩346⎭
+)
+(defparameter  enumDown  0)
+(defparameter  enumAcross  1)
+(defparameter  enumUp  2)
+(defparameter  enumThrough  3)                                                                                          #|line 544|#
 
-  append_routing_descriptor ( container, rdesc)⎩347⎭
-  ⎩348⎭
+(defun container_instantiator (&optional  reg  owner  container_name  desc)                                             #|line 545|#
 
-⎩349⎭
+    global enumDown, enumUp, enumAcross, enumThrough                                                                    #|line 546|#
 
-def fmt_down (desc,indent):⎩350⎭
+      (let ((undefined (make_container    container_name   owner                                                        #|line 547|#
+      )))
+          (let ((undefined  nil))                                                                                       #|line 548|#
 
+              (let ((undefined  nil))
 
-  #|                                                                            #line return f'\n{indent}↓ {desc@container.name}.“{desc@source_port}“ ➔ {desc@target.name}.“{desc@target_port}“ {format_message (desc@target_message)}' |#⎩351⎭
+                  #|  not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here |#         #|line 549|#
 
-  return  str( "\n") +  str( indent) +  str( " ↓ ") +  str( desc ["container"]. name) +  str( ".") +  str( desc ["source_port"]) +  str( " ➔ ") +  str( desc ["target"]. name) +  str( ".") +  str( desc ["target_port"]) +  str( " ") + format_message ( desc ["target_message"])           ⎩362⎭
-  ⎩363⎭
 
-⎩364⎭
+                    #|  collect children |#                                                                             #|line 550|#
 
-#|                                                                              #line  |#⎩365⎭
+                      (loop for child_desc in (cdr (assoc 'children  desc)
+                        do                                                                                              #|line 551|#
 
-def make_Up_Descriptor (source,source_port,source_message,container,container_port,container_message):⎩366⎭
+                            (let ((undefined (get_component_instance    reg  (cdr (assoc 'name  child_desc)   container #|line 552|#
+                            )))
+                                (cdr (assoc '(append    child_instance                                                  #|line 553|#
+                                )  children))
+                                  (setf (nth (cdr (assoc 'id  child_desc)  children_by_id)  child_instance)             #|line 554|#
 
-  return {⎩367⎭
-  "action": drUp,⎩368⎭
-  "source": source,⎩369⎭
-  "source_port": source_port,⎩370⎭
-  "source_message": source_message,⎩371⎭
-  "container": container,⎩372⎭
-  "container_port": container_port,⎩373⎭
-  "container_message": container_message,⎩374⎭
-  "fmt": fmt_up⎩375⎭
-  }⎩376⎭
-  ⎩377⎭
 
-⎩378⎭
+                        (setf (cdr (assoc ' children  container))  children                                             #|line 555|#
 
-def log_up (source,source_port,source_message,container,target_port,target_message):⎩379⎭
+                          (let ((undefined  container))                                                                 #|line 556|#
+                                                                                                                        #|line 557|#
 
-  rdesc = make_Up_Descriptor ( source, source_port, source_message, container, target_port, target_message)⎩380⎭
+                                (let ((undefined  nil))                                                                 #|line 558|#
 
-  append_routing_descriptor ( container, rdesc)⎩381⎭
-  ⎩382⎭
+                                    (loop for proto_conn in (cdr (assoc 'connections  desc)
+                                      do                                                                                #|line 559|#
 
-⎩383⎭
+                                          (let ((undefined  nil))                                                       #|line 560|#
 
-def fmt_up (desc,indent):⎩384⎭
+                                              (let ((undefined  nil))                                                   #|line 561|#
 
+                                                  (let ((undefined (Connector )))                                       #|line 562|#
 
-  #|                                                                            #line return f'\n{indent}↑ {desc@source.name}.“{desc@source_port}“ ➔ {desc@container.name}.“{desc@container_port}“ {format_message (desc@container_message)}' |#⎩385⎭
+                                                      (cond
+                                                        (( equal   (cdr (assoc 'dir  proto_conn)  enumDown)             #|line 563|#
 
-  return  str( "\n") +  str( indent) +  str( "↑ ") +  str( desc ["source"]. name) +  str( ".") +  str( desc ["source_port"]) +  str( " ➔ ") +  str( desc ["container"]. name) +  str( ".") +  str( desc ["container_port"]) +  str( " ") + format_message ( desc ["container_message"])           ⎩396⎭
-  ⎩397⎭
 
-⎩398⎭
+                                                              #|  JSON: {'dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''}, |##|line 564|#
 
-def make_Across_Descriptor (container,source,source_port,source_message,target,target_port,target_message):⎩399⎭
+                                                                (setf (cdr (assoc ' direction  connector))  "down"      #|line 565|#
 
-  return {⎩400⎭
-  "action": drAcross,⎩401⎭
-  "container": container,⎩402⎭
-  "source": source,⎩403⎭
-  "source_port": source_port,⎩404⎭
-  "source_message": source_message,⎩405⎭
-  "target": target,⎩406⎭
-  "target_port": target_port,⎩407⎭
-  "target_message": target_message,⎩408⎭
-  "fmt": fmt_across⎩409⎭
-  }⎩410⎭
-  ⎩411⎭
+                                                                  (setf (cdr (assoc ' sender  connector)) (Sender   (cdr (assoc ' name  me))   me  (cdr (assoc 'source_port  proto_conn) #|line 566|#
+                                                                  )
+                                                                    (let ((undefined (nth (cdr (assoc 'id (cdr (assoc 'target  proto_conn))  children_by_id)))#|line 567|#
 
-⎩412⎭
+                                                                        (cond
+                                                                          (( equal    target_component  nil)            #|line 568|#
 
-def log_across (container,source,source_port,source_message,target,target_port,target_message):⎩413⎭
+                                                                                (load_error    (concatenate 'string  "internal error: .Down connection target internal error " (cdr (assoc 'target  proto_conn)) )#|line 569|#
 
-  rdesc = make_Across_Descriptor ( container, source, source_port, source_message, target, target_port, target_message)⎩414⎭
+                                                                            )(t                                         #|line 570|#
 
-  append_routing_descriptor ( container, rdesc)⎩415⎭
-  ⎩416⎭
+                                                                                (setf (cdr (assoc ' receiver  connector)) (Receiver   (cdr (assoc ' name  target_component))  (cdr (assoc ' inq  target_component))  (cdr (assoc 'target_port  proto_conn)   target_component #|line 571|#
+                                                                                )
+                                                                                  (cdr (assoc '(append    connector )  connectors))
+                                                                            )))                                         #|line 572|#
 
-⎩417⎭
+                                                          )(( equal   (cdr (assoc 'dir  proto_conn)  enumAcross)        #|line 573|#
 
-def fmt_across (desc,indent):⎩418⎭
+                                                              (setf (cdr (assoc ' direction  connector))  "across"      #|line 574|#
 
+                                                                (let ((undefined (nth (cdr (assoc 'id (cdr (assoc 'source  proto_conn))  children_by_id)))#|line 575|#
 
-  #|                                                                            #line return f'\n{indent}→ {desc@source.name}.“{desc@source_port}“ ➔ {desc@target.name}.“{desc@target_port}“  {format_message (desc@target_message)}' |#⎩419⎭
+                                                                    (let ((undefined (nth (cdr (assoc 'id (cdr (assoc 'target  proto_conn))  children_by_id)))#|line 576|#
 
-  return  str( "\n") +  str( indent) +  str( "→ ") +  str( desc ["source"]. name) +  str( ".") +  str( desc ["source_port"]) +  str( " ➔ ") +  str( desc ["target"]. name) +  str( ".") +  str( desc ["target_port"]) +  str( "  ") + format_message ( desc ["target_message"])           ⎩430⎭
-  ⎩431⎭
+                                                                        (cond
+                                                                          (( equal    source_component  nil)            #|line 577|#
 
-⎩432⎭
+                                                                                (load_error    (concatenate 'string  "internal error: .Across connection source not ok " (cdr (assoc 'source  proto_conn)) )#|line 578|#
 
-#|                                                                              #line  |#⎩433⎭
+                                                                            )(t                                         #|line 579|#
 
-def make_Through_Descriptor (container,source_port,source_message,target_port,message):⎩434⎭
+                                                                                (setf (cdr (assoc ' sender  connector)) (Sender   (cdr (assoc ' name  source_component))   source_component  (cdr (assoc 'source_port  proto_conn) #|line 580|#
+                                                                                )
+                                                                                  (cond
+                                                                                    (( equal    target_component  nil)  #|line 581|#
 
-  return {⎩435⎭
-  "action": drThrough,⎩436⎭
-  "container": container,⎩437⎭
-  "source_port": source_port,⎩438⎭
-  "source_message": source_message,⎩439⎭
-  "target_port": target_port,⎩440⎭
-  "message": message,⎩441⎭
-  "fmt": fmt_through⎩442⎭
-  }⎩443⎭
-  ⎩444⎭
+                                                                                          (load_error    (concatenate 'string  "internal error: .Across connection target not ok " (cdr (assoc ' target  proto_conn))) )#|line 582|#
 
-⎩445⎭
+                                                                                      )(t                               #|line 583|#
 
-def log_through (container,source_port,source_message,target_port,message):⎩446⎭
+                                                                                          (setf (cdr (assoc ' receiver  connector)) (Receiver   (cdr (assoc ' name  target_component))  (cdr (assoc ' inq  target_component))  (cdr (assoc 'target_port  proto_conn)   target_component #|line 584|#
+                                                                                          )
+                                                                                            (cdr (assoc '(append    connector )  connectors))
+                                                                                      ))
+                                                                            ))))                                        #|line 585|#
 
-  rdesc = make_Through_Descriptor ( container, source_port, source_message, target_port, message)⎩447⎭
+                                                          )(( equal   (cdr (assoc 'dir  proto_conn)  enumUp)            #|line 586|#
 
-  append_routing_descriptor ( container, rdesc)⎩448⎭
-  ⎩449⎭
+                                                              (setf (cdr (assoc ' direction  connector))  "up"          #|line 587|#
 
-⎩450⎭
+                                                                (let ((undefined (nth (cdr (assoc 'id (cdr (assoc 'source  proto_conn))  children_by_id)))#|line 588|#
 
-def fmt_through (desc,indent):⎩451⎭
+                                                                    (cond
+                                                                      (( equal    source_component  nil)                #|line 589|#
 
+                                                                            (print    (concatenate 'string  "internal error: .Up connection source not ok " (cdr (assoc 'source  proto_conn)) )#|line 590|#
 
-  #|                                                                            #line return f'\n{indent}⇶ {desc @container.name}.“{desc@source_port}“ ➔ {desc@container.name}.“{desc@target_port}“ {format_message (desc@message)}' |#⎩452⎭
+                                                                        )(t                                             #|line 591|#
 
-  return  str( "\n") +  str( indent) +  str( "⇶ ") +  str( desc ["container"]. name) +  str( ".") +  str( desc ["source_port"]) +  str( " ➔ ") +  str( desc ["container"]. name) +  str( ".") +  str( desc ["target_port"]) +  str( " ") + format_message ( desc ["message"])           ⎩463⎭
-  ⎩464⎭
+                                                                            (setf (cdr (assoc ' sender  connector)) (Sender   (cdr (assoc ' name  source_component))   source_component  (cdr (assoc 'source_port  proto_conn) #|line 592|#
+                                                                            )
+                                                                              (setf (cdr (assoc ' receiver  connector)) (Receiver   (cdr (assoc ' name  me))  (cdr (assoc ' outq  container))  (cdr (assoc 'target_port  proto_conn)   me #|line 593|#
+                                                                              )
+                                                                                (cdr (assoc '(append    connector )  connectors))
+                                                                        )))                                             #|line 594|#
 
-⎩465⎭
+                                                          )(( equal   (cdr (assoc 'dir  proto_conn)  enumThrough)       #|line 595|#
 
-#|                                                                              #line  |#⎩466⎭
+                                                              (setf (cdr (assoc ' direction  connector))  "through"     #|line 596|#
 
-def make_InOut_Descriptor (container,component,in_message,out_port,out_message):⎩467⎭
+                                                                (setf (cdr (assoc ' sender  connector)) (Sender   (cdr (assoc ' name  me))   me  (cdr (assoc 'source_port  proto_conn) #|line 597|#
+                                                                )
+                                                                  (setf (cdr (assoc ' receiver  connector)) (Receiver   (cdr (assoc ' name  me))  (cdr (assoc ' outq  container))  (cdr (assoc 'target_port  proto_conn)   me #|line 598|#
+                                                                  )
+                                                                    (cdr (assoc '(append    connector )  connectors))
+                                                          )))))                                                         #|line 599|#
 
-  return {⎩468⎭
-  "action": drInOut,⎩469⎭
-  "container": container,⎩470⎭
-  "component": component,⎩471⎭
-  "in_message": in_message,⎩472⎭
-  "out_message": out_message,⎩473⎭
-  "fmt": fmt_inout⎩474⎭
-  }⎩475⎭
-  ⎩476⎭
+                                                                                                                        #|line 600|#
 
-⎩477⎭
+                                      (setf (cdr (assoc ' connections  container))  connectors                          #|line 601|#
 
-def log_inout (container,component,in_message):⎩478⎭
+                                        (return-from container_instantiator  container)                                 #|line 602|#
+                                      )))))                                                                             #|line 603|#
 
-  if  component. outq.empty ():⎩479⎭
+)
+#|  The default handler for container components. |#                                                                    #|line 605|#
 
-    log_inout_no_output (container= container,component= component,in_message= in_message)⎩480⎭
+(defun container_handler (&optional  container  message)                                                                #|line 606|#
 
-  else:⎩481⎭
+    (route  :container  container :from_component  container :message  message )
 
-    log_inout_recursively (container= container,component= component,in_message= in_message,out_messages=list ( component. outq. queue))⎩482⎭
+      #|  references to 'self' are replaced by the container during instantiation |#                                    #|line 607|#
 
-  ⎩483⎭
+        (loop while (any_child_ready    container )
+          do                                                                                                            #|line 608|#
 
-⎩484⎭
+              (step_children    container   message )                                                                   #|line 609|#
 
-def log_inout_no_output (container,component,in_message):⎩485⎭
+          )                                                                                                             #|line 610|#
 
-  rdesc = make_InOut_Descriptor (container= container,component= component,in_message= in_message,⎩486⎭
-  out_port= None,out_message= None)⎩487⎭
+)
+#|  Frees the given container and associated data. |#                                                                   #|line 612|#
 
-  append_routing_descriptor ( container, rdesc)⎩488⎭
-  ⎩489⎭
+(defun destroy_container (&optional  eh)                                                                                #|line 613|#
 
-⎩490⎭
+    #| pass |#                                                                                                          #|line 614|#
+                                                                                                                        #|line 615|#
 
-def log_inout_single (container,component,in_message,out_message):⎩491⎭
+)
+(defun fifo_is_empty (&optional  fifo)                                                                                  #|line 617|#
 
-  rdesc = make_InOut_Descriptor (container= container,component= component,in_message= in_message,⎩492⎭
-  out_port= None,out_message= out_message)⎩493⎭
+    (return-from fifo_is_empty (cdr (assoc '(empty )  fifo)))                                                           #|line 618|#
+                                                                                                                        #|line 619|#
 
-  append_routing_descriptor ( container, rdesc)⎩494⎭
-  ⎩495⎭
+)
+#|  Routing connection for a container component. The `direction` field has |#                                          #|line 621|#
 
-⎩496⎭
+#|  no affect on the default message routing system _ it is there for debugging |#                                      #|line 622|#
 
-def log_inout_recursively (container,component,in_message,out_messages=[]):⎩497⎭
+#|  purposes, or for reading by other tools. |#                                                                         #|line 623|#
+                                                                                                                        #|line 624|#
 
-  if [] ==  out_messages:⎩498⎭
+(defun Connector (&optional )                                                                                           #|line 625|#
 
-    pass⎩499⎭
+  (list
+    (cons 'direction  nil)
+    #|  down, across, up, through |#                                                                                    #|line 626|#
 
-  else:⎩500⎭
+    (cons 'sender  nil)                                                                                                 #|line 627|#
 
-    m =   out_messages[0] ⎩501⎭
+    (cons 'receiver  nil)                                                                                               #|line 628|#
+    )                                                                                                                   #|line 629|#
+)
+                                                                                                                        #|line 630|#
 
-    rest =   out_messages[1:] ⎩502⎭
+#|  `Sender` is used to “pattern match“ which `Receiver` a message should go to, |#                                     #|line 631|#
 
-    log_inout_single (container= container,component= component,in_message= in_message,out_message= m)⎩503⎭
+#|  based on component ID (pointer) and port name. |#                                                                   #|line 632|#
+                                                                                                                        #|line 633|#
 
-    log_inout_recursively (container= container,component= component,in_message= in_message,out_messages= rest)⎩504⎭
+(defun Sender (&optional  name  component  port)                                                                        #|line 634|#
 
-  ⎩505⎭
+  (list
+    (cons 'name  name)                                                                                                  #|line 635|#
 
-⎩506⎭
+    (cons 'component  component)
+    #|  from |#                                                                                                         #|line 636|#
 
-def fmt_inout (desc,indent):⎩507⎭
+    (cons 'port  port)
+    #|  from's port |#                                                                                                  #|line 637|#
+    )                                                                                                                   #|line 638|#
+)
+                                                                                                                        #|line 639|#
 
-  outm =  desc ["out_message"]⎩508⎭
+#|  `Receiver` is a handle to a destination queue, and a `port` name to assign |#                                       #|line 640|#
 
-  if  None ==  outm:⎩509⎭
+#|  to incoming messages to this queue. |#                                                                              #|line 641|#
+                                                                                                                        #|line 642|#
 
-    return  str( "\n") +  str( indent) +  "  ⊥"  ⎩510⎭
+(defun Receiver (&optional  name  queue  port  component)                                                               #|line 643|#
 
-  else:⎩511⎭
+  (list
+    (cons 'name  name)                                                                                                  #|line 644|#
 
-    return  str( "\n") +  str( indent) +  str( "  ∴ ") +  str( desc ["component"]. name) +  str( " ") + format_message ( outm)     ⎩516⎭
-    ⎩517⎭
+    (cons 'queue  queue)
+    #|  queue (input | output) of receiver |#                                                                           #|line 645|#
 
-  ⎩518⎭
+    (cons 'port  port)
+    #|  destination port |#                                                                                             #|line 646|#
 
-⎩519⎭
+    (cons 'component  component)
+    #|  to (for bootstrap debug) |#                                                                                     #|line 647|#
+    )                                                                                                                   #|line 648|#
+)
+                                                                                                                        #|line 649|#
 
-def log_tick (container,component,in_message):⎩520⎭
+#|  Checks if two senders match, by pointer equality and port name matching. |#                                         #|line 650|#
 
-  pass⎩521⎭
-  ⎩522⎭
+(defun sender_eq (&optional  s1  s2)                                                                                    #|line 651|#
 
-⎩523⎭
+    (let ((undefined ( equal   (cdr (assoc ' component  s1)) (cdr (assoc ' component  s2)))))                           #|line 652|#
 
-#|                                                                              #line  |#⎩524⎭
+        (let ((undefined ( equal   (cdr (assoc ' port  s1)) (cdr (assoc ' port  s2)))))                                 #|line 653|#
 
-def routing_trace_all (container):⎩525⎭
+            (return-from sender_eq ( and   same_components  same_ports))                                                #|line 654|#
+          ))                                                                                                            #|line 655|#
 
-  indent =  ""⎩526⎭
+)
+#|  Delivers the given message to the receiver of this connector. |#                                                    #|line 657|#
+                                                                                                                        #|line 658|#
 
-  lis = list ( container. routings. queue)⎩527⎭
+(defun deposit (&optional  parent  conn  message)                                                                       #|line 659|#
 
-  return recursive_routing_trace ( container, lis, indent)⎩528⎭
-  ⎩529⎭
+    (let ((undefined (make_message  :port (cdr (assoc '(cdr (assoc ' port  receiver))  conn)) :datum (cdr (assoc ' datum  message)) #|line 660|#
+    )))
+        (log_connection    parent   conn   new_message                                                                  #|line 661|#
+        )
+          (push_message    parent  (cdr (assoc '(cdr (assoc ' component  receiver))  conn))  (cdr (assoc '(cdr (assoc ' queue  receiver))  conn))   new_message #|line 662|#
+          ))                                                                                                            #|line 663|#
 
-⎩530⎭
+)
+(defun force_tick (&optional  parent  eh)                                                                               #|line 665|#
 
-def recursive_routing_trace (container,lis,indent):⎩531⎭
+    (let ((undefined (make_message    "."  (new_datum_tick )                                                            #|line 666|#
+    )))
+        (push_message    parent   eh  (cdr (assoc ' inq  eh))   tick_msg                                                #|line 667|#
+        )
+          (return-from force_tick  tick_msg)                                                                            #|line 668|#
+        )                                                                                                               #|line 669|#
 
-  if [] ==  lis:⎩532⎭
+)
+(defun push_message (&optional  parent  receiver  inq  m)                                                               #|line 671|#
 
-    return  ""⎩533⎭
+    (cdr (assoc '(put    m                                                                                              #|line 672|#
+    )  inq))
+      (cdr (assoc '(cdr (assoc '(put    receiver                                                                        #|line 673|#
+      )  visit_ordering))  parent))                                                                                     #|line 674|#
 
-  else:⎩534⎭
+)
+(defun is_self (&optional  child  container)                                                                            #|line 676|#
 
-    desc = first ( lis)⎩535⎭
 
-    formatted =  desc ["fmt"] ( desc, indent)⎩536⎭
+    #|  in an earlier version “self“ was denoted as ϕ |#                                                                #|line 677|#
 
-    return  formatted+recursive_routing_trace ( container,rest ( lis), indent+ "  ")⎩537⎭
+      (return-from is_self ( equal    child  container))                                                                #|line 678|#
+                                                                                                                        #|line 679|#
 
-  ⎩538⎭
+)
+(defun step_child (&optional  child  msg)                                                                               #|line 681|#
 
-⎩539⎭
+    (let ((undefined (cdr (assoc ' state  child))))                                                                     #|line 682|#
 
-enumDown =  0⎩540⎭
+        (cdr (assoc '(handler    child   msg                                                                            #|line 683|#
+        )  child))
+          (let ((undefined (cdr (assoc ' state  child))))                                                               #|line 684|#
 
-enumAcross =  1⎩541⎭
+              (return-from step_child (values undefined undefined))                                                     #|line 687|#
+            ))                                                                                                          #|line 688|#
 
-enumUp =  2⎩542⎭
+)
+(defun save_message (&optional  eh  msg)                                                                                #|line 690|#
 
-enumThrough =  3⎩543⎭
-⎩544⎭
+    (cdr (assoc '(cdr (assoc '(put    msg                                                                               #|line 691|#
+    )  saved_messages))  eh))                                                                                           #|line 692|#
 
-def container_instantiator (reg,owner,container_name,desc):⎩545⎭
+)
+(defun fetch_saved_message_and_clear (&optional  eh)                                                                    #|line 694|#
 
-  global enumDown, enumUp, enumAcross, enumThrough⎩546⎭
+    (return-from fetch_saved_message_and_clear (cdr (assoc '(cdr (assoc '(get )  saved_messages))  eh)))                #|line 695|#
+                                                                                                                        #|line 696|#
 
-  container = make_container ( container_name, owner)⎩547⎭
+)
+(defun step_children (&optional  container  causingMessage)                                                             #|line 698|#
 
-  children = []⎩548⎭
+    (setf (cdr (assoc ' state  container))  "idle"                                                                      #|line 699|#
 
-  children_by_id = {}
+      (loop for child in (list   (cdr (assoc '(cdr (assoc ' queue  visit_ordering))  container)) )
+        do                                                                                                              #|line 700|#
 
-  #|                                                                            #line  not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here |#⎩549⎭
 
+            #|  child = container represents self, skip it |#                                                           #|line 701|#
 
-  #|                                                                            #line  collect children |#⎩550⎭
+              (cond
+                ((not (is_self    child   container ))                                                                  #|line 702|#
 
-  for child_desc in  desc ["children"]:⎩551⎭
+                      (cond
+                        ((not (cdr (assoc '(cdr (assoc '(empty )  inq))  child)))                                       #|line 703|#
 
-    child_instance = get_component_instance ( reg, child_desc ["name"], container)⎩552⎭
+                              (let ((undefined (cdr (assoc '(cdr (assoc '(get )  inq))  child))))                       #|line 704|#
 
-    children.append ( child_instance)⎩553⎭
+                                  (loop while (step_child    child   msg                                                #|line 705|#
+                                  )
+                                    doundefined)
+                                    (cond
+                                      ( began_long_run                                                                  #|line 706|#
 
-    children_by_id [ child_desc ["id"]] =  child_instance⎩554⎭
+                                            (save_message    child   msg )                                              #|line 707|#
 
+                                        )( continued_long_run                                                           #|line 708|#
 
-  container. children =  children⎩555⎭
+                                            #| pass |#                                                                  #|line 709|#
 
-  me =  container⎩556⎭
-  ⎩557⎭
+                                        )( ended_long_run                                                               #|line 710|#
 
-  connectors = []⎩558⎭
+                                            (log_inout  :container  container :component  child :in_message (fetch_saved_message_and_clear    child ) )#|line 711|#
 
-  for proto_conn in  desc ["connections"]:⎩559⎭
+                                        )(t                                                                             #|line 712|#
 
-    source_component =  None⎩560⎭
+                                            (log_inout  :container  container :component  child :in_message  msg )      #|line 713|#
 
-    target_component =  None⎩561⎭
+                                        ))
+                                      (destroy_message    msg ))                                                        #|line 714|#
 
-    connector = Connector ()⎩562⎭
+                          )(t                                                                                           #|line 715|#
 
-    if  proto_conn ["dir"] ==  enumDown:⎩563⎭
+                              (cond
+                                ((not (equal  (cdr (assoc ' state  child))  "idle")                                     #|line 716|#
 
+                                      (let ((undefined (force_tick    container   child                                 #|line 717|#
+                                      )))
+                                          (cdr (assoc '(handler    child   msg                                          #|line 718|#
+                                          )  child))
+                                            (log_tick  :container  container :component  child :in_message  msg         #|line 719|#
+                                            )
+                                              (destroy_message    msg ))
+                                  ))                                                                                    #|line 720|#
 
-      #|                                                                        #line  JSON: {'dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''}, |#⎩564⎭
+                          ))                                                                                            #|line 721|#
 
-      connector. direction =  "down"⎩565⎭
+                        (cond
+                          (( equal   (cdr (assoc ' state  child))  "active")                                            #|line 722|#
 
-      connector. sender = Sender ( me. name, me, proto_conn ["source_port"])⎩566⎭
 
-      target_component =  children_by_id [ proto_conn ["target"] ["id"]]⎩567⎭
+                                #|  if child remains active, then the container must remain active and must propagate “ticks“ to child |##|line 723|#
 
-      if ( target_component ==  None):⎩568⎭
+                                  (setf (cdr (assoc ' state  container))  "active"                                      #|line 724|#
 
-        load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn ["target"] )⎩569⎭
+                            ))                                                                                          #|line 725|#
 
-      else:⎩570⎭
+                          (loop while (not (cdr (assoc '(cdr (assoc '(empty )  outq))  child)))
+                            do                                                                                          #|line 726|#
 
-        connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn ["target_port"], target_component)⎩571⎭
+                                (let ((undefined (cdr (assoc '(cdr (assoc '(get )  outq))  child))))                    #|line 727|#
 
-        connectors.append ( connector)
-      ⎩572⎭
+                                    (route    container   child   msg                                                   #|line 728|#
+                                    )
+                                      (destroy_message    msg ))
+                            )
+                  ))                                                                                                    #|line 729|#
 
-    elif  proto_conn ["dir"] ==  enumAcross:⎩573⎭
+                                                                                                                        #|line 730|#
+                                                                                                                        #|line 731|#
+                                                                                                                        #|line 732|#
 
-      connector. direction =  "across"⎩574⎭
+)
+(defun attempt_tick (&optional  parent  eh)                                                                             #|line 734|#
 
-      source_component =  children_by_id [ proto_conn ["source"] ["id"]]⎩575⎭
+    (cond
+      ((not (equal  (cdr (assoc ' state  eh))  "idle")                                                                  #|line 735|#
 
-      target_component =  children_by_id [ proto_conn ["target"] ["id"]]⎩576⎭
+            (force_tick    parent   eh )                                                                                #|line 736|#
 
-      if  source_component ==  None:⎩577⎭
+        ))                                                                                                              #|line 737|#
 
-        load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn ["source"] )⎩578⎭
+)
+(defun is_tick (&optional  msg)                                                                                         #|line 739|#
 
-      else:⎩579⎭
+    (return-from is_tick ( equal    "tick" (cdr (assoc '(cdr (assoc '(kind )  datum))  msg))))                          #|line 740|#
+                                                                                                                        #|line 741|#
 
-        connector. sender = Sender ( source_component. name, source_component, proto_conn ["source_port"])⎩580⎭
+)
+#|  Routes a single message to all matching destinations, according to |#                                               #|line 743|#
 
-        if  target_component ==  None:⎩581⎭
+#|  the container's connection network. |#                                                                              #|line 744|#
+                                                                                                                        #|line 745|#
 
-          load_error ( str( "internal error: .Across connection target not ok ") +  proto_conn. target )⎩582⎭
+(defun route (&optional  container  from_component  message)                                                            #|line 746|#
 
-        else:⎩583⎭
+    (let (( was_sent  nil))
 
-          connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn ["target_port"], target_component)⎩584⎭
+        #|  for checking that output went somewhere (at least during bootstrap) |#                                      #|line 747|#
 
-          connectors.append ( connector)
+          (let (( fromname  ""))                                                                                        #|line 748|#
 
-      ⎩585⎭
+              (cond
+                ((is_tick    message )                                                                                  #|line 749|#
 
-    elif  proto_conn ["dir"] ==  enumUp:⎩586⎭
+                      (loop for child in (cdr (assoc ' children  container))
+                        do                                                                                              #|line 750|#
 
-      connector. direction =  "up"⎩587⎭
+                            (attempt_tick    container   child   message )                                              #|line 751|#
 
-      source_component =  children_by_id [ proto_conn ["source"] ["id"]]⎩588⎭
 
-      if  source_component ==  None:⎩589⎭
+                        (setf  was_sent  t                                                                              #|line 752|#
 
-        print ( str( "internal error: .Up connection source not ok ") +  proto_conn ["source"] )⎩590⎭
+                  )(t                                                                                                   #|line 753|#
 
-      else:⎩591⎭
+                      (cond
+                        ((not (is_self    from_component   container ))                                                 #|line 754|#
 
-        connector. sender = Sender ( source_component. name, source_component, proto_conn ["source_port"])⎩592⎭
+                              (setf  fromname (cdr (assoc ' name  from_component))                                      #|line 755|#
 
-        connector. receiver = Receiver ( me. name, container. outq, proto_conn ["target_port"], me)⎩593⎭
+                          ))
+                        (let ((undefined (Sender  :name  fromname :component  from_component :port (cdr (assoc ' port  message)) #|line 756|#
+                        )))                                                                                             #|line 757|#
 
-        connectors.append ( connector)
-      ⎩594⎭
+                            (loop for connector in (cdr (assoc ' connections  container))
+                              do                                                                                        #|line 758|#
 
-    elif  proto_conn ["dir"] ==  enumThrough:⎩595⎭
+                                  (cond
+                                    ((sender_eq    from_sender  (cdr (assoc ' sender  connector)) )                     #|line 759|#
 
-      connector. direction =  "through"⎩596⎭
+                                          (deposit    container   connector   message                                   #|line 760|#
+                                          )
+                                            (setf  was_sent  t
+                                      ))
+                              )                                                                                         #|line 761|#
 
-      connector. sender = Sender ( me. name, me, proto_conn ["source_port"])⎩597⎭
+                  ))
+                (cond
+                  ((not  was_sent)                                                                                      #|line 762|#
 
-      connector. receiver = Receiver ( me. name, container. outq, proto_conn ["target_port"], me)⎩598⎭
+                        (print    "\n\n*** Error: ***"                                                                  #|line 763|#
+                        )
+                          (dump_possible_connections    container                                                       #|line 764|#
+                          )
+                            (print_routing_trace    container                                                           #|line 765|#
+                            )
+                              (print    "***"                                                                           #|line 766|#
+                              )
+                                (print    (concatenate 'string (cdr (assoc ' name  container))  (concatenate 'string  ": message '"  (concatenate 'string (cdr (assoc ' port  message))  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor..."))))) #|line 767|#
+                                )
+                                  (print    "***"                                                                       #|line 768|#
+                                  )
+                                    (exit )                                                                             #|line 769|#
 
-      connectors.append ( connector)
-    ⎩599⎭
+                    ))))                                                                                                #|line 770|#
 
-  ⎩600⎭
+)
+(defun dump_possible_connections (&optional  container)                                                                 #|line 772|#
 
-  container. connections =  connectors⎩601⎭
+    (print    (concatenate 'string  "*** possible connections for "  (concatenate 'string (cdr (assoc ' name  container))  ":")) #|line 773|#
+    )
+      (loop for connector in (cdr (assoc ' connections  container))
+        do                                                                                                              #|line 774|#
 
-  return  container⎩602⎭
-  ⎩603⎭
+            (print    (concatenate 'string (cdr (assoc ' direction  connector))  (concatenate 'string  " "  (concatenate 'string (cdr (assoc '(cdr (assoc ' name  sender))  connector))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc '(cdr (assoc ' port  sender))  connector))  (concatenate 'string  " -> "  (concatenate 'string (cdr (assoc '(cdr (assoc ' name  receiver))  connector))  (concatenate 'string  "." (cdr (assoc '(cdr (assoc ' port  receiver))  connector)))))))))) )#|line 775|#
 
-⎩604⎭
+                                                                                                                        #|line 776|#
 
-#|                                                                              #line  The default handler for container components. |#⎩605⎭
+)
+(defun any_child_ready (&optional  container)                                                                           #|line 778|#
 
-def container_handler (container,message):⎩606⎭
+    (loop for child in (cdr (assoc ' children  container))
+      do                                                                                                                #|line 779|#
 
-  route (container= container,from_component= container,message= message)
+          (cond
+            ((child_is_ready    child )                                                                                 #|line 780|#
 
-  #|                                                                            #line  references to 'self' are replaced by the container during instantiation |#⎩607⎭
+                  (return-from any_child_ready  t)
+              ))                                                                                                        #|line 781|#
 
-  while any_child_ready ( container):⎩608⎭
 
-    step_children ( container, message)⎩609⎭
+      (return-from any_child_ready  nil)                                                                                #|line 782|#
+                                                                                                                        #|line 783|#
 
-  ⎩610⎭
+)
+(defun child_is_ready (&optional  eh)                                                                                   #|line 785|#
 
-⎩611⎭
+    (return-from child_is_ready ( or  ( or  ( or  (not (cdr (assoc '(cdr (assoc '(empty )  outq))  eh))) (not (cdr (assoc '(cdr (assoc '(empty )  inq))  eh)))) (not (equal  (cdr (assoc ' state  eh))  "idle")) (any_child_ready    eh )))#|line 786|#
+                                                                                                                        #|line 787|#
 
-#|                                                                              #line  Frees the given container and associated data. |#⎩612⎭
+)
+(defun print_routing_trace (&optional  eh)                                                                              #|line 789|#
 
-def destroy_container (eh):⎩613⎭
+    (print   (routing_trace_all    eh )                                                                                 #|line 790|#
+    )                                                                                                                   #|line 791|#
 
-  pass⎩614⎭
-  ⎩615⎭
+)
+(defun append_routing_descriptor (&optional  container  desc)                                                           #|line 793|#
 
-⎩616⎭
+    (cdr (assoc '(cdr (assoc '(put    desc                                                                              #|line 794|#
+    )  routings))  container))                                                                                          #|line 795|#
 
-def fifo_is_empty (fifo):⎩617⎭
+)
+(defun log_connection (&optional  container  connector  message)                                                        #|line 797|#
 
-  return  fifo.empty ()⎩618⎭
-  ⎩619⎭
+    (cond
+      (( equal    "down" (cdr (assoc ' direction  connector)))                                                          #|line 798|#
 
-⎩620⎭
+            (log_down  :container  container                                                                            #|line 799|#
+            :source_port (cdr (assoc '(cdr (assoc ' port  sender))  connector))                                         #|line 800|#
+            :source_message  nil                                                                                        #|line 801|#
+            :target (cdr (assoc '(cdr (assoc ' component  receiver))  connector))                                       #|line 802|#
+            :target_port (cdr (assoc '(cdr (assoc ' port  receiver))  connector))                                       #|line 803|#
+            :target_message  message )                                                                                  #|line 804|#
 
-#|                                                                              #line  Routing connection for a container component. The `direction` field has |#⎩621⎭
+        )(( equal    "up" (cdr (assoc ' direction  connector)))                                                         #|line 805|#
 
-#|                                                                              #line  no affect on the default message routing system _ it is there for debugging |#⎩622⎭
+            (log_up  :source (cdr (assoc '(cdr (assoc ' component  sender))  connector)) :source_port (cdr (assoc '(cdr (assoc ' port  sender))  connector)) :source_message  nil :container  container :target_port (cdr (assoc '(cdr (assoc ' port  receiver))  connector)) #|line 806|#
+            :target_message  message )                                                                                  #|line 807|#
 
-#|                                                                              #line  purposes, or for reading by other tools. |#⎩623⎭
-⎩624⎭
+        )(( equal    "across" (cdr (assoc ' direction  connector)))                                                     #|line 808|#
 
-class Connector:
-  def __init__ (self,):⎩625⎭
+            (log_across  :container  container                                                                          #|line 809|#
+            :source (cdr (assoc '(cdr (assoc ' component  sender))  connector)) :source_port (cdr (assoc '(cdr (assoc ' port  sender))  connector)) :source_message  nil #|line 810|#
+            :target (cdr (assoc '(cdr (assoc ' component  receiver))  connector)) :target_port (cdr (assoc '(cdr (assoc ' port  receiver))  connector)) :target_message  message )#|line 811|#
 
-    self.direction =  None
-    #|                                                                          #line  down, across, up, through |#⎩626⎭
+        )(( equal    "through" (cdr (assoc ' direction  connector)))                                                    #|line 812|#
 
-    self.sender =  None ⎩627⎭
+            (log_through  :container  container :source_port (cdr (assoc '(cdr (assoc ' port  sender))  connector)) :source_message  nil #|line 813|#
+            :target_port (cdr (assoc '(cdr (assoc ' port  receiver))  connector)) :message  message )                   #|line 814|#
 
-    self.receiver =  None ⎩628⎭
-    ⎩629⎭
+        )(t                                                                                                             #|line 815|#
 
-⎩630⎭
+            (print    (concatenate 'string  "*** FATAL error: in log_connection /"  (concatenate 'string (cdr (assoc ' direction  connector))  (concatenate 'string  "/ /"  (concatenate 'string (cdr (assoc ' port  message))  (concatenate 'string  "/ /"  (concatenate 'string (cdr (assoc '(cdr (assoc '(srepr )  datum))  message))  "/")))))) #|line 816|#
+            )
+              (exit )                                                                                                   #|line 817|#
 
-#|                                                                              #line  `Sender` is used to “pattern match“ which `Receiver` a message should go to, |#⎩631⎭
+        ))                                                                                                              #|line 818|#
 
-#|                                                                              #line  based on component ID (pointer) and port name. |#⎩632⎭
-⎩633⎭
+)
+(defun container_injector (&optional  container  message)                                                               #|line 820|#
 
-class Sender:
-  def __init__ (self,name,component,port):⎩634⎭
+    (log_inject  :receiver  container :port (cdr (assoc ' port  message)) :msg  message                                 #|line 821|#
+    )
+      (container_handler    container   message                                                                         #|line 822|#
+      )                                                                                                                 #|line 823|#
 
-    self.name =  name ⎩635⎭
+)
 
-    self.component =  component
-    #|                                                                          #line  from |#⎩636⎭
 
-    self.port =  port
-    #|                                                                          #line  from's port |#⎩637⎭
-    ⎩638⎭
 
-⎩639⎭
 
-#|                                                                              #line  `Receiver` is a handle to a destination queue, and a `port` name to assign |#⎩640⎭
 
-#|                                                                              #line  to incoming messages to this queue. |#⎩641⎭
-⎩642⎭
+                                                                                                                        #|line 4|#
+                                                                                                                        #|line 5|#
 
-class Receiver:
-  def __init__ (self,name,queue,port,component):⎩643⎭
+(defun Component_Registry (&optional )                                                                                  #|line 6|#
 
-    self.name =  name ⎩644⎭
+  (list
+    (cons 'templates  nil)                                                                                              #|line 7|#
+    )                                                                                                                   #|line 8|#
+)
+                                                                                                                        #|line 9|#
 
-    self.queue =  queue
-    #|                                                                          #line  queue (input | output) of receiver |#⎩645⎭
+(defun Template (&optional  name  template_data  instantiator)                                                          #|line 10|#
 
-    self.port =  port
-    #|                                                                          #line  destination port |#⎩646⎭
+  (list
+    (cons 'name  name)                                                                                                  #|line 11|#
 
-    self.component =  component
-    #|                                                                          #line  to (for bootstrap debug) |#⎩647⎭
-    ⎩648⎭
+    (cons 'template_data  template_data)                                                                                #|line 12|#
 
-⎩649⎭
+    (cons 'instantiator  instantiator)                                                                                  #|line 13|#
+    )                                                                                                                   #|line 14|#
+)
+                                                                                                                        #|line 15|#
 
-#|                                                                              #line  Checks if two senders match, by pointer equality and port name matching. |#⎩650⎭
+(defun read_and_convert_json_file (&optional  filename)                                                                 #|line 16|#
 
-def sender_eq (s1,s2):⎩651⎭
+    ;; read json from a named file and convert it into internal form (a tree of routings)
+    ;; return the routings from the function or print an error message and return nil
+    (handler-bind ((error #'(lambda (condition) nil)))
+      (with-open-file (json-stream "~/projects/rtlarson/eyeballs.json" :direction :input)
+        (json:decode-json json-stream)))
+                                                                                                                        #|line 17|#
+                                                                                                                        #|line 18|#
 
-  same_components = ( s1. component ==  s2. component)⎩652⎭
+)
+(defun json2internal (&optional  container_xml)                                                                         #|line 20|#
 
-  same_ports = ( s1. port ==  s2. port)⎩653⎭
+    (let ((undefined (cdr (assoc '(cdr (assoc '(basename    container_xml                                               #|line 21|#
+    )  path))  os))))
+        (let ((undefined (read_and_convert_json_file    fname                                                           #|line 22|#
+        )))
+            (return-from json2internal  routings)                                                                       #|line 23|#
+          ))                                                                                                            #|line 24|#
 
-  return  same_components and  same_ports⎩654⎭
-  ⎩655⎭
+)
+(defun delete_decls (&optional  d)                                                                                      #|line 26|#
 
-⎩656⎭
+    #| pass |#                                                                                                          #|line 27|#
+                                                                                                                        #|line 28|#
 
-#|                                                                              #line  Delivers the given message to the receiver of this connector. |#⎩657⎭
-⎩658⎭
+)
+(defun make_component_registry (&optional )                                                                             #|line 30|#
 
-def deposit (parent,conn,message):⎩659⎭
+    (return-from make_component_registry (Component_Registry ))                                                         #|line 31|#
+                                                                                                                        #|line 32|#
 
-  new_message = make_message (port= conn. receiver. port,datum= message. datum)⎩660⎭
+)
+(defun register_component (&optional  reg  template  :ok_to_overwrite  nil)                                             #|line 34|#
 
-  log_connection ( parent, conn, new_message)⎩661⎭
+    (let ((undefined (mangle_name   (cdr (assoc ' name  template))                                                      #|line 35|#
+    )))
+        (cond
+          (( and  ( in   name (cdr (assoc ' templates  reg))) (not  ok_to_overwrite))                                   #|line 36|#
 
-  push_message ( parent, conn. receiver. component, conn. receiver. queue, new_message)⎩662⎭
-  ⎩663⎭
+                (load_error    (concatenate 'string  "Component "  (concatenate 'string (cdr (assoc ' name  template))  " already declared")) )#|line 37|#
 
-⎩664⎭
+            ))
+          (setf (cdr (assoc '(nth  name  templates)  reg))  template                                                    #|line 38|#
 
-def force_tick (parent,eh):⎩665⎭
+            (return-from register_component  reg)                                                                       #|line 39|#
+          )                                                                                                             #|line 40|#
 
-  tick_msg = make_message ( ".",new_datum_tick ())⎩666⎭
+)
+(defun register_multiple_components (&optional  reg  templates)                                                         #|line 42|#
 
-  push_message ( parent, eh, eh. inq, tick_msg)⎩667⎭
+    (loop for template in  templates
+      do                                                                                                                #|line 43|#
 
-  return  tick_msg⎩668⎭
-  ⎩669⎭
+          (register_component    reg   template )                                                                       #|line 44|#
 
-⎩670⎭
+                                                                                                                        #|line 45|#
 
-def push_message (parent,receiver,inq,m):⎩671⎭
+)
+(defun get_component_instance (&optional  reg  full_name  owner)                                                        #|line 47|#
 
-  inq.put ( m)⎩672⎭
+    (let ((undefined (mangle_name    full_name                                                                          #|line 48|#
+    )))
+        (cond
+          (( in   template_name (cdr (assoc ' templates  reg)))                                                         #|line 49|#
 
-  parent. visit_ordering.put ( receiver)⎩673⎭
-  ⎩674⎭
+                (let ((undefined (cdr (assoc '(nth  template_name  templates)  reg))))                                  #|line 50|#
 
-⎩675⎭
+                    (cond
+                      (( equal    template  nil)                                                                        #|line 51|#
 
-def is_self (child,container):⎩676⎭
+                            (load_error    (concatenate 'string  "Registry Error: Can;t find component "  (concatenate 'string  template_name  " (does it need to be declared in components_to_include_in_project?")) #|line 52|#
+                            )
+                              (return-from get_component_instance  nil)                                                 #|line 53|#
 
+                        )(t                                                                                             #|line 54|#
 
-  #|                                                                            #line  in an earlier version “self“ was denoted as ϕ |#⎩677⎭
+                            (let ((undefined  ""))                                                                      #|line 55|#
 
-  return  child ==  container⎩678⎭
-  ⎩679⎭
+                                (let ((undefined  template_name))                                                       #|line 56|#
 
-⎩680⎭
+                                    (cond
+                                      ((not (equal   nil  owner)                                                        #|line 57|#
 
-def step_child (child,msg):⎩681⎭
+                                            (let ((undefined (cdr (assoc ' name  owner))))                              #|line 58|#
 
-  before_state =  child. state⎩682⎭
+                                                (let ((undefined  (concatenate 'string  owner_name  (concatenate 'string  "."  template_name))))))#|line 59|#
 
-  child.handler ( child, msg)⎩683⎭
+                                        )(t                                                                             #|line 60|#
 
-  after_state =  child. state⎩684⎭
+                                            (let ((undefined  template_name)))                                          #|line 61|#
 
-  return [ before_state ==  "idle" and  after_state!= "idle",⎩685⎭
-  before_state!= "idle" and  after_state!= "idle",⎩686⎭
-  before_state!= "idle" and  after_state ==  "idle"]⎩687⎭
-  ⎩688⎭
+                                        ))
+                                      (let ((undefined (cdr (assoc '(instantiator    reg   owner   instance_name  (cdr (assoc ' template_data  template)) #|line 62|#
+                                      )  template))))
+                                          (setf (cdr (assoc ' depth  instance)) (calculate_depth    instance            #|line 63|#
+                                          )
+                                            (return-from get_component_instance  instance))))
+                        )))                                                                                             #|line 64|#
 
-⎩689⎭
+            )(t                                                                                                         #|line 65|#
 
-def save_message (eh,msg):⎩690⎭
+                (load_error    (concatenate 'string  "Registry Error: Can't find component "  (concatenate 'string  template_name  " (does it need to be declared in components_to_include_in_project?")) #|line 66|#
+                )
+                  (return-from get_component_instance  nil)                                                             #|line 67|#
 
-  eh. saved_messages.put ( msg)⎩691⎭
-  ⎩692⎭
+            )))                                                                                                         #|line 68|#
 
-⎩693⎭
+)
+(defun calculate_depth (&optional  eh)                                                                                  #|line 69|#
 
-def fetch_saved_message_and_clear (eh):⎩694⎭
+    (cond
+      (( equal   (cdr (assoc ' owner  eh))  nil)                                                                        #|line 70|#
 
-  return  eh. saved_messages.get ()⎩695⎭
-  ⎩696⎭
+            (return-from calculate_depth  0)                                                                            #|line 71|#
 
-⎩697⎭
+        )(t                                                                                                             #|line 72|#
 
-def step_children (container,causingMessage):⎩698⎭
+            (return-from calculate_depth (+  1 (calculate_depth   (cdr (assoc ' owner  eh)) )))                         #|line 73|#
 
-  container. state =  "idle"⎩699⎭
+        ))                                                                                                              #|line 74|#
 
-  for child in list ( container. visit_ordering. queue):⎩700⎭
+)
+(defun dump_registry (&optional  reg)                                                                                   #|line 76|#
 
+    (print )                                                                                                            #|line 77|#
 
-    #|                                                                          #line  child = container represents self, skip it |#⎩701⎭
+      (print    "*** PALETTE ***"                                                                                       #|line 78|#
+      )
+        (loop for c in (cdr (assoc ' templates  reg))
+          do                                                                                                            #|line 79|#
 
-    if (not (is_self ( child, container))):⎩702⎭
+              (print   (cdr (assoc ' name  c)) )                                                                        #|line 80|#
 
-      if (not ( child. inq.empty ())):⎩703⎭
 
-        msg =  child. inq.get ()⎩704⎭
+          (print    "***************"                                                                                   #|line 81|#
+          )
+            (print )                                                                                                    #|line 82|#
+                                                                                                                        #|line 83|#
 
-        [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)⎩705⎭
+)
+(defun print_stats (&optional  reg)                                                                                     #|line 85|#
 
-        if  began_long_run:⎩706⎭
+    (print    (concatenate 'string  "registry statistics: " (cdr (assoc ' stats  reg)))                                 #|line 86|#
+    )                                                                                                                   #|line 87|#
 
-          save_message ( child, msg)⎩707⎭
+)
+(defun mangle_name (&optional  s)                                                                                       #|line 89|#
 
-        elif  continued_long_run:⎩708⎭
 
-          pass⎩709⎭
+    #|  trim name to remove code from Container component names _ deferred until later (or never) |#                    #|line 90|#
 
-        elif  ended_long_run:⎩710⎭
+      (return-from mangle_name  s)                                                                                      #|line 91|#
+                                                                                                                        #|line 92|#
 
-          log_inout (container= container,component= child,in_message=fetch_saved_message_and_clear ( child))⎩711⎭
+)
+(defun generate_shell_components (&optional  reg  container_list)                                                       #|line 95|#
 
-        else:⎩712⎭
 
-          log_inout (container= container,component= child,in_message= msg)⎩713⎭
+    #|  [ |#                                                                                                            #|line 96|#
 
 
-        destroy_message ( msg)⎩714⎭
+      #|      {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |##|line 97|#
 
-      else:⎩715⎭
 
-        if  child. state!= "idle":⎩716⎭
+        #|      {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []} |#                        #|line 98|#
 
-          msg = force_tick ( container, child)⎩717⎭
 
-          child.handler ( child, msg)⎩718⎭
+          #|  ] |#                                                                                                      #|line 99|#
 
-          log_tick (container= container,component= child,in_message= msg)⎩719⎭
+            (cond
+              ((not (equal   nil  container_list)                                                                       #|line 100|#
 
-          destroy_message ( msg)
-        ⎩720⎭
+                    (loop for diagram in  container_list
+                      do                                                                                                #|line 101|#
 
-      ⎩721⎭
 
-      if  child. state ==  "active":⎩722⎭
+                          #|  loop through every component in the diagram and look for names that start with “$“ |#     #|line 102|#
 
 
-        #|                                                                      #line  if child remains active, then the container must remain active and must propagate “ticks“ to child |#⎩723⎭
+                            #|  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |##|line 103|#
 
-        container. state =  "active"⎩724⎭
+                              (loop for child_descriptor in (cdr (assoc 'children  diagram)
+                                do                                                                                      #|line 104|#
 
-      ⎩725⎭
+                                    (cond
+                                      ((first_char_is   (cdr (assoc 'name  child_descriptor)   "$" )                    #|line 105|#
 
-      while (not ( child. outq.empty ())):⎩726⎭
+                                            (let ((undefined (cdr (assoc 'name  child_descriptor)))                     #|line 106|#
 
-        msg =  child. outq.get ()⎩727⎭
+                                                (let ((undefined (cdr (assoc '(strip )  (subseq  name 1)))))            #|line 107|#
 
-        route ( container, child, msg)⎩728⎭
+                                                    (let ((undefined (Template  :name  name :instantiator  shell_out_instantiate :template_data  cmd #|line 108|#
+                                                    )))
+                                                        (register_component    reg   generated_leaf ))))                #|line 109|#
 
-        destroy_message ( msg)
+                                        )((first_char_is   (cdr (assoc 'name  child_descriptor)   "'" )                 #|line 110|#
 
-    ⎩729⎭
+                                            (let ((undefined (cdr (assoc 'name  child_descriptor)))                     #|line 111|#
 
-  ⎩730⎭
-  ⎩731⎭
-  ⎩732⎭
+                                                (let ((undefined  (subseq  name 1)))                                    #|line 112|#
 
-⎩733⎭
+                                                    (let ((undefined (Template  :name  name :instantiator  string_constant_instantiate :template_data  s #|line 113|#
+                                                    )))
+                                                        (register_component    reg   generated_leaf :ok_to_overwrite  t ))))
+                                        ))
 
-def attempt_tick (parent,eh):⎩734⎭
+                                                                                                                        #|line 114|#
 
-  if  eh. state!= "idle":⎩735⎭
+                ))                                                                                                      #|line 115|#
 
-    force_tick ( parent, eh)⎩736⎭
+)
+(defun first_char (&optional  s)                                                                                        #|line 117|#
 
-  ⎩737⎭
+    (return-from first_char  (car  s))                                                                                  #|line 118|#
+                                                                                                                        #|line 119|#
 
-⎩738⎭
+)
+(defun first_char_is (&optional  s  c)                                                                                  #|line 121|#
 
-def is_tick (msg):⎩739⎭
+    (return-from first_char_is ( equal    c (first_char    s                                                            #|line 122|#
+      )))                                                                                                               #|line 123|#
 
-  return  "tick" ==  msg. datum.kind ()⎩740⎭
-  ⎩741⎭
+)
+#|  this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here |##|line 125|#
 
-⎩742⎭
+#|  I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped |##|line 126|#
 
-#|                                                                              #line  Routes a single message to all matching destinations, according to |#⎩743⎭
+(defun run_command (&optional  eh  cmd  s)                                                                              #|line 127|#
 
-#|                                                                              #line  the container's connection network. |#⎩744⎭
-⎩745⎭
+    (let ((undefined (cdr (assoc '(run    cmd :capture_output  t :input  s :encoding  "UTF_8"                           #|line 128|#
+    )  subprocess))))
+        (cond
+          ((not ( equal   (cdr (assoc ' returncode  ret))  0))                                                          #|line 129|#
 
-def route (container,from_component,message):⎩746⎭
+                (cond
+                  ((not (equal  (cdr (assoc ' stderr  ret))  nil)                                                       #|line 130|#
 
-  was_sent =  False
+                        (return-from run_command (values undefined undefined))                                          #|line 131|#
 
-  #|                                                                            #line  for checking that output went somewhere (at least during bootstrap) |#⎩747⎭
+                    )(t                                                                                                 #|line 132|#
 
-  fromname =  ""⎩748⎭
+                        (return-from run_command (values undefined undefined))
+                    ))                                                                                                  #|line 133|#
 
-  if is_tick ( message):⎩749⎭
+            )(t                                                                                                         #|line 134|#
 
-    for child in  container. children:⎩750⎭
+                (return-from run_command (values undefined undefined))                                                  #|line 135|#
 
-      attempt_tick ( container, child, message)⎩751⎭
+            )))                                                                                                         #|line 136|#
 
+)
+#|  Data for an asyncronous component _ effectively, a function with input |#                                           #|line 138|#
 
-    was_sent =  True⎩752⎭
+#|  and output queues of messages. |#                                                                                   #|line 139|#
 
-  else:⎩753⎭
+#|  |#                                                                                                                  #|line 140|#
 
-    if (not (is_self ( from_component, container))):⎩754⎭
+#|  Components can either be a user_supplied function (“lea“), or a “container“ |#                                      #|line 141|#
 
-      fromname =  from_component. name⎩755⎭
+#|  that routes messages to child components according to a list of connections |#                                      #|line 142|#
 
+#|  that serve as a message routing table. |#                                                                           #|line 143|#
 
-    from_sender = Sender (name= fromname,component= from_component,port= message. port)⎩756⎭
-    ⎩757⎭
+#|  |#                                                                                                                  #|line 144|#
 
-    for connector in  container. connections:⎩758⎭
+#|  Child components themselves can be leaves or other containers. |#                                                   #|line 145|#
 
-      if sender_eq ( from_sender, connector. sender):⎩759⎭
+#|  |#                                                                                                                  #|line 146|#
 
-        deposit ( container, connector, message)⎩760⎭
+#|  `handler` invokes the code that is attached to this component. |#                                                   #|line 147|#
 
-        was_sent =  True
+#|  |#                                                                                                                  #|line 148|#
 
-    ⎩761⎭
+#|  `instance_data` is a pointer to instance data that the `leaf_handler` |#                                            #|line 149|#
 
+#|  function may want whenever it is invoked again. |#                                                                  #|line 150|#
 
-  if not ( was_sent):⎩762⎭
+#|  |#                                                                                                                  #|line 151|#
+                                                                                                                        #|line 152|#
+                                                                                                                        #|line 155|#
+                                                                                                                        #|line 156|#
 
-    print ( "\n\n*** Error: ***")⎩763⎭
+#|  Eh_States :: enum { idle, active } |#                                                                               #|line 157|#
 
-    dump_possible_connections ( container)⎩764⎭
+(defun Eh (&optional )                                                                                                  #|line 158|#
 
-    print_routing_trace ( container)⎩765⎭
+  (list
+    (cons 'name  "")                                                                                                    #|line 159|#
 
-    print ( "***")⎩766⎭
+    (cons 'inq (cdr (assoc '(Queue )  queue)))                                                                          #|line 160|#
 
-    print ( str( container. name) +  str( ": message '") +  str( message. port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     )⎩767⎭
+    (cons 'outq (cdr (assoc '(Queue )  queue)))                                                                         #|line 161|#
 
-    print ( "***")⎩768⎭
+    (cons 'owner  nil)                                                                                                  #|line 162|#
 
-    exit ()⎩769⎭
+    (cons 'saved_messages (cdr (assoc '(LifoQueue )  queue)))
+    #|  stack of saved message(s) |#                                                                                    #|line 163|#
 
-  ⎩770⎭
+    (cons 'inject  injector_NIY)                                                                                        #|line 164|#
 
-⎩771⎭
+    (cons 'children  nil)                                                                                               #|line 165|#
 
-def dump_possible_connections (container):⎩772⎭
+    (cons 'visit_ordering (cdr (assoc '(Queue )  queue)))                                                               #|line 166|#
 
-  print ( str( "*** possible connections for ") +  str( container. name) +  ":"  )⎩773⎭
+    (cons 'connections  nil)                                                                                            #|line 167|#
 
-  for connector in  container. connections:⎩774⎭
+    (cons 'routings (cdr (assoc '(Queue )  queue)))                                                                     #|line 168|#
 
-    print ( str( connector. direction) +  str( " ") +  str( connector. sender. name) +  str( ".") +  str( connector. sender. port) +  str( " -> ") +  str( connector. receiver. name) +  str( ".") +  connector. receiver. port        )⎩775⎭
+    (cons 'handler  nil)                                                                                                #|line 169|#
 
-  ⎩776⎭
+    (cons 'instance_data  nil)                                                                                          #|line 170|#
 
-⎩777⎭
+    (cons 'state  "idle")                                                                                               #|line 171|#
 
-def any_child_ready (container):⎩778⎭
+    #|  bootstrap debugging |#                                                                                          #|line 172|#
 
-  for child in  container. children:⎩779⎭
+    (cons 'kind  nil)
+    #|  enum { container, leaf, } |#                                                                                    #|line 173|#
 
-    if child_is_ready ( child):⎩780⎭
+    (cons 'trace  nil)
+    #|  set '⊤' if logging is enabled and if this component should be traced, (⊥ means silence, no tracing for this component) |##|line 174|#
 
-      return  True
-    ⎩781⎭
+    (cons 'depth  0)
+    #|  hierarchical depth of component, 0=top, 1=1st child of top, 2=1st child of 1st child of top, etc. |#            #|line 175|#
+    )                                                                                                                   #|line 176|#
+)
+                                                                                                                        #|line 177|#
 
+#|  Creates a component that acts as a container. It is the same as a `Eh` instance |#                                  #|line 178|#
 
-  return  False⎩782⎭
-  ⎩783⎭
+#|  whose handler function is `container_handler`. |#                                                                   #|line 179|#
 
-⎩784⎭
+(defun make_container (&optional  name  owner)                                                                          #|line 180|#
 
-def child_is_ready (eh):⎩785⎭
+    (let ((undefined (Eh )))                                                                                            #|line 181|#
 
-  return (not ( eh. outq.empty ())) or (not ( eh. inq.empty ())) or ( eh. state!= "idle") or (any_child_ready ( eh))⎩786⎭
-  ⎩787⎭
+        (setf (cdr (assoc ' name  eh))  name                                                                            #|line 182|#
 
-⎩788⎭
+          (setf (cdr (assoc ' owner  eh))  owner                                                                        #|line 183|#
 
-def print_routing_trace (eh):⎩789⎭
+            (setf (cdr (assoc ' handler  eh))  container_handler                                                        #|line 184|#
 
-  print (routing_trace_all ( eh))⎩790⎭
-  ⎩791⎭
+              (setf (cdr (assoc ' inject  eh))  container_injector                                                      #|line 185|#
 
-⎩792⎭
+                (setf (cdr (assoc ' state  eh))  "idle"                                                                 #|line 186|#
 
-def append_routing_descriptor (container,desc):⎩793⎭
+                  (setf (cdr (assoc ' kind  eh))  "container"                                                           #|line 187|#
 
-  container. routings.put ( desc)⎩794⎭
-  ⎩795⎭
+                    (return-from make_container  eh)                                                                    #|line 188|#
+                  )                                                                                                     #|line 189|#
 
-⎩796⎭
+)
+#|  Creates a new leaf component out of a handler function, and a data parameter |#                                     #|line 191|#
 
-def log_connection (container,connector,message):⎩797⎭
+#|  that will be passed back to your handler when called. |#                                                            #|line 192|#
+                                                                                                                        #|line 193|#
 
-  if  "down" ==  connector. direction:⎩798⎭
+(defun make_leaf (&optional  name  owner  instance_data  handler)                                                       #|line 194|#
 
-    log_down (container= container,⎩799⎭
-    source_port= connector. sender. port,⎩800⎭
-    source_message= None,⎩801⎭
-    target= connector. receiver. component,⎩802⎭
-    target_port= connector. receiver. port,⎩803⎭
-    target_message= message)⎩804⎭
+    (let ((undefined (Eh )))                                                                                            #|line 195|#
 
-  elif  "up" ==  connector. direction:⎩805⎭
+        (setf (cdr (assoc ' name  eh))  (concatenate 'string (cdr (assoc ' name  owner))  (concatenate 'string  "."  name))#|line 196|#
 
-    log_up (source= connector. sender. component,source_port= connector. sender. port,source_message= None,container= container,target_port= connector. receiver. port,⎩806⎭
-    target_message= message)⎩807⎭
+          (setf (cdr (assoc ' owner  eh))  owner                                                                        #|line 197|#
 
-  elif  "across" ==  connector. direction:⎩808⎭
+            (setf (cdr (assoc ' handler  eh))  handler                                                                  #|line 198|#
 
-    log_across (container= container,⎩809⎭
-    source= connector. sender. component,source_port= connector. sender. port,source_message= None,⎩810⎭
-    target= connector. receiver. component,target_port= connector. receiver. port,target_message= message)⎩811⎭
+              (setf (cdr (assoc ' instance_data  eh))  instance_data                                                    #|line 199|#
 
-  elif  "through" ==  connector. direction:⎩812⎭
+                (setf (cdr (assoc ' state  eh))  "idle"                                                                 #|line 200|#
 
-    log_through (container= container,source_port= connector. sender. port,source_message= None,⎩813⎭
-    target_port= connector. receiver. port,message= message)⎩814⎭
+                  (setf (cdr (assoc ' kind  eh))  "leaf"                                                                #|line 201|#
 
-  else:⎩815⎭
+                    (return-from make_leaf  eh)                                                                         #|line 202|#
+                  )                                                                                                     #|line 203|#
 
-    print ( str( "*** FATAL error: in log_connection /") +  str( connector. direction) +  str( "/ /") +  str( message. port) +  str( "/ /") +  str( message. datum.srepr ()) +  "/"      )⎩816⎭
+)
+#|  Sends a message on the given `port` with `data`, placing it on the output |#                                        #|line 205|#
 
-    exit ()⎩817⎭
+#|  of the given component. |#                                                                                          #|line 206|#
+                                                                                                                        #|line 207|#
 
-  ⎩818⎭
+(defun send (&optional  eh  port  datum  causingMessage)                                                                #|line 208|#
 
-⎩819⎭
+    (let ((undefined (make_message    port   datum                                                                      #|line 209|#
+    )))
+        (log_send  :sender  eh :sender_port  port :msg  msg :cause_msg  causingMessage                                  #|line 210|#
+        )
+          (put_output    eh   msg                                                                                       #|line 211|#
+          ))                                                                                                            #|line 212|#
 
-def container_injector (container,message):⎩820⎭
+)
+(defun send_string (&optional  eh  port  s  causingMessage)                                                             #|line 214|#
 
-  log_inject (receiver= container,port= message. port,msg= message)⎩821⎭
+    (let ((undefined (new_datum_string    s                                                                             #|line 215|#
+    )))
+        (let ((undefined (make_message  :port  port :datum  datum                                                       #|line 216|#
+        )))
+            (log_send_string  :sender  eh :sender_port  port :msg  msg :cause_msg  causingMessage                       #|line 217|#
+            )
+              (put_output    eh   msg                                                                                   #|line 218|#
+              )))                                                                                                       #|line 219|#
 
-  container_handler ( container, message)⎩822⎭
-  ⎩823⎭
+)
+(defun forward (&optional  eh  port  msg)                                                                               #|line 221|#
 
-⎩824⎭
+    (let ((undefined (make_message    port  (cdr (assoc ' datum  msg))                                                  #|line 222|#
+    )))
+        (log_forward  :sender  eh :sender_port  port :msg  msg :cause_msg  msg                                          #|line 223|#
+        )
+          (put_output    eh   msg                                                                                       #|line 224|#
+          ))                                                                                                            #|line 225|#
 
+)
+(defun inject (&optional  eh  msg)                                                                                      #|line 227|#
 
+    (cdr (assoc '(inject    eh   msg                                                                                    #|line 228|#
+    )  eh))                                                                                                             #|line 229|#
 
+)
+#|  Returns a list of all output messages on a container. |#                                                            #|line 231|#
 
+#|  For testing / debugging purposes. |#                                                                                #|line 232|#
+                                                                                                                        #|line 233|#
 
+(defun output_list (&optional  eh)                                                                                      #|line 234|#
 
+    (return-from output_list (cdr (assoc ' outq  eh)))                                                                  #|line 235|#
+                                                                                                                        #|line 236|#
 
-import os⎩1⎭
+)
+#|  Utility for printing an array of messages. |#                                                                       #|line 238|#
 
-import json⎩2⎭
+(defun print_output_list (&optional  eh)                                                                                #|line 239|#
 
-import sys⎩3⎭
-⎩4⎭
-⎩5⎭
+    (loop for m in (list   (cdr (assoc '(cdr (assoc ' queue  outq))  eh)) )
+      do                                                                                                                #|line 240|#
 
-class Component_Registry:
-  def __init__ (self,):⎩6⎭
+          (print   (format_message    m ) )                                                                             #|line 241|#
 
-    self.templates = {} ⎩7⎭
-    ⎩8⎭
+                                                                                                                        #|line 242|#
 
-⎩9⎭
+)
+(defun spaces (&optional  n)                                                                                            #|line 244|#
 
-class Template:
-  def __init__ (self,name,template_data,instantiator):⎩10⎭
+    (let (( s  ""))                                                                                                     #|line 245|#
 
-    self.name =  name ⎩11⎭
+        (loop for i in (loop for n from 0 below  n by 1 collect n)
+          do                                                                                                            #|line 246|#
 
-    self.template_data =  template_data ⎩12⎭
+              (setf  s (+  s  " ")                                                                                      #|line 247|#
 
-    self.instantiator =  instantiator ⎩13⎭
-    ⎩14⎭
 
-⎩15⎭
+          (return-from spaces  s)                                                                                       #|line 248|#
+        )                                                                                                               #|line 249|#
 
-def read_and_convert_json_file (filename):⎩16⎭
+)
+(defun set_active (&optional  eh)                                                                                       #|line 251|#
 
-  try:
-    fil = open(filename, "r")
-    json_data = fil.read()
-    routings = json.loads(json_data)
-    fil.close ()
-    return routings
-  except FileNotFoundError:
-    print (f"File not found: '{filename}'")
-    return None
-  except json.JSONDecodeError as e:
-    print ("Error decoding JSON in file: '{e}'")
-    return None
-  ⎩17⎭
-  ⎩18⎭
+    (setf (cdr (assoc ' state  eh))  "active"                                                                           #|line 252|#
+                                                                                                                        #|line 253|#
 
-⎩19⎭
+)
+(defun set_idle (&optional  eh)                                                                                         #|line 255|#
 
-def json2internal (container_xml):⎩20⎭
+    (setf (cdr (assoc ' state  eh))  "idle"                                                                             #|line 256|#
+                                                                                                                        #|line 257|#
 
-  fname =  os. path.basename ( container_xml)⎩21⎭
+)
+#|  Utility for printing a specific output message. |#                                                                  #|line 259|#
+                                                                                                                        #|line 260|#
 
-  routings = read_and_convert_json_file ( fname)⎩22⎭
+(defun fetch_first_output (&optional  eh  port)                                                                         #|line 261|#
 
-  return  routings⎩23⎭
-  ⎩24⎭
+    (loop for msg in (list   (cdr (assoc '(cdr (assoc ' queue  outq))  eh)) )
+      do                                                                                                                #|line 262|#
 
-⎩25⎭
+          (cond
+            (( equal   (cdr (assoc ' port  msg))  port)                                                                 #|line 263|#
 
-def delete_decls (d):⎩26⎭
+                  (return-from fetch_first_output (cdr (assoc ' datum  msg)))
+              ))                                                                                                        #|line 264|#
 
-  pass⎩27⎭
-  ⎩28⎭
 
-⎩29⎭
+      (return-from fetch_first_output  nil)                                                                             #|line 265|#
+                                                                                                                        #|line 266|#
 
-def make_component_registry ():⎩30⎭
+)
+(defun print_specific_output (&optional  eh  :port  ""  :stderr  nil)                                                   #|line 268|#
 
-  return Component_Registry ()⎩31⎭
-  ⎩32⎭
+    (let (( datum (fetch_first_output    eh   port                                                                      #|line 269|#
+    )))
+        (let (( outf  nil))                                                                                             #|line 270|#
 
-⎩33⎭
+            (cond
+              ((not (equal   datum  nil)                                                                                #|line 271|#
 
-def register_component (reg,template,ok_to_overwrite= False):⎩34⎭
+                    (cond
+                      ( stderr
 
-  name = mangle_name ( template. name)⎩35⎭
+                            #|  I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in... |##|line 272|#
 
-  if  name in  reg. templates and not  ok_to_overwrite:⎩36⎭
+                              (setf  outf (cdr (assoc ' stderr  sys))                                                   #|line 273|#
 
-    load_error ( str( "Component ") +  str( template. name) +  " already declared"  )⎩37⎭
+                        )(t                                                                                             #|line 274|#
 
+                            (setf  outf (cdr (assoc ' stdout  sys))                                                     #|line 275|#
 
-  reg. templates [ name] =  template⎩38⎭
+                        ))
+                      (print   (cdr (assoc '(srepr )  datum)) :file  outf )                                             #|line 276|#
 
-  return  reg⎩39⎭
-  ⎩40⎭
+                ))))                                                                                                    #|line 277|#
 
-⎩41⎭
+)
+(defun put_output (&optional  eh  msg)                                                                                  #|line 279|#
 
-def register_multiple_components (reg,templates):⎩42⎭
+    (cdr (assoc '(cdr (assoc '(put    msg                                                                               #|line 280|#
+    )  outq))  eh))                                                                                                     #|line 281|#
 
-  for template in  templates:⎩43⎭
+)
+(defun injector_NIY (&optional  eh  msg)                                                                                #|line 283|#
 
-    register_component ( reg, template)⎩44⎭
 
-  ⎩45⎭
+    #|  print (f'Injector not implemented for this component “{eh.name}“ kind ∷ {eh.kind} port ∷ “{msg.port}“') |#      #|line 284|#
 
-⎩46⎭
+      (print    (concatenate 'string  "Injector not implemented for this component "  (concatenate 'string (cdr (assoc ' name  eh))  (concatenate 'string  " kind ∷ "  (concatenate 'string (cdr (assoc ' kind  eh))  (concatenate 'string  ",  port ∷ " (cdr (assoc ' port  msg))))))) #|line 289|#
+      )
+        (exit )                                                                                                         #|line 290|#
+                                                                                                                        #|line 291|#
 
-def get_component_instance (reg,full_name,owner):⎩47⎭
+)                                                                                                                       #|line 297|#
 
-  template_name = mangle_name ( full_name)⎩48⎭
+(defparameter  root_project  "")                                                                                        #|line 298|#
 
-  if  template_name in  reg. templates:⎩49⎭
+(defparameter  root_0D  "")                                                                                             #|line 299|#
+                                                                                                                        #|line 300|#
 
-    template =  reg. templates [ template_name]⎩50⎭
+(defun set_environment (&optional  rproject  r0D)                                                                       #|line 301|#
 
-    if ( template ==  None):⎩51⎭
+    global root_project                                                                                                 #|line 302|#
 
-      load_error ( str( "Registry Error: Can;t find component ") +  str( template_name) +  " (does it need to be declared in components_to_include_in_project?"  )⎩52⎭
+      global root_0D                                                                                                    #|line 303|#
 
-      return  None⎩53⎭
+        (setf  root_project  rproject                                                                                   #|line 304|#
 
-    else:⎩54⎭
+          (setf  root_0D  r0D                                                                                           #|line 305|#
+                                                                                                                        #|line 306|#
 
-      owner_name =  ""⎩55⎭
+)
+(defun probe_instantiate (&optional  reg  owner  name  template_data)                                                   #|line 308|#
 
-      instance_name =  template_name⎩56⎭
+    (let ((undefined (gensymbol    "?"                                                                                  #|line 309|#
+    )))
+        (return-from probe_instantiate (make_leaf  :name  name_with_id :owner  owner :instance_data  nil :handler  probe_handler #|line 310|#
+          )))                                                                                                           #|line 311|#
 
-      if  None!= owner:⎩57⎭
+)
+(defun probeA_instantiate (&optional  reg  owner  name  template_data)                                                  #|line 312|#
 
-        owner_name =  owner. name⎩58⎭
+    (let ((undefined (gensymbol    "?A"                                                                                 #|line 313|#
+    )))
+        (return-from probeA_instantiate (make_leaf  :name  name_with_id :owner  owner :instance_data  nil :handler  probe_handler #|line 314|#
+          )))                                                                                                           #|line 315|#
 
-        instance_name =  str( owner_name) +  str( ".") +  template_name  ⎩59⎭
+)
+(defun probeB_instantiate (&optional  reg  owner  name  template_data)                                                  #|line 317|#
 
-      else:⎩60⎭
+    (let ((undefined (gensymbol    "?B"                                                                                 #|line 318|#
+    )))
+        (return-from probeB_instantiate (make_leaf  :name  name_with_id :owner  owner :instance_data  nil :handler  probe_handler #|line 319|#
+          )))                                                                                                           #|line 320|#
 
-        instance_name =  template_name⎩61⎭
+)
+(defun probeC_instantiate (&optional  reg  owner  name  template_data)                                                  #|line 322|#
 
+    (let ((undefined (gensymbol    "?C"                                                                                 #|line 323|#
+    )))
+        (return-from probeC_instantiate (make_leaf  :name  name_with_id :owner  owner :instance_data  nil :handler  probe_handler #|line 324|#
+          )))                                                                                                           #|line 325|#
 
-      instance =  template.instantiator ( reg, owner, instance_name, template. template_data)⎩62⎭
+)
+(defun probe_handler (&optional  eh  msg)                                                                               #|line 327|#
 
-      instance. depth = calculate_depth ( instance)⎩63⎭
+    (let ((undefined (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))))                                               #|line 328|#
 
-      return  instance
-    ⎩64⎭
+        (print    (concatenate 'string  "... probe "  (concatenate 'string (cdr (assoc ' name  eh))  (concatenate 'string  ": "  s))) :file (cdr (assoc ' stderr  sys)) #|line 329|#
+        ))                                                                                                              #|line 330|#
 
-  else:⎩65⎭
+)
+(defun trash_instantiate (&optional  reg  owner  name  template_data)                                                   #|line 332|#
 
-    load_error ( str( "Registry Error: Can't find component ") +  str( template_name) +  " (does it need to be declared in components_to_include_in_project?"  )⎩66⎭
+    (let ((undefined (gensymbol    "trash"                                                                              #|line 333|#
+    )))
+        (return-from trash_instantiate (make_leaf  :name  name_with_id :owner  owner :instance_data  nil :handler  trash_handler #|line 334|#
+          )))                                                                                                           #|line 335|#
 
-    return  None⎩67⎭
+)
+(defun trash_handler (&optional  eh  msg)                                                                               #|line 337|#
 
-  ⎩68⎭
 
+    #|  to appease dumped_on_floor checker |#                                                                           #|line 338|#
 
-def calculate_depth (eh):⎩69⎭
+      #| pass |#                                                                                                        #|line 339|#
+                                                                                                                        #|line 340|#
 
-  if  eh. owner ==  None:⎩70⎭
+)
+(defun TwoMessages (&optional  first  second)                                                                           #|line 341|#
 
-    return  0⎩71⎭
+  (list
+    (cons 'first  first)                                                                                                #|line 342|#
 
-  else:⎩72⎭
+    (cons 'second  second)                                                                                              #|line 343|#
+    )                                                                                                                   #|line 344|#
+)
+                                                                                                                        #|line 345|#
 
-    return  1+calculate_depth ( eh. owner)⎩73⎭
+#|  Deracer_States :: enum { idle, waitingForFirst, waitingForSecond } |#                                               #|line 346|#
 
-  ⎩74⎭
+(defun Deracer_Instance_Data (&optional  state  buffer)                                                                 #|line 347|#
 
-⎩75⎭
+  (list
+    (cons 'state  state)                                                                                                #|line 348|#
 
-def dump_registry (reg):⎩76⎭
+    (cons 'buffer  buffer)                                                                                              #|line 349|#
+    )                                                                                                                   #|line 350|#
+)
+                                                                                                                        #|line 351|#
 
-  print ()⎩77⎭
+(defun reclaim_Buffers_from_heap (&optional  inst)                                                                      #|line 352|#
 
-  print ( "*** PALETTE ***")⎩78⎭
+    #| pass |#                                                                                                          #|line 353|#
+                                                                                                                        #|line 354|#
 
-  for c in  reg. templates:⎩79⎭
+)
+(defun deracer_instantiate (&optional  reg  owner  name  template_data)                                                 #|line 356|#
 
-    print ( c. name)⎩80⎭
+    (let ((undefined (gensymbol    "deracer"                                                                            #|line 357|#
+    )))
+        (let ((undefined (Deracer_Instance_Data    "idle"  (TwoMessages    nil   nil )                                  #|line 358|#
+        )))
+            (setf (cdr (assoc ' state  inst))  "idle"                                                                   #|line 359|#
 
+              (let ((undefined (make_leaf  :name  name_with_id :owner  owner :instance_data  inst :handler  deracer_handler #|line 360|#
+              )))
+                  (return-from deracer_instantiate  eh)                                                                 #|line 361|#
+                )))                                                                                                     #|line 362|#
 
-  print ( "***************")⎩81⎭
+)
+(defun send_first_then_second (&optional  eh  inst)                                                                     #|line 364|#
 
-  print ()⎩82⎭
-  ⎩83⎭
+    (forward    eh   "1"  (cdr (assoc '(cdr (assoc ' first  buffer))  inst))                                            #|line 365|#
+    )
+      (forward    eh   "2"  (cdr (assoc '(cdr (assoc ' second  buffer))  inst))                                         #|line 366|#
+      )
+        (reclaim_Buffers_from_heap    inst                                                                              #|line 367|#
+        )                                                                                                               #|line 368|#
 
-⎩84⎭
+)
+(defun deracer_handler (&optional  eh  msg)                                                                             #|line 370|#
 
-def print_stats (reg):⎩85⎭
+    (setf  inst (cdr (assoc ' instance_data  eh))                                                                       #|line 371|#
 
-  print ( str( "registry statistics: ") +  reg. stats )⎩86⎭
-  ⎩87⎭
+      (cond
+        (( equal   (cdr (assoc ' state  inst))  "idle")                                                                 #|line 372|#
 
-⎩88⎭
+              (cond
+                (( equal    "1" (cdr (assoc ' port  msg)))                                                              #|line 373|#
 
-def mangle_name (s):⎩89⎭
+                      (setf (cdr (assoc '(cdr (assoc ' first  buffer))  inst))  msg                                     #|line 374|#
 
+                        (setf (cdr (assoc ' state  inst))  "waitingForSecond"                                           #|line 375|#
 
-  #|                                                                            #line  trim name to remove code from Container component names _ deferred until later (or never) |#⎩90⎭
+                  )(( equal    "2" (cdr (assoc ' port  msg)))                                                           #|line 376|#
 
-  return  s⎩91⎭
-  ⎩92⎭
+                      (setf (cdr (assoc '(cdr (assoc ' second  buffer))  inst))  msg                                    #|line 377|#
 
-⎩93⎭
+                        (setf (cdr (assoc ' state  inst))  "waitingForFirst"                                            #|line 378|#
 
-import subprocess⎩94⎭
+                  )(t                                                                                                   #|line 379|#
 
-def generate_shell_components (reg,container_list):⎩95⎭
+                      (runtime_error    (concatenate 'string  "bad msg.port (case A) for deracer " (cdr (assoc ' port  msg))) )
+                  ))                                                                                                    #|line 380|#
 
+          )(( equal   (cdr (assoc ' state  inst))  "waitingForFirst")                                                   #|line 381|#
 
-  #|                                                                            #line  [ |#⎩96⎭
+              (cond
+                (( equal    "1" (cdr (assoc ' port  msg)))                                                              #|line 382|#
 
+                      (setf (cdr (assoc '(cdr (assoc ' first  buffer))  inst))  msg                                     #|line 383|#
 
-  #|                                                                            #line      {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |#⎩97⎭
+                        (send_first_then_second    eh   inst                                                            #|line 384|#
+                        )
+                          (setf (cdr (assoc ' state  inst))  "idle"                                                     #|line 385|#
 
+                  )(t                                                                                                   #|line 386|#
 
-  #|                                                                            #line      {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []} |#⎩98⎭
+                      (runtime_error    (concatenate 'string  "bad msg.port (case B) for deracer " (cdr (assoc ' port  msg))) )
+                  ))                                                                                                    #|line 387|#
 
+          )(( equal   (cdr (assoc ' state  inst))  "waitingForSecond")                                                  #|line 388|#
 
-  #|                                                                            #line  ] |#⎩99⎭
+              (cond
+                (( equal    "2" (cdr (assoc ' port  msg)))                                                              #|line 389|#
 
-  if  None!= container_list:⎩100⎭
+                      (setf (cdr (assoc '(cdr (assoc ' second  buffer))  inst))  msg                                    #|line 390|#
 
-    for diagram in  container_list:⎩101⎭
+                        (send_first_then_second    eh   inst                                                            #|line 391|#
+                        )
+                          (setf (cdr (assoc ' state  inst))  "idle"                                                     #|line 392|#
 
+                  )(t                                                                                                   #|line 393|#
 
-      #|                                                                        #line  loop through every component in the diagram and look for names that start with “$“ |#⎩102⎭
+                      (runtime_error    (concatenate 'string  "bad msg.port (case C) for deracer " (cdr (assoc ' port  msg))) )
+                  ))                                                                                                    #|line 394|#
 
+          )(t                                                                                                           #|line 395|#
 
-      #|                                                                        #line  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |#⎩103⎭
+              (runtime_error    "bad state for deracer {eh.state}" )                                                    #|line 396|#
 
-      for child_descriptor in  diagram ["children"]:⎩104⎭
+          ))                                                                                                            #|line 397|#
 
-        if first_char_is ( child_descriptor ["name"], "$"):⎩105⎭
+)
+(defun low_level_read_text_file_instantiate (&optional  reg  owner  name  template_data)                                #|line 399|#
 
-          name =  child_descriptor ["name"]⎩106⎭
+    (let ((undefined (gensymbol    "Low Level Read Text File"                                                           #|line 400|#
+    )))
+        (return-from low_level_read_text_file_instantiate (make_leaf    name_with_id   owner   nil   low_level_read_text_file_handler #|line 401|#
+          )))                                                                                                           #|line 402|#
 
-          cmd =   name[1:] .strip ()⎩107⎭
+)
+(defun low_level_read_text_file_handler (&optional  eh  msg)                                                            #|line 404|#
 
-          generated_leaf = Template (name= name,instantiator= shell_out_instantiate,template_data= cmd)⎩108⎭
+    (let ((undefined (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))))                                               #|line 405|#
 
-          register_component ( reg, generated_leaf)⎩109⎭
+        ;; read text from a named file fname, send the text out on port "" else send error info on port "✗"
+        ;; given eh and msg if needed
+        (handler-bind ((error #'(lambda (condition) (send_string eh "✗" (format nil "~&~A~&" condition)))))
+          (with-open-file (stream fname)
+            (let ((contents (make-string (file-length stream))))
+              (read-sequence contents stream)
+              (send_string eh "" contents))))
+                                                                                                                        #|line 406|#
+      )                                                                                                                 #|line 407|#
 
-        elif first_char_is ( child_descriptor ["name"], "'"):⎩110⎭
+)
+(defun ensure_string_datum_instantiate (&optional  reg  owner  name  template_data)                                     #|line 409|#
 
-          name =  child_descriptor ["name"]⎩111⎭
+    (let ((undefined (gensymbol    "Ensure String Datum"                                                                #|line 410|#
+    )))
+        (return-from ensure_string_datum_instantiate (make_leaf    name_with_id   owner   nil   ensure_string_datum_handler #|line 411|#
+          )))                                                                                                           #|line 412|#
 
-          s =   name[1:] ⎩112⎭
+)
+(defun ensure_string_datum_handler (&optional  eh  msg)                                                                 #|line 414|#
 
-          generated_leaf = Template (name= name,instantiator= string_constant_instantiate,template_data= s)⎩113⎭
+    (cond
+      (( equal    "string" (cdr (assoc '(cdr (assoc '(kind )  datum))  msg)))                                           #|line 415|#
 
-          register_component ( reg, generated_leaf,ok_to_overwrite= True)
+            (forward    eh   ""   msg )                                                                                 #|line 416|#
 
+        )(t                                                                                                             #|line 417|#
 
-    ⎩114⎭
+            (let ((undefined  (concatenate 'string  "*** ensure: type error (expected a string datum) but got " (cdr (assoc ' datum  msg)))))#|line 418|#
 
-  ⎩115⎭
+                (send_string    eh   "✗"   emsg   msg ))                                                                #|line 419|#
 
-⎩116⎭
+        ))                                                                                                              #|line 420|#
 
-def first_char (s):⎩117⎭
+)
+(defun Syncfilewrite_Data (&optional )                                                                                  #|line 422|#
 
-  return   s[0] ⎩118⎭
-  ⎩119⎭
+  (list
+    (cons 'filename  "")                                                                                                #|line 423|#
+    )                                                                                                                   #|line 424|#
+)
+                                                                                                                        #|line 425|#
 
-⎩120⎭
+#|  temp copy for bootstrap, sends “done“ (error during bootstrap if not wired) |#                                      #|line 426|#
 
-def first_char_is (s,c):⎩121⎭
+(defun syncfilewrite_instantiate (&optional  reg  owner  name  template_data)                                           #|line 427|#
 
-  return  c == first_char ( s)⎩122⎭
-  ⎩123⎭
+    (let ((undefined (gensymbol    "syncfilewrite"                                                                      #|line 428|#
+    )))
+        (let ((undefined (Syncfilewrite_Data )))                                                                        #|line 429|#
 
-⎩124⎭
+            (return-from syncfilewrite_instantiate (make_leaf    name_with_id   owner   inst   syncfilewrite_handler    #|line 430|#
+              ))))                                                                                                      #|line 431|#
 
-#|                                                                              #line  this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here |#⎩125⎭
+)
+(defun syncfilewrite_handler (&optional  eh  msg)                                                                       #|line 433|#
 
-#|                                                                              #line  I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped |#⎩126⎭
+    (let (( inst (cdr (assoc ' instance_data  eh))))                                                                    #|line 434|#
 
-def run_command (eh,cmd,s):⎩127⎭
+        (cond
+          (( equal    "filename" (cdr (assoc ' port  msg)))                                                             #|line 435|#
 
-  ret =  subprocess.run ( cmd,capture_output= True,input= s,encoding= "UTF_8")⎩128⎭
+                (setf (cdr (assoc ' filename  inst)) (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))                 #|line 436|#
 
-  if not ( ret. returncode ==  0):⎩129⎭
+            )(( equal    "input" (cdr (assoc ' port  msg)))                                                             #|line 437|#
 
-    if  ret. stderr!= None:⎩130⎭
+                (let ((undefined (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))))                                   #|line 438|#
 
-      return [ "", ret. stderr]⎩131⎭
+                    (let (( f (open   (cdr (assoc ' filename  inst))   "w"                                              #|line 439|#
+                    )))
+                        (cond
+                          ((not (equal   f  nil)                                                                        #|line 440|#
 
-    else:⎩132⎭
+                                (cdr (assoc '(write   (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))                #|line 441|#
+                                )  f))
+                                  (cdr (assoc '(close )  f))                                                            #|line 442|#
 
-      return [ "", str( "error in shell_out ") +  ret. returncode ]
-    ⎩133⎭
+                                    (send    eh   "done"  (new_datum_bang )   msg )                                     #|line 443|#
 
-  else:⎩134⎭
+                            )(t                                                                                         #|line 444|#
 
-    return [ ret. stdout, None]⎩135⎭
+                                (send_string    eh   "✗"   (concatenate 'string  "open error on file " (cdr (assoc ' filename  inst)))   msg )
+                            ))))                                                                                        #|line 445|#
 
-  ⎩136⎭
+            )))                                                                                                         #|line 446|#
 
-⎩137⎭
+)
+(defun StringConcat_Instance_Data (&optional )                                                                          #|line 448|#
 
-#|                                                                              #line  Data for an asyncronous component _ effectively, a function with input |#⎩138⎭
+  (list
+    (cons 'buffer1  nil)                                                                                                #|line 449|#
 
-#|                                                                              #line  and output queues of messages. |#⎩139⎭
+    (cons 'buffer2  nil)                                                                                                #|line 450|#
 
-#|                                                                              #line  |#⎩140⎭
+    (cons 'count  0)                                                                                                    #|line 451|#
+    )                                                                                                                   #|line 452|#
+)
+                                                                                                                        #|line 453|#
 
-#|                                                                              #line  Components can either be a user_supplied function (“lea“), or a “container“ |#⎩141⎭
+(defun stringconcat_instantiate (&optional  reg  owner  name  template_data)                                            #|line 454|#
 
-#|                                                                              #line  that routes messages to child components according to a list of connections |#⎩142⎭
+    (let ((undefined (gensymbol    "stringconcat"                                                                       #|line 455|#
+    )))
+        (let ((undefined (StringConcat_Instance_Data )))                                                                #|line 456|#
 
-#|                                                                              #line  that serve as a message routing table. |#⎩143⎭
+            (return-from stringconcat_instantiate (make_leaf    name_with_id   owner   instp   stringconcat_handler     #|line 457|#
+              ))))                                                                                                      #|line 458|#
 
-#|                                                                              #line  |#⎩144⎭
+)
+(defun stringconcat_handler (&optional  eh  msg)                                                                        #|line 460|#
 
-#|                                                                              #line  Child components themselves can be leaves or other containers. |#⎩145⎭
+    (let (( inst (cdr (assoc ' instance_data  eh))))                                                                    #|line 461|#
 
-#|                                                                              #line  |#⎩146⎭
+        (cond
+          (( equal    "1" (cdr (assoc ' port  msg)))                                                                    #|line 462|#
 
-#|                                                                              #line  `handler` invokes the code that is attached to this component. |#⎩147⎭
+                (setf (cdr (assoc ' buffer1  inst)) (clone_string   (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))  #|line 463|#
+                )
+                  (setf (cdr (assoc ' count  inst)) (+ (cdr (assoc ' count  inst))  1)                                  #|line 464|#
 
-#|                                                                              #line  |#⎩148⎭
+                    (maybe_stringconcat    eh   inst   msg )                                                            #|line 465|#
 
-#|                                                                              #line  `instance_data` is a pointer to instance data that the `leaf_handler` |#⎩149⎭
+            )(( equal    "2" (cdr (assoc ' port  msg)))                                                                 #|line 466|#
 
-#|                                                                              #line  function may want whenever it is invoked again. |#⎩150⎭
+                (setf (cdr (assoc ' buffer2  inst)) (clone_string   (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))  #|line 467|#
+                )
+                  (setf (cdr (assoc ' count  inst)) (+ (cdr (assoc ' count  inst))  1)                                  #|line 468|#
 
-#|                                                                              #line  |#⎩151⎭
-⎩152⎭
+                    (maybe_stringconcat    eh   inst   msg )                                                            #|line 469|#
 
-import queue⎩153⎭
+            )(t                                                                                                         #|line 470|#
 
-import sys⎩154⎭
-⎩155⎭
-⎩156⎭
+                (runtime_error    (concatenate 'string  "bad msg.port for stringconcat: " (cdr (assoc ' port  msg)))    #|line 471|#
+                )                                                                                                       #|line 472|#
 
-#|                                                                              #line  Eh_States :: enum { idle, active } |#⎩157⎭
+            )))                                                                                                         #|line 473|#
 
-class Eh:
-  def __init__ (self,):⎩158⎭
+)
+(defun maybe_stringconcat (&optional  eh  inst  msg)                                                                    #|line 475|#
 
-    self.name =  "" ⎩159⎭
+    (cond
+      (( and  ( equal    0 (len   (cdr (assoc ' buffer1  inst)) )) ( equal    0 (len   (cdr (assoc ' buffer2  inst)) )))#|line 476|#
 
-    self.inq =  queue.Queue () ⎩160⎭
+            (runtime_error    "something is wrong in stringconcat, both strings are 0 length" )                         #|line 477|#
 
-    self.outq =  queue.Queue () ⎩161⎭
+        ))
+      (cond
+        (( >=  (cdr (assoc ' count  inst))  2)                                                                          #|line 478|#
 
-    self.owner =  None ⎩162⎭
+              (let (( concatenated_string  ""))                                                                         #|line 479|#
 
-    self.saved_messages =  queue.LifoQueue ()
-    #|                                                                          #line  stack of saved message(s) |#⎩163⎭
+                  (cond
+                    (( equal    0 (len   (cdr (assoc ' buffer1  inst)) ))                                               #|line 480|#
 
-    self.inject =  injector_NIY ⎩164⎭
+                          (setf  concatenated_string (cdr (assoc ' buffer2  inst))                                      #|line 481|#
 
-    self.children = [] ⎩165⎭
+                      )(( equal    0 (len   (cdr (assoc ' buffer2  inst)) ))                                            #|line 482|#
 
-    self.visit_ordering =  queue.Queue () ⎩166⎭
+                          (setf  concatenated_string (cdr (assoc ' buffer1  inst))                                      #|line 483|#
 
-    self.connections = [] ⎩167⎭
+                      )(t                                                                                               #|line 484|#
 
-    self.routings =  queue.Queue () ⎩168⎭
+                          (setf  concatenated_string (+ (cdr (assoc ' buffer1  inst)) (cdr (assoc ' buffer2  inst)))    #|line 485|#
 
-    self.handler =  None ⎩169⎭
+                      ))
+                    (send_string    eh   ""   concatenated_string   msg                                                 #|line 486|#
+                    )
+                      (setf (cdr (assoc ' buffer1  inst))  nil                                                          #|line 487|#
 
-    self.instance_data =  None ⎩170⎭
+                        (setf (cdr (assoc ' buffer2  inst))  nil                                                        #|line 488|#
 
-    self.state =  "idle" ⎩171⎭
+                          (setf (cdr (assoc ' count  inst))  0)                                                         #|line 489|#
 
-    #|                                                                          #line  bootstrap debugging |#⎩172⎭
+          ))                                                                                                            #|line 490|#
 
-    self.kind =  None
-    #|                                                                          #line  enum { container, leaf, } |#⎩173⎭
+)
+#|  |#                                                                                                                  #|line 492|#
+                                                                                                                        #|line 493|#
 
-    self.trace =  False
-    #|                                                                          #line  set '⊤' if logging is enabled and if this component should be traced, (⊥ means silence, no tracing for this component) |#⎩174⎭
+#|  this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here |##|line 494|#
 
-    self.depth =  0
-    #|                                                                          #line  hierarchical depth of component, 0=top, 1=1st child of top, 2=1st child of 1st child of top, etc. |#⎩175⎭
-    ⎩176⎭
+(defun shell_out_instantiate (&optional  reg  owner  name  template_data)                                               #|line 495|#
 
-⎩177⎭
+    (let ((undefined (gensymbol    "shell_out"                                                                          #|line 496|#
+    )))
+        (let ((undefined (cdr (assoc '(split    template_data                                                           #|line 497|#
+        )  shlex))))
+            (return-from shell_out_instantiate (make_leaf    name_with_id   owner   cmd   shell_out_handler             #|line 498|#
+              ))))                                                                                                      #|line 499|#
 
-#|                                                                              #line  Creates a component that acts as a container. It is the same as a `Eh` instance |#⎩178⎭
+)
+(defun shell_out_handler (&optional  eh  msg)                                                                           #|line 501|#
 
-#|                                                                              #line  whose handler function is `container_handler`. |#⎩179⎭
+    (let ((undefined (cdr (assoc ' instance_data  eh))))                                                                #|line 502|#
 
-def make_container (name,owner):⎩180⎭
+        (let ((undefined (cdr (assoc '(cdr (assoc '(srepr )  datum))  msg))))                                           #|line 503|#
 
-  eh = Eh ()⎩181⎭
+            (loop while (run_command    eh   cmd   s                                                                    #|line 504|#
+            )
+              doundefined)
+              (cond
+                ((not (equal   stderr  nil)                                                                             #|line 505|#
 
-  eh. name =  name⎩182⎭
+                      (send_string    eh   "✗"   stderr   msg )                                                         #|line 506|#
 
-  eh. owner =  owner⎩183⎭
+                  )(t                                                                                                   #|line 507|#
 
-  eh. handler =  container_handler⎩184⎭
+                      (send_string    eh   ""   stdout   msg )                                                          #|line 508|#
 
-  eh. inject =  container_injector⎩185⎭
+                  ))))                                                                                                  #|line 509|#
 
-  eh. state =  "idle"⎩186⎭
+)
+(defun string_constant_instantiate (&optional  reg  owner  name  template_data)                                         #|line 511|#
 
-  eh. kind =  "container"⎩187⎭
+    global root_project                                                                                                 #|line 512|#
 
-  return  eh⎩188⎭
-  ⎩189⎭
+      global root_0D                                                                                                    #|line 513|#
 
-⎩190⎭
+        (let ((undefined (gensymbol    "strconst"                                                                       #|line 514|#
+        )))
+            (let (( s  template_data))                                                                                  #|line 515|#
 
-#|                                                                              #line  Creates a new leaf component out of a handler function, and a data parameter |#⎩191⎭
+                (cond
+                  ((not (equal   root_project  "")                                                                      #|line 516|#
 
-#|                                                                              #line  that will be passed back to your handler when called. |#⎩192⎭
-⎩193⎭
+                        (setf  s (cdr (assoc '(sub    "_00_"   root_project   s )  re))                                 #|line 517|#
 
-def make_leaf (name,owner,instance_data,handler):⎩194⎭
+                    ))
+                  (cond
+                    ((not (equal   root_0D  "")                                                                         #|line 518|#
 
-  eh = Eh ()⎩195⎭
+                          (setf  s (cdr (assoc '(sub    "_0D_"   root_0D   s )  re))                                    #|line 519|#
 
-  eh. name =  str( owner. name) +  str( ".") +  name  ⎩196⎭
+                      ))
+                    (return-from string_constant_instantiate (make_leaf    name_with_id   owner   s   string_constant_handler #|line 520|#
+                      ))))                                                                                              #|line 521|#
 
-  eh. owner =  owner⎩197⎭
+)
+(defun string_constant_handler (&optional  eh  msg)                                                                     #|line 523|#
 
-  eh. handler =  handler⎩198⎭
+    (let ((undefined (cdr (assoc ' instance_data  eh))))                                                                #|line 524|#
 
-  eh. instance_data =  instance_data⎩199⎭
+        (send_string    eh   ""   s   msg                                                                               #|line 525|#
+        ))                                                                                                              #|line 526|#
 
-  eh. state =  "idle"⎩200⎭
+)
+(defun string_make_persistent (&optional  s)                                                                            #|line 528|#
 
-  eh. kind =  "leaf"⎩201⎭
 
-  return  eh⎩202⎭
-  ⎩203⎭
+    #|  this is here for non_GC languages like Odin, it is a no_op for GC languages like Python |#                      #|line 529|#
 
-⎩204⎭
+      (return-from string_make_persistent  s)                                                                           #|line 530|#
+                                                                                                                        #|line 531|#
 
-#|                                                                              #line  Sends a message on the given `port` with `data`, placing it on the output |#⎩205⎭
+)
+(defun string_clone (&optional  s)                                                                                      #|line 533|#
 
-#|                                                                              #line  of the given component. |#⎩206⎭
-⎩207⎭
+    (return-from string_clone  s)                                                                                       #|line 534|#
+                                                                                                                        #|line 535|#
 
-def send (eh,port,datum,causingMessage):⎩208⎭
+)                                                                                                                       #|line 538|#
 
-  msg = make_message ( port, datum)⎩209⎭
+#|  usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ... |#                                      #|line 539|#
 
-  log_send (sender= eh,sender_port= port,msg= msg,cause_msg= causingMessage)⎩210⎭
+#|  where ${_00_} is the root directory for the project |#                                                              #|line 540|#
 
-  put_output ( eh, msg)⎩211⎭
-  ⎩212⎭
+#|  where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python) |#                                           #|line 541|#
+                                                                                                                        #|line 542|#
+                                                                                                                        #|line 543|#
+                                                                                                                        #|line 544|#
 
-⎩213⎭
+(defun initialize_component_palette (&optional  root_project  root_0D  diagram_source_files)                            #|line 545|#
 
-def send_string (eh,port,s,causingMessage):⎩214⎭
+    (let ((undefined (make_component_registry )))                                                                       #|line 546|#
 
-  datum = new_datum_string ( s)⎩215⎭
+        (loop for diagram_source in  diagram_source_files
+          do                                                                                                            #|line 547|#
 
-  msg = make_message (port= port,datum= datum)⎩216⎭
+              (let ((undefined (json2internal    diagram_source                                                         #|line 548|#
+              )))
+                  (generate_shell_components    reg   all_containers_within_single_file                                 #|line 549|#
+                  )
+                    (loop for container in  all_containers_within_single_file
+                      do                                                                                                #|line 550|#
 
-  log_send_string (sender= eh,sender_port= port,msg= msg,cause_msg= causingMessage)⎩217⎭
+                          (register_component    reg  (Template  :name (cdr (assoc 'name  container) :template_data  container :instantiator  container_instantiator ) )
+                      )                                                                                                 #|line 551|#
 
-  put_output ( eh, msg)⎩218⎭
-  ⎩219⎭
 
-⎩220⎭
+          (initialize_stock_components    reg                                                                           #|line 552|#
+          )
+            (return-from initialize_component_palette  reg)                                                             #|line 553|#
+          )                                                                                                             #|line 554|#
 
-def forward (eh,port,msg):⎩221⎭
+)
+(defun print_error_maybe (&optional  main_container)                                                                    #|line 556|#
 
-  fwdmsg = make_message ( port, msg. datum)⎩222⎭
+    (let ((undefined  "✗"))                                                                                             #|line 557|#
 
-  log_forward (sender= eh,sender_port= port,msg= msg,cause_msg= msg)⎩223⎭
+        (let ((undefined (fetch_first_output    main_container   error_port                                             #|line 558|#
+        )))
+            (cond
+              (( and  (not (equal   err  nil) ( <   0 (len   (trimws   (cdr (assoc '(srepr )  err)) ) )))               #|line 559|#
 
-  put_output ( eh, msg)⎩224⎭
-  ⎩225⎭
+                    (print    "___ !!! ERRORS !!! ___"                                                                  #|line 560|#
+                    )
+                      (print_specific_output    main_container   error_port   nil )                                     #|line 561|#
 
-⎩226⎭
+                ))))                                                                                                    #|line 562|#
 
-def inject (eh,msg):⎩227⎭
+)
+#|  debugging helpers |#                                                                                                #|line 564|#
+                                                                                                                        #|line 565|#
 
-  eh.inject ( eh, msg)⎩228⎭
-  ⎩229⎭
+(defun dump_outputs (&optional  main_container)                                                                         #|line 566|#
 
-⎩230⎭
+    (print )                                                                                                            #|line 567|#
 
-#|                                                                              #line  Returns a list of all output messages on a container. |#⎩231⎭
+      (print    "___ Outputs ___"                                                                                       #|line 568|#
+      )
+        (print_output_list    main_container                                                                            #|line 569|#
+        )                                                                                                               #|line 570|#
 
-#|                                                                              #line  For testing / debugging purposes. |#⎩232⎭
-⎩233⎭
+)
+(defun trace_outputs (&optional  main_container)                                                                        #|line 572|#
 
-def output_list (eh):⎩234⎭
+    (print )                                                                                                            #|line 573|#
 
-  return  eh. outq⎩235⎭
-  ⎩236⎭
+      (print    "___ Message Traces ___"                                                                                #|line 574|#
+      )
+        (print_routing_trace    main_container                                                                          #|line 575|#
+        )                                                                                                               #|line 576|#
 
-⎩237⎭
+)
+(defun dump_hierarchy (&optional  main_container)                                                                       #|line 578|#
 
-#|                                                                              #line  Utility for printing an array of messages. |#⎩238⎭
+    (print )                                                                                                            #|line 579|#
 
-def print_output_list (eh):⎩239⎭
+      (print    (concatenate 'string  "___ Hierarchy ___" (build_hierarchy    main_container ))                         #|line 580|#
+      )                                                                                                                 #|line 581|#
 
-  for m in list ( eh. outq. queue):⎩240⎭
+)
+(defun build_hierarchy (&optional  c)                                                                                   #|line 583|#
 
-    print (format_message ( m))⎩241⎭
+    (let (( s  ""))                                                                                                     #|line 584|#
 
-  ⎩242⎭
+        (loop for child in (cdr (assoc ' children  c))
+          do                                                                                                            #|line 585|#
 
-⎩243⎭
+              (setf  s  (concatenate 'string  s (build_hierarchy    child ))                                            #|line 586|#
 
-def spaces (n):⎩244⎭
 
-  s =  ""⎩245⎭
+          (let (( indent  ""))                                                                                          #|line 587|#
 
-  for i in range( n):⎩246⎭
+              (loop for i in (loop for n from 0 below (cdr (assoc ' depth  c)) by 1 collect n)
+                do                                                                                                      #|line 588|#
 
-    s =  s+ " "⎩247⎭
+                    (setf  indent (+  indent  "  ")                                                                     #|line 589|#
 
 
-  return  s⎩248⎭
-  ⎩249⎭
+                (return-from build_hierarchy  (concatenate 'string  "\n"  (concatenate 'string  indent  (concatenate 'string  "("  (concatenate 'string (cdr (assoc ' name  c))  (concatenate 'string  s  ")"))))))#|line 590|#
+              ))                                                                                                        #|line 591|#
 
-⎩250⎭
+)
+(defun dump_connections (&optional  c)                                                                                  #|line 593|#
 
-def set_active (eh):⎩251⎭
+    (print )                                                                                                            #|line 594|#
 
-  eh. state =  "active"⎩252⎭
-  ⎩253⎭
+      (print    "___ connections ___"                                                                                   #|line 595|#
+      )
+        (dump_possible_connections    c                                                                                 #|line 596|#
+        )
+          (loop for child in (cdr (assoc ' children  c))
+            do                                                                                                          #|line 597|#
 
-⎩254⎭
+                (print )                                                                                                #|line 598|#
 
-def set_idle (eh):⎩255⎭
+                  (dump_possible_connections    child )                                                                 #|line 599|#
 
-  eh. state =  "idle"⎩256⎭
-  ⎩257⎭
+                                                                                                                        #|line 600|#
 
-⎩258⎭
+)
+(defun trimws (&optional  s)                                                                                            #|line 602|#
 
-#|                                                                              #line  Utility for printing a specific output message. |#⎩259⎭
-⎩260⎭
 
-def fetch_first_output (eh,port):⎩261⎭
+    #|  remove whitespace from front and back of string |#                                                              #|line 603|#
 
-  for msg in list ( eh. outq. queue):⎩262⎭
+      (return-from trimws (cdr (assoc '(strip )  s)))                                                                   #|line 604|#
+                                                                                                                        #|line 605|#
 
-    if ( msg. port ==  port):⎩263⎭
+)
+(defun clone_string (&optional  s)                                                                                      #|line 607|#
 
-      return  msg. datum
-    ⎩264⎭
+    (return-from clone_string  s                                                                                        #|line 608|#
+                                                                                                                        #|line 609|#
+        )                                                                                                               #|line 610|#
 
+)
+(defparameter  load_errors  nil)                                                                                        #|line 611|#
 
-  return  None⎩265⎭
-  ⎩266⎭
+(defparameter  runtime_errors  nil)                                                                                     #|line 612|#
+                                                                                                                        #|line 613|#
 
-⎩267⎭
+(defun load_error (&optional  s)                                                                                        #|line 614|#
 
-def print_specific_output (eh,port= "",stderr= False):⎩268⎭
+    global load_errors                                                                                                  #|line 615|#
 
-  datum = fetch_first_output ( eh, port)⎩269⎭
+      (print    s                                                                                                       #|line 616|#
+      )
+        (quit )                                                                                                         #|line 617|#
 
-  outf =  None⎩270⎭
+          (setf  load_errors  t                                                                                         #|line 618|#
+                                                                                                                        #|line 619|#
 
-  if  datum!= None:⎩271⎭
+)
+(defun runtime_error (&optional  s)                                                                                     #|line 621|#
 
-    if  stderr:
+    global runtime_errors                                                                                               #|line 622|#
 
-      #|                                                                        #line  I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in... |#⎩272⎭
+      (print    s                                                                                                       #|line 623|#
+      )
+        (quit )                                                                                                         #|line 624|#
 
-      outf =  sys. stderr⎩273⎭
+          (setf  runtime_errors  t                                                                                      #|line 625|#
+                                                                                                                        #|line 626|#
 
-    else:⎩274⎭
+)
+(defun fakepipename_instantiate (&optional  reg  owner  name  template_data)                                            #|line 628|#
 
-      outf =  sys. stdout⎩275⎭
+    (let ((undefined (gensymbol    "fakepipe"                                                                           #|line 629|#
+    )))
+        (return-from fakepipename_instantiate (make_leaf    instance_name   owner   nil   fakepipename_handler          #|line 630|#
+          )))                                                                                                           #|line 631|#
 
+)
+(defparameter  rand  0)                                                                                                 #|line 633|#
+                                                                                                                        #|line 634|#
 
-    print ( datum.srepr (),file= outf)⎩276⎭
+(defun fakepipename_handler (&optional  eh  msg)                                                                        #|line 635|#
 
-  ⎩277⎭
+    global rand                                                                                                         #|line 636|#
 
-⎩278⎭
+      (setf  rand (+  rand  1)
 
-def put_output (eh,msg):⎩279⎭
+        #|  not very random, but good enough _ 'rand' must be unique within a single run |#                             #|line 637|#
 
-  eh. outq.put ( msg)⎩280⎭
-  ⎩281⎭
+          (send_string    eh   ""   (concatenate 'string  "/tmp/fakepipe"  rand)   msg                                  #|line 638|#
+          )                                                                                                             #|line 639|#
 
-⎩282⎭
+)                                                                                                                       #|line 641|#
 
-def injector_NIY (eh,msg):⎩283⎭
+#|  all of the the built_in leaves are listed here |#                                                                   #|line 642|#
 
+#|  future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project |##|line 643|#
+                                                                                                                        #|line 644|#
+                                                                                                                        #|line 645|#
 
-  #|                                                                            #line  print (f'Injector not implemented for this component “{eh.name}“ kind ∷ {eh.kind} port ∷ “{msg.port}“') |#⎩284⎭
+(defun initialize_stock_components (&optional  reg)                                                                     #|line 646|#
 
-  print ( str( "Injector not implemented for this component ") +  str( eh. name) +  str( " kind ∷ ") +  str( eh. kind) +  str( ",  port ∷ ") +  msg. port     )⎩289⎭
+    (register_component    reg  (Template    "1then2"   nil   deracer_instantiate )                                     #|line 647|#
+    )
+      (register_component    reg  (Template    "?"   nil   probe_instantiate )                                          #|line 648|#
+      )
+        (register_component    reg  (Template    "?A"   nil   probeA_instantiate )                                      #|line 649|#
+        )
+          (register_component    reg  (Template    "?B"   nil   probeB_instantiate )                                    #|line 650|#
+          )
+            (register_component    reg  (Template    "?C"   nil   probeC_instantiate )                                  #|line 651|#
+            )
+              (register_component    reg  (Template    "trash"   nil   trash_instantiate )                              #|line 652|#
+              )                                                                                                         #|line 653|#
 
-  exit ()⎩290⎭
-  ⎩291⎭
+                (register_component    reg  (Template    "Low Level Read Text File"   nil   low_level_read_text_file_instantiate ) #|line 654|#
+                )
+                  (register_component    reg  (Template    "Ensure String Datum"   nil   ensure_string_datum_instantiate ) #|line 655|#
+                  )                                                                                                     #|line 656|#
 
-⎩292⎭
+                    (register_component    reg  (Template    "syncfilewrite"   nil   syncfilewrite_instantiate )        #|line 657|#
+                    )
+                      (register_component    reg  (Template    "stringconcat"   nil   stringconcat_instantiate )        #|line 658|#
+                      )
 
-import sys⎩293⎭
+                        #|  for fakepipe |#                                                                             #|line 659|#
 
-import re⎩294⎭
+                          (register_component    reg  (Template    "fakepipename"   nil   fakepipename_instantiate )    #|line 660|#
+                          )                                                                                             #|line 661|#
 
-import subprocess⎩295⎭
+)                                                                                                                       #|line 663|#
 
-import shlex⎩296⎭
-⎩297⎭
+(defun initialize (&optional )                                                                                          #|line 664|#
 
-root_project =  ""⎩298⎭
+    (let ((undefined  (nth  1 argv)))                                                                                   #|line 665|#
 
-root_0D =  ""⎩299⎭
-⎩300⎭
+        (let ((undefined  (nth  2 argv)))                                                                               #|line 666|#
 
-def set_environment (rproject,r0D):⎩301⎭
+            (let ((undefined  (nth  3 argv)))                                                                           #|line 667|#
 
-  global root_project⎩302⎭
+                (let ((undefined  (nth  4 argv)))                                                                       #|line 668|#
 
-  global root_0D⎩303⎭
+                    (let ((undefined  (nthcdr  5 (argv))))                                                              #|line 669|#
 
-  root_project =  rproject⎩304⎭
+                        (let ((undefined (initialize_component_palette    root_project   root_0D   diagram_names        #|line 670|#
+                        )))
+                            (return-from initialize (values undefined undefined))                                       #|line 671|#
+                          ))))))                                                                                        #|line 672|#
 
-  root_0D =  r0D⎩305⎭
-  ⎩306⎭
+)
+(defun start (&optional  palette  env  :show_hierarchy  False  :show_connections  False  :show_traces  False  :show_all_outputs  False)#|line 674|#
 
-⎩307⎭
+    (let ((undefined (nth  0  env)))                                                                                    #|line 675|#
 
-def probe_instantiate (reg,owner,name,template_data):⎩308⎭
+        (let ((undefined (nth  1  env)))                                                                                #|line 676|#
 
-  name_with_id = gensymbol ( "?")⎩309⎭
+            (let ((undefined (nth  2  env)))                                                                            #|line 677|#
 
-  return make_leaf (name= name_with_id,owner= owner,instance_data= None,handler= probe_handler)⎩310⎭
-  ⎩311⎭
+                (let ((undefined (nth  3  env)))                                                                        #|line 678|#
 
+                    (let ((undefined (nth  4  env)))                                                                    #|line 679|#
 
-def probeA_instantiate (reg,owner,name,template_data):⎩312⎭
+                        (set_environment    root_of_project   root_of_0D                                                #|line 680|#
+                        )
 
-  name_with_id = gensymbol ( "?A")⎩313⎭
+                          #|  get entrypoint container |#                                                               #|line 681|#
 
-  return make_leaf (name= name_with_id,owner= owner,instance_data= None,handler= probe_handler)⎩314⎭
-  ⎩315⎭
+                            (setf  main_container (get_component_instance    palette   main_container_name :owner  nil  #|line 682|#
+                            )
+                              (cond
+                                (( equal    nil  main_container)                                                        #|line 683|#
 
-⎩316⎭
+                                      (load_error    (concatenate 'string  "Couldn't find container with page name "  (concatenate 'string  main_container_name  (concatenate 'string  " in files "  (concatenate 'string  diagram_source_files  "(check tab names, or disable compression?)")))) #|line 687|#
+                                      )                                                                                 #|line 688|#
 
-def probeB_instantiate (reg,owner,name,template_data):⎩317⎭
+                                  ))
+                                (cond
+                                  ( show_hierarchy                                                                      #|line 689|#
 
-  name_with_id = gensymbol ( "?B")⎩318⎭
+                                        (dump_hierarchy    main_container                                               #|line 690|#
+                                        )                                                                               #|line 691|#
 
-  return make_leaf (name= name_with_id,owner= owner,instance_data= None,handler= probe_handler)⎩319⎭
-  ⎩320⎭
+                                    ))
+                                  (cond
+                                    ( show_connections                                                                  #|line 692|#
 
-⎩321⎭
+                                          (dump_connections    main_container                                           #|line 693|#
+                                          )                                                                             #|line 694|#
 
-def probeC_instantiate (reg,owner,name,template_data):⎩322⎭
+                                      ))
+                                    (cond
+                                      ((not  load_errors)                                                               #|line 695|#
 
-  name_with_id = gensymbol ( "?C")⎩323⎭
+                                            (setf  arg (new_datum_string    arg                                         #|line 696|#
+                                            )
+                                              (setf  msg (make_message    ""   arg                                      #|line 697|#
+                                              )
+                                                (inject    main_container   msg                                         #|line 698|#
+                                                )
+                                                  (cond
+                                                    ( show_all_outputs                                                  #|line 699|#
 
-  return make_leaf (name= name_with_id,owner= owner,instance_data= None,handler= probe_handler)⎩324⎭
-  ⎩325⎭
+                                                          (dump_outputs    main_container                               #|line 700|#
+                                                          )
+                                                      )(t                                                               #|line 701|#
 
-⎩326⎭
+                                                          (print_error_maybe    main_container                          #|line 702|#
+                                                          )
+                                                            (print_specific_output    main_container :port  "" :stderr  False #|line 703|#
+                                                            )
+                                                              (cond
+                                                                ( show_traces                                           #|line 704|#
 
-def probe_handler (eh,msg):⎩327⎭
+                                                                      (print    "--- routing traces ---"                #|line 705|#
+                                                                      )
+                                                                        (print   (routing_trace_all    main_container ) #|line 706|#
+                                                                        )                                               #|line 707|#
 
-  s =  msg. datum.srepr ()⎩328⎭
+                                                                  ))                                                    #|line 708|#
 
-  print ( str( "... probe ") +  str( eh. name) +  str( ": ") +  s   ,file= sys. stderr)⎩329⎭
-  ⎩330⎭
+                                                      ))
+                                                    (cond
+                                                      ( show_all_outputs                                                #|line 709|#
 
-⎩331⎭
+                                                            (print    "--- done ---"                                    #|line 710|#
+                                                            )                                                           #|line 711|#
 
-def trash_instantiate (reg,owner,name,template_data):⎩332⎭
+                                                        ))                                                              #|line 712|#
 
-  name_with_id = gensymbol ( "trash")⎩333⎭
+                                        )))))))                                                                         #|line 713|#
 
-  return make_leaf (name= name_with_id,owner= owner,instance_data= None,handler= trash_handler)⎩334⎭
-  ⎩335⎭
+)                                                                                                                       #|line 715|#
+                                                                                                                        #|line 716|#
 
-⎩336⎭
+#|  utility functions  |#                                                                                               #|line 717|#
 
-def trash_handler (eh,msg):⎩337⎭
+(defun send_int (&optional  eh  port  i  causing_message)                                                               #|line 718|#
 
+    (let ((undefined (new_datum_int    i                                                                                #|line 719|#
+    )))
+        (send    eh   port   datum   causing_message                                                                    #|line 720|#
+        ))                                                                                                              #|line 721|#
 
-  #|                                                                            #line  to appease dumped_on_floor checker |#⎩338⎭
+)
+(defun send_bang (&optional  eh  port  causing_message)                                                                 #|line 723|#
 
-  pass⎩339⎭
-  ⎩340⎭
+    (let ((undefined (new_datum_bang )))                                                                                #|line 724|#
 
+        (send    eh   port   datum   causing_message                                                                    #|line 725|#
+        ))                                                                                                              #|line 726|#
 
-class TwoMessages:
-  def __init__ (self,first,second):⎩341⎭
-
-    self.first =  first ⎩342⎭
-
-    self.second =  second ⎩343⎭
-    ⎩344⎭
-
-⎩345⎭
-
-#|                                                                              #line  Deracer_States :: enum { idle, waitingForFirst, waitingForSecond } |#⎩346⎭
-
-class Deracer_Instance_Data:
-  def __init__ (self,state,buffer):⎩347⎭
-
-    self.state =  state ⎩348⎭
-
-    self.buffer =  buffer ⎩349⎭
-    ⎩350⎭
-
-⎩351⎭
-
-def reclaim_Buffers_from_heap (inst):⎩352⎭
-
-  pass⎩353⎭
-  ⎩354⎭
-
-⎩355⎭
-
-def deracer_instantiate (reg,owner,name,template_data):⎩356⎭
-
-  name_with_id = gensymbol ( "deracer")⎩357⎭
-
-  inst = Deracer_Instance_Data ( "idle",TwoMessages ( None, None))⎩358⎭
-
-  inst. state =  "idle"⎩359⎭
-
-  eh = make_leaf (name= name_with_id,owner= owner,instance_data= inst,handler= deracer_handler)⎩360⎭
-
-  return  eh⎩361⎭
-  ⎩362⎭
-
-⎩363⎭
-
-def send_first_then_second (eh,inst):⎩364⎭
-
-  forward ( eh, "1", inst. buffer. first)⎩365⎭
-
-  forward ( eh, "2", inst. buffer. second)⎩366⎭
-
-  reclaim_Buffers_from_heap ( inst)⎩367⎭
-  ⎩368⎭
-
-⎩369⎭
-
-def deracer_handler (eh,msg):⎩370⎭
-
-  inst =  eh. instance_data⎩371⎭
-
-  if  inst. state ==  "idle":⎩372⎭
-
-    if  "1" ==  msg. port:⎩373⎭
-
-      inst. buffer. first =  msg⎩374⎭
-
-      inst. state =  "waitingForSecond"⎩375⎭
-
-    elif  "2" ==  msg. port:⎩376⎭
-
-      inst. buffer. second =  msg⎩377⎭
-
-      inst. state =  "waitingForFirst"⎩378⎭
-
-    else:⎩379⎭
-
-      runtime_error ( str( "bad msg.port (case A) for deracer ") +  msg. port )
-    ⎩380⎭
-
-  elif  inst. state ==  "waitingForFirst":⎩381⎭
-
-    if  "1" ==  msg. port:⎩382⎭
-
-      inst. buffer. first =  msg⎩383⎭
-
-      send_first_then_second ( eh, inst)⎩384⎭
-
-      inst. state =  "idle"⎩385⎭
-
-    else:⎩386⎭
-
-      runtime_error ( str( "bad msg.port (case B) for deracer ") +  msg. port )
-    ⎩387⎭
-
-  elif  inst. state ==  "waitingForSecond":⎩388⎭
-
-    if  "2" ==  msg. port:⎩389⎭
-
-      inst. buffer. second =  msg⎩390⎭
-
-      send_first_then_second ( eh, inst)⎩391⎭
-
-      inst. state =  "idle"⎩392⎭
-
-    else:⎩393⎭
-
-      runtime_error ( str( "bad msg.port (case C) for deracer ") +  msg. port )
-    ⎩394⎭
-
-  else:⎩395⎭
-
-    runtime_error ( "bad state for deracer {eh.state}")⎩396⎭
-
-  ⎩397⎭
-
-⎩398⎭
-
-def low_level_read_text_file_instantiate (reg,owner,name,template_data):⎩399⎭
-
-  name_with_id = gensymbol ( "Low Level Read Text File")⎩400⎭
-
-  return make_leaf ( name_with_id, owner, None, low_level_read_text_file_handler)⎩401⎭
-  ⎩402⎭
-
-⎩403⎭
-
-def low_level_read_text_file_handler (eh,msg):⎩404⎭
-
-  fname =  msg. datum.srepr ()⎩405⎭
-
-  try:
-    f = open (fname)
-  except Exception as e:
-    f = None
-  if f != None:
-    data = f.read ()
-    if data!= None:
-      send_string (eh, "", data, msg)
-    else:
-      send_string (eh, "✗", f"read error on file '{fname}'", msg)
-    f.close ()
-  else:
-    send_string (eh, "✗", f"open error on file '{fname}'", msg)
-  ⎩406⎭
-  ⎩407⎭
-
-⎩408⎭
-
-def ensure_string_datum_instantiate (reg,owner,name,template_data):⎩409⎭
-
-  name_with_id = gensymbol ( "Ensure String Datum")⎩410⎭
-
-  return make_leaf ( name_with_id, owner, None, ensure_string_datum_handler)⎩411⎭
-  ⎩412⎭
-
-⎩413⎭
-
-def ensure_string_datum_handler (eh,msg):⎩414⎭
-
-  if  "string" ==  msg. datum.kind ():⎩415⎭
-
-    forward ( eh, "", msg)⎩416⎭
-
-  else:⎩417⎭
-
-    emsg =  str( "*** ensure: type error (expected a string datum) but got ") +  msg. datum ⎩418⎭
-
-    send_string ( eh, "✗", emsg, msg)⎩419⎭
-
-  ⎩420⎭
-
-⎩421⎭
-
-class Syncfilewrite_Data:
-  def __init__ (self,):⎩422⎭
-
-    self.filename =  "" ⎩423⎭
-    ⎩424⎭
-
-⎩425⎭
-
-#|                                                                              #line  temp copy for bootstrap, sends “done“ (error during bootstrap if not wired) |#⎩426⎭
-
-def syncfilewrite_instantiate (reg,owner,name,template_data):⎩427⎭
-
-  name_with_id = gensymbol ( "syncfilewrite")⎩428⎭
-
-  inst = Syncfilewrite_Data ()⎩429⎭
-
-  return make_leaf ( name_with_id, owner, inst, syncfilewrite_handler)⎩430⎭
-  ⎩431⎭
-
-⎩432⎭
-
-def syncfilewrite_handler (eh,msg):⎩433⎭
-
-  inst =  eh. instance_data⎩434⎭
-
-  if  "filename" ==  msg. port:⎩435⎭
-
-    inst. filename =  msg. datum.srepr ()⎩436⎭
-
-  elif  "input" ==  msg. port:⎩437⎭
-
-    contents =  msg. datum.srepr ()⎩438⎭
-
-    f = open ( inst. filename, "w")⎩439⎭
-
-    if  f!= None:⎩440⎭
-
-      f.write ( msg. datum.srepr ())⎩441⎭
-
-      f.close ()⎩442⎭
-
-      send ( eh, "done",new_datum_bang (), msg)⎩443⎭
-
-    else:⎩444⎭
-
-      send_string ( eh, "✗", str( "open error on file ") +  inst. filename , msg)
-    ⎩445⎭
-
-  ⎩446⎭
-
-⎩447⎭
-
-class StringConcat_Instance_Data:
-  def __init__ (self,):⎩448⎭
-
-    self.buffer1 =  None ⎩449⎭
-
-    self.buffer2 =  None ⎩450⎭
-
-    self.count =  0 ⎩451⎭
-    ⎩452⎭
-
-⎩453⎭
-
-def stringconcat_instantiate (reg,owner,name,template_data):⎩454⎭
-
-  name_with_id = gensymbol ( "stringconcat")⎩455⎭
-
-  instp = StringConcat_Instance_Data ()⎩456⎭
-
-  return make_leaf ( name_with_id, owner, instp, stringconcat_handler)⎩457⎭
-  ⎩458⎭
-
-⎩459⎭
-
-def stringconcat_handler (eh,msg):⎩460⎭
-
-  inst =  eh. instance_data⎩461⎭
-
-  if  "1" ==  msg. port:⎩462⎭
-
-    inst. buffer1 = clone_string ( msg. datum.srepr ())⎩463⎭
-
-    inst. count =  inst. count+ 1⎩464⎭
-
-    maybe_stringconcat ( eh, inst, msg)⎩465⎭
-
-  elif  "2" ==  msg. port:⎩466⎭
-
-    inst. buffer2 = clone_string ( msg. datum.srepr ())⎩467⎭
-
-    inst. count =  inst. count+ 1⎩468⎭
-
-    maybe_stringconcat ( eh, inst, msg)⎩469⎭
-
-  else:⎩470⎭
-
-    runtime_error ( str( "bad msg.port for stringconcat: ") +  msg. port )⎩471⎭
-    ⎩472⎭
-
-  ⎩473⎭
-
-⎩474⎭
-
-def maybe_stringconcat (eh,inst,msg):⎩475⎭
-
-  if ( 0 == len ( inst. buffer1)) and ( 0 == len ( inst. buffer2)):⎩476⎭
-
-    runtime_error ( "something is wrong in stringconcat, both strings are 0 length")⎩477⎭
-
-
-  if  inst. count >=  2:⎩478⎭
-
-    concatenated_string =  ""⎩479⎭
-
-    if  0 == len ( inst. buffer1):⎩480⎭
-
-      concatenated_string =  inst. buffer2⎩481⎭
-
-    elif  0 == len ( inst. buffer2):⎩482⎭
-
-      concatenated_string =  inst. buffer1⎩483⎭
-
-    else:⎩484⎭
-
-      concatenated_string =  inst. buffer1+ inst. buffer2⎩485⎭
-
-
-    send_string ( eh, "", concatenated_string, msg)⎩486⎭
-
-    inst. buffer1 =  None⎩487⎭
-
-    inst. buffer2 =  None⎩488⎭
-
-    inst. count =  0⎩489⎭
-
-  ⎩490⎭
-
-⎩491⎭
-
-#|                                                                              #line  |#⎩492⎭
-⎩493⎭
-
-#|                                                                              #line  this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here |#⎩494⎭
-
-def shell_out_instantiate (reg,owner,name,template_data):⎩495⎭
-
-  name_with_id = gensymbol ( "shell_out")⎩496⎭
-
-  cmd =  shlex.split ( template_data)⎩497⎭
-
-  return make_leaf ( name_with_id, owner, cmd, shell_out_handler)⎩498⎭
-  ⎩499⎭
-
-⎩500⎭
-
-def shell_out_handler (eh,msg):⎩501⎭
-
-  cmd =  eh. instance_data⎩502⎭
-
-  s =  msg. datum.srepr ()⎩503⎭
-
-  [ stdout, stderr] = run_command ( eh, cmd, s)⎩504⎭
-
-  if  stderr!= None:⎩505⎭
-
-    send_string ( eh, "✗", stderr, msg)⎩506⎭
-
-  else:⎩507⎭
-
-    send_string ( eh, "", stdout, msg)⎩508⎭
-
-  ⎩509⎭
-
-⎩510⎭
-
-def string_constant_instantiate (reg,owner,name,template_data):⎩511⎭
-
-  global root_project⎩512⎭
-
-  global root_0D⎩513⎭
-
-  name_with_id = gensymbol ( "strconst")⎩514⎭
-
-  s =  template_data⎩515⎭
-
-  if  root_project!= "":⎩516⎭
-
-    s =  re.sub ( "_00_", root_project, s)⎩517⎭
-
-
-  if  root_0D!= "":⎩518⎭
-
-    s =  re.sub ( "_0D_", root_0D, s)⎩519⎭
-
-
-  return make_leaf ( name_with_id, owner, s, string_constant_handler)⎩520⎭
-  ⎩521⎭
-
-⎩522⎭
-
-def string_constant_handler (eh,msg):⎩523⎭
-
-  s =  eh. instance_data⎩524⎭
-
-  send_string ( eh, "", s, msg)⎩525⎭
-  ⎩526⎭
-
-⎩527⎭
-
-def string_make_persistent (s):⎩528⎭
-
-
-  #|                                                                            #line  this is here for non_GC languages like Odin, it is a no_op for GC languages like Python |#⎩529⎭
-
-  return  s⎩530⎭
-  ⎩531⎭
-
-⎩532⎭
-
-def string_clone (s):⎩533⎭
-
-  return  s⎩534⎭
-  ⎩535⎭
-
-⎩536⎭
-
-import sys⎩537⎭
-⎩538⎭
-
-#|                                                                              #line  usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ... |#⎩539⎭
-
-#|                                                                              #line  where ${_00_} is the root directory for the project |#⎩540⎭
-
-#|                                                                              #line  where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python) |#⎩541⎭
-⎩542⎭
-⎩543⎭
-⎩544⎭
-
-def initialize_component_palette (root_project,root_0D,diagram_source_files):⎩545⎭
-
-  reg = make_component_registry ()⎩546⎭
-
-  for diagram_source in  diagram_source_files:⎩547⎭
-
-    all_containers_within_single_file = json2internal ( diagram_source)⎩548⎭
-
-    generate_shell_components ( reg, all_containers_within_single_file)⎩549⎭
-
-    for container in  all_containers_within_single_file:⎩550⎭
-
-      register_component ( reg,Template (name= container ["name"],template_data= container,instantiator= container_instantiator))
-    ⎩551⎭
-
-
-  initialize_stock_components ( reg)⎩552⎭
-
-  return  reg⎩553⎭
-  ⎩554⎭
-
-⎩555⎭
-
-def print_error_maybe (main_container):⎩556⎭
-
-  error_port =  "✗"⎩557⎭
-
-  err = fetch_first_output ( main_container, error_port)⎩558⎭
-
-  if ( err!= None) and ( 0 < len (trimws ( err.srepr ()))):⎩559⎭
-
-    print ( "___ !!! ERRORS !!! ___")⎩560⎭
-
-    print_specific_output ( main_container, error_port, False)⎩561⎭
-
-  ⎩562⎭
-
-⎩563⎭
-
-#|                                                                              #line  debugging helpers |#⎩564⎭
-⎩565⎭
-
-def dump_outputs (main_container):⎩566⎭
-
-  print ()⎩567⎭
-
-  print ( "___ Outputs ___")⎩568⎭
-
-  print_output_list ( main_container)⎩569⎭
-  ⎩570⎭
-
-⎩571⎭
-
-def trace_outputs (main_container):⎩572⎭
-
-  print ()⎩573⎭
-
-  print ( "___ Message Traces ___")⎩574⎭
-
-  print_routing_trace ( main_container)⎩575⎭
-  ⎩576⎭
-
-⎩577⎭
-
-def dump_hierarchy (main_container):⎩578⎭
-
-  print ()⎩579⎭
-
-  print ( str( "___ Hierarchy ___") + (build_hierarchy ( main_container)) )⎩580⎭
-  ⎩581⎭
-
-⎩582⎭
-
-def build_hierarchy (c):⎩583⎭
-
-  s =  ""⎩584⎭
-
-  for child in  c. children:⎩585⎭
-
-    s =  str( s) + build_hierarchy ( child) ⎩586⎭
-
-
-  indent =  ""⎩587⎭
-
-  for i in range( c. depth):⎩588⎭
-
-    indent =  indent+ "  "⎩589⎭
-
-
-  return  str( "\n") +  str( indent) +  str( "(") +  str( c. name) +  str( s) +  ")"     ⎩590⎭
-  ⎩591⎭
-
-⎩592⎭
-
-def dump_connections (c):⎩593⎭
-
-  print ()⎩594⎭
-
-  print ( "___ connections ___")⎩595⎭
-
-  dump_possible_connections ( c)⎩596⎭
-
-  for child in  c. children:⎩597⎭
-
-    print ()⎩598⎭
-
-    dump_possible_connections ( child)⎩599⎭
-
-  ⎩600⎭
-
-⎩601⎭
-
-def trimws (s):⎩602⎭
-
-
-  #|                                                                            #line  remove whitespace from front and back of string |#⎩603⎭
-
-  return  s.strip ()⎩604⎭
-  ⎩605⎭
-
-⎩606⎭
-
-def clone_string (s):⎩607⎭
-
-  return  s⎩608⎭
-  ⎩609⎭
-  ⎩610⎭
-
-
-load_errors =  False⎩611⎭
-
-runtime_errors =  False⎩612⎭
-⎩613⎭
-
-def load_error (s):⎩614⎭
-
-  global load_errors⎩615⎭
-
-  print ( s)⎩616⎭
-
-  quit ()⎩617⎭
-
-  load_errors =  True⎩618⎭
-  ⎩619⎭
-
-⎩620⎭
-
-def runtime_error (s):⎩621⎭
-
-  global runtime_errors⎩622⎭
-
-  print ( s)⎩623⎭
-
-  quit ()⎩624⎭
-
-  runtime_errors =  True⎩625⎭
-  ⎩626⎭
-
-⎩627⎭
-
-def fakepipename_instantiate (reg,owner,name,template_data):⎩628⎭
-
-  instance_name = gensymbol ( "fakepipe")⎩629⎭
-
-  return make_leaf ( instance_name, owner, None, fakepipename_handler)⎩630⎭
-  ⎩631⎭
-
-⎩632⎭
-
-rand =  0⎩633⎭
-⎩634⎭
-
-def fakepipename_handler (eh,msg):⎩635⎭
-
-  global rand⎩636⎭
-
-  rand =  rand+ 1
-
-  #|                                                                            #line  not very random, but good enough _ 'rand' must be unique within a single run |#⎩637⎭
-
-  send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)⎩638⎭
-  ⎩639⎭
-
-⎩640⎭
-⎩641⎭
-
-#|                                                                              #line  all of the the built_in leaves are listed here |#⎩642⎭
-
-#|                                                                              #line  future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project |#⎩643⎭
-⎩644⎭
-⎩645⎭
-
-def initialize_stock_components (reg):⎩646⎭
-
-  register_component ( reg,Template ( "1then2", None, deracer_instantiate))⎩647⎭
-
-  register_component ( reg,Template ( "?", None, probe_instantiate))⎩648⎭
-
-  register_component ( reg,Template ( "?A", None, probeA_instantiate))⎩649⎭
-
-  register_component ( reg,Template ( "?B", None, probeB_instantiate))⎩650⎭
-
-  register_component ( reg,Template ( "?C", None, probeC_instantiate))⎩651⎭
-
-  register_component ( reg,Template ( "trash", None, trash_instantiate))⎩652⎭
-  ⎩653⎭
-
-  register_component ( reg,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))⎩654⎭
-
-  register_component ( reg,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate))⎩655⎭
-  ⎩656⎭
-
-  register_component ( reg,Template ( "syncfilewrite", None, syncfilewrite_instantiate))⎩657⎭
-
-  register_component ( reg,Template ( "stringconcat", None, stringconcat_instantiate))⎩658⎭
-
-
-  #|                                                                            #line  for fakepipe |#⎩659⎭
-
-  register_component ( reg,Template ( "fakepipename", None, fakepipename_instantiate))⎩660⎭
-  ⎩661⎭
-
-⎩662⎭
-⎩663⎭
-
-def initialize ():⎩664⎭
-
-  root_of_project =  sys.argv[ 1] ⎩665⎭
-
-  root_of_0D =  sys.argv[ 2] ⎩666⎭
-
-  arg =  sys.argv[ 3] ⎩667⎭
-
-  main_container_name =  sys.argv[ 4] ⎩668⎭
-
-  diagram_names =  sys.argv[ 5:] ⎩669⎭
-
-  palette = initialize_component_palette ( root_project, root_0D, diagram_names)⎩670⎭
-
-  return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]⎩671⎭
-  ⎩672⎭
-
-⎩673⎭
-
-def start (palette,env,show_hierarchy= False,show_connections= False,show_traces= False,show_all_outputs= False):⎩674⎭
-
-  root_of_project =  env [ 0]⎩675⎭
-
-  root_of_0D =  env [ 1]⎩676⎭
-
-  main_container_name =  env [ 2]⎩677⎭
-
-  diagram_names =  env [ 3]⎩678⎭
-
-  arg =  env [ 4]⎩679⎭
-
-  set_environment ( root_of_project, root_of_0D)⎩680⎭
-
-
-  #|                                                                            #line  get entrypoint container |#⎩681⎭
-
-  main_container = get_component_instance ( palette, main_container_name,owner= None)⎩682⎭
-
-  if  None ==  main_container:⎩683⎭
-
-    load_error ( str( "Couldn't find container with page name ") +  str( main_container_name) +  str( " in files ") +  str( diagram_source_files) +  "(check tab names, or disable compression?)"    )⎩687⎭
-    ⎩688⎭
-
-
-  if  show_hierarchy:⎩689⎭
-
-    dump_hierarchy ( main_container)⎩690⎭
-    ⎩691⎭
-
-
-  if  show_connections:⎩692⎭
-
-    dump_connections ( main_container)⎩693⎭
-    ⎩694⎭
-
-
-  if not  load_errors:⎩695⎭
-
-    arg = new_datum_string ( arg)⎩696⎭
-
-    msg = make_message ( "", arg)⎩697⎭
-
-    inject ( main_container, msg)⎩698⎭
-
-    if  show_all_outputs:⎩699⎭
-
-      dump_outputs ( main_container)⎩700⎭
-
-    else:⎩701⎭
-
-      print_error_maybe ( main_container)⎩702⎭
-
-      print_specific_output ( main_container,port= "",stderr= False)⎩703⎭
-
-      if  show_traces:⎩704⎭
-
-        print ( "--- routing traces ---")⎩705⎭
-
-        print (routing_trace_all ( main_container))⎩706⎭
-        ⎩707⎭
-
-      ⎩708⎭
-
-
-    if  show_all_outputs:⎩709⎭
-
-      print ( "--- done ---")⎩710⎭
-      ⎩711⎭
-
-    ⎩712⎭
-
-  ⎩713⎭
-
-⎩714⎭
-⎩715⎭
-⎩716⎭
-
-#|                                                                              #line  utility functions  |#⎩717⎭
-
-def send_int (eh,port,i,causing_message):⎩718⎭
-
-  datum = new_datum_int ( i)⎩719⎭
-
-  send ( eh, port, datum, causing_message)⎩720⎭
-  ⎩721⎭
-
-⎩722⎭
-
-def send_bang (eh,port,causing_message):⎩723⎭
-
-  datum = new_datum_bang ()⎩724⎭
-
-  send ( eh, port, datum, causing_message)⎩725⎭
-  ⎩726⎭
-
-⎩727⎭
-
+)
 
 
 

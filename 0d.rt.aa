@@ -1,0 +1,483 @@
+defvar counter ⇐ 0
+
+defvar digits ⇐ [
+    “₀”, “₁”, “₂”, “₃”, “₄”, “₅”,
+    “₆”, “₇”, “₈”, “₉”,
+    “₁₀”, “₁₁”, “₁₂”, “₁₃”, “₁₄”,
+    “₁₅”, “₁₆”, “₁₇”, “₁₈”, “₁₉”,
+    “₂₀”, “₂₁”, “₂₂”, “₂₃”, “₂₄”,
+    “₂₅”, “₂₆”, “₂₇”, “₂₈”, “₂₉”
+]
+
+defn gensymbol (s) {
+    global counter
+    name_with_id ≡ strcons (s, subscripted_digit (counter))
+    counter ⇐ counter + 1
+    return name_with_id
+}
+
+defn subscripted_digit (n) {
+  global digits
+  if (n >=  0 and n <=  29) {
+    return digits [n]
+  } else {
+    return strcons (“₊”, n)
+  }
+}
+
+defobj Datum () {
+      • data ⇐ ϕ
+      • clone ⇐ ϕ
+      • reclaim ⇐ ϕ
+      • srepr ⇐ ϕ
+      • kind ⇐ ϕ
+      • raw ⇐ ϕ
+}
+
+defn new_datum_string (s) {
+    d ≡ fresh (Datum)
+    d.data ⇐ s
+    d.clone ⇐ λ: clone_datum_string (d)
+    d.reclaim ⇐ λ: reclaim_datum_string (d)    
+    d.srepr ⇐ λ: srepr_datum_string (d)
+    d.raw ⇐ λ: raw_datum_string (d)    
+    d.kind ⇐ λ: “string”
+    return d
+}
+
+defn clone_datum_string (d) {
+  d ≡ new_datum_string (d.data)
+  return d
+}
+
+defn reclaim_datum_string (src) {
+  pass
+}
+
+defn srepr_datum_string (d) {
+  return d.data
+}
+
+defn raw_datum_string (d) {
+  return bytearray (d.data,“UTF_8”)
+}
+
+defn new_datum_bang () {
+    p ≡ Datum ()
+    p.data ⇐ ⊤
+    p.clone ⇐ λ: clone_datum_bang (p)
+    p.reclaim ⇐ λ: reclaim_datum_bang (p)
+    p.srepr ⇐ λ: srepr_datum_bang ()
+    p.raw ⇐ λ: raw_datum_bang ()    
+    p.kind ⇐ λ: “bang”
+    return p
+}
+
+defn clone_datum_bang (d) {
+    return new_datum_bang ()
+}
+
+defn reclaim_datum_bang (d) {
+    pass
+}
+
+defn srepr_datum_bang () {
+    return “!”
+}
+
+defn raw_datum_bang () {
+    return []
+}
+
+defn new_datum_tick () {
+    p ≡ new_datum_bang ()
+    p.kind ⇐ λ: “tick”
+    p.clone ⇐ λ: new_datum_tick ()
+    p.srepr ⇐ λ: srepr_datum_tick ()
+    p.raw ⇐ λ: raw_datum_tick ()
+    return p
+}
+
+defn srepr_datum_tick () {
+    return “.”
+}
+
+defn raw_datum_tick () {
+    return []
+}
+
+defn new_datum_bytes (b) {
+    p ≡ Datum ()
+    p.data ⇐ b
+    p.clone ⇐ clone_datum_bytes
+    p.reclaim ⇐ λ: reclaim_datum_bytes (p)
+    p.srepr ⇐ λ: srepr_datum_bytes (b)
+    p.raw ⇐ λ: raw_datum_bytes (b)
+    p.kind ⇐ λ: “bytes”
+    return p
+}
+
+defn clone_datum_bytes (src) {
+    p ≡ Datum ()
+    p ≡ src
+    p.data ⇐ src.clone ()
+    return p
+}
+
+defn reclaim_datum_bytes (src) {
+    pass
+}
+
+defn srepr_datum_bytes (d) {
+    return d.data.decode (“UTF_8”)
+}
+defn raw_datum_bytes (d) {
+    return d.data
+}
+
+defn new_datum_handle (h) {
+    return new_datum_int (h)
+}
+
+defn new_datum_int (i) {
+    p ≡ Datum ()
+    p.data ⇐ i
+    p.clone ⇐ λ: clone_int (i)
+    p.reclaim ⇐ λ: reclaim_int (i)
+    p.srepr ⇐ λ: srepr_datum_int (i)
+    p.raw ⇐ λ: raw_datum_int (i)
+    p.kind ⇐ λ: “int”
+    return p
+}
+
+defn clone_int (i) {
+    p ≡ new_datum_int (i)
+    return p
+}
+
+defn reclaim_int (src) {
+    pass
+}
+
+defn srepr_datum_int (i) {
+  return str (i)
+}
+
+defn raw_datum_int (i) {
+    return i
+}
+
+⌈ Message passed to a leaf component.⌉
+⌈⌉
+⌈ `port` refers to the name of the incoming or outgoing port of this component.⌉
+⌈ `datum` is the data attached to this message.⌉
+defobj Message (port, datum) {
+        • port ⇐ port
+        • datum ⇐ datum
+}
+
+defn clone_port (s) {
+    return clone_string (s)
+}
+
+⌈ Utility for making a `Message`. Used to safely “seed“ messages⌉
+⌈ entering the very top of a network.⌉
+defn make_message (port, datum) {
+    p ≡ clone_string (port)
+    m ≡ Message (port ∷ p, datum ∷ datum.clone ())
+    return m
+}
+
+⌈ Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations.⌉
+defn message_clone (message) {
+    m ≡ Message (port ∷ clone_port (message.port), datum ∷ message.datum.clone ())
+    return m
+}
+
+⌈ Frees a message.⌉
+defn destroy_message (msg) {
+    ⌈ during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages⌉
+    pass
+}
+
+defn destroy_datum (msg) {
+    pass
+}
+
+defn destroy_port (msg) {
+    pass
+}
+
+⌈⌉
+defn format_message (m) {
+    if m = ϕ {
+        return “ϕ” }
+    else {
+        return strcons (“⟪”,
+	         strcons (m.port,
+		   strcons (“⦂”,
+		     strcons (m.datum.srepr (), “⟫”))))
+    }
+}
+
+⌈ dynamic routing descriptors⌉
+
+defconst drInject ≡ “inject”
+defconst drSend ≡ “send”
+defconst drInOut ≡ “inout”
+defconst drForward ≡ “forward”
+defconst drDown ≡ “down”
+defconst drUp ≡ “up”
+defconst drAcross ≡ “across”
+defconst drThrough ≡ “through”
+
+⌈ See “class_free programming“ starting at 45:01 of https://www.youtube.com/watch?v=XFTOG895C7c⌉
+
+
+defn make_Routing_Descriptor (action, component, port, message) {
+    return {
+        “action”: action,
+        “component”: component,
+        “port”: port,
+        “message”: message
+        }
+}
+
+⌈⌉
+defn make_Send_Descriptor (component, port, message, cause_port, cause_message) {
+    rdesc ≡ make_Routing_Descriptor (action ∷ drSend, component ∷ component, port ∷ port, message ∷ message)
+    return {
+        “action”: drSend,
+        “component”: rdesc@component,
+        “port”: rdesc@port,
+        “message”: rdesc@message,
+        “cause_port”: cause_port,
+        “cause_message”: cause_message,
+        “fmt”: fmt_send
+        }
+}
+
+defn log_send (sender, sender_port, msg, cause_msg) {
+    send_desc ≡ make_Send_Descriptor (component ∷ sender, port ∷ sender_port, message ∷ msg, cause_port ∷ cause_msg.port, cause_message ∷ cause_msg)
+    append_routing_descriptor (container ∷ sender.owner, desc ∷ send_desc)
+}
+
+defn log_send_string (sender, sender_port, msg, cause_msg) {
+    send_desc ≡ make_Send_Descriptor (sender, sender_port, msg, cause_msg.port, cause_msg)
+    append_routing_descriptor (container ∷ sender.owner, desc ∷ send_desc)
+}
+
+defn fmt_send (desc, indent) {
+    return “”
+    ⌈return f'\n{indent}⋯ {desc@component.name}.“{desc@cause_port}“ ∴ {desc@component.name}.“{desc@port}“ {format_message (desc@message)}'⌉
+}
+
+defn fmt_send_string (desc, indent) {
+    return fmt_send (desc, indent)
+}
+
+⌈⌉
+defn make_Forward_Descriptor (component, port, message, cause_port, cause_message) {
+    rdesc ≡ make_Routing_Descriptor (action ∷ drSend, component ∷ component, port ∷ port, message ∷ message)
+    fmt_forward ≡ λ (desc) : “”
+    return {
+        “action”: drForward,
+        “component”: rdesc@component,
+        “port”: rdesc@port,
+        “message”: rdesc@message,
+        “cause_port”: cause_port,
+        “cause_message”: cause_message,
+        “fmt”: fmt_forward
+        }
+}
+
+defn log_forward (sender, sender_port, msg, cause_msg) {
+    pass ⌈ when needed, it is too frequent to bother logging⌉
+}
+
+defn fmt_forward (desc) {
+    print (strcons (“*** Error fmt_forward ”, desc))
+    quit ()
+}
+
+⌈⌉
+defn make_Inject_Descriptor (receiver, port, message) {
+    rdesc ≡ make_Routing_Descriptor (action ∷ drInject, component ∷ receiver, port ∷ port, message ∷ message)
+    return {
+        “action”: drInject,
+        “component”: rdesc@component,
+        “port”: rdesc@port,
+        “message”: rdesc@message,
+        “fmt” : fmt_inject
+        }
+}
+
+defn log_inject (receiver, port, msg) {
+    inject_desc ≡ make_Inject_Descriptor (receiver ∷ receiver, port ∷ port, message ∷ msg)
+    append_routing_descriptor (container ∷ receiver, desc ∷ inject_desc)
+}
+
+defn fmt_inject (desc, indent) {
+    ⌈return f'\n{indent}⟹  {desc@component.name}.“{desc@port}“ {format_message (desc@message)}'⌉
+    return strcons (“\n”,
+             strcons (indent,
+	       strcons (“⟹  ”,
+	         strcons (desc@component.name,
+		   strcons (“.”,
+		     strcons (desc@port,
+		       strcons (“ ”, format_message (desc@message))))))))
+}
+
+⌈⌉
+defn make_Down_Descriptor (container, source_port, source_message, target, target_port, target_message) {
+    return {
+        “action”: drDown,
+        “container”: container,
+        “source_port”: source_port,
+        “source_message”: source_message,
+        “target”: target,
+        “target_port”: target_port,
+        “target_message”: target_message,
+        “fmt” : fmt_down
+        }
+}
+
+defn log_down (container, source_port, source_message, target, target_port, target_message) {
+    rdesc ≡ make_Down_Descriptor (container, source_port, source_message, target, target_port, target_message)
+    append_routing_descriptor (container, rdesc)
+}
+
+defn fmt_down (desc, indent) {
+    ⌈return f'\n{indent}↓ {desc@container.name}.“{desc@source_port}“ ➔ {desc@target.name}.“{desc@target_port}“ {format_message (desc@target_message)}'⌉
+    return strcons (“\n”,
+             strcons (indent,
+	       strcons (“ ↓ ”,
+	         strcons (desc@container.name,
+		   strcons (“.”,
+		     strcons (desc@source_port,
+		       strcons (“ ➔ ”,
+		         strcons (desc@target.name,
+			   strcons (“.”,
+			     strcons (desc@target_port,
+			       strcons (“ ”, format_message (desc@target_message))))))))))))
+}
+
+⌈⌉
+defn make_Up_Descriptor (source, source_port, source_message, container, container_port, container_message) {
+    return {
+        “action”: drUp,
+        “source”: source,
+        “source_port”: source_port,
+        “source_message”: source_message,
+        “container”: container,
+        “container_port”: container_port,
+        “container_message”: container_message,
+        “fmt” : fmt_up
+        }
+}
+
+defn log_up (source, source_port, source_message, container, target_port, target_message) {
+    rdesc ≡ make_Up_Descriptor (source, source_port, source_message, container, target_port, target_message)
+    append_routing_descriptor (container, rdesc)
+}
+
+defn fmt_up (desc, indent) {
+    ⌈return f'\n{indent}↑ {desc@source.name}.“{desc@source_port}“ ➔ {desc@container.name}.“{desc@container_port}“ {format_message (desc@container_message)}'⌉
+    return strcons (“\n”,
+             strcons (indent,
+	       strcons (“↑ ”,
+	         strcons (desc@source.name,
+		   strcons (“.”,
+		     strcons (desc@source_port,
+		       strcons (“ ➔ ”,
+		         strcons (desc@container.name,
+			   strcons (“.”,
+			     strcons (desc@container_port,
+			       strcons (“ ”, format_message (desc@container_message))))))))))))
+}
+
+defn make_Across_Descriptor (container, source, source_port, source_message, target, target_port, target_message) {
+    return {
+        “action”: drAcross,
+        “container”: container,
+        “source”: source,
+        “source_port”: source_port,
+        “source_message”: source_message,
+        “target”: target,
+        “target_port”: target_port,
+        “target_message”: target_message,
+        “fmt” : fmt_across
+        }
+}
+
+defn log_across (container, source, source_port, source_message, target, target_port, target_message) {
+    rdesc ≡ make_Across_Descriptor (container, source, source_port, source_message, target, target_port, target_message)
+    append_routing_descriptor (container, rdesc)
+}
+
+defn fmt_across (desc, indent) {
+    ⌈return f'\n{indent}→ {desc@source.name}.“{desc@source_port}“ ➔ {desc@target.name}.“{desc@target_port}“  {format_message (desc@target_message)}'⌉
+    return strcons (“\n”,
+             strcons (indent,
+	       strcons (“→ ”,
+	         strcons (desc@source.name,
+		   strcons (“.”,
+		     strcons (desc@source_port,
+		       strcons (“ ➔ ”,
+		         strcons (desc@target.name,
+			   strcons (“.”,
+			     strcons (desc@target_port,
+			       strcons (“  ”, format_message (desc@target_message))))))))))))
+}
+
+⌈⌉
+defn make_Through_Descriptor (container, source_port, source_message, target_port, message) {
+    return {
+        “action”: drThrough,
+        “container”: container,
+        “source_port”: source_port,
+        “source_message”: source_message,
+        “target_port”: target_port,
+        “message”: message,
+        “fmt” : fmt_through
+        }
+}
+
+defn log_through (container, source_port, source_message, target_port, message) {
+    rdesc ≡ make_Through_Descriptor (container, source_port, source_message, target_port, message)
+    append_routing_descriptor (container, rdesc)
+}
+
+defn fmt_through (desc, indent) {
+    ⌈return f'\n{indent}⇶ {desc @container.name}.“{desc@source_port}“ ➔ {desc@container.name}.“{desc@target_port}“ {format_message (desc@message)}'⌉
+    return strcons (“\n”,
+             strcons (indent,
+	       strcons (“⇶ ”,
+	         strcons (desc@container.name,
+		   strcons (“.”,
+		     strcons (desc@source_port,
+		       strcons (“ ➔ ”,
+		         strcons (desc@container.name,
+			   strcons (“.”,
+			     strcons (desc@target_port,
+			       strcons (“ ”, format_message (desc@message))))))))))))
+}
+
+⌈⌉
+defn make_InOut_Descriptor (container, component, in_message, out_port, out_message) {
+    return {
+        “action”: drInOut,
+        “container”: container,
+        “component”: component,
+        “in_message”: in_message,
+        “out_message”: out_message,
+        “fmt” : fmt_inout
+        }
+}
+
+defn log_inout (container, component, in_message) {
+    if component.outq.empty () {
+        log_inout_no_output (container ∷ container, component ∷ component, in_message ∷ in_message) }
+    else {
+        log_inout_recursively (container ∷ container, component ∷ component, in_message ∷ in_message, out_messages ∷ list (component.outq.queue)) }
+}
