@@ -1,4 +1,5 @@
-defn f () {
-    x ≡ child.inq.empty
-    x ≡ child.inq.empty ()
+defn attempt_tick (parent, eh) {
+    if eh.state != “idle” {
+        force_tick (parent, eh)}
 }
+

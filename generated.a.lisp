@@ -2,13 +2,11 @@
 (load "~/quicklisp/setup.lisp")
 (ql:quickload :cl-json)
 
-(defun f (&optional )                                                                                                   #|line 1|#
-
-    (let ((x (cdr (assoc '(cdr (assoc ' empty  inq))  child))))                                                         #|line 2|#
-
-        (let ((x (funcall (cdr (assoc '(cdr (assoc ' empty  inq))  child)) ))))                                         #|line 3|#
-      )                                                                                                                 #|line 4|#
-
+(defun attempt_tick (&optional  parent  eh)                                                                             #|line 1|#
+    (cond
+      ((not (equal  (cdr (assoc ' state  eh))  "idle"))                                                                 #|line 2|#
+            (funcall  force_tick    parent   eh )                                                                       #|line 3|#
+        ))                                                                                                              #|line 4|#
 )
 
 

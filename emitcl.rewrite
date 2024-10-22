@@ -61,8 +61,8 @@ Defsynonym_legal [id _eqv e rec?] = ‛\n(let ((«id» «e»))⤷«rec»⤶)’
 
 InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(cons '«ident» «Exp») «fluff»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\n(cond ⤷\n(«Exp»⤷«StatementBlock»⤶)«ElifStatement»«ElseStatement»⤶)«rec»’
-ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp»⤷«StatementBlock»⤶)’
-ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶)’
+ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp»⤷«StatementBlock»⤶B)’
+ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶Y)’
 ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident» in «Exp»⤷\ndo«StatementBlock»)⤶«rec»’
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
 
@@ -78,7 +78,7 @@ Exp [e] = ‛«e»’
 BooleanAndOrIn_andOrIn [e1 op e2] = ‛(«op» «e1» «e2»)’
 BooleanAndOrIn_default [e] = ‛«e»’
 
-BooleanExp_boolopneq [ BooleanExp boolOp BooleanNot] =‛(not («boolOp» «BooleanExp» «BooleanNot»)’
+BooleanExp_boolopneq [ BooleanExp boolOp BooleanNot] =‛(not («boolOp» «BooleanExp» «BooleanNot»))’
 BooleanExp_boolop [ BooleanExp boolOp BooleanNot] =‛(«boolOp» «BooleanExp» «BooleanNot»)’
 BooleanExp_basic [ BooleanNot] =‛«BooleanNot»’
 
@@ -191,6 +191,6 @@ ok [p] = ‛«p»’
 err [p] = ‛«p»’
 port [s] = ‛«s»’
 
-line [lb cs* rb] = ‛«lb»«cs»«rb»\n’
+line [lb cs* rb] = ‛«lb»«cs»«rb»’
 Comma [line1? _comma line2?] = ‛«line1» «line2»’
 }
