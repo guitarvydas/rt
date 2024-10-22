@@ -96,7 +96,6 @@ MulExp_basic [ ExpExp] =‛«ExpExp»’
 ExpExp_power [ Primary _69 ExpExp] =‛(expt «Primary» «ExpExp»)’
 ExpExp_basic [ Primary] =‛«Primary»’
 
-Primary_callident [id actuals] = ‛(funcall '«id» «actuals»)’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 Primary_plain [p] = ‛«p»’
 
@@ -116,6 +115,9 @@ Pmacro_stringcdr [ _83 _84 e _85 ] =‛ (subseq «e» 1)’
 Pmacro_strcons [ _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» «e2»)’
 
 Atom_pmacro [m] = ‛«m»’
+
+Atom_callident [id actuals] = ‛(funcall '«id» «actuals»)’
+
 Atom_emptylistconst [ _72 _73] =‛ nil’
 Atom_emptydict [ _76 _77] =‛ nil’
 Atom_paren [ _70 Exp _71] =‛«Exp»’

@@ -95,7 +95,6 @@ emit {
       | Primary -- basic
 
     Primary =
-      | ident Actuals -- callident
       | PrimaryIndexed Actuals -- call
       | PrimaryIndexed -- plain
 
@@ -130,6 +129,7 @@ emit {
       | "⊤" -- true
       | "⊥" -- false
       | kw<"range"> "(" Exp ")" -- range
+      | ident Actuals -- callident
       | string -- string
       | number -- number
       | ident -- ident
