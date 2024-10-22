@@ -146,7 +146,7 @@ ObjFormals_noformals [ _148 _149] =‛’
 ObjFormals_withformals [ _150 FormalComma* _151] =‛«FormalComma»’
 LambdaFormals_noformals [ _148 _149] =‛’
 LambdaFormals_withformals [ _150 FormalComma* _151] =‛«FormalComma»’
-Formal_defaultvalue [ ident  _152 Exp] = ‛:«ident» «Exp»’
+Formal_defaultvalue [ ident  _152 Exp] = ‛(«ident» «Exp»)’
 Formal_plain [ ident] = ‛«ident»’
 FormalComma [Formal comma?] =‛ «Formal»«comma»’
 

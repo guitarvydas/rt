@@ -1,4 +1,3 @@
-defn f () {
-   cmd ≡ stringcdr (name).strip ()
+defn log_inout_recursively (container, component, in_message, out_messages ∷ []) {
+        rest ≡ cdr (out_messages)
 }
-
