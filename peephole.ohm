@@ -4,9 +4,10 @@ peephole {
     | funcallIdent -- funcallident
     | any -- default
 
-  funcallIdent = "(" space* "funcall" space space* "'" ident space* args* ")"
+  funcallIdent = "(" space* "funcall" space space* "'" ident args* ")"
   args =
-    | "(" stuff* ")" -- rec
+    | funcallIdent -- funcallident
+    | "(" args* ")" -- rec
     | ~"(" ~")" any -- default
 
   ident = "❲"? first rest* "❳"?

@@ -2,7 +2,8 @@
   main [stuff+] = ‛«stuff»’
   stuff_funcallident [f] = ‛«f»’
   stuff_default [x] = ‛«x»’
-  funcallIdent [lp ws1* _funcall space ws2* _quote ident ws3* args* rp] = ‛«lp»«ident» «args»«rp»’
+  funcallIdent [lp ws1* _funcall space ws2* _quote ident args* rp] = ‛«lp»«ident» «args»«rp»’
+  args_funcallident [f] = ‛«f»’
   args_rec [lp args* rp] = ‛«lp»«args»«rp»’
   args_default [x] = ‛«x»’
 
