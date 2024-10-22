@@ -95,6 +95,7 @@ emit {
       | Primary -- basic
 
     Primary =
+      | ident Actuals -- callident
       | PrimaryIndexed Actuals -- call
       | PrimaryIndexed -- plain
 

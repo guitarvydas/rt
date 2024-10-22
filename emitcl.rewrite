@@ -1,6 +1,6 @@
 % rewrite emitCLrwr {
 
-Main [ TopLevel+] = ‛(declaim (sb-ext:muffle-conditions cl:warning))\n(load "~/quicklisp/setup.lisp")\n(ql:quickload :cl-json)\n«TopLevel»’
+Main [ TopLevel+] = ‛(ql:quickload :cl-json)\n«TopLevel»’
 
 TopLevel_defvar [ Defvar] =‛«Defvar»’
 TopLevel_defconst [ Defconst] =‛«Defconst»’
@@ -61,8 +61,8 @@ Defsynonym_legal [id _eqv e rec?] = ‛\n(let ((«id» «e»))⤷«rec»⤶)’
 
 InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(cons '«ident» «Exp») «fluff»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\n(cond ⤷\n(«Exp»⤷«StatementBlock»⤶)«ElifStatement»«ElseStatement»⤶)«rec»’
-ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp»⤷«StatementBlock»⤶B)’
-ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶Y)’
+ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp»⤷«StatementBlock»⤶)’
+ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶)’
 ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident» in «Exp»⤷\ndo«StatementBlock»)⤶«rec»’
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
 
@@ -71,7 +71,7 @@ Assignment_multiple [ lb Lvals+ rb _assign Exp rec?] =‛\n(multiple-value-setq 
 Assignment_single [ Lval _59 Exp rec?] =‛\n(setf «Lval» «Exp»)«rec»’
 LvalComma [Lval Comma?] = ‛«Lval»«Comma»’
 
-ReturnExp_multiple [ _60 Exps+ _62 rec?] =‛(values «Exp1» «Exp2»)«rec»’
+ReturnExp_multiple [ _60 Exps+ _62 rec?] =‛(values «Exps»)«rec»’
 ReturnExp_single [ Exp rec?] =‛«Exp»«rec»’
 ExpComma [Exp Comma?] = ‛«Exp»«Comma»’
 Exp [e] = ‛«e»’
@@ -96,6 +96,7 @@ MulExp_basic [ ExpExp] =‛«ExpExp»’
 ExpExp_power [ Primary _69 ExpExp] =‛(expt «Primary» «ExpExp»)’
 ExpExp_basic [ Primary] =‛«Primary»’
 
+Primary_callident [id actuals] = ‛(funcall '«id» «actuals»)’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 Primary_plain [p] = ‛«p»’
 

@@ -1,3 +1,3 @@
-defn log_inout_recursively (container, component, in_message, out_messages ∷ []) {
-        rest ≡ cdr (out_messages)
+defn start (palette, env, show_hierarchy∷False, show_connections∷False, show_traces∷False, show_all_outputs∷False) {
+                print (routing_trace_all (main_container))
 }
