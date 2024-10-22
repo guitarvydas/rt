@@ -95,7 +95,6 @@ emit {
       | Primary -- basic
 
     Primary =
-      | Pmacro -- pmacro
       | PrimaryIndexed Actuals -- call
       | PrimaryIndexed -- plain
 
@@ -117,6 +116,7 @@ emit {
       | pkw<"strcons"> "(" Exp Comma Exp ")" -- strcons
 
     Atom =
+      | Pmacro -- pmacro
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren

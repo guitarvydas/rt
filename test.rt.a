@@ -1,5 +1,4 @@
-defn attempt_tick (parent, eh) {
-    if eh.state != “idle” {
-        force_tick (parent, eh)}
+defn f () {
+   cmd ≡ stringcdr (name).strip ()
 }
 
