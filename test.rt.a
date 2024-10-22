@@ -1,12 +1,4 @@
-defn make_Send_Descriptor (component, port, message, cause_port, cause_message) {
-    rdesc ≡ make_Routing_Descriptor (action ∷ drSend, component ∷ component, port ∷ port, message ∷ message)
-    return {
-        “action”: drSend,
-        “component”: rdesc@component,
-        “port”: rdesc@port,
-        “message”: rdesc@message,
-        “cause_port”: cause_port,
-        “cause_message”: cause_message,
-        “fmt”: fmt_send
-        }
+defn f () {
+    x ≡ child.inq.empty
+    x ≡ child.inq.empty ()
 }

@@ -101,7 +101,6 @@ emitPython {
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice
       | Pmacro -- pmacro
-      | ident Actuals -- identcall
       | Primary Actuals -- call
       | Atom -- atom
 

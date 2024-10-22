@@ -66,7 +66,8 @@ ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶)’
 ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident» in «Exp»⤷\ndo«StatementBlock»)⤶«rec»’
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
 
-Assignment_multiple [ _55 Lvals+ _57 _58 Exp rec?] =‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
+Assignment_multiple [ lb Lvals+ rb _assign Exp rec?] =‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
+
 Assignment_single [ Lval _59 Exp rec?] =‛\n(setf «Lval» «Exp»)«rec»’
 LvalComma [Lval Comma?] = ‛«Lval»«Comma»’
 
