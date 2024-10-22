@@ -1,6 +1,6 @@
 % rewrite emitCLrwr {
 
-Main [ TopLevel+] = ‛(load "~/quicklisp/setup.lisp")\n(ql:quickload :cl-json)\n«TopLevel»’
+Main [ TopLevel+] = ‛(declaim (sb-ext:muffle-conditions cl:warning))\n(load "~/quicklisp/setup.lisp")\n(ql:quickload :cl-json)\n«TopLevel»’
 
 TopLevel_defvar [ Defvar] =‛«Defvar»’
 TopLevel_defconst [ Defconst] =‛«Defconst»’
@@ -66,7 +66,7 @@ ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶Y)’
 ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident» in «Exp»⤷\ndo«StatementBlock»)⤶«rec»’
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
 
-Assignment_multiple [ lb Lvals+ rb _assign Exp rec?] =‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
+Assignment_multiple [ lb Lvals+ rb _assign Exp rec?] =‛\n(multiple-value-setq («Lvals») ⤷«Exp»⤶)«rec»’
 
 Assignment_single [ Lval _59 Exp rec?] =‛\n(setf «Lval» «Exp»)«rec»’
 LvalComma [Lval Comma?] = ‛«Lval»«Comma»’
