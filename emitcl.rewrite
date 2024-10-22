@@ -96,15 +96,16 @@ MulExp_basic [ ExpExp] =‛«ExpExp»’
 ExpExp_power [ Primary _69 ExpExp] =‛(expt «Primary» «ExpExp»)’
 ExpExp_basic [ Primary] =‛«Primary»’
 
-Primary_lookupident [p _at key] = ‛(cdr (assoc '«key» «p»))’
-Primary_lookup [p _at key] = ‛(cdr (assoc «key» «p»))’
-Primary_field [p _dot key] = ‛(cdr (assoc '«key» «p»))’ 
-Primary_index [p lb e rb] = ‛(nth «e» «p»)’ 
-Primary_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
 Primary_pmacro [m] = ‛«m»’
-Primary_identcall [id actuals] = ‛(«id» «actuals»)’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
-Primary_atom [a] = ‛«a»’
+Primary_plain [p] = ‛«p»’
+
+PrimaryIndexed_lookupident [p _at key] = ‛(cdr (assoc '«key» «p»))’
+PrimaryIndexed_lookup [p _at key] = ‛(cdr (assoc «key» «p»))’
+PrimaryIndexed_field [p _dot key] = ‛(cdr (assoc '«key» «p»))’ 
+PrimaryIndexed_index [p lb e rb] = ‛(nth «e» «p»)’ 
+PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
+PrimaryIndexed_atom [a] = ‛«a»’
 
 Pmacro_fresh [ _83 _84 ident _85] =‛ («ident»)’
 Pmacro_car [ _83 _84 e _85 ] =‛ (car «e»)’

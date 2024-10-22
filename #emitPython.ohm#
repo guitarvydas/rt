@@ -1,4 +1,4 @@
-emitCLohm {
+emitPython {
 
   Main = TopLevel+
   TopLevel =
@@ -95,14 +95,16 @@ emitCLohm {
       | Primary -- basic
 
     Primary =
+      | Pmacro -- pmacro
+      | PrimaryIndexed Actuals -- call
+      | PrimaryIndexed -- plain
+
+    PrimaryIndexed =
       | Primary "@" ident -- lookupident
       | Primary "@" Primary -- lookup
       | Primary "." Primary -- field
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice
-      | Pmacro -- pmacro
-      | ident Actuals -- identcall
-      | Primary Actuals -- call
       | Atom -- atom
 
     Pmacro =

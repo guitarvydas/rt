@@ -695,7 +695,7 @@
         "name": "RT to Python",
         "children": [
             {
-                "name": "$ ./ndsl emitPython.ohm emitPython.rewrite",
+                "name": "$ ./ndsl emit.ohm emitPython.rewrite",
                 "id": 5
             }
         ],
@@ -708,7 +708,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ ./ndsl emitPython.ohm emitPython.rewrite",
+                    "name": "$ ./ndsl emit.ohm emitPython.rewrite",
                     "id": 5
                 },
                 "target_port": ""
@@ -716,7 +716,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ ./ndsl emitPython.ohm emitPython.rewrite",
+                    "name": "$ ./ndsl emit.ohm emitPython.rewrite",
                     "id": 5
                 },
                 "source_port": "",
@@ -729,7 +729,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ ./ndsl emitPython.ohm emitPython.rewrite",
+                    "name": "$ ./ndsl emit.ohm emitPython.rewrite",
                     "id": 5
                 },
                 "source_port": "\u2717",

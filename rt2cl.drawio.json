@@ -362,7 +362,7 @@
         "name": "RT to Common Lisp",
         "children": [
             {
-                "name": "$ ./ndsl emitcl.ohm emitcl.rewrite",
+                "name": "$ ./ndsl emit.ohm emitcl.rewrite",
                 "id": 5
             }
         ],
@@ -375,7 +375,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ ./ndsl emitcl.ohm emitcl.rewrite",
+                    "name": "$ ./ndsl emit.ohm emitcl.rewrite",
                     "id": 5
                 },
                 "target_port": ""
@@ -383,7 +383,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ ./ndsl emitcl.ohm emitcl.rewrite",
+                    "name": "$ ./ndsl emit.ohm emitcl.rewrite",
                     "id": 5
                 },
                 "source_port": "",
@@ -396,7 +396,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ ./ndsl emitcl.ohm emitcl.rewrite",
+                    "name": "$ ./ndsl emit.ohm emitcl.rewrite",
                     "id": 5
                 },
                 "source_port": "\u2717",
