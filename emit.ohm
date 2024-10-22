@@ -100,11 +100,11 @@ emit {
       | PrimaryIndexed -- plain
 
     PrimaryIndexed =
-      | Primary "@" ident -- lookupident
-      | Primary "@" Primary -- lookup
-      | Primary "." Primary -- field
-      | Primary "[" Exp "]" -- index
-      | Primary "[" digit+ ":" "]" -- nthslice
+      | PrimaryIndexed "@" ident -- lookupident
+      | PrimaryIndexed "@" PrimaryIndexed -- lookup
+      | PrimaryIndexed "." PrimaryIndexed -- field
+      | PrimaryIndexed "[" Exp "]" -- index
+      | PrimaryIndexed "[" digit+ ":" "]" -- nthslice
       | Atom -- atom
 
     Pmacro =
@@ -123,8 +123,8 @@ emit {
       | "[" line? PrimaryComma+ line? "]" -- listconst
       | "{" line? PairComma+ line? "}" -- dict
       | lambda LambdaFormals? ":" Exp -- lambda
-      | "+" Primary -- pos
-      | "-" Primary -- neg
+      | "+" Atom -- pos
+      | "-" Atom -- neg
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false

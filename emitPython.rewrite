@@ -104,14 +104,16 @@ MulExp_basic [ ExpExp] =‛«ExpExp»’
 ExpExp_power [ Primary _69 ExpExp] =‛«Primary»«_69»«ExpExp»’
 ExpExp_basic [ Primary] =‛«Primary»’
 
-Primary_lookupident [p _at key] = ‛«p» ["«key»"]’
-Primary_lookup [p _at key] = ‛«p» [«key»]’
-Primary_field [p _dot key] = ‛«p».«key»’ 
-Primary_index [p lb e rb] = ‛«p» [«e»]’ 
-Primary_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’
 Primary_pmacro [m] = ‛«m»’
 Primary_call [p actuals] = ‛«p» «actuals»’
-Primary_atom [a] = ‛«a»’
+Primary_plain [p] = ‛«p»’
+
+PrimaryIndexed_lookupident [p _at key] = ‛«p» ["«key»"]’
+PrimaryIndexed_lookup [p _at key] = ‛«p» [«key»]’
+PrimaryIndexed_field [p _dot key] = ‛«p».«key»’ 
+PrimaryIndexed_index [p lb e rb] = ‛«p» [«e»]’ 
+PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’
+PrimaryIndexed_atom [a] = ‛«a»’
 
 Pmacro_fresh [ _83 _84 ident _85] =‛ «ident» ()’
 Pmacro_car [ _83 _84 e _85 ] =‛ «e»[0] ’
