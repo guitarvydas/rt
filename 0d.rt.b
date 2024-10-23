@@ -31,7 +31,10 @@ defn make_component_registry () {
     return Component_Registry ()
 }
 
-defn register_component (reg, template, ok_to_overwrite ∷ ⊥) {
+defn register_component (reg, template) { { return abstracted_register_component (reg, template,  ⊥) }
+defn register_component_allow_overwriting (reg, template) { return abstracted_register_component (reg, template,  ⊤) }
+
+defn abstracted_register_component (reg, template, ok_to_overwrite) {
     name ≡ mangle_name (template.name)
     if name in reg.templates and not ok_to_overwrite {
         load_error (strcons (“Component ”, strcons (template.name, “ already declared”)))}
@@ -105,13 +108,13 @@ defn generate_shell_components (reg, container_list) {
                 if first_char_is (child_descriptor@name, “$”){
                     name ≡ child_descriptor@name
                     cmd ≡ stringcdr (name).strip ()
-                    generated_leaf ≡ Template (name ∷ name, instantiator ∷ shell_out_instantiate, template_data ∷ cmd)
+                    generated_leaf ≡ Template (name, shell_out_instantiate, cmd)
                     register_component (reg, generated_leaf)}
                 elif first_char_is (child_descriptor@name, “'”){
                     name ≡ child_descriptor@name
                     s ≡ stringcdr (name)
-                    generated_leaf ≡ Template (name ∷ name, instantiator ∷ string_constant_instantiate, template_data ∷ s)
-                    register_component (reg, generated_leaf, ok_to_overwrite ∷ ⊤)}}}}
+                    generated_leaf ≡ Template (name, string_constant_instantiate, s)
+                    register_component_allow_overwriting (reg, generated_leaf}}}}
 }
 
 defn first_char (s) {
@@ -125,7 +128,8 @@ defn first_char_is (s, c) {
 ⌈ this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here⌉
 ⌈ I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped⌉
 defn run_command (eh, cmd, s) {
-    ret ≡ subprocess.run (cmd, capture_output ∷ ⊤, input ∷ s, encoding ∷ “UTF_8”)
+    ⌈ capture_output ∷ ⊤⌉
+    ret ≡ subprocess.run (cmd,  s, “UTF_8”)
     if  not (ret.returncode = 0){
         if ret.stderr != ϕ{
             return [“”, ret.stderr]}
@@ -207,20 +211,20 @@ defn make_leaf (name, owner, instance_data, handler) {
 
 defn send (eh,port,datum,causingMessage) {
     msg ≡ make_message(port, datum)
-    log_send (sender ∷ eh, sender_port ∷ port, msg ∷ msg, cause_msg ∷ causingMessage)
+    log_send (eh, port, msg, causingMessage)
     put_output (eh, msg)
 }
 
 defn send_string (eh, port, s, causingMessage) {
     datum ≡ new_datum_string (s)
-    msg ≡ make_message(port ∷ port, datum ∷ datum)
-    log_send_string (sender ∷ eh, sender_port ∷ port, msg ∷ msg, cause_msg ∷ causingMessage)
+    msg ≡ make_message(port, datum)
+    log_send_string (eh, sender_port, msg, cause_causingMessage)
     put_output (eh, msg)
 }
 
 defn forward (eh, port, msg) {
     fwdmsg ≡ make_message(port, msg.datum)
-    log_forward (sender ∷ eh, sender_port ∷ port, msg ∷ msg, cause_msg ∷ msg)
+    log_forward (eh, sender_port, msg, cause_msg)
     put_output (eh, msg)
 }
 
@@ -265,14 +269,21 @@ defn fetch_first_output (eh, port) {
     return ϕ
 }
 
-defn print_specific_output (eh, port ∷ “”, stderr ∷ ⊥) {
+defn print_specific_output (eh, port) {
+    ⌈ port ∷ “”⌉
     deftemp datum ⇐ fetch_first_output (eh, port)
     deftemp outf ⇐ ϕ
     if datum != ϕ{
-        if stderr{              ⌈ I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in...⌉
-            outf ⇐ sys.stderr}
-        else{
-            outf ⇐ sys.stdout}
+        outf ⇐ sys.stdout
+        print (datum.srepr (), file ∷ outf)}
+}
+defn print_specific_output_to_stderr (eh, port) {
+    ⌈ port ∷ “”⌉
+    deftemp datum ⇐ fetch_first_output (eh, port)
+    deftemp outf ⇐ ϕ
+    if datum != ϕ{
+        ⌈ I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in...⌉
+        outf ⇐ sys.stderr
         print (datum.srepr (), file ∷ outf)}
 }
 
@@ -307,21 +318,21 @@ defn set_environment (rproject, r0D) {
 
 defn probe_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“?”)
-    return make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
 }
 defn probeA_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“?A”)
-    return make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
 }
 
 defn probeB_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol(“?B”)
-    return make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
 }
 
 defn probeC_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol(“?C”)
-    return make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
 }
 
 defn probe_handler (eh, msg) {
@@ -331,7 +342,7 @@ defn probe_handler (eh, msg) {
 
 defn trash_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“trash”)
-    return make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ trash_handler)
+    return make_leaf (name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ trash_handler)
 }
 
 defn trash_handler (eh, msg) {
@@ -357,7 +368,7 @@ defn deracer_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“deracer”)
     inst ≡ Deracer_Instance_Data (“idle”, TwoMessages (ϕ, ϕ))
     inst.state ⇐ “idle”
-    eh ≡ make_leaf (name ∷ name_with_id, owner ∷ owner, instance_data ∷ inst, handler ∷ deracer_handler)
+    eh ≡ make_leaf (name_with_id, owner, inst, deracer_handler)
     return eh
 }
 
@@ -548,7 +559,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
         all_containers_within_single_file ≡ json2internal (diagram_source)
         generate_shell_components (reg, all_containers_within_single_file)
         for container in all_containers_within_single_file{
-            register_component (reg, Template (name ∷ container@name , template_data ∷ container, instantiator ∷ container_instantiator))}}
+            register_component (reg, Template (container@name , template_container, container_instantiator))}}
     initialize_stock_components (reg)
     return reg
 }
@@ -671,7 +682,8 @@ defn initialize () {
     return [palette, [root_of_project, root_of_0D, main_container_name, diagram_names, arg]]
 }
 
-defn start (palette, env, show_hierarchy∷⊥, show_connections∷⊥, show_traces∷⊥, show_all_outputs∷⊥) {
+defn start (palette, env, show_hierarchy, show_connections, show_traces, show_all_outputs) {
+    ⌈ show_hierarchy∷⊥, show_connections∷⊥, show_traces∷⊥, show_all_outputs∷⊥⌉
     root_of_project ≡ env [0]
     root_of_0D ≡ env [1]
     main_container_name ≡ env [2]
@@ -679,7 +691,7 @@ defn start (palette, env, show_hierarchy∷⊥, show_connections∷⊥, show_tra
     arg ≡ env [4]
     set_environment (root_of_project, root_of_0D)
     ⌈ get entrypoint container⌉
-    deftemp main_container ⇐ get_component_instance(palette, main_container_name, owner∷ϕ)
+    deftemp main_container ⇐ get_component_instance(palette, main_container_name, ϕ)
     if ϕ = main_container {
         load_error (strcons (“Couldn't find container with page name ”,
 	              strcons (main_container_name,
@@ -700,7 +712,7 @@ defn start (palette, env, show_hierarchy∷⊥, show_connections∷⊥, show_tra
             dump_outputs (main_container)
         } else {
             print_error_maybe (main_container)
-            print_specific_output (main_container, port∷“”, stderr∷⊥)
+            print_specific_output (main_container, “”)
             if show_traces {
                 print (“--- routing traces ---”)
                 print (routing_trace_all (main_container))

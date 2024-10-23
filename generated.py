@@ -1,11 +1,9 @@
 
 
-def f ():                                                                       #line 1
+def start (palette,env,show_hierarchy= False,show_connections= False,show_traces= False,show_all_outputs= False):#line 1
 
-    x =  child. inq. empty                                                      #line 2
-
-    x =  child. inq. empty ()                                                   #line 3
-                                                                                #line 4
+    print (routing_trace_all ( main_container))                                 #line 2
+                                                                                #line 3
 
 
 
