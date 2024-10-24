@@ -31,7 +31,7 @@ defn make_component_registry () {
     return Component_Registry ()
 }
 
-defn register_component (reg, template) { { return abstracted_register_component (reg, template,  ⊥) }
+defn register_component (reg, template) { return abstracted_register_component (reg, template,  ⊥) }
 defn register_component_allow_overwriting (reg, template) { return abstracted_register_component (reg, template,  ⊤) }
 
 defn abstracted_register_component (reg, template, ok_to_overwrite) {
@@ -101,20 +101,24 @@ defn generate_shell_components (reg, container_list) {
     ⌈     {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []}⌉
     ⌈ ]⌉
     if ϕ != container_list {
-        for diagram in container_list{
+        for diagram in container_list {
             ⌈ loop through every component in the diagram and look for names that start with “$“⌉
             ⌈ {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},⌉
-            for child_descriptor in diagram@children{
-                if first_char_is (child_descriptor@name, “$”){
+            for child_descriptor in diagram@children {
+                if first_char_is (child_descriptor@name, “$”) {
                     name ≡ child_descriptor@name
                     cmd ≡ stringcdr (name).strip ()
                     generated_leaf ≡ Template (name, shell_out_instantiate, cmd)
-                    register_component (reg, generated_leaf)}
-                elif first_char_is (child_descriptor@name, “'”){
+                    register_component (reg, generated_leaf)
+                } elif first_char_is (child_descriptor@name, “'”) {
                     name ≡ child_descriptor@name
                     s ≡ stringcdr (name)
                     generated_leaf ≡ Template (name, string_constant_instantiate, s)
-                    register_component_allow_overwriting (reg, generated_leaf}}}}
+                    register_component_allow_overwriting (reg, generated_leaf)
+		}
+	    }
+	}
+    }
 }
 
 defn first_char (s) {
@@ -275,7 +279,7 @@ defn print_specific_output (eh, port) {
     deftemp outf ⇐ ϕ
     if datum != ϕ{
         outf ⇐ sys.stdout
-        print (datum.srepr (), file ∷ outf)}
+        print (datum.srepr (), outf)}
 }
 defn print_specific_output_to_stderr (eh, port) {
     ⌈ port ∷ “”⌉
@@ -284,7 +288,7 @@ defn print_specific_output_to_stderr (eh, port) {
     if datum != ϕ{
         ⌈ I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in...⌉
         outf ⇐ sys.stderr
-        print (datum.srepr (), file ∷ outf)}
+        print (datum.srepr (), outf)}
 }
 
 defn put_output (eh, msg) {
@@ -318,31 +322,31 @@ defn set_environment (rproject, r0D) {
 
 defn probe_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“?”)
-    return make_leaf (name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name_with_id, owner, ϕ, probe_handler)
 }
 defn probeA_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“?A”)
-    return make_leaf (name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name_with_id, owner,  ϕ,  probe_handler)
 }
 
 defn probeB_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol(“?B”)
-    return make_leaf (name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name_with_id, owner,  ϕ,  probe_handler)
 }
 
 defn probeC_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol(“?C”)
-    return make_leaf (name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ probe_handler)
+    return make_leaf (name_with_id, owner,  ϕ,  probe_handler)
 }
 
 defn probe_handler (eh, msg) {
     s ≡ msg.datum.srepr ()
-    print (strcons (“... probe ”, strcons (eh.name, strcons (“: ”, s))), file ∷ sys.stderr)
+    print (strcons (“... probe ”, strcons (eh.name, strcons (“: ”, s))), sys.stderr)
 }
 
 defn trash_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“trash”)
-    return make_leaf (name_with_id, owner ∷ owner, instance_data ∷ ϕ, handler ∷ trash_handler)
+    return make_leaf (name_with_id, owner, ϕ, trash_handler)
 }
 
 defn trash_handler (eh, msg) {
@@ -559,7 +563,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
         all_containers_within_single_file ≡ json2internal (diagram_source)
         generate_shell_components (reg, all_containers_within_single_file)
         for container in all_containers_within_single_file{
-            register_component (reg, Template (container@name , template_container, container_instantiator))}}
+            register_component (reg, Template (container@name , ⌈ template_data = ⌉container, ⌈ instantiator = ⌉container_instantiator))}}
     initialize_stock_components (reg)
     return reg
 }
@@ -682,7 +686,8 @@ defn initialize () {
     return [palette, [root_of_project, root_of_0D, main_container_name, diagram_names, arg]]
 }
 
-defn start (palette, env, show_hierarchy, show_connections, show_traces, show_all_outputs) {
+defn start (palette, env) { start_with_debug (palette, env, False, False, False, False) }
+defn start_with_debug (palette, env, show_hierarchy, show_connections, show_traces, show_all_outputs) {
     ⌈ show_hierarchy∷⊥, show_connections∷⊥, show_traces∷⊥, show_all_outputs∷⊥⌉
     root_of_project ≡ env [0]
     root_of_0D ≡ env [1]

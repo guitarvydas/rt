@@ -126,7 +126,7 @@ Atom_pmacro [m] = ‛«m»’
 Atom_emptylistconst [ _72 _73] =‛«_72»«_73»’
 Atom_emptydict [ _76 _77] =‛«_76»«_77»’
 Atom_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’
-Atom_listconst [ lb line1? PrimaryComma+ line2? rb] =‛«_74»«line1»«PrimaryComma»«_75»«line2»’
+Atom_listconst [ lb line1? PrimaryComma+ line2? rb] =‛«lb»«line1»«PrimaryComma»«rb»«line2»’
 Atom_dict [ _78 line1? PairComma+ line2? _79] =‛«_78»«line1»«PairComma»«line2»«_79»’
 Atom_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
 Atom_pos [ _86 Primary ] =‛ +«Primary»’
@@ -150,15 +150,13 @@ ObjFormals_noformals [ _148 _149] =‛’
 ObjFormals_withformals [ _150 FormalComma* _151] =‛«FormalComma»’
 LambdaFormals_noformals [ _148 _149] =‛’
 LambdaFormals_withformals [ _150 FormalComma* _151] =‛«FormalComma»’
-Formal_defaultvalue [ ident  _152 Exp] = ‛«ident»=«Exp»’
-Formal_plain [ ident] = ‛«ident»’
+Formal [ ident] = ‛«ident»’
 FormalComma [Formal comma?] =‛«Formal»«comma»’
 
 Actuals_noactuals [ _154 _155] =‛«_154»«_155»’
 Actuals_actuals [ _156 ActualComma* _157 line?] =‛«_156»«ActualComma»«_157»«line»’
-Actual [ ParamName? Exp] = ‛«ParamName»«Exp»’
-ActualComma [Actual comma? line?] = ‛«Actual»«comma»«line»’
-ParamName [ ident _159] = ‛«ident»=’
+Actual [Exp] = ‛«Exp»’
+ActualComma [comment? Actual comma? line?] = ‛«Actual»«comma»«line»’
 
 number_fract [ num* _160 den+] =‛«num»«_160»«den»’
 number_whole [ digit+] =‛«digit»’

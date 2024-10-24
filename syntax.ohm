@@ -136,9 +136,7 @@ syntax {
       | "(" ")" -- noformals
       | "(" FormalComma* ")" -- withformals
 
-    Formal = 
-       | ident "∷" Exp -- defaultvalue
-       | ident -- plain
+    Formal = ident
 
     FormalComma = Formal Comma?
     
@@ -147,7 +145,7 @@ syntax {
       | "(" ActualComma* ")" line? -- actuals
 
    Actual = ParamName? Exp
-   ActualComma = Actual Comma? line?
+   ActualComma = comment? Actual Comma? line?
 
    ParamName = ident "∷"
 

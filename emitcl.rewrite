@@ -149,15 +149,13 @@ ObjFormals_noformals [ _148 _149] =‛’
 ObjFormals_withformals [ _150 FormalComma* _151] =‛«FormalComma»’
 LambdaFormals_noformals [ _148 _149] =‛’
 LambdaFormals_withformals [ _150 FormalComma* _151] =‛«FormalComma»’
-Formal_defaultvalue [ ident  _152 Exp] = ‛(«ident» «Exp»)’
-Formal_plain [ ident] = ‛«ident»’
+Formal [ ident] = ‛«ident»’
 FormalComma [Formal comma?] =‛ «Formal»«comma»’
 
 Actuals_noactuals [ _154 _155] =‛’
 Actuals_actuals [ _156 ActualComma* _157 line?] =‛ «ActualComma» «line»’
-Actual [ ParamName? Exp] = ‛«ParamName» «Exp»’
-ActualComma [Actual comma? line?] = ‛«Actual»«comma»«line»’
-ParamName [ ident _159] = ‛:«ident»’
+Actual [ Exp] = ‛«Exp»’
+ActualComma [comment? Actual comma? line?] = ‛«comment»«Actual»«comma»«line»’
 
 number_fract [ num* _160 den+] =‛«num».«den»’
 number_whole [ digit+] =‛«digit»’

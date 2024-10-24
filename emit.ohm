@@ -152,7 +152,6 @@ emit {
       | "(" FormalComma* ")" -- withformals
 
     Formal = 
-       | ident "∷" Exp -- defaultvalue
        | ident -- plain
        
     FormalComma = Formal Comma?
@@ -161,10 +160,8 @@ emit {
       | "(" ")" -- noactuals
       | "(" ActualComma* ")" line? -- actuals
 
-   Actual = ParamName? Exp
-   ActualComma = Actual Comma? line?
-
-   ParamName = ident "∷"
+   Actual = Exp
+   ActualComma = comment? Actual Comma? line?
 
     number =
       | digit* "." digit+  -- fract
