@@ -258,7 +258,7 @@ defn make_Send_Descriptor (component, port, message, cause_port, cause_message) 
 }
 
 defn log_send (sender, sender_port, msg, cause_msg) {
-    send_desc ≡ make_Send_Descriptor (sender, sender_port, msg, cause_cause_msg.port, cause_cause_msg)
+    send_desc ≡ make_Send_Descriptor (sender, sender_port, msg, cause_msg.port, cause_msg)
     append_routing_descriptor (sender.owner, send_desc)
 }
 
@@ -477,13 +477,13 @@ defn make_InOut_Descriptor (container, component, in_message, out_port, out_mess
 
 defn log_inout (container, component, in_message) {
     if component.outq.empty () {
-        log_inout_no_output (container, component, in_in_message) }
+        log_inout_no_output (container, component, in_message) }
     else {
-        log_inout_recursively (container, component, in_in_message, out_list (component.outq.queue)) }
+        log_inout_recursively (container, component, in_message, list (component.outq.queue)) }
 }
 
 defn log_inout_no_output (container, component, in_message) {
-    rdesc ≡ make_InOut_Descriptor (container, component, in_in_message, ϕ, ϕ)
+    rdesc ≡ make_InOut_Descriptor (container, component, in_message, ϕ, ϕ)
     append_routing_descriptor (container, rdesc)
 }
 
@@ -499,7 +499,7 @@ defn log_inout_recursively (container, component, in_message, out_messages) {
         m ≡ car (out_messages)
         rest ≡ cdr (out_messages)
         log_inout_single (container, component, in_message, m)
-        log_inout_recursively (container, component, in_in_message, out_rest) }
+        log_inout_recursively (container, component, in_message, rest) }
 }
 
 defn fmt_inout (desc, indent) {
@@ -706,15 +706,15 @@ defn step_children (container, causingMessage) {
                 elif continued_long_run {
                     pass }
                 elif ended_long_run {
-                    log_inout (container, child, in_fetch_saved_message_and_clear (child))}
+                    log_inout (container, child, fetch_saved_message_and_clear (child))}
                 else {
-                    log_inout (container, child, in_msg)}
+                    log_inout (container, child, msg)}
                 destroy_message(msg)}
             else {
                 if child.state !=  “idle” {
                     msg ≡ force_tick (container, child)
                     child.handler(child, msg)
-                    log_tick (container, child, in_msg)
+                    log_tick (container, child, msg)
                     destroy_message(msg)}}
             
             if child.state = “active” {

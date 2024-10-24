@@ -222,13 +222,13 @@ defn send (eh,port,datum,causingMessage) {
 defn send_string (eh, port, s, causingMessage) {
     datum ≡ new_datum_string (s)
     msg ≡ make_message(port, datum)
-    log_send_string (eh, sender_port, msg, cause_causingMessage)
+    log_send_string (eh, port, msg, causingMessage)
     put_output (eh, msg)
 }
 
 defn forward (eh, port, msg) {
     fwdmsg ≡ make_message(port, msg.datum)
-    log_forward (eh, sender_port, msg, cause_msg)
+    log_forward (eh, port, msg, msg)
     put_output (eh, msg)
 }
 

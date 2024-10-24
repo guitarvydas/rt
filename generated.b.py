@@ -424,7 +424,7 @@ def send_string (eh,port,s,causingMessage):                                     
 
     msg = make_message ( port, datum)                                           #line 224
 
-    log_send_string ( eh, sender_port, msg, cause_causingMessage)               #line 225
+    log_send_string ( eh, port, msg, causingMessage)                            #line 225
 
     put_output ( eh, msg)                                                       #line 226
                                                                                 #line 227
@@ -435,7 +435,7 @@ def forward (eh,port,msg):                                                      
 
     fwdmsg = make_message ( port, msg. datum)                                   #line 230
 
-    log_forward ( eh, sender_port, msg, cause_msg)                              #line 231
+    log_forward ( eh, port, msg, msg)                                           #line 231
 
     put_output ( eh, msg)                                                       #line 232
                                                                                 #line 233

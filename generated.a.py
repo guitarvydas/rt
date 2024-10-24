@@ -442,7 +442,7 @@ def make_Send_Descriptor (component,port,message,cause_port,cause_message):     
 
 def log_send (sender,sender_port,msg,cause_msg):                                #line 260
 
-    send_desc = make_Send_Descriptor ( sender, sender_port, msg, cause_cause_msg. port, cause_cause_msg)#line 261
+    send_desc = make_Send_Descriptor ( sender, sender_port, msg, cause_msg. port, cause_msg)#line 261
 
     append_routing_descriptor ( sender. owner, send_desc)                       #line 262
                                                                                 #line 263
@@ -703,11 +703,11 @@ def log_inout (container,component,in_message):                                 
 
     if  component. outq.empty ():                                               #line 479
 
-        log_inout_no_output ( container, component, in_in_message)              #line 480
+        log_inout_no_output ( container, component, in_message)                 #line 480
 
     else:                                                                       #line 481
 
-        log_inout_recursively ( container, component, in_in_message,out_list ( component. outq. queue))#line 482
+        log_inout_recursively ( container, component, in_message,list ( component. outq. queue))#line 482
 
                                                                                 #line 483
 
@@ -715,7 +715,7 @@ def log_inout (container,component,in_message):                                 
 
 def log_inout_no_output (container,component,in_message):                       #line 485
 
-    rdesc = make_InOut_Descriptor ( container, component, in_in_message, None, None)#line 486
+    rdesc = make_InOut_Descriptor ( container, component, in_message, None, None)#line 486
 
     append_routing_descriptor ( container, rdesc)                               #line 487
                                                                                 #line 488
@@ -745,7 +745,7 @@ def log_inout_recursively (container,component,in_message,out_messages):        
 
         log_inout_single ( container, component, in_message, m)                 #line 501
 
-        log_inout_recursively ( container, component, in_in_message, out_rest)  #line 502
+        log_inout_recursively ( container, component, in_message, rest)         #line 502
 
                                                                                 #line 503
 
@@ -1125,11 +1125,11 @@ def step_children (container,causingMessage):                                   
 
                 elif  ended_long_run:                                           #line 708
 
-                    log_inout ( container, child,in_fetch_saved_message_and_clear ( child))#line 709
+                    log_inout ( container, child,fetch_saved_message_and_clear ( child))#line 709
 
                 else:                                                           #line 710
 
-                    log_inout ( container, child, in_msg)                       #line 711
+                    log_inout ( container, child, msg)                          #line 711
 
 
                 destroy_message ( msg)                                          #line 712
@@ -1142,7 +1142,7 @@ def step_children (container,causingMessage):                                   
 
                     child.handler ( child, msg)                                 #line 716
 
-                    log_tick ( container, child, in_msg)                        #line 717
+                    log_tick ( container, child, msg)                           #line 717
 
                     destroy_message ( msg)
                                                                                 #line 718
