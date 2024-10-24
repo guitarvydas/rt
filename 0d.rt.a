@@ -602,7 +602,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
 
 ⌈ The default handler for container components.⌉
 defn container_handler (container, message) {
-    route (container, from_container, message) ⌈ references to 'self' are replaced by the container during instantiation⌉
+    route (container, ⌈ from= ⌉container, message) ⌈ references to 'self' are replaced by the container during instantiation⌉
     while any_child_ready (container) {
         step_children (container, message)}
 }
@@ -795,11 +795,11 @@ defn append_routing_descriptor (container, desc) {
 defn log_connection (container, connector, message) {
     if “down” = connector.direction{
         log_down (container,
-	          source_connector.sender.port,
-		  ϕ,
-		  connector.receiver.component,
-		  connector.receiver.port,
-                  message) }
+	          ⌈ source port = ⌉connector.sender.port,
+		  ⌈ source message = ⌉ϕ,
+		  ⌈ target = ⌉connector.receiver.component,
+		  ⌈ target port = ⌉connector.receiver.port,
+                  ⌈ target message = ⌉message) }
     elif “up” = connector.direction {
         log_up (connector.sender.component, connector.sender.port, ϕ, container, connector.receiver.port, message) }
     elif “across” = connector.direction {

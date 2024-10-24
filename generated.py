@@ -942,7 +942,7 @@ def container_instantiator (reg,owner,container_name,desc):                     
 
 def container_handler (container,message):                                      #line 604
 
-    route ( container, from_container, message)
+    route ( container, container, message)
     # references to 'self' are replaced by the container during instantiation   #line 605
 
     while any_child_ready ( container):                                         #line 606
@@ -1303,7 +1303,7 @@ def log_connection (container,connector,message):                               
     if  "down" ==  connector. direction:                                        #line 796
 
         log_down ( container,                                                   #line 797
-        source_connector. sender. port,                                         #line 798
+        connector. sender. port,                                                #line 798
         None,                                                                   #line 799
         connector. receiver. component,                                         #line 800
         connector. receiver. port,                                              #line 801
