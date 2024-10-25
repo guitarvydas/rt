@@ -21,7 +21,7 @@ emit {
    Rec_Statement = line? R_Statement line?
    R_Statement =
      | comment Rec_Statement? -- comment
-     | Macro -- macro
+     | External -- external
      | Deftemp -- deftemp
      | Defsynonym -- defsynonym     
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
@@ -35,10 +35,20 @@ emit {
      | line Rec_Statement? -- line
    CommaIdent = Comma ident
 
-   Macro =
-     | "#" "❲low_level_read_text_file_handler❳" "(" eh Comma msg Comma fname Comma ok Comma err ")" -- read
-     | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
-     | "#" "❲get_argv❳" "(" ")" -- getargv
+   External =
+     | "#" xkw<"low_level_read_text_file_handler"> "(" eh Comma msg Comma fname Comma ok Comma err ")" -- read
+     | "#" xkw<"read_and_convert_json_file"> "(" fname ")" -- racjf
+     | "#" xkw<"get_argv"> "(" ")" -- getargv
+     | "#" xkw<"freshQueue"> "(" ")" -- freshQueue
+     | "#" xkw<"freshStack"> "(" ")" -- freshStack
+     | "#" xkw<"fresh"> "(" ident ")" -- fresh
+     | "#" xkw<"car"> "(" Exp ")" -- car
+     | "#" xkw<"cdr"> "(" Exp ")" -- cdr
+     | "#" xkw<"nthargv"> "(" Exp ")" -- nthargv
+     | "#" xkw<"nthargvcdr"> "(" Exp ")" -- nthargvcdr
+     | "#" xkw<"stringcdr"> "(" Exp ")" -- stringcdr
+     | "#" xkw<"strcons"> "(" Exp Comma Exp ")" -- strcons
+
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
    Defsynonym =
@@ -107,17 +117,8 @@ emit {
       | PrimaryIndexed "[" digit+ ":" "]" -- nthslice
       | Atom -- atom
 
-    Pmacro =
-      | pkw<"fresh"> "(" ident ")" -- fresh
-      | pkw<"car"> "(" Exp ")" -- car
-      | pkw<"cdr"> "(" Exp ")" -- cdr
-      | pkw<"nthargv"> "(" Exp ")" -- nthargv
-      | pkw<"nthargvcdr"> "(" Exp ")" -- nthargvcdr
-      | pkw<"stringcdr"> "(" Exp ")" -- stringcdr
-      | pkw<"strcons"> "(" Exp Comma Exp ")" -- strcons
-
     Atom =
-      | Pmacro -- pmacro
+      | External -- external
       | "[" "]" -- emptylistconst
       | "{" "}" -- emptydict
       | "(" Exp ")" -- paren
@@ -209,7 +210,7 @@ emit {
   phi = ("ϕ" | kw<"%CF%95">)
 
   kw<s> = "❲" s "❳"
-  pkw<s> = "❲" s "❳"
+  xkw<s> = "❲" s "❳"
   ident  = ~keyword "❲" idchar+ "❳"
   idchar =
     | "❲" idchar+ "❳" -- rec

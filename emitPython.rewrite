@@ -21,7 +21,7 @@ StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1�
 Rec_Statement [line1? R_Statement line2?] = ‛«line1»«R_Statement»«line2»’
 R_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
 R_Statement_comment [s rec?] =‛\n«s»«rec»’
-R_Statement_macro [m] = ‛«m»’
+R_Statement_external [x] = ‛«x»’
 R_Statement_if [ IfStatement] =‛«IfStatement»’
 R_Statement_pass [ _27 scope?] =‛\npass«scope»’
 R_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
@@ -32,7 +32,7 @@ R_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
 R_Statement_line [line rec?] = ‛«line»«rec»’
 CommaIdent [_comma ident] = ‛, «ident»’
 
-Macro_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
+External_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
     try:⤷
         f = open («fname»)⤶
     except Exception as e:⤷
@@ -48,7 +48,7 @@ Macro_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4
         send_string (eh, «err», f"open error on file '{«fname»}'", «msg»)⤶
 ’
 
-Macro_racjf [_octothorpe _racjf lp fname rp] = ‛
+External_racjf [_octothorpe _racjf lp fname rp] = ‛
     try:⤷
         fil = open(«fname», “r”)
         json_data = fil.read()
@@ -62,9 +62,17 @@ Macro_racjf [_octothorpe _racjf lp fname rp] = ‛
         print ("Error decoding JSON in file: '{e}'")
         return None⤶
 ’
-Macro_getargv [_octothorpe _getrv lp rp] = ‛
-    return sys.argv
-’
+External_getargv [_octothorpe _getrv lp rp] = ‛ sys.argv’
+External_freshQueue [_octothorpe _ lp rp] = ‛ queue.Queue ()’
+External_freshStack [_octothorpe _ lp rp] = ‛ queue.LifoQueue ()’
+External_fresh [_octothorpe _83 _84 ident _85] =‛ «ident» ()’
+External_car [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
+External_cdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’
+External_nthargvcdr [_octothorpe _83 lb n rb ] =‛ sys.argv[«n»:] ’
+External_nthargv [_octothorpe _83 _84 n _85 ] =‛ sys.argv[«n»] ’
+External_stringcdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’
+External_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ str(«e1») + «e2» ’
+
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n«lval» = «e»«rec»’
 Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec»’
@@ -117,15 +125,7 @@ PrimaryIndexed_index [p lb e rb] = ‛«p» [«e»]’
 PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’
 PrimaryIndexed_atom [a] = ‛«a»’
 
-Pmacro_fresh [ _83 _84 ident _85] =‛ «ident» ()’
-Pmacro_car [ _83 _84 e _85 ] =‛ «e»[0] ’
-Pmacro_cdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
-Pmacro_nthargvcdr [ _83 lb n rb ] =‛ sys.argv[«n»:] ’
-Pmacro_nthargv [ _83 _84 n _85 ] =‛ sys.argv[«n»] ’
-Pmacro_stringcdr [ _83 _84 e _85 ] =‛ «e»[1:] ’
-Pmacro_strcons [ _strcons lp e1 _comma e2 rp] =‛ str(«e1») + «e2» ’
-
-Atom_pmacro [m] = ‛«m»’
+Atom_external [x] = ‛«x»’
 Atom_emptylistconst [ _72 _73] =‛«_72»«_73»’
 Atom_emptydict [ _76 _77] =‛«_76»«_77»’
 Atom_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’

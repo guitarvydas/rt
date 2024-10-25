@@ -37,7 +37,7 @@ defn register_component_allow_overwriting (reg, template) { return abstracted_re
 defn abstracted_register_component (reg, template, ok_to_overwrite) {
     name ≡ mangle_name (template.name)
     if name in reg.templates and not ok_to_overwrite {
-        load_error (strcons (“Component ”, strcons (template.name, “ already declared”)))}
+        load_error (#strcons (“Component ”, #strcons (template.name, “ already declared”)))}
     reg.templates[name] ⇐ template
     return reg
 }
@@ -52,21 +52,21 @@ defn get_component_instance (reg, full_name, owner) {
     if template_name in reg.templates {
         template ≡ reg.templates[template_name]
         if (template = ϕ) {
-            load_error (strcons (“Registry Error: Can't find component ”, strcons (template_name, “ (does it need to be declared in components_to_include_in_project?”)))
+            load_error (#strcons (“Registry Error: Can't find component ”, #strcons (template_name, “ (does it need to be declared in components_to_include_in_project?”)))
             return ϕ}
         else {
             owner_name ≡ “”
             instance_name ≡ template_name
             if ϕ != owner {
                 owner_name ⇐ owner.name
-                instance_name ⇐ strcons (owner_name, strcons (“.”, template_name))}
+                instance_name ⇐ #strcons (owner_name, #strcons (“.”, template_name))}
             else{
                 instance_name ⇐ template_name}
             instance ≡ template.instantiator (reg, owner, instance_name, template.template_data)
             instance.depth ⇐ calculate_depth (instance)
             return instance }}
     else {
-            load_error (strcons (“Registry Error: Can't find component ”, strcons (template_name, “ (does it need to be declared in components_to_include_in_project?”)))
+            load_error (#strcons (“Registry Error: Can't find component ”, #strcons (template_name, “ (does it need to be declared in components_to_include_in_project?”)))
             return ϕ}
 }
 defn calculate_depth (eh) {
@@ -86,7 +86,7 @@ defn dump_registry (reg) {
 }
 
 defn print_stats (reg) {
-    print (strcons (“registry statistics: ”, reg.stats))
+    print (#strcons (“registry statistics: ”, reg.stats))
 }
 
 defn mangle_name (s) {
@@ -107,12 +107,12 @@ defn generate_shell_components (reg, container_list) {
             for child_descriptor in diagram@children {
                 if first_char_is (child_descriptor@name, “$”) {
                     name ≡ child_descriptor@name
-                    cmd ≡ stringcdr (name).strip ()
+                    cmd ≡ #stringcdr (name).strip ()
                     generated_leaf ≡ Template (name, shell_out_instantiate, cmd)
                     register_component (reg, generated_leaf)
                 } elif first_char_is (child_descriptor@name, “'”) {
                     name ≡ child_descriptor@name
-                    s ≡ stringcdr (name)
+                    s ≡ #stringcdr (name)
                     generated_leaf ≡ Template (name, string_constant_instantiate, s)
                     register_component_allow_overwriting (reg, generated_leaf)
 		}
@@ -122,7 +122,7 @@ defn generate_shell_components (reg, container_list) {
 }
 
 defn first_char (s) {
-    return car (s)
+    return #car (s)
 }
 
 defn first_char_is (s, c) {
@@ -138,7 +138,7 @@ defn run_command (eh, cmd, s) {
         if ret.stderr != ϕ{
             return [“”, ret.stderr]}
         else{
-            return [“”, strcons (“error in shell_out ”, ret.returncode)]}}
+            return [“”, #strcons (“error in shell_out ”, ret.returncode)]}}
     else{
         return [ret.stdout, ϕ]}
 }
@@ -161,22 +161,18 @@ defn run_command (eh, cmd, s) {
 import queue
 import sys
 
-defn freshQueue () {
-    #freshQueue ()
-}
-
 ⌈ Eh_States :: enum { idle, active }⌉
 defobj Eh () {
         • name ⇐ “”
-        • inq ⇐ queue.Queue ()
-        • outq ⇐ queue.Queue ()
+        • inq ⇐ #freshQueue ()
+        • outq ⇐ #freshQueue ()
         • owner ⇐ ϕ
-        • saved_messages ⇐ queue.LifoQueue () ⌈ stack of saved message(s)⌉
+        • saved_messages ⇐ #freshStack () ⌈ stack of saved message(s)⌉
         • inject ⇐ injector_NIY
         • children ⇐ []
-        • visit_ordering ⇐ queue.Queue ()
+        • visit_ordering ⇐ # freshQueue ()
         • connections ⇐ []
-        • routings ⇐ queue.Queue ()
+        • routings ⇐ #freshQueue ()
         • handler ⇐ ϕ
         • instance_data ⇐ ϕ
         • state ⇐ “idle”
@@ -204,7 +200,7 @@ defn make_container (name, owner) {
 
 defn make_leaf (name, owner, instance_data, handler) {
     eh ≡ Eh ()
-    eh.name ⇐ strcons (owner.name, strcons (“.”, name))
+    eh.name ⇐ #strcons (owner.name, #strcons (“.”, name))
     eh.owner ⇐ owner
     eh.handler ⇐ handler
     eh.instance_data ⇐ instance_data
@@ -297,11 +293,11 @@ defn put_output (eh, msg) {
 
 defn injector_NIY (eh, msg) {
    ⌈ print (f'Injector not implemented for this component “{eh.name}“ kind ∷ {eh.kind} port ∷ “{msg.port}“')⌉
-   print (strcons (“Injector not implemented for this component ”,
-            strcons (eh.name,
-	      strcons (“ kind ∷ ”,
-	        strcons (eh.kind,
-		  strcons (“,  port ∷ ”, msg.port))))))
+   print (#strcons (“Injector not implemented for this component ”,
+            #strcons (eh.name,
+	      #strcons (“ kind ∷ ”,
+	        #strcons (eh.kind,
+		  #strcons (“,  port ∷ ”, msg.port))))))
     exit ()
 }
 
@@ -341,7 +337,7 @@ defn probeC_instantiate (reg, owner, name, template_data) {
 
 defn probe_handler (eh, msg) {
     s ≡ msg.datum.srepr ()
-    print (strcons (“... probe ”, strcons (eh.name, strcons (“: ”, s))), sys.stderr)
+    print (#strcons (“... probe ”, #strcons (eh.name, #strcons (“: ”, s))), sys.stderr)
 }
 
 defn trash_instantiate (reg, owner, name, template_data) {
@@ -392,21 +388,21 @@ defn deracer_handler (eh, msg) {
             inst.buffer.second ⇐ msg
             inst.state ⇐ “waitingForFirst”}
         else{
-            runtime_error (strcons (“bad msg.port (case A) for deracer ”, msg.port))}}
+            runtime_error (#strcons (“bad msg.port (case A) for deracer ”, msg.port))}}
     elif inst.state = “waitingForFirst” {
         if “1” = msg.port{
             inst.buffer.first ⇐ msg
             send_first_then_second (eh, inst)
             inst.state ⇐ “idle”}
         else{
-            runtime_error (strcons (“bad msg.port (case B) for deracer ”, msg.port))}}
+            runtime_error (#strcons (“bad msg.port (case B) for deracer ”, msg.port))}}
     elif inst.state = “waitingForSecond”{
         if “2” = msg.port{
             inst.buffer.second ⇐ msg
             send_first_then_second (eh, inst)
             inst.state ⇐ “idle”}
         else{
-            runtime_error (strcons (“bad msg.port (case C) for deracer ”, msg.port))}}
+            runtime_error (#strcons (“bad msg.port (case C) for deracer ”, msg.port))}}
     else{
         runtime_error (“bad state for deracer {eh.state}”)}
 }
@@ -430,7 +426,7 @@ defn ensure_string_datum_handler (eh, msg) {
     if “string” = msg.datum.kind (){
         forward (eh, “”, msg)}
     else{
-        emsg ≡ strcons (“*** ensure: type error (expected a string datum) but got ”, msg.datum)
+        emsg ≡ #strcons (“*** ensure: type error (expected a string datum) but got ”, msg.datum)
         send_string (eh, “✗”, emsg, msg)}
 }
 
@@ -457,7 +453,7 @@ defn syncfilewrite_handler (eh, msg) {
             f.close ()
             send (eh, “done”, new_datum_bang (), msg)}
         else{
-            send_string (eh, “✗”, strcons (“open error on file ”, inst.filename), msg)}}
+            send_string (eh, “✗”, #strcons (“open error on file ”, inst.filename), msg)}}
 }
 
 defobj StringConcat_Instance_Data () {
@@ -483,7 +479,7 @@ defn stringconcat_handler (eh, msg) {
         inst.count ⇐ inst.count + 1
         maybe_stringconcat (eh, inst, msg)}
     else{
-        runtime_error (strcons (“bad msg.port for stringconcat: ”, msg.port))
+        runtime_error (#strcons (“bad msg.port for stringconcat: ”, msg.port))
     }
 }
 
@@ -596,17 +592,17 @@ defn trace_outputs (main_container) {
 
 defn dump_hierarchy (main_container) {
     nl ()
-    print (strcons (“___ Hierarchy ___”, (build_hierarchy (main_container))))
+    print (#strcons (“___ Hierarchy ___”, (build_hierarchy (main_container))))
 }
 
 defn build_hierarchy (c) {
     deftemp s ⇐ “”
     for child in c.children{
-        s ⇐ strcons (s, build_hierarchy (child))}
+        s ⇐ #strcons (s, build_hierarchy (child))}
     deftemp indent ⇐ “”
     for i in range (c.depth){
         indent ⇐ indent + “  ”}
-    return strcons (“\n”, strcons (indent, strcons (“(”, strcons (c.name, strcons (s, “)”)))))
+    return #strcons (“\n”, #strcons (indent, #strcons (“(”, #strcons (c.name, #strcons (s, “)”)))))
 }
 
 defn dump_connections (c) {
@@ -654,7 +650,7 @@ defvar rand ⇐ 0
 defn fakepipename_handler (eh, msg) {
     global rand
     rand ⇐ rand + 1 ⌈ not very random, but good enough _ 'rand' must be unique within a single run⌉
-    send_string (eh, “”, strcons (“/tmp/fakepipe”, rand), msg)
+    send_string (eh, “”, #strcons (“/tmp/fakepipe”, rand), msg)
 }
 
 
@@ -684,11 +680,11 @@ defn argv () {
 }
 
 defn initialize () {
-    root_of_project ≡ nthargv (1) 
-    root_of_0D ≡ nthargv (2)
-    arg ≡ nthargv (3)
-    main_container_name ≡ nthargv (4)
-    diagram_names ≡ nthargvcdr (5)
+    root_of_project ≡ #nthargv (1) 
+    root_of_0D ≡ #nthargv (2)
+    arg ≡ #nthargv (3)
+    main_container_name ≡ #nthargv (4)
+    diagram_names ≡ #nthargvcdr (5)
     palette ≡ initialize_component_palette (root_project, root_0D, diagram_names)
     return [palette, [root_of_project, root_of_0D, main_container_name, diagram_names, arg]]
 }
@@ -705,10 +701,10 @@ defn start_with_debug (palette, env, show_hierarchy, show_connections, show_trac
     ⌈ get entrypoint container⌉
     deftemp main_container ⇐ get_component_instance(palette, main_container_name, ϕ)
     if ϕ = main_container {
-        load_error (strcons (“Couldn't find container with page name ”,
-	              strcons (main_container_name,
-		        strcons (“ in files ”,
-			  strcons (diagram_names, “(check tab names, or disable compression?)”)))))
+        load_error (#strcons (“Couldn't find container with page name ”,
+	              #strcons (main_container_name,
+		        #strcons (“ in files ”,
+			  #strcons (diagram_names, “(check tab names, or disable compression?)”)))))
     }
     if show_hierarchy {
         dump_hierarchy (main_container)
