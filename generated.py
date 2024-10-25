@@ -217,666 +217,676 @@ def clone_datum_bytes (src):                                                    
 
     p = Datum ()                                                                #line 121
 
-    p =  src                                                                    #line 122
+    p. clone =  src. clone                                                      #line 122
 
-    p. data =  src.clone ()                                                     #line 123
+    p. reclaim =  src. reclaim                                                  #line 123
 
-    return  p                                                                   #line 124
-                                                                                #line 125
+    p. srepr =  src. srepr                                                      #line 124
 
-                                                                                #line 126
+    p. raw =  src. raw                                                          #line 125
 
-def reclaim_datum_bytes (src):                                                  #line 127
+    p. kind =  src. kind                                                        #line 126
 
-    pass                                                                        #line 128
+    p. data =  src.clone ()                                                     #line 127
+
+    return  p                                                                   #line 128
                                                                                 #line 129
 
                                                                                 #line 130
 
-def srepr_datum_bytes (d):                                                      #line 131
+def reclaim_datum_bytes (src):                                                  #line 131
 
-    return  d. data.decode ( "UTF_8")                                           #line 132
+    pass                                                                        #line 132
                                                                                 #line 133
 
+                                                                                #line 134
 
-def raw_datum_bytes (d):                                                        #line 134
+def srepr_datum_bytes (d):                                                      #line 135
 
-    return  d. data                                                             #line 135
-                                                                                #line 136
-
+    return  d. data.decode ( "UTF_8")                                           #line 136
                                                                                 #line 137
 
-def new_datum_handle (h):                                                       #line 138
 
-    return new_datum_int ( h)                                                   #line 139
+def raw_datum_bytes (d):                                                        #line 138
+
+    return  d. data                                                             #line 139
                                                                                 #line 140
 
                                                                                 #line 141
 
-def new_datum_int (i):                                                          #line 142
+def new_datum_handle (h):                                                       #line 142
 
-    p = Datum ()                                                                #line 143
+    return new_datum_int ( h)                                                   #line 143
+                                                                                #line 144
 
-    p. data =  i                                                                #line 144
+                                                                                #line 145
 
-    p. clone =  lambda : clone_int ( i)                                         #line 145
+def new_datum_int (i):                                                          #line 146
 
-    p. reclaim =  lambda : reclaim_int ( i)                                     #line 146
+    p = Datum ()                                                                #line 147
 
-    p. srepr =  lambda : srepr_datum_int ( i)                                   #line 147
+    p. data =  i                                                                #line 148
 
-    p. raw =  lambda : raw_datum_int ( i)                                       #line 148
+    p. clone =  lambda : clone_int ( i)                                         #line 149
 
-    p. kind =  lambda :  "int"                                                  #line 149
+    p. reclaim =  lambda : reclaim_int ( i)                                     #line 150
 
-    return  p                                                                   #line 150
-                                                                                #line 151
+    p. srepr =  lambda : srepr_datum_int ( i)                                   #line 151
 
-                                                                                #line 152
+    p. raw =  lambda : raw_datum_int ( i)                                       #line 152
 
-def clone_int (i):                                                              #line 153
+    p. kind =  lambda :  "int"                                                  #line 153
 
-    p = new_datum_int ( i)                                                      #line 154
+    return  p                                                                   #line 154
+                                                                                #line 155
 
-    return  p                                                                   #line 155
                                                                                 #line 156
 
-                                                                                #line 157
+def clone_int (i):                                                              #line 157
 
-def reclaim_int (src):                                                          #line 158
+    p = new_datum_int ( i)                                                      #line 158
 
-    pass                                                                        #line 159
+    return  p                                                                   #line 159
                                                                                 #line 160
 
                                                                                 #line 161
 
-def srepr_datum_int (i):                                                        #line 162
+def reclaim_int (src):                                                          #line 162
 
-    return str ( i)                                                             #line 163
+    pass                                                                        #line 163
                                                                                 #line 164
 
                                                                                 #line 165
 
-def raw_datum_int (i):                                                          #line 166
+def srepr_datum_int (i):                                                        #line 166
 
-    return  i                                                                   #line 167
+    return str ( i)                                                             #line 167
                                                                                 #line 168
 
                                                                                 #line 169
-# Message passed to a leaf component.                                           #line 170
-#                                                                               #line 171
-# `port` refers to the name of the incoming or outgoing port of this component. #line 172
-# `datum` is the data attached to this message.                                 #line 173
+
+def raw_datum_int (i):                                                          #line 170
+
+    return  i                                                                   #line 171
+                                                                                #line 172
+
+                                                                                #line 173
+# Message passed to a leaf component.                                           #line 174
+#                                                                               #line 175
+# `port` refers to the name of the incoming or outgoing port of this component. #line 176
+# `datum` is the data attached to this message.                                 #line 177
 
 class Message:
-    def __init__ (self,port,datum):                                             #line 174
+    def __init__ (self,port,datum):                                             #line 178
 
-        self.port =  port                                                       #line 175
+        self.port =  port                                                       #line 179
 
-        self.datum =  datum                                                     #line 176
-                                                                                #line 177
-
-                                                                                #line 178
-
-def clone_port (s):                                                             #line 179
-
-    return clone_string ( s)                                                    #line 180
+        self.datum =  datum                                                     #line 180
                                                                                 #line 181
 
                                                                                 #line 182
-# Utility for making a `Message`. Used to safely “seed“ messages                #line 183
-# entering the very top of a network.                                           #line 184
 
-def make_message (port,datum):                                                  #line 185
+def clone_port (s):                                                             #line 183
 
-    p = clone_string ( port)                                                    #line 186
+    return clone_string ( s)                                                    #line 184
+                                                                                #line 185
 
-    m = Message ( p, datum.clone ())                                            #line 187
+                                                                                #line 186
+# Utility for making a `Message`. Used to safely “seed“ messages                #line 187
+# entering the very top of a network.                                           #line 188
 
-    return  m                                                                   #line 188
-                                                                                #line 189
+def make_message (port,datum):                                                  #line 189
 
-                                                                                #line 190
-# Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations.#line 191
+    p = clone_string ( port)                                                    #line 190
 
-def message_clone (message):                                                    #line 192
+    m = Message ( p, datum.clone ())                                            #line 191
 
-    m = Message (clone_port ( message. port), message. datum.clone ())          #line 193
+    return  m                                                                   #line 192
+                                                                                #line 193
 
-    return  m                                                                   #line 194
-                                                                                #line 195
+                                                                                #line 194
+# Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations.#line 195
 
-                                                                                #line 196
-# Frees a message.                                                              #line 197
+def message_clone (message):                                                    #line 196
 
-def destroy_message (msg):                                                      #line 198
+    m = Message (clone_port ( message. port), message. datum.clone ())          #line 197
 
-    # during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages#line 199
+    return  m                                                                   #line 198
+                                                                                #line 199
 
-    pass                                                                        #line 200
-                                                                                #line 201
+                                                                                #line 200
+# Frees a message.                                                              #line 201
 
-                                                                                #line 202
+def destroy_message (msg):                                                      #line 202
 
-def destroy_datum (msg):                                                        #line 203
+    # during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages#line 203
 
     pass                                                                        #line 204
                                                                                 #line 205
 
                                                                                 #line 206
 
-def destroy_port (msg):                                                         #line 207
+def destroy_datum (msg):                                                        #line 207
 
     pass                                                                        #line 208
                                                                                 #line 209
 
                                                                                 #line 210
-#                                                                               #line 211
 
-def format_message (m):                                                         #line 212
+def destroy_port (msg):                                                         #line 211
 
-    if  m ==  None:                                                             #line 213
+    pass                                                                        #line 212
+                                                                                #line 213
 
-        return  "ϕ"                                                             #line 214
+                                                                                #line 214
+#                                                                               #line 215
 
-    else:                                                                       #line 215
+def format_message (m):                                                         #line 216
 
-        return  str( "⟪") +  str( m. port) +  str( "⦂") +  str( m. datum.srepr ()) +  "⟫"    #line 219
-                                                                                #line 220
+    if  m ==  None:                                                             #line 217
 
-                                                                                #line 221
+        return  "ϕ"                                                             #line 218
 
-                                                                                #line 222
-                                                                                #line 223
+    else:                                                                       #line 219
 
-enumDown =  0                                                                   #line 224
+        return  str( "⟪") +  str( m. port) +  str( "⦂") +  str( m. datum.srepr ()) +  "⟫"    #line 223
+                                                                                #line 224
 
-enumAcross =  1                                                                 #line 225
+                                                                                #line 225
 
-enumUp =  2                                                                     #line 226
+                                                                                #line 226
+                                                                                #line 227
 
-enumThrough =  3                                                                #line 227
-                                                                                #line 228
+enumDown =  0                                                                   #line 228
 
-def container_instantiator (reg,owner,container_name,desc):                     #line 229
+enumAcross =  1                                                                 #line 229
 
-    global enumDown, enumUp, enumAcross, enumThrough                            #line 230
+enumUp =  2                                                                     #line 230
 
-    container = make_container ( container_name, owner)                         #line 231
+enumThrough =  3                                                                #line 231
+                                                                                #line 232
 
-    children = []                                                               #line 232
+def container_instantiator (reg,owner,container_name,desc):                     #line 233
+
+    global enumDown, enumUp, enumAcross, enumThrough                            #line 234
+
+    container = make_container ( container_name, owner)                         #line 235
+
+    children = []                                                               #line 236
 
     children_by_id = {}
-    # not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here#line 233
+    # not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here#line 237
 
-    # collect children                                                          #line 234
+    # collect children                                                          #line 238
 
-    for child_desc in  desc ["children"]:                                       #line 235
+    for child_desc in  desc ["children"]:                                       #line 239
 
-        child_instance = get_component_instance ( reg, child_desc ["name"], container)#line 236
+        child_instance = get_component_instance ( reg, child_desc ["name"], container)#line 240
 
-        children.append ( child_instance)                                       #line 237
+        children.append ( child_instance)                                       #line 241
 
-        children_by_id [ child_desc ["id"]] =  child_instance                   #line 238
+        children_by_id [ child_desc ["id"]] =  child_instance                   #line 242
 
 
-    container. children =  children                                             #line 239
+    container. children =  children                                             #line 243
 
-    me =  container                                                             #line 240
-                                                                                #line 241
+    me =  container                                                             #line 244
+                                                                                #line 245
 
-    connectors = []                                                             #line 242
+    connectors = []                                                             #line 246
 
-    for proto_conn in  desc ["connections"]:                                    #line 243
+    for proto_conn in  desc ["connections"]:                                    #line 247
 
-        source_component =  None                                                #line 244
+        connector = Connector ()                                                #line 248
 
-        target_component =  None                                                #line 245
+        if  proto_conn ["dir"] ==  enumDown:                                    #line 249
 
-        connector = Connector ()                                                #line 246
+            # JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},#line 250
 
-        if  proto_conn ["dir"] ==  enumDown:                                    #line 247
+            connector. direction =  "down"                                      #line 251
 
-            # JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},#line 248
+            connector. sender = Sender ( me. name, me, proto_conn ["source_port"])#line 252
 
-            connector. direction =  "down"                                      #line 249
+            target_component =  children_by_id [ proto_conn ["target"] ["id"]]  #line 253
 
-            connector. sender = Sender ( me. name, me, proto_conn ["source_port"])#line 250
+            if ( target_component ==  None):                                    #line 254
 
-            target_component =  children_by_id [ proto_conn ["target"] ["id"]]  #line 251
+                load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn ["target"] )#line 255
 
-            if ( target_component ==  None):                                    #line 252
+            else:                                                               #line 256
 
-                load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn ["target"] )#line 253
-
-            else:                                                               #line 254
-
-                connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn ["target_port"], target_component)#line 255
+                connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn ["target_port"], target_component)#line 257
 
                 connectors.append ( connector)
-                                                                                #line 256
+                                                                                #line 258
 
-        elif  proto_conn ["dir"] ==  enumAcross:                                #line 257
+        elif  proto_conn ["dir"] ==  enumAcross:                                #line 259
 
-            connector. direction =  "across"                                    #line 258
+            connector. direction =  "across"                                    #line 260
 
-            source_component =  children_by_id [ proto_conn ["source"] ["id"]]  #line 259
+            source_component =  children_by_id [ proto_conn ["source"] ["id"]]  #line 261
 
-            target_component =  children_by_id [ proto_conn ["target"] ["id"]]  #line 260
+            target_component =  children_by_id [ proto_conn ["target"] ["id"]]  #line 262
 
-            if  source_component ==  None:                                      #line 261
+            if  source_component ==  None:                                      #line 263
 
-                load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn ["source"] )#line 262
+                load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn ["source"] )#line 264
 
-            else:                                                               #line 263
+            else:                                                               #line 265
 
-                connector. sender = Sender ( source_component. name, source_component, proto_conn ["source_port"])#line 264
+                connector. sender = Sender ( source_component. name, source_component, proto_conn ["source_port"])#line 266
 
-                if  target_component ==  None:                                  #line 265
+                if  target_component ==  None:                                  #line 267
 
-                    load_error ( str( "internal error: .Across connection target not ok ") +  proto_conn. target )#line 266
+                    load_error ( str( "internal error: .Across connection target not ok ") +  proto_conn. target )#line 268
 
-                else:                                                           #line 267
+                else:                                                           #line 269
 
-                    connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn ["target_port"], target_component)#line 268
+                    connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn ["target_port"], target_component)#line 270
 
                     connectors.append ( connector)
 
-                                                                                #line 269
+                                                                                #line 271
 
-        elif  proto_conn ["dir"] ==  enumUp:                                    #line 270
+        elif  proto_conn ["dir"] ==  enumUp:                                    #line 272
 
-            connector. direction =  "up"                                        #line 271
+            connector. direction =  "up"                                        #line 273
 
-            source_component =  children_by_id [ proto_conn ["source"] ["id"]]  #line 272
+            source_component =  children_by_id [ proto_conn ["source"] ["id"]]  #line 274
 
-            if  source_component ==  None:                                      #line 273
+            if  source_component ==  None:                                      #line 275
 
-                print ( str( "internal error: .Up connection source not ok ") +  proto_conn ["source"] )#line 274
+                print ( str( "internal error: .Up connection source not ok ") +  proto_conn ["source"] )#line 276
 
-            else:                                                               #line 275
+            else:                                                               #line 277
 
-                connector. sender = Sender ( source_component. name, source_component, proto_conn ["source_port"])#line 276
+                connector. sender = Sender ( source_component. name, source_component, proto_conn ["source_port"])#line 278
 
-                connector. receiver = Receiver ( me. name, container. outq, proto_conn ["target_port"], me)#line 277
+                connector. receiver = Receiver ( me. name, container. outq, proto_conn ["target_port"], me)#line 279
 
                 connectors.append ( connector)
-                                                                                #line 278
+                                                                                #line 280
 
-        elif  proto_conn ["dir"] ==  enumThrough:                               #line 279
+        elif  proto_conn ["dir"] ==  enumThrough:                               #line 281
 
-            connector. direction =  "through"                                   #line 280
+            connector. direction =  "through"                                   #line 282
 
-            connector. sender = Sender ( me. name, me, proto_conn ["source_port"])#line 281
+            connector. sender = Sender ( me. name, me, proto_conn ["source_port"])#line 283
 
-            connector. receiver = Receiver ( me. name, container. outq, proto_conn ["target_port"], me)#line 282
+            connector. receiver = Receiver ( me. name, container. outq, proto_conn ["target_port"], me)#line 284
 
             connectors.append ( connector)
-                                                                                #line 283
+                                                                                #line 285
 
-                                                                                #line 284
+                                                                                #line 286
 
-    container. connections =  connectors                                        #line 285
+    container. connections =  connectors                                        #line 287
 
-    return  container                                                           #line 286
-                                                                                #line 287
+    return  container                                                           #line 288
+                                                                                #line 289
 
-                                                                                #line 288
-# The default handler for container components.                                 #line 289
+                                                                                #line 290
+# The default handler for container components.                                 #line 291
 
-def container_handler (container,message):                                      #line 290
+def container_handler (container,message):                                      #line 292
 
     route ( container, container, message)
-    # references to 'self' are replaced by the container during instantiation   #line 291
+    # references to 'self' are replaced by the container during instantiation   #line 293
 
-    while any_child_ready ( container):                                         #line 292
+    while any_child_ready ( container):                                         #line 294
 
-        step_children ( container, message)                                     #line 293
+        step_children ( container, message)                                     #line 295
 
-                                                                                #line 294
+                                                                                #line 296
 
-                                                                                #line 295
-# Frees the given container and associated data.                                #line 296
+                                                                                #line 297
+# Frees the given container and associated data.                                #line 298
 
-def destroy_container (eh):                                                     #line 297
+def destroy_container (eh):                                                     #line 299
 
-    pass                                                                        #line 298
-                                                                                #line 299
+    pass                                                                        #line 300
+                                                                                #line 301
 
-                                                                                #line 300
+                                                                                #line 302
 
-def fifo_is_empty (fifo):                                                       #line 301
+def fifo_is_empty (fifo):                                                       #line 303
 
-    return  fifo.empty ()                                                       #line 302
-                                                                                #line 303
+    return  fifo.empty ()                                                       #line 304
+                                                                                #line 305
 
-                                                                                #line 304
-# Routing connection for a container component. The `direction` field has       #line 305
-# no affect on the default message routing system _ it is there for debugging   #line 306
-# purposes, or for reading by other tools.                                      #line 307
-                                                                                #line 308
+                                                                                #line 306
+# Routing connection for a container component. The `direction` field has       #line 307
+# no affect on the default message routing system _ it is there for debugging   #line 308
+# purposes, or for reading by other tools.                                      #line 309
+                                                                                #line 310
 
 class Connector:
-    def __init__ (self,):                                                       #line 309
+    def __init__ (self,):                                                       #line 311
 
-        self.direction =  None # down, across, up, through                      #line 310
+        self.direction =  None # down, across, up, through                      #line 312
 
-        self.sender =  None                                                     #line 311
+        self.sender =  None                                                     #line 313
 
-        self.receiver =  None                                                   #line 312
-                                                                                #line 313
+        self.receiver =  None                                                   #line 314
+                                                                                #line 315
 
-                                                                                #line 314
-# `Sender` is used to “pattern match“ which `Receiver` a message should go to,  #line 315
-# based on component ID (pointer) and port name.                                #line 316
-                                                                                #line 317
+                                                                                #line 316
+# `Sender` is used to “pattern match“ which `Receiver` a message should go to,  #line 317
+# based on component ID (pointer) and port name.                                #line 318
+                                                                                #line 319
 
 class Sender:
-    def __init__ (self,name,component,port):                                    #line 318
+    def __init__ (self,name,component,port):                                    #line 320
 
-        self.name =  name                                                       #line 319
+        self.name =  name                                                       #line 321
 
-        self.component =  component # from                                      #line 320
+        self.component =  component # from                                      #line 322
 
-        self.port =  port # from's port                                         #line 321
-                                                                                #line 322
+        self.port =  port # from's port                                         #line 323
+                                                                                #line 324
 
-                                                                                #line 323
-# `Receiver` is a handle to a destination queue, and a `port` name to assign    #line 324
-# to incoming messages to this queue.                                           #line 325
-                                                                                #line 326
+                                                                                #line 325
+# `Receiver` is a handle to a destination queue, and a `port` name to assign    #line 326
+# to incoming messages to this queue.                                           #line 327
+                                                                                #line 328
 
 class Receiver:
-    def __init__ (self,name,queue,port,component):                              #line 327
+    def __init__ (self,name,queue,port,component):                              #line 329
 
-        self.name =  name                                                       #line 328
+        self.name =  name                                                       #line 330
 
-        self.queue =  queue # queue (input | output) of receiver                #line 329
+        self.queue =  queue # queue (input | output) of receiver                #line 331
 
-        self.port =  port # destination port                                    #line 330
+        self.port =  port # destination port                                    #line 332
 
-        self.component =  component # to (for bootstrap debug)                  #line 331
-                                                                                #line 332
+        self.component =  component # to (for bootstrap debug)                  #line 333
+                                                                                #line 334
 
-                                                                                #line 333
-# Checks if two senders match, by pointer equality and port name matching.      #line 334
+                                                                                #line 335
+# Checks if two senders match, by pointer equality and port name matching.      #line 336
 
-def sender_eq (s1,s2):                                                          #line 335
+def sender_eq (s1,s2):                                                          #line 337
 
-    same_components = ( s1. component ==  s2. component)                        #line 336
+    same_components = ( s1. component ==  s2. component)                        #line 338
 
-    same_ports = ( s1. port ==  s2. port)                                       #line 337
+    same_ports = ( s1. port ==  s2. port)                                       #line 339
 
-    return  same_components and  same_ports                                     #line 338
-                                                                                #line 339
+    return  same_components and  same_ports                                     #line 340
+                                                                                #line 341
 
-                                                                                #line 340
-# Delivers the given message to the receiver of this connector.                 #line 341
                                                                                 #line 342
+# Delivers the given message to the receiver of this connector.                 #line 343
+                                                                                #line 344
 
-def deposit (parent,conn,message):                                              #line 343
+def deposit (parent,conn,message):                                              #line 345
 
-    new_message = make_message ( conn. receiver. port, message. datum)          #line 344
+    new_message = make_message ( conn. receiver. port, message. datum)          #line 346
 
-    push_message ( parent, conn. receiver. component, conn. receiver. queue, new_message)#line 345
-                                                                                #line 346
+    push_message ( parent, conn. receiver. component, conn. receiver. queue, new_message)#line 347
+                                                                                #line 348
 
-                                                                                #line 347
+                                                                                #line 349
 
-def force_tick (parent,eh):                                                     #line 348
+def force_tick (parent,eh):                                                     #line 350
 
-    tick_msg = make_message ( ".",new_datum_tick ())                            #line 349
+    tick_msg = make_message ( ".",new_datum_tick ())                            #line 351
 
-    push_message ( parent, eh, eh. inq, tick_msg)                               #line 350
+    push_message ( parent, eh, eh. inq, tick_msg)                               #line 352
 
-    return  tick_msg                                                            #line 351
-                                                                                #line 352
+    return  tick_msg                                                            #line 353
+                                                                                #line 354
 
-                                                                                #line 353
+                                                                                #line 355
 
-def push_message (parent,receiver,inq,m):                                       #line 354
+def push_message (parent,receiver,inq,m):                                       #line 356
 
-    inq.put ( m)                                                                #line 355
+    inq.put ( m)                                                                #line 357
 
-    parent. visit_ordering.put ( receiver)                                      #line 356
-                                                                                #line 357
+    parent. visit_ordering.put ( receiver)                                      #line 358
+                                                                                #line 359
 
-                                                                                #line 358
+                                                                                #line 360
 
-def is_self (child,container):                                                  #line 359
+def is_self (child,container):                                                  #line 361
 
-    # in an earlier version “self“ was denoted as ϕ                             #line 360
+    # in an earlier version “self“ was denoted as ϕ                             #line 362
 
-    return  child ==  container                                                 #line 361
-                                                                                #line 362
+    return  child ==  container                                                 #line 363
+                                                                                #line 364
 
-                                                                                #line 363
+                                                                                #line 365
 
-def step_child (child,msg):                                                     #line 364
+def step_child (child,msg):                                                     #line 366
 
-    before_state =  child. state                                                #line 365
+    before_state =  child. state                                                #line 367
 
-    child.handler ( child, msg)                                                 #line 366
+    child.handler ( child, msg)                                                 #line 368
 
-    after_state =  child. state                                                 #line 367
+    after_state =  child. state                                                 #line 369
 
-    return [ before_state ==  "idle" and  after_state!= "idle",                 #line 368
-    before_state!= "idle" and  after_state!= "idle",                            #line 369
-    before_state!= "idle" and  after_state ==  "idle"]                          #line 370
-                                                                                #line 371
+    return [ before_state ==  "idle" and  after_state!= "idle",                 #line 370
+    before_state!= "idle" and  after_state!= "idle",                            #line 371
+    before_state!= "idle" and  after_state ==  "idle"]                          #line 372
+                                                                                #line 373
 
-                                                                                #line 372
+                                                                                #line 374
 
-def save_message (eh,msg):                                                      #line 373
+def save_message (eh,msg):                                                      #line 375
 
-    eh. saved_messages.put ( msg)                                               #line 374
-                                                                                #line 375
+    eh. saved_messages.put ( msg)                                               #line 376
+                                                                                #line 377
 
-                                                                                #line 376
+                                                                                #line 378
 
-def fetch_saved_message_and_clear (eh):                                         #line 377
+def fetch_saved_message_and_clear (eh):                                         #line 379
 
-    return  eh. saved_messages.get ()                                           #line 378
-                                                                                #line 379
+    return  eh. saved_messages.get ()                                           #line 380
+                                                                                #line 381
 
-                                                                                #line 380
+                                                                                #line 382
 
-def step_children (container,causingMessage):                                   #line 381
+def step_children (container,causingMessage):                                   #line 383
 
-    container. state =  "idle"                                                  #line 382
+    container. state =  "idle"                                                  #line 384
 
-    for child in list ( container. visit_ordering. queue):                      #line 383
+    for child in list ( container. visit_ordering. queue):                      #line 385
 
-        # child = container represents self, skip it                            #line 384
+        # child = container represents self, skip it                            #line 386
 
-        if (not (is_self ( child, container))):                                 #line 385
+        if (not (is_self ( child, container))):                                 #line 387
 
-            if (not ( child. inq.empty ())):                                    #line 386
+            if (not ( child. inq.empty ())):                                    #line 388
 
-                msg =  child. inq.get ()                                        #line 387
+                msg =  child. inq.get ()                                        #line 389
 
-                [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)#line 388
+                began_long_run =  None                                          #line 390
 
-                if  began_long_run:                                             #line 389
+                continued_long_run =  None                                      #line 391
 
-                    save_message ( child, msg)                                  #line 390
+                ended_long_run =  None                                          #line 392
 
-                elif  continued_long_run:                                       #line 391
+                [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)#line 393
 
-                    pass                                                        #line 392
-                                                                                #line 393
+                if  began_long_run:                                             #line 394
+
+                    save_message ( child, msg)                                  #line 395
+
+                elif  continued_long_run:                                       #line 396
+
+                    pass                                                        #line 397
+                                                                                #line 398
 
 
-                destroy_message ( msg)                                          #line 394
+                destroy_message ( msg)                                          #line 399
 
-            else:                                                               #line 395
+            else:                                                               #line 400
 
-                if  child. state!= "idle":                                      #line 396
+                if  child. state!= "idle":                                      #line 401
 
-                    msg = force_tick ( container, child)                        #line 397
+                    msg = force_tick ( container, child)                        #line 402
 
-                    child.handler ( child, msg)                                 #line 398
+                    child.handler ( child, msg)                                 #line 403
 
                     destroy_message ( msg)
-                                                                                #line 399
-
-                                                                                #line 400
-
-            if  child. state ==  "active":                                      #line 401
-
-                # if child remains active, then the container must remain active and must propagate “ticks“ to child#line 402
-
-                container. state =  "active"                                    #line 403
-
                                                                                 #line 404
 
-            while (not ( child. outq.empty ())):                                #line 405
+                                                                                #line 405
 
-                msg =  child. outq.get ()                                       #line 406
+            if  child. state ==  "active":                                      #line 406
 
-                route ( container, child, msg)                                  #line 407
+                # if child remains active, then the container must remain active and must propagate “ticks“ to child#line 407
+
+                container. state =  "active"                                    #line 408
+
+                                                                                #line 409
+
+            while (not ( child. outq.empty ())):                                #line 410
+
+                msg =  child. outq.get ()                                       #line 411
+
+                route ( container, child, msg)                                  #line 412
 
                 destroy_message ( msg)
 
-                                                                                #line 408
+                                                                                #line 413
 
-                                                                                #line 409
-                                                                                #line 410
-                                                                                #line 411
-
-                                                                                #line 412
-
-def attempt_tick (parent,eh):                                                   #line 413
-
-    if  eh. state!= "idle":                                                     #line 414
-
-        force_tick ( parent, eh)                                                #line 415
-
+                                                                                #line 414
+                                                                                #line 415
                                                                                 #line 416
 
                                                                                 #line 417
 
-def is_tick (msg):                                                              #line 418
+def attempt_tick (parent,eh):                                                   #line 418
 
-    return  "tick" ==  msg. datum.kind ()                                       #line 419
-                                                                                #line 420
+    if  eh. state!= "idle":                                                     #line 419
+
+        force_tick ( parent, eh)                                                #line 420
 
                                                                                 #line 421
-# Routes a single message to all matching destinations, according to            #line 422
-# the container's connection network.                                           #line 423
-                                                                                #line 424
 
-def route (container,from_component,message):                                   #line 425
+                                                                                #line 422
+
+def is_tick (msg):                                                              #line 423
+
+    return  "tick" ==  msg. datum.kind ()                                       #line 424
+                                                                                #line 425
+
+                                                                                #line 426
+# Routes a single message to all matching destinations, according to            #line 427
+# the container's connection network.                                           #line 428
+                                                                                #line 429
+
+def route (container,from_component,message):                                   #line 430
 
     was_sent =  False
-    # for checking that output went somewhere (at least during bootstrap)       #line 426
+    # for checking that output went somewhere (at least during bootstrap)       #line 431
 
-    fromname =  ""                                                              #line 427
+    fromname =  ""                                                              #line 432
 
-    if is_tick ( message):                                                      #line 428
+    if is_tick ( message):                                                      #line 433
 
-        for child in  container. children:                                      #line 429
+        for child in  container. children:                                      #line 434
 
-            attempt_tick ( container, child, message)                           #line 430
-
-
-        was_sent =  True                                                        #line 431
-
-    else:                                                                       #line 432
-
-        if (not (is_self ( from_component, container))):                        #line 433
-
-            fromname =  from_component. name                                    #line 434
+            attempt_tick ( container, child)                                    #line 435
 
 
-        from_sender = Sender ( fromname, from_component, message. port)         #line 435
-                                                                                #line 436
+        was_sent =  True                                                        #line 436
 
-        for connector in  container. connections:                               #line 437
+    else:                                                                       #line 437
 
-            if sender_eq ( from_sender, connector. sender):                     #line 438
+        if (not (is_self ( from_component, container))):                        #line 438
 
-                deposit ( container, connector, message)                        #line 439
+            fromname =  from_component. name                                    #line 439
+
+
+        from_sender = Sender ( fromname, from_component, message. port)         #line 440
+                                                                                #line 441
+
+        for connector in  container. connections:                               #line 442
+
+            if sender_eq ( from_sender, connector. sender):                     #line 443
+
+                deposit ( container, connector, message)                        #line 444
 
                 was_sent =  True
 
-                                                                                #line 440
+                                                                                #line 445
 
 
-    if not ( was_sent):                                                         #line 441
+    if not ( was_sent):                                                         #line 446
 
-        print ( "\n\n*** Error: ***")                                           #line 442
+        print ( "\n\n*** Error: ***")                                           #line 447
 
-        dump_possible_connections ( container)                                  #line 443
+        dump_possible_connections ( container)                                  #line 448
 
-        print_routing_trace ( container)                                        #line 444
+        print_routing_trace ( container)                                        #line 449
 
-        print ( "***")                                                          #line 445
+        print ( "***")                                                          #line 450
 
-        print ( str( container. name) +  str( ": message '") +  str( message. port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     )#line 446
+        print ( str( container. name) +  str( ": message '") +  str( message. port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     )#line 451
 
-        print ( "***")                                                          #line 447
+        print ( "***")                                                          #line 452
 
-        exit ()                                                                 #line 448
+        exit ()                                                                 #line 453
 
-                                                                                #line 449
-
-                                                                                #line 450
-
-def dump_possible_connections (container):                                      #line 451
-
-    print ( str( "*** possible connections for ") +  str( container. name) +  ":"  )#line 452
-
-    for connector in  container. connections:                                   #line 453
-
-        print ( str( connector. direction) +  str( " ") +  str( connector. sender. name) +  str( ".") +  str( connector. sender. port) +  str( " -> ") +  str( connector. receiver. name) +  str( ".") +  connector. receiver. port        )#line 454
+                                                                                #line 454
 
                                                                                 #line 455
 
-                                                                                #line 456
+def dump_possible_connections (container):                                      #line 456
 
-def any_child_ready (container):                                                #line 457
+    print ( str( "*** possible connections for ") +  str( container. name) +  ":"  )#line 457
 
-    for child in  container. children:                                          #line 458
+    for connector in  container. connections:                                   #line 458
 
-        if child_is_ready ( child):                                             #line 459
+        print ( str( connector. direction) +  str( " ") +  str( connector. sender. name) +  str( ".") +  str( connector. sender. port) +  str( " -> ") +  str( connector. receiver. name) +  str( ".") +  connector. receiver. port        )#line 459
 
-            return  True
                                                                                 #line 460
 
+                                                                                #line 461
 
-    return  False                                                               #line 461
-                                                                                #line 462
+def any_child_ready (container):                                                #line 462
 
-                                                                                #line 463
+    for child in  container. children:                                          #line 463
 
-def child_is_ready (eh):                                                        #line 464
+        if child_is_ready ( child):                                             #line 464
 
-    return (not ( eh. outq.empty ())) or (not ( eh. inq.empty ())) or ( eh. state!= "idle") or (any_child_ready ( eh))#line 465
-                                                                                #line 466
+            return  True
+                                                                                #line 465
 
+
+    return  False                                                               #line 466
                                                                                 #line 467
 
-def print_routing_trace (eh):                                                   #line 468
+                                                                                #line 468
 
-    print (routing_trace_all ( eh))                                             #line 469
-                                                                                #line 470
+def child_is_ready (eh):                                                        #line 469
 
+    return (not ( eh. outq.empty ())) or (not ( eh. inq.empty ())) or ( eh. state!= "idle") or (any_child_ready ( eh))#line 470
                                                                                 #line 471
 
-def append_routing_descriptor (container,desc):                                 #line 472
+                                                                                #line 472
 
-    container. routings.put ( desc)                                             #line 473
-                                                                                #line 474
+def print_routing_trace (eh):                                                   #line 473
 
+    print (routing_trace_all ( eh))                                             #line 474
                                                                                 #line 475
 
-def container_injector (container,message):                                     #line 476
+                                                                                #line 476
 
-    container_handler ( container, message)                                     #line 477
-                                                                                #line 478
+def append_routing_descriptor (container,desc):                                 #line 477
 
+    container. routings.put ( desc)                                             #line 478
                                                                                 #line 479
+
+                                                                                #line 480
+
+def container_injector (container,message):                                     #line 481
+
+    container_handler ( container, message)                                     #line 482
+                                                                                #line 483
+
+                                                                                #line 484
 
 
 
@@ -1054,7 +1064,7 @@ def calculate_depth (eh):                                                       
 
 def dump_registry (reg):                                                        #line 79
 
-    print ()                                                                    #line 80
+    nl ()                                                                       #line 80
 
     print ( "*** PALETTE ***")                                                  #line 81
 
@@ -1065,7 +1075,7 @@ def dump_registry (reg):                                                        
 
     print ( "***************")                                                  #line 84
 
-    print ()                                                                    #line 85
+    nl ()                                                                       #line 85
                                                                                 #line 86
 
                                                                                 #line 87
@@ -1980,304 +1990,318 @@ def print_error_maybe (main_container):                                         
 # debugging helpers                                                             #line 576
                                                                                 #line 577
 
-def dump_outputs (main_container):                                              #line 578
+def nl ():                                                                      #line 578
 
-    print ()                                                                    #line 579
+    print ( "")                                                                 #line 579
+                                                                                #line 580
 
-    print ( "___ Outputs ___")                                                  #line 580
+                                                                                #line 581
 
-    print_output_list ( main_container)                                         #line 581
-                                                                                #line 582
+def dump_outputs (main_container):                                              #line 582
 
-                                                                                #line 583
+    nl ()                                                                       #line 583
 
-def trace_outputs (main_container):                                             #line 584
+    print ( "___ Outputs ___")                                                  #line 584
 
-    print ()                                                                    #line 585
+    print_output_list ( main_container)                                         #line 585
+                                                                                #line 586
 
-    print ( "___ Message Traces ___")                                           #line 586
+                                                                                #line 587
 
-    print_routing_trace ( main_container)                                       #line 587
-                                                                                #line 588
+def trace_outputs (main_container):                                             #line 588
 
-                                                                                #line 589
+    nl ()                                                                       #line 589
 
-def dump_hierarchy (main_container):                                            #line 590
+    print ( "___ Message Traces ___")                                           #line 590
 
-    print ()                                                                    #line 591
+    print_routing_trace ( main_container)                                       #line 591
+                                                                                #line 592
 
-    print ( str( "___ Hierarchy ___") + (build_hierarchy ( main_container)) )   #line 592
                                                                                 #line 593
 
-                                                                                #line 594
+def dump_hierarchy (main_container):                                            #line 594
 
-def build_hierarchy (c):                                                        #line 595
+    nl ()                                                                       #line 595
 
-    s =  ""                                                                     #line 596
+    print ( str( "___ Hierarchy ___") + (build_hierarchy ( main_container)) )   #line 596
+                                                                                #line 597
 
-    for child in  c. children:                                                  #line 597
+                                                                                #line 598
 
-        s =  str( s) + build_hierarchy ( child)                                 #line 598
+def build_hierarchy (c):                                                        #line 599
+
+    s =  ""                                                                     #line 600
+
+    for child in  c. children:                                                  #line 601
+
+        s =  str( s) + build_hierarchy ( child)                                 #line 602
 
 
-    indent =  ""                                                                #line 599
+    indent =  ""                                                                #line 603
 
-    for i in range( c. depth):                                                  #line 600
+    for i in range( c. depth):                                                  #line 604
 
-        indent =  indent+ "  "                                                  #line 601
+        indent =  indent+ "  "                                                  #line 605
 
 
-    return  str( "\n") +  str( indent) +  str( "(") +  str( c. name) +  str( s) +  ")"     #line 602
-                                                                                #line 603
+    return  str( "\n") +  str( indent) +  str( "(") +  str( c. name) +  str( s) +  ")"     #line 606
+                                                                                #line 607
 
-                                                                                #line 604
+                                                                                #line 608
 
-def dump_connections (c):                                                       #line 605
+def dump_connections (c):                                                       #line 609
 
-    print ()                                                                    #line 606
+    nl ()                                                                       #line 610
 
-    print ( "___ connections ___")                                              #line 607
+    print ( "___ connections ___")                                              #line 611
 
-    dump_possible_connections ( c)                                              #line 608
+    dump_possible_connections ( c)                                              #line 612
 
-    for child in  c. children:                                                  #line 609
+    for child in  c. children:                                                  #line 613
 
-        print ()                                                                #line 610
+        nl ()                                                                   #line 614
 
-        dump_possible_connections ( child)                                      #line 611
+        dump_possible_connections ( child)                                      #line 615
 
-                                                                                #line 612
+                                                                                #line 616
 
-                                                                                #line 613
-
-def trimws (s):                                                                 #line 614
-
-    # remove whitespace from front and back of string                           #line 615
-
-    return  s.strip ()                                                          #line 616
                                                                                 #line 617
 
-                                                                                #line 618
+def trimws (s):                                                                 #line 618
 
-def clone_string (s):                                                           #line 619
+    # remove whitespace from front and back of string                           #line 619
 
-    return  s                                                                   #line 620
+    return  s.strip ()                                                          #line 620
                                                                                 #line 621
+
                                                                                 #line 622
 
+def clone_string (s):                                                           #line 623
 
-load_errors =  False                                                            #line 623
-
-runtime_errors =  False                                                         #line 624
+    return  s                                                                   #line 624
                                                                                 #line 625
+                                                                                #line 626
 
-def load_error (s):                                                             #line 626
 
-    global load_errors                                                          #line 627
+load_errors =  False                                                            #line 627
 
-    print ( s)                                                                  #line 628
+runtime_errors =  False                                                         #line 628
+                                                                                #line 629
 
-    quit ()                                                                     #line 629
+def load_error (s):                                                             #line 630
 
-    load_errors =  True                                                         #line 630
-                                                                                #line 631
+    global load_errors                                                          #line 631
 
-                                                                                #line 632
+    print ( s)                                                                  #line 632
 
-def runtime_error (s):                                                          #line 633
+    quit ()                                                                     #line 633
 
-    global runtime_errors                                                       #line 634
+    load_errors =  True                                                         #line 634
+                                                                                #line 635
 
-    print ( s)                                                                  #line 635
+                                                                                #line 636
 
-    quit ()                                                                     #line 636
+def runtime_error (s):                                                          #line 637
 
-    runtime_errors =  True                                                      #line 637
-                                                                                #line 638
+    global runtime_errors                                                       #line 638
 
-                                                                                #line 639
+    print ( s)                                                                  #line 639
 
-def fakepipename_instantiate (reg,owner,name,template_data):                    #line 640
+    quit ()                                                                     #line 640
 
-    instance_name = gensymbol ( "fakepipe")                                     #line 641
+    runtime_errors =  True                                                      #line 641
+                                                                                #line 642
 
-    return make_leaf ( instance_name, owner, None, fakepipename_handler)        #line 642
                                                                                 #line 643
 
-                                                                                #line 644
+def fakepipename_instantiate (reg,owner,name,template_data):                    #line 644
 
-rand =  0                                                                       #line 645
-                                                                                #line 646
+    instance_name = gensymbol ( "fakepipe")                                     #line 645
 
-def fakepipename_handler (eh,msg):                                              #line 647
+    return make_leaf ( instance_name, owner, None, fakepipename_handler)        #line 646
+                                                                                #line 647
 
-    global rand                                                                 #line 648
+                                                                                #line 648
+
+rand =  0                                                                       #line 649
+                                                                                #line 650
+
+def fakepipename_handler (eh,msg):                                              #line 651
+
+    global rand                                                                 #line 652
 
     rand =  rand+ 1
-    # not very random, but good enough _ 'rand' must be unique within a single run#line 649
+    # not very random, but good enough _ 'rand' must be unique within a single run#line 653
 
-    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)                  #line 650
-                                                                                #line 651
+    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)                  #line 654
+                                                                                #line 655
 
-                                                                                #line 652
-                                                                                #line 653
-# all of the the built_in leaves are listed here                                #line 654
-# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 655
                                                                                 #line 656
                                                                                 #line 657
+# all of the the built_in leaves are listed here                                #line 658
+# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 659
+                                                                                #line 660
+                                                                                #line 661
 
-def initialize_stock_components (reg):                                          #line 658
+def initialize_stock_components (reg):                                          #line 662
 
-    register_component ( reg,Template ( "1then2", None, deracer_instantiate))   #line 659
+    register_component ( reg,Template ( "1then2", None, deracer_instantiate))   #line 663
 
-    register_component ( reg,Template ( "?", None, probe_instantiate))          #line 660
+    register_component ( reg,Template ( "?", None, probe_instantiate))          #line 664
 
-    register_component ( reg,Template ( "?A", None, probeA_instantiate))        #line 661
+    register_component ( reg,Template ( "?A", None, probeA_instantiate))        #line 665
 
-    register_component ( reg,Template ( "?B", None, probeB_instantiate))        #line 662
+    register_component ( reg,Template ( "?B", None, probeB_instantiate))        #line 666
 
-    register_component ( reg,Template ( "?C", None, probeC_instantiate))        #line 663
+    register_component ( reg,Template ( "?C", None, probeC_instantiate))        #line 667
 
-    register_component ( reg,Template ( "trash", None, trash_instantiate))      #line 664
-                                                                                #line 665
+    register_component ( reg,Template ( "trash", None, trash_instantiate))      #line 668
+                                                                                #line 669
 
-    register_component ( reg,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 666
+    register_component ( reg,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 670
 
-    register_component ( reg,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 667
-                                                                                #line 668
+    register_component ( reg,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 671
+                                                                                #line 672
 
-    register_component ( reg,Template ( "syncfilewrite", None, syncfilewrite_instantiate))#line 669
+    register_component ( reg,Template ( "syncfilewrite", None, syncfilewrite_instantiate))#line 673
 
-    register_component ( reg,Template ( "stringconcat", None, stringconcat_instantiate))#line 670
+    register_component ( reg,Template ( "stringconcat", None, stringconcat_instantiate))#line 674
 
-    # for fakepipe                                                              #line 671
+    # for fakepipe                                                              #line 675
 
-    register_component ( reg,Template ( "fakepipename", None, fakepipename_instantiate))#line 672
-                                                                                #line 673
+    register_component ( reg,Template ( "fakepipename", None, fakepipename_instantiate))#line 676
+                                                                                #line 677
 
-                                                                                #line 674
-                                                                                #line 675
+                                                                                #line 678
 
-def initialize ():                                                              #line 676
+def argv ():                                                                    #line 679
 
-    root_of_project =  sys.argv[ 1]                                             #line 677
+    return sys.argv
+                                                                                #line 680
+                                                                                #line 681
 
-    root_of_0D =  sys.argv[ 2]                                                  #line 678
+                                                                                #line 682
 
-    arg =  sys.argv[ 3]                                                         #line 679
+def initialize ():                                                              #line 683
 
-    main_container_name =  sys.argv[ 4]                                         #line 680
+    root_of_project =  sys.argv[ 1]                                             #line 684
 
-    diagram_names =  sys.argv[ 5:]                                              #line 681
+    root_of_0D =  sys.argv[ 2]                                                  #line 685
 
-    palette = initialize_component_palette ( root_project, root_0D, diagram_names)#line 682
+    arg =  sys.argv[ 3]                                                         #line 686
 
-    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 683
-                                                                                #line 684
+    main_container_name =  sys.argv[ 4]                                         #line 687
 
-                                                                                #line 685
+    diagram_names =  sys.argv[ 5:]                                              #line 688
+
+    palette = initialize_component_palette ( root_project, root_0D, diagram_names)#line 689
+
+    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 690
+                                                                                #line 691
+
+                                                                                #line 692
 
 def start (palette,env):
-    start_with_debug ( palette, env, False, False, False, False)                #line 686
+    start_with_debug ( palette, env, False, False, False, False)                #line 693
 
 
-def start_with_debug (palette,env,show_hierarchy,show_connections,show_traces,show_all_outputs):#line 687
+def start_with_debug (palette,env,show_hierarchy,show_connections,show_traces,show_all_outputs):#line 694
 
-    # show_hierarchy∷⊥, show_connections∷⊥, show_traces∷⊥, show_all_outputs∷⊥   #line 688
+    # show_hierarchy∷⊥, show_connections∷⊥, show_traces∷⊥, show_all_outputs∷⊥   #line 695
 
-    root_of_project =  env [ 0]                                                 #line 689
+    root_of_project =  env [ 0]                                                 #line 696
 
-    root_of_0D =  env [ 1]                                                      #line 690
+    root_of_0D =  env [ 1]                                                      #line 697
 
-    main_container_name =  env [ 2]                                             #line 691
+    main_container_name =  env [ 2]                                             #line 698
 
-    diagram_names =  env [ 3]                                                   #line 692
+    diagram_names =  env [ 3]                                                   #line 699
 
-    arg =  env [ 4]                                                             #line 693
+    arg =  env [ 4]                                                             #line 700
 
-    set_environment ( root_of_project, root_of_0D)                              #line 694
+    set_environment ( root_of_project, root_of_0D)                              #line 701
 
-    # get entrypoint container                                                  #line 695
+    # get entrypoint container                                                  #line 702
 
-    main_container = get_component_instance ( palette, main_container_name, None)#line 696
+    main_container = get_component_instance ( palette, main_container_name, None)#line 703
 
-    if  None ==  main_container:                                                #line 697
+    if  None ==  main_container:                                                #line 704
 
-        load_error ( str( "Couldn't find container with page name ") +  str( main_container_name) +  str( " in files ") +  str( diagram_names) +  "(check tab names, or disable compression?)"    )#line 701
-                                                                                #line 702
-
-
-    if  show_hierarchy:                                                         #line 703
-
-        dump_hierarchy ( main_container)                                        #line 704
-                                                                                #line 705
+        load_error ( str( "Couldn't find container with page name ") +  str( main_container_name) +  str( " in files ") +  str( diagram_names) +  "(check tab names, or disable compression?)"    )#line 708
+                                                                                #line 709
 
 
-    if  show_connections:                                                       #line 706
+    if  show_hierarchy:                                                         #line 710
 
-        dump_connections ( main_container)                                      #line 707
-                                                                                #line 708
-
-
-    if not  load_errors:                                                        #line 709
-
-        arg = new_datum_string ( arg)                                           #line 710
-
-        msg = make_message ( "", arg)                                           #line 711
-
-        inject ( main_container, msg)                                           #line 712
-
-        if  show_all_outputs:                                                   #line 713
-
-            dump_outputs ( main_container)                                      #line 714
-
-        else:                                                                   #line 715
-
-            print_error_maybe ( main_container)                                 #line 716
-
-            print_specific_output ( main_container, "")                         #line 717
-
-            if  show_traces:                                                    #line 718
-
-                print ( "--- routing traces ---")                               #line 719
-
-                print (routing_trace_all ( main_container))                     #line 720
-                                                                                #line 721
-
-                                                                                #line 722
+        dump_hierarchy ( main_container)                                        #line 711
+                                                                                #line 712
 
 
-        if  show_all_outputs:                                                   #line 723
+    if  show_connections:                                                       #line 713
 
-            print ( "--- done ---")                                             #line 724
-                                                                                #line 725
+        dump_connections ( main_container)                                      #line 714
+                                                                                #line 715
 
-                                                                                #line 726
 
-                                                                                #line 727
+    if not  load_errors:                                                        #line 716
 
+        arg = new_datum_string ( arg)                                           #line 717
+
+        msg = make_message ( "", arg)                                           #line 718
+
+        inject ( main_container, msg)                                           #line 719
+
+        if  show_all_outputs:                                                   #line 720
+
+            dump_outputs ( main_container)                                      #line 721
+
+        else:                                                                   #line 722
+
+            print_error_maybe ( main_container)                                 #line 723
+
+            print_specific_output ( main_container, "")                         #line 724
+
+            if  show_traces:                                                    #line 725
+
+                print ( "--- routing traces ---")                               #line 726
+
+                print (routing_trace_all ( main_container))                     #line 727
                                                                                 #line 728
+
                                                                                 #line 729
-                                                                                #line 730
-# utility functions                                                             #line 731
 
-def send_int (eh,port,i,causing_message):                                       #line 732
 
-    datum = new_datum_int ( i)                                                  #line 733
+        if  show_all_outputs:                                                   #line 730
 
-    send ( eh, port, datum, causing_message)                                    #line 734
+            print ( "--- done ---")                                             #line 731
+                                                                                #line 732
+
+                                                                                #line 733
+
+                                                                                #line 734
+
                                                                                 #line 735
-
                                                                                 #line 736
+                                                                                #line 737
+# utility functions                                                             #line 738
 
-def send_bang (eh,port,causing_message):                                        #line 737
+def send_int (eh,port,i,causing_message):                                       #line 739
 
-    datum = new_datum_bang ()                                                   #line 738
+    datum = new_datum_int ( i)                                                  #line 740
 
-    send ( eh, port, datum, causing_message)                                    #line 739
-                                                                                #line 740
+    send ( eh, port, datum, causing_message)                                    #line 741
+                                                                                #line 742
 
-                                                                                #line 741
+                                                                                #line 743
+
+def send_bang (eh,port,causing_message):                                        #line 744
+
+    datum = new_datum_bang ()                                                   #line 745
+
+    send ( eh, port, datum, causing_message)                                    #line 746
+                                                                                #line 747
+
+                                                                                #line 748
 
 
 

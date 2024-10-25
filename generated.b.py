@@ -170,7 +170,7 @@ def calculate_depth (eh):                                                       
 
 def dump_registry (reg):                                                        #line 79
 
-    print ()                                                                    #line 80
+    nl ()                                                                       #line 80
 
     print ( "*** PALETTE ***")                                                  #line 81
 
@@ -181,7 +181,7 @@ def dump_registry (reg):                                                        
 
     print ( "***************")                                                  #line 84
 
-    print ()                                                                    #line 85
+    nl ()                                                                       #line 85
                                                                                 #line 86
 
                                                                                 #line 87
@@ -1096,304 +1096,318 @@ def print_error_maybe (main_container):                                         
 # debugging helpers                                                             #line 576
                                                                                 #line 577
 
-def dump_outputs (main_container):                                              #line 578
+def nl ():                                                                      #line 578
 
-    print ()                                                                    #line 579
+    print ( "")                                                                 #line 579
+                                                                                #line 580
 
-    print ( "___ Outputs ___")                                                  #line 580
+                                                                                #line 581
 
-    print_output_list ( main_container)                                         #line 581
-                                                                                #line 582
+def dump_outputs (main_container):                                              #line 582
 
-                                                                                #line 583
+    nl ()                                                                       #line 583
 
-def trace_outputs (main_container):                                             #line 584
+    print ( "___ Outputs ___")                                                  #line 584
 
-    print ()                                                                    #line 585
+    print_output_list ( main_container)                                         #line 585
+                                                                                #line 586
 
-    print ( "___ Message Traces ___")                                           #line 586
+                                                                                #line 587
 
-    print_routing_trace ( main_container)                                       #line 587
-                                                                                #line 588
+def trace_outputs (main_container):                                             #line 588
 
-                                                                                #line 589
+    nl ()                                                                       #line 589
 
-def dump_hierarchy (main_container):                                            #line 590
+    print ( "___ Message Traces ___")                                           #line 590
 
-    print ()                                                                    #line 591
+    print_routing_trace ( main_container)                                       #line 591
+                                                                                #line 592
 
-    print ( str( "___ Hierarchy ___") + (build_hierarchy ( main_container)) )   #line 592
                                                                                 #line 593
 
-                                                                                #line 594
+def dump_hierarchy (main_container):                                            #line 594
 
-def build_hierarchy (c):                                                        #line 595
+    nl ()                                                                       #line 595
 
-    s =  ""                                                                     #line 596
+    print ( str( "___ Hierarchy ___") + (build_hierarchy ( main_container)) )   #line 596
+                                                                                #line 597
 
-    for child in  c. children:                                                  #line 597
+                                                                                #line 598
 
-        s =  str( s) + build_hierarchy ( child)                                 #line 598
+def build_hierarchy (c):                                                        #line 599
+
+    s =  ""                                                                     #line 600
+
+    for child in  c. children:                                                  #line 601
+
+        s =  str( s) + build_hierarchy ( child)                                 #line 602
 
 
-    indent =  ""                                                                #line 599
+    indent =  ""                                                                #line 603
 
-    for i in range( c. depth):                                                  #line 600
+    for i in range( c. depth):                                                  #line 604
 
-        indent =  indent+ "  "                                                  #line 601
+        indent =  indent+ "  "                                                  #line 605
 
 
-    return  str( "\n") +  str( indent) +  str( "(") +  str( c. name) +  str( s) +  ")"     #line 602
-                                                                                #line 603
+    return  str( "\n") +  str( indent) +  str( "(") +  str( c. name) +  str( s) +  ")"     #line 606
+                                                                                #line 607
 
-                                                                                #line 604
+                                                                                #line 608
 
-def dump_connections (c):                                                       #line 605
+def dump_connections (c):                                                       #line 609
 
-    print ()                                                                    #line 606
+    nl ()                                                                       #line 610
 
-    print ( "___ connections ___")                                              #line 607
+    print ( "___ connections ___")                                              #line 611
 
-    dump_possible_connections ( c)                                              #line 608
+    dump_possible_connections ( c)                                              #line 612
 
-    for child in  c. children:                                                  #line 609
+    for child in  c. children:                                                  #line 613
 
-        print ()                                                                #line 610
+        nl ()                                                                   #line 614
 
-        dump_possible_connections ( child)                                      #line 611
+        dump_possible_connections ( child)                                      #line 615
 
-                                                                                #line 612
+                                                                                #line 616
 
-                                                                                #line 613
-
-def trimws (s):                                                                 #line 614
-
-    # remove whitespace from front and back of string                           #line 615
-
-    return  s.strip ()                                                          #line 616
                                                                                 #line 617
 
-                                                                                #line 618
+def trimws (s):                                                                 #line 618
 
-def clone_string (s):                                                           #line 619
+    # remove whitespace from front and back of string                           #line 619
 
-    return  s                                                                   #line 620
+    return  s.strip ()                                                          #line 620
                                                                                 #line 621
+
                                                                                 #line 622
 
+def clone_string (s):                                                           #line 623
 
-load_errors =  False                                                            #line 623
-
-runtime_errors =  False                                                         #line 624
+    return  s                                                                   #line 624
                                                                                 #line 625
+                                                                                #line 626
 
-def load_error (s):                                                             #line 626
 
-    global load_errors                                                          #line 627
+load_errors =  False                                                            #line 627
 
-    print ( s)                                                                  #line 628
+runtime_errors =  False                                                         #line 628
+                                                                                #line 629
 
-    quit ()                                                                     #line 629
+def load_error (s):                                                             #line 630
 
-    load_errors =  True                                                         #line 630
-                                                                                #line 631
+    global load_errors                                                          #line 631
 
-                                                                                #line 632
+    print ( s)                                                                  #line 632
 
-def runtime_error (s):                                                          #line 633
+    quit ()                                                                     #line 633
 
-    global runtime_errors                                                       #line 634
+    load_errors =  True                                                         #line 634
+                                                                                #line 635
 
-    print ( s)                                                                  #line 635
+                                                                                #line 636
 
-    quit ()                                                                     #line 636
+def runtime_error (s):                                                          #line 637
 
-    runtime_errors =  True                                                      #line 637
-                                                                                #line 638
+    global runtime_errors                                                       #line 638
 
-                                                                                #line 639
+    print ( s)                                                                  #line 639
 
-def fakepipename_instantiate (reg,owner,name,template_data):                    #line 640
+    quit ()                                                                     #line 640
 
-    instance_name = gensymbol ( "fakepipe")                                     #line 641
+    runtime_errors =  True                                                      #line 641
+                                                                                #line 642
 
-    return make_leaf ( instance_name, owner, None, fakepipename_handler)        #line 642
                                                                                 #line 643
 
-                                                                                #line 644
+def fakepipename_instantiate (reg,owner,name,template_data):                    #line 644
 
-rand =  0                                                                       #line 645
-                                                                                #line 646
+    instance_name = gensymbol ( "fakepipe")                                     #line 645
 
-def fakepipename_handler (eh,msg):                                              #line 647
+    return make_leaf ( instance_name, owner, None, fakepipename_handler)        #line 646
+                                                                                #line 647
 
-    global rand                                                                 #line 648
+                                                                                #line 648
+
+rand =  0                                                                       #line 649
+                                                                                #line 650
+
+def fakepipename_handler (eh,msg):                                              #line 651
+
+    global rand                                                                 #line 652
 
     rand =  rand+ 1
-    # not very random, but good enough _ 'rand' must be unique within a single run#line 649
+    # not very random, but good enough _ 'rand' must be unique within a single run#line 653
 
-    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)                  #line 650
-                                                                                #line 651
+    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)                  #line 654
+                                                                                #line 655
 
-                                                                                #line 652
-                                                                                #line 653
-# all of the the built_in leaves are listed here                                #line 654
-# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 655
                                                                                 #line 656
                                                                                 #line 657
+# all of the the built_in leaves are listed here                                #line 658
+# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 659
+                                                                                #line 660
+                                                                                #line 661
 
-def initialize_stock_components (reg):                                          #line 658
+def initialize_stock_components (reg):                                          #line 662
 
-    register_component ( reg,Template ( "1then2", None, deracer_instantiate))   #line 659
+    register_component ( reg,Template ( "1then2", None, deracer_instantiate))   #line 663
 
-    register_component ( reg,Template ( "?", None, probe_instantiate))          #line 660
+    register_component ( reg,Template ( "?", None, probe_instantiate))          #line 664
 
-    register_component ( reg,Template ( "?A", None, probeA_instantiate))        #line 661
+    register_component ( reg,Template ( "?A", None, probeA_instantiate))        #line 665
 
-    register_component ( reg,Template ( "?B", None, probeB_instantiate))        #line 662
+    register_component ( reg,Template ( "?B", None, probeB_instantiate))        #line 666
 
-    register_component ( reg,Template ( "?C", None, probeC_instantiate))        #line 663
+    register_component ( reg,Template ( "?C", None, probeC_instantiate))        #line 667
 
-    register_component ( reg,Template ( "trash", None, trash_instantiate))      #line 664
-                                                                                #line 665
+    register_component ( reg,Template ( "trash", None, trash_instantiate))      #line 668
+                                                                                #line 669
 
-    register_component ( reg,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 666
+    register_component ( reg,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 670
 
-    register_component ( reg,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 667
-                                                                                #line 668
+    register_component ( reg,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 671
+                                                                                #line 672
 
-    register_component ( reg,Template ( "syncfilewrite", None, syncfilewrite_instantiate))#line 669
+    register_component ( reg,Template ( "syncfilewrite", None, syncfilewrite_instantiate))#line 673
 
-    register_component ( reg,Template ( "stringconcat", None, stringconcat_instantiate))#line 670
+    register_component ( reg,Template ( "stringconcat", None, stringconcat_instantiate))#line 674
 
-    # for fakepipe                                                              #line 671
+    # for fakepipe                                                              #line 675
 
-    register_component ( reg,Template ( "fakepipename", None, fakepipename_instantiate))#line 672
-                                                                                #line 673
+    register_component ( reg,Template ( "fakepipename", None, fakepipename_instantiate))#line 676
+                                                                                #line 677
 
-                                                                                #line 674
-                                                                                #line 675
+                                                                                #line 678
 
-def initialize ():                                                              #line 676
+def argv ():                                                                    #line 679
 
-    root_of_project =  sys.argv[ 1]                                             #line 677
+    return sys.argv
+                                                                                #line 680
+                                                                                #line 681
 
-    root_of_0D =  sys.argv[ 2]                                                  #line 678
+                                                                                #line 682
 
-    arg =  sys.argv[ 3]                                                         #line 679
+def initialize ():                                                              #line 683
 
-    main_container_name =  sys.argv[ 4]                                         #line 680
+    root_of_project =  sys.argv[ 1]                                             #line 684
 
-    diagram_names =  sys.argv[ 5:]                                              #line 681
+    root_of_0D =  sys.argv[ 2]                                                  #line 685
 
-    palette = initialize_component_palette ( root_project, root_0D, diagram_names)#line 682
+    arg =  sys.argv[ 3]                                                         #line 686
 
-    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 683
-                                                                                #line 684
+    main_container_name =  sys.argv[ 4]                                         #line 687
 
-                                                                                #line 685
+    diagram_names =  sys.argv[ 5:]                                              #line 688
+
+    palette = initialize_component_palette ( root_project, root_0D, diagram_names)#line 689
+
+    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 690
+                                                                                #line 691
+
+                                                                                #line 692
 
 def start (palette,env):
-    start_with_debug ( palette, env, False, False, False, False)                #line 686
+    start_with_debug ( palette, env, False, False, False, False)                #line 693
 
 
-def start_with_debug (palette,env,show_hierarchy,show_connections,show_traces,show_all_outputs):#line 687
+def start_with_debug (palette,env,show_hierarchy,show_connections,show_traces,show_all_outputs):#line 694
 
-    # show_hierarchy∷⊥, show_connections∷⊥, show_traces∷⊥, show_all_outputs∷⊥   #line 688
+    # show_hierarchy∷⊥, show_connections∷⊥, show_traces∷⊥, show_all_outputs∷⊥   #line 695
 
-    root_of_project =  env [ 0]                                                 #line 689
+    root_of_project =  env [ 0]                                                 #line 696
 
-    root_of_0D =  env [ 1]                                                      #line 690
+    root_of_0D =  env [ 1]                                                      #line 697
 
-    main_container_name =  env [ 2]                                             #line 691
+    main_container_name =  env [ 2]                                             #line 698
 
-    diagram_names =  env [ 3]                                                   #line 692
+    diagram_names =  env [ 3]                                                   #line 699
 
-    arg =  env [ 4]                                                             #line 693
+    arg =  env [ 4]                                                             #line 700
 
-    set_environment ( root_of_project, root_of_0D)                              #line 694
+    set_environment ( root_of_project, root_of_0D)                              #line 701
 
-    # get entrypoint container                                                  #line 695
+    # get entrypoint container                                                  #line 702
 
-    main_container = get_component_instance ( palette, main_container_name, None)#line 696
+    main_container = get_component_instance ( palette, main_container_name, None)#line 703
 
-    if  None ==  main_container:                                                #line 697
+    if  None ==  main_container:                                                #line 704
 
-        load_error ( str( "Couldn't find container with page name ") +  str( main_container_name) +  str( " in files ") +  str( diagram_names) +  "(check tab names, or disable compression?)"    )#line 701
-                                                                                #line 702
-
-
-    if  show_hierarchy:                                                         #line 703
-
-        dump_hierarchy ( main_container)                                        #line 704
-                                                                                #line 705
+        load_error ( str( "Couldn't find container with page name ") +  str( main_container_name) +  str( " in files ") +  str( diagram_names) +  "(check tab names, or disable compression?)"    )#line 708
+                                                                                #line 709
 
 
-    if  show_connections:                                                       #line 706
+    if  show_hierarchy:                                                         #line 710
 
-        dump_connections ( main_container)                                      #line 707
-                                                                                #line 708
-
-
-    if not  load_errors:                                                        #line 709
-
-        arg = new_datum_string ( arg)                                           #line 710
-
-        msg = make_message ( "", arg)                                           #line 711
-
-        inject ( main_container, msg)                                           #line 712
-
-        if  show_all_outputs:                                                   #line 713
-
-            dump_outputs ( main_container)                                      #line 714
-
-        else:                                                                   #line 715
-
-            print_error_maybe ( main_container)                                 #line 716
-
-            print_specific_output ( main_container, "")                         #line 717
-
-            if  show_traces:                                                    #line 718
-
-                print ( "--- routing traces ---")                               #line 719
-
-                print (routing_trace_all ( main_container))                     #line 720
-                                                                                #line 721
-
-                                                                                #line 722
+        dump_hierarchy ( main_container)                                        #line 711
+                                                                                #line 712
 
 
-        if  show_all_outputs:                                                   #line 723
+    if  show_connections:                                                       #line 713
 
-            print ( "--- done ---")                                             #line 724
-                                                                                #line 725
+        dump_connections ( main_container)                                      #line 714
+                                                                                #line 715
 
-                                                                                #line 726
 
-                                                                                #line 727
+    if not  load_errors:                                                        #line 716
 
+        arg = new_datum_string ( arg)                                           #line 717
+
+        msg = make_message ( "", arg)                                           #line 718
+
+        inject ( main_container, msg)                                           #line 719
+
+        if  show_all_outputs:                                                   #line 720
+
+            dump_outputs ( main_container)                                      #line 721
+
+        else:                                                                   #line 722
+
+            print_error_maybe ( main_container)                                 #line 723
+
+            print_specific_output ( main_container, "")                         #line 724
+
+            if  show_traces:                                                    #line 725
+
+                print ( "--- routing traces ---")                               #line 726
+
+                print (routing_trace_all ( main_container))                     #line 727
                                                                                 #line 728
+
                                                                                 #line 729
-                                                                                #line 730
-# utility functions                                                             #line 731
 
-def send_int (eh,port,i,causing_message):                                       #line 732
 
-    datum = new_datum_int ( i)                                                  #line 733
+        if  show_all_outputs:                                                   #line 730
 
-    send ( eh, port, datum, causing_message)                                    #line 734
+            print ( "--- done ---")                                             #line 731
+                                                                                #line 732
+
+                                                                                #line 733
+
+                                                                                #line 734
+
                                                                                 #line 735
-
                                                                                 #line 736
+                                                                                #line 737
+# utility functions                                                             #line 738
 
-def send_bang (eh,port,causing_message):                                        #line 737
+def send_int (eh,port,i,causing_message):                                       #line 739
 
-    datum = new_datum_bang ()                                                   #line 738
+    datum = new_datum_int ( i)                                                  #line 740
 
-    send ( eh, port, datum, causing_message)                                    #line 739
-                                                                                #line 740
+    send ( eh, port, datum, causing_message)                                    #line 741
+                                                                                #line 742
 
-                                                                                #line 741
+                                                                                #line 743
+
+def send_bang (eh,port,causing_message):                                        #line 744
+
+    datum = new_datum_bang ()                                                   #line 745
+
+    send ( eh, port, datum, causing_message)                                    #line 746
+                                                                                #line 747
+
+                                                                                #line 748
 
 
 
