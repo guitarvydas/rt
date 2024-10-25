@@ -62,6 +62,9 @@ Macro_racjf [_octothorpe _racjf lp fname rp] = ‛
         print ("Error decoding JSON in file: '{e}'")
         return None⤶
 ’
+Macro_getargv [_octothorpe _getrv lp rp] = ‛
+    return sys.argv
+’
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n«lval» = «e»«rec»’
 Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec»’
