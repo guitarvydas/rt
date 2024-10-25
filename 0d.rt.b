@@ -215,20 +215,17 @@ defn make_leaf (name, owner, instance_data, handler) {
 
 defn send (eh,port,datum,causingMessage) {
     msg ≡ make_message(port, datum)
-    log_send (eh, port, msg, causingMessage)
     put_output (eh, msg)
 }
 
 defn send_string (eh, port, s, causingMessage) {
     datum ≡ new_datum_string (s)
     msg ≡ make_message(port, datum)
-    log_send_string (eh, port, msg, causingMessage)
     put_output (eh, msg)
 }
 
 defn forward (eh, port, msg) {
     fwdmsg ≡ make_message(port, msg.datum)
-    log_forward (eh, port, msg, msg)
     put_output (eh, msg)
 }
 
@@ -686,7 +683,7 @@ defn initialize () {
     return [palette, [root_of_project, root_of_0D, main_container_name, diagram_names, arg]]
 }
 
-defn start (palette, env) { start_with_debug (palette, env, False, False, False, False) }
+defn start (palette, env) { start_with_debug (palette, env, ⊥,⊥,⊥,⊥) }
 defn start_with_debug (palette, env, show_hierarchy, show_connections, show_traces, show_all_outputs) {
     ⌈ show_hierarchy∷⊥, show_connections∷⊥, show_traces∷⊥, show_all_outputs∷⊥⌉
     root_of_project ≡ env [0]
