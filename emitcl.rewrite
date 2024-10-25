@@ -25,7 +25,7 @@ StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1�
 Rec_Statement [line1? R_Statement line2?] = ‛«line1»⤷«R_Statement»⤶«line2»’
 R_Statement_globals [ _24 ident1  cidents* scope?] =‛«scope»’
 R_Statement_comment [s rec?] =‛\n«s»«rec»’
-R_Statement_macro [m] = ‛«m»’
+R_Statement_external [x] = ‛«x»’
 R_Statement_if [ IfStatement] =‛«IfStatement»’
 R_Statement_pass [ _27 scope?] =‛\n#| pass |#«scope»’
 R_Statement_return [ _29 ReturnExp] =‛\n(return-from ⟪functionName⟫ ⤷«ReturnExp»⤶)’
@@ -36,7 +36,7 @@ R_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
 R_Statement_line [line rec?] = ‛«line»«rec»’
 CommaIdent [_comma ident] = ‛, «ident»’
 
-Macro_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
+External_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
 ;; read text from a named file «fname», send the text out on port «ok» else send error info on port «err»
 ;; given «eh» and «msg» if needed
 (handler-bind ((error #'(lambda (condition) (send_string «eh» «err» (format nil "~&~A~&" condition)))))⤷
@@ -46,16 +46,26 @@ Macro_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4
       (send_string «eh» «ok» contents))))⤶⤶⤶
 ’
 
-Macro_racjf [_octothorpe _racjf lp fname rp] = ‛
+External_racjf [_octothorpe _racjf lp fname rp] = ‛
   ;; read json from a named file and convert it into internal form (a tree of routings)
   ;; return the routings from the function or raise an error
   (with-open-file (json-stream "~/projects/rtlarson/eyeballs.json" :direction :input)⤷
     (json:decode-json json-stream))⤶
 ’
 
-Macro_getargv [_octothorpe _getrv lp rp] = ‛
+External_getargv [_octothorpe _getrv lp rp] = ‛
   (error 'NIY)
 ’
+
+External_freshQueue [_octothorpe _83 _84 ident _85] =‛ (***)’
+External_freshStack [_octothorpe _83 _84 ident _85] =‛ nil’
+External_fresh [_octothorpe _83 _84 ident _85] =‛ («ident»)’
+External_car [_octothorpe _83 _84 e _85 ] =‛ (car «e»)’
+External_cdr [_octothorpe _83 _84 e _85 ] =‛ (cdr «e»)’
+External_nthargvcdr [_octothorpe _83 lb n rb ] =‛ (nthcdr «n» (argv))’
+External_nthargv [_octothorpe _83 _84 n _85 ] =‛ (nth «n» argv)’
+External_stringcdr [_octothorpe _83 _84 e _85 ] =‛ (subseq «e» 1)’
+External_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» «e2»)’
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n(let ((«lval» «e»))⤷\n(declare (ignorable «lval»))«rec»⤶)’
 Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec»’
@@ -109,15 +119,8 @@ PrimaryIndexed_index [p lb e rb] = ‛(nth «e» «p»)’
 PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
 PrimaryIndexed_atom [a] = ‛«a»’
 
-Pmacro_fresh [ _83 _84 ident _85] =‛ («ident»)’
-Pmacro_car [ _83 _84 e _85 ] =‛ (car «e»)’
-Pmacro_cdr [ _83 _84 e _85 ] =‛ (cdr «e»)’
-Pmacro_nthargvcdr [ _83 lb n rb ] =‛ (nthcdr «n» (argv))’
-Pmacro_nthargv [ _83 _84 n _85 ] =‛ (nth «n» argv)’
-Pmacro_stringcdr [ _83 _84 e _85 ] =‛ (subseq «e» 1)’
-Pmacro_strcons [ _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» «e2»)’
 
-Atom_pmacro [m] = ‛«m»’
+Atom_external [x] = ‛«x»’
 
 Atom_callident [id actuals] = ‛(funcall '«id» «actuals»)’
 
