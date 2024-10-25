@@ -18,7 +18,7 @@ StatementBlock [ line1? lb line2? Rec_Statement line3? rb line4?] = ‛«line1»
 
 Rec_Statement [line1? R_Statement line2?] = ‛«line1»«R_Statement»«line2»’
 R_Statement_comment [ comment Rec_Statement?] =‛«comment»«Rec_Statement»’
-R_Statement_macro [ Macro] =‛«Macro»’
+R_Statement_external [x] =‛«x»’
 R_Statement_deftemp [ Deftemp] =‛«Deftemp»’
 R_Statement_defsynonym [ Defsynonym] =‛«Defsynonym»’
 R_Statement_globals [ _18 ident CommaIdent* Rec_Statement?] =‛«_18»«ident»«CommaIdent»«Rec_Statement»’
@@ -32,9 +32,7 @@ R_Statement_call [ Lval Rec_Statement?] =‛«Lval»«Rec_Statement»’
 R_Statement_line [line rec?] = ‛«line»«rec»’
 CommaIdent [ _23 ident] = ‛«_23»«ident»’
 
-Macro_read [ _24 _25 _26 eh _27 msg _28 fname _29 ok _30 err _31] =‛«_24»«_25»«_26»«eh»«_27»«msg»«_28»«fname»«_29»«ok»«_30»«err»«_31»’
-Macro_racjf [ _32 _33 _34 fname _35] =‛«_32»«_33»«_34»«fname»«_35»’
-Macro_getargv [ _32 _33 _34 _35] =‛«_32»«_33»«_34»«_35»’
+External [_octothorpe id lpar expcomma* rpar] = ‛«_octothorpe»«id»«lpar»«expcomma»«rpar»’
 
 Deftemp [ _37 Lval _38 Exp Rec_Statement?] = ‛«_37»«Lval»«_38»«Exp»«Rec_Statement»’
 Defsynonym_legal [ id _39 Exp Rec_Statement?] = ‛«id»«_39»«Exp»«Rec_Statement»’
@@ -96,6 +94,7 @@ Atom_neg [ _118 Primary] =‛«_118»«Primary»’
 Atom_phi [ phi] =‛«phi»’
 Atom_true [ _119] =‛«_119»’
 Atom_false [ _120] =‛«_120»’
+Atom_external [m] =‛«m»’
 Atom_range [ _122 _123 Exp _124] =‛«_122»«_123»«Exp»«_124»’
 Atom_string [ string] =‛«string»’
 Atom_number [ number] =‛«number»’

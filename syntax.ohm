@@ -21,7 +21,7 @@ syntax {
    Rec_Statement = line? R_Statement line?
    R_Statement =
      | comment Rec_Statement? -- comment
-     | Macro -- macro
+     | External -- external
      | Deftemp -- deftemp
      | Defsynonym -- defsynonym     
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
@@ -35,10 +35,7 @@ syntax {
      | line Rec_Statement? -- line
    CommaIdent = Comma ident
 
-   Macro =
-     | "#" "❲low_level_read_text_file_handler❳" "(" eh Comma msg Comma fname Comma ok Comma err ")" -- read
-     | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
-     | "#" "❲get_argv❳" "(" ")" -- getargv
+   External = "#" ident "(" ExpComma* ")"
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
    Defsynonym = Lval "≡" Exp Rec_Statement?
@@ -115,6 +112,7 @@ syntax {
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
+      | External -- external
       | kw<"range"> "(" Exp ")" -- range
       | string -- string
       | number -- number

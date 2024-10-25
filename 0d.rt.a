@@ -11,7 +11,7 @@ defvar digits ⇐ [
 
 defn gensymbol (s) {
     global counter
-    name_with_id ≡ strcons (s, subscripted_digit (counter))
+    name_with_id ≡ #strcons (s, subscripted_digit (counter))
     counter ⇐ counter + 1
     return name_with_id
 }
@@ -21,7 +21,7 @@ defn subscripted_digit (n) {
   if (n >=  0 and n <=  29) {
     return digits [n]
   } else {
-    return strcons (“₊”, n)
+    return #strcons (“₊”, n)
   }
 }
 
@@ -35,7 +35,7 @@ defobj Datum () {
 }
 
 defn new_datum_string (s) {
-    d ≡ fresh (Datum)
+    d ≡ #fresh (Datum)
     d.data ⇐ s
     d.clone ⇐ λ: clone_datum_string (d)
     d.reclaim ⇐ λ: reclaim_datum_string (d)    
@@ -217,10 +217,10 @@ defn format_message (m) {
     if m = ϕ {
         return “ϕ” }
     else {
-        return strcons (“⟪”,
-	         strcons (m.port,
-		   strcons (“⦂”,
-		     strcons (m.datum.srepr (), “⟫”))))
+        return #strcons (“⟪”,
+	         #strcons (m.port,
+		   #strcons (“⦂”,
+		     #strcons (m.datum.srepr (), “⟫”))))
     }
 }
 
@@ -252,7 +252,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
             connector.sender ⇐ Sender (me.name, me, proto_conn@source_port)
             target_component ≡ children_by_id [proto_conn@target@id]
             if (target_component = ϕ) {
-                load_error (strcons (“internal error: .Down connection target internal error ”, proto_conn@target))}
+                load_error (#strcons (“internal error: .Down connection target internal error ”, proto_conn@target))}
             else{
                 connector.receiver ⇐ Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
                 connectors.append (connector) }}
@@ -261,11 +261,11 @@ defn container_instantiator (reg, owner, container_name, desc) {
             source_component ≡ children_by_id [proto_conn@source@id]
             target_component ≡ children_by_id [proto_conn@target@id]
             if source_component = ϕ {
-                load_error (strcons (“internal error: .Across connection source not ok ”, proto_conn@source)) }
+                load_error (#strcons (“internal error: .Across connection source not ok ”, proto_conn@source)) }
             else {
                 connector.sender ⇐ Sender (source_component.name, source_component, proto_conn@source_port)
                 if target_component = ϕ {
-                    load_error (strcons (“internal error: .Across connection target not ok ”, proto_conn.target)) }
+                    load_error (#strcons (“internal error: .Across connection target not ok ”, proto_conn.target)) }
                 else {
                     connector.receiver ⇐ Receiver (target_component.name, target_component.inq, proto_conn@target_port, target_component)
                     connectors.append (connector)}}}
@@ -273,7 +273,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
             connector.direction ⇐ “up”
             source_component ≡ children_by_id [proto_conn@source@id]
             if source_component = ϕ {
-                print (strcons (“internal error: .Up connection source not ok ”, proto_conn@source)) }
+                print (#strcons (“internal error: .Up connection source not ok ”, proto_conn@source)) }
             else {
                 connector.sender ⇐ Sender (source_component.name, source_component, proto_conn@source_port)
                 connector.receiver ⇐ Receiver (me.name, container.outq, proto_conn@target_port, me)
@@ -448,15 +448,15 @@ defn route (container, from_component, message) {
         dump_possible_connections (container)
         print_routing_trace (container)
         print (“***”)
-        print (strcons (container.name, strcons (“: message '”, strcons (message.port, strcons (“' from ”, strcons (fromname, “ dropped on floor...”))))))
+        print (#strcons (container.name, #strcons (“: message '”, #strcons (message.port, #strcons (“' from ”, #strcons (fromname, “ dropped on floor...”))))))
         print (“***”)
         exit () }
 }
 
 defn dump_possible_connections (container) {
-    print (strcons (“*** possible connections for ”, strcons (container.name, “:”)))
+    print (#strcons (“*** possible connections for ”, #strcons (container.name, “:”)))
     for connector in container.connections {
-        print (strcons (connector.direction, strcons (“ ”, strcons (connector.sender.name, strcons (“.”, strcons (connector.sender.port, strcons (“ -> ”, strcons (connector.receiver.name, strcons (“.”, connector.receiver.port))))))))) }
+        print (#strcons (connector.direction, #strcons (“ ”, #strcons (connector.sender.name, #strcons (“.”, #strcons (connector.sender.port, #strcons (“ -> ”, #strcons (connector.receiver.name, #strcons (“.”, connector.receiver.port))))))))) }
 }
 
 defn any_child_ready (container) {
