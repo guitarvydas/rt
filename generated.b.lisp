@@ -23,10 +23,8 @@
   (declare (ignorable  container_xml))                                                                                  #|line 20|#
       (let ((fname (cdr (assoc '(cdr (assoc '(basename    container_xml                                                 #|line 21|#)  path))  os))))
         (declare (ignorable fname))
-
           (let ((routings (read_and_convert_json_file    fname                                                          #|line 22|#)))
             (declare (ignorable routings))
-
               (return-from json2internal  routings)                                                                     #|line 23|#))#|line 24|#
   )
 (defun delete_decls (&optional  d)
@@ -49,7 +47,6 @@
   (declare (ignorable  reg  template  ok_to_overwrite))                                                                 #|line 37|#
       (let ((name (mangle_name   (cdr (assoc ' name  template))                                                         #|line 38|#)))
         (declare (ignorable name))
-
           (cond
             (( and  ( in   name (cdr (assoc ' templates  reg))) (not  ok_to_overwrite))                                 #|line 39|#
                   (load_error    (concatenate 'string  "Component "  (concatenate 'string (cdr (assoc ' name  template))  " already declared")) )#|line 40|#
@@ -68,12 +65,10 @@
   (declare (ignorable  reg  full_name  owner))                                                                          #|line 50|#
       (let ((template_name (mangle_name    full_name                                                                    #|line 51|#)))
         (declare (ignorable template_name))
-
           (cond
             (( in   template_name (cdr (assoc ' templates  reg)))                                                       #|line 52|#
                   (let ((template (cdr (assoc '(nth  template_name  templates)  reg))))
-                    (declare (ignorable template))
-                                                                                                                        #|line 53|#
+                    (declare (ignorable template))                                                                      #|line 53|#
                       (cond
                         (( equal    template  nil)                                                                      #|line 54|#
                               (load_error    (concatenate 'string  "Registry Error: Can;t find component "  (concatenate 'string  template_name  " (does it need to be declared in components_to_include_in_project?")) #|line 55|#)
@@ -81,11 +76,9 @@
                           )
                         (t                                                                                              #|line 57|#
                               (let ((owner_name  ""))
-                                (declare (ignorable owner_name))
-                                                                                                                        #|line 58|#
+                                (declare (ignorable owner_name))                                                        #|line 58|#
                                   (let ((instance_name  template_name))
-                                    (declare (ignorable instance_name))
-                                                                                                                        #|line 59|#
+                                    (declare (ignorable instance_name))                                                 #|line 59|#
                                       (cond
                                         ((not (equal   nil  owner))                                                     #|line 60|#
                                               (setf  owner_name (cdr (assoc ' name  owner)))                            #|line 61|#
@@ -96,7 +89,6 @@
                                           ))
                                         (let ((instance (cdr (assoc '(instantiator    reg  owner  instance_name (cdr (assoc ' template_data  template)) #|line 65|#)  template))))
                                           (declare (ignorable instance))
-
                                             (setf (cdr (assoc ' depth  instance)) (calculate_depth    instance          #|line 66|#))
                                               (return-from get_component_instance  instance))))
                           )))                                                                                           #|line 67|#
@@ -153,26 +145,20 @@
                                       (cond
                                         ((first_char_is   (cdr (assoc 'name  child_descriptor))  "$" )                  #|line 108|#
                                               (let ((name (cdr (assoc 'name  child_descriptor))))
-                                                (declare (ignorable name))
-                                                                                                                        #|line 109|#
+                                                (declare (ignorable name))                                              #|line 109|#
                                                   (let ((cmd (cdr (assoc '(strip  )  (subseq  name 1)))))
-                                                    (declare (ignorable cmd))
-                                                                                                                        #|line 110|#
+                                                    (declare (ignorable cmd))                                           #|line 110|#
                                                       (let ((generated_leaf (Template    name  shell_out_instantiate  cmd #|line 111|#)))
                                                         (declare (ignorable generated_leaf))
-
                                                           (register_component    reg  generated_leaf                    #|line 112|#))))
                                           )
                                         ((first_char_is   (cdr (assoc 'name  child_descriptor))  "'" )                  #|line 113|#
                                               (let ((name (cdr (assoc 'name  child_descriptor))))
-                                                (declare (ignorable name))
-                                                                                                                        #|line 114|#
+                                                (declare (ignorable name))                                              #|line 114|#
                                                   (let ((s  (subseq  name 1)))
-                                                    (declare (ignorable s))
-                                                                                                                        #|line 115|#
+                                                    (declare (ignorable s))                                             #|line 115|#
                                                       (let ((generated_leaf (Template    name  string_constant_instantiate  s #|line 116|#)))
                                                         (declare (ignorable generated_leaf))
-
                                                           (register_component_allow_overwriting    reg  generated_leaf  #|line 117|#))))#|line 118|#
                                           ))                                                                            #|line 119|#
                                   )                                                                                     #|line 120|#
@@ -192,7 +178,6 @@
       #|  capture_output ∷ ⊤ |#                                                                                         #|line 135|#
         (let ((ret (cdr (assoc '(run    cmd  s  "UTF_8"                                                                 #|line 136|#)  subprocess))))
           (declare (ignorable ret))
-
             (cond
               ((not ( equal   (cdr (assoc ' returncode  ret))  0))                                                      #|line 137|#
                     (cond
@@ -229,8 +214,7 @@
 (defun make_container (&optional  name  owner)
   (declare (ignorable  name  owner))                                                                                    #|line 188|#
       (let ((eh (Eh  )))
-        (declare (ignorable eh))
-                                                                                                                        #|line 189|#
+        (declare (ignorable eh))                                                                                        #|line 189|#
           (setf (cdr (assoc ' name  eh))  name)                                                                         #|line 190|#
             (setf (cdr (assoc ' owner  eh))  owner)                                                                     #|line 191|#
               (setf (cdr (assoc ' handler  eh))  container_handler)                                                     #|line 192|#
@@ -242,8 +226,7 @@
 (defun make_leaf (&optional  name  owner  instance_data  handler)
   (declare (ignorable  name  owner  instance_data  handler))                                                            #|line 202|#
       (let ((eh (Eh  )))
-        (declare (ignorable eh))
-                                                                                                                        #|line 203|#
+        (declare (ignorable eh))                                                                                        #|line 203|#
           (setf (cdr (assoc ' name  eh))  (concatenate 'string (cdr (assoc ' name  owner))  (concatenate 'string  "."  name)))#|line 204|#
             (setf (cdr (assoc ' owner  eh))  owner)                                                                     #|line 205|#
               (setf (cdr (assoc ' handler  eh))  handler)                                                               #|line 206|#
@@ -256,24 +239,20 @@
   (declare (ignorable  eh  port  datum  causingMessage))                                                                #|line 216|#
       (let ((msg (make_message    port  datum                                                                           #|line 217|#)))
         (declare (ignorable msg))
-
           (put_output    eh  msg                                                                                        #|line 218|#))#|line 219|#
   )
 (defun send_string (&optional  eh  port  s  causingMessage)
   (declare (ignorable  eh  port  s  causingMessage))                                                                    #|line 221|#
       (let ((datum (new_datum_string    s                                                                               #|line 222|#)))
         (declare (ignorable datum))
-
           (let ((msg (make_message    port  datum                                                                       #|line 223|#)))
             (declare (ignorable msg))
-
               (put_output    eh  msg                                                                                    #|line 224|#)))#|line 225|#
   )
 (defun forward (&optional  eh  port  msg)
   (declare (ignorable  eh  port  msg))                                                                                  #|line 227|#
       (let ((fwdmsg (make_message    port (cdr (assoc ' datum  msg))                                                    #|line 228|#)))
         (declare (ignorable fwdmsg))
-
           (put_output    eh  msg                                                                                        #|line 229|#))#|line 230|#
   )
 (defun inject (&optional  eh  msg)
@@ -294,8 +273,7 @@
 (defun spaces (&optional  n)
   (declare (ignorable  n))                                                                                              #|line 249|#
       (let (( s  ""))
-        (declare (ignorable  s))
-                                                                                                                        #|line 250|#
+        (declare (ignorable  s))                                                                                        #|line 250|#
           (loop for i in (loop for n from 0 below  n by 1 collect n)
             do                                                                                                          #|line 251|#
                 (setf  s (+  s  " "))                                                                                   #|line 252|#
@@ -326,10 +304,8 @@
       #|  port ∷ “” |#                                                                                                  #|line 274|#
         (let (( datum (fetch_first_output    eh  port                                                                   #|line 275|#)))
           (declare (ignorable  datum))
-
             (let (( outf  nil))
-              (declare (ignorable  outf))
-                                                                                                                        #|line 276|#
+              (declare (ignorable  outf))                                                                               #|line 276|#
                 (cond
                   ((not (equal   datum  nil))                                                                           #|line 277|#
                         (setf  outf (cdr (assoc ' stdout  sys)))                                                        #|line 278|#
@@ -341,10 +317,8 @@
       #|  port ∷ “” |#                                                                                                  #|line 282|#
         (let (( datum (fetch_first_output    eh  port                                                                   #|line 283|#)))
           (declare (ignorable  datum))
-
             (let (( outf  nil))
-              (declare (ignorable  outf))
-                                                                                                                        #|line 284|#
+              (declare (ignorable  outf))                                                                               #|line 284|#
                 (cond
                   ((not (equal   datum  nil))                                                                           #|line 285|#
                         #|  I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in... |##|line 286|#
@@ -373,42 +347,36 @@
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 320|#
       (let ((name_with_id (gensymbol    "?"                                                                             #|line 321|#)))
         (declare (ignorable name_with_id))
-
           (return-from probe_instantiate (make_leaf    name_with_id  owner  nil  probe_handler                          #|line 322|#)))#|line 323|#
   )
 (defun probeA_instantiate (&optional  reg  owner  name  template_data)
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 324|#
       (let ((name_with_id (gensymbol    "?A"                                                                            #|line 325|#)))
         (declare (ignorable name_with_id))
-
           (return-from probeA_instantiate (make_leaf    name_with_id  owner  nil  probe_handler                         #|line 326|#)))#|line 327|#
   )
 (defun probeB_instantiate (&optional  reg  owner  name  template_data)
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 329|#
       (let ((name_with_id (gensymbol    "?B"                                                                            #|line 330|#)))
         (declare (ignorable name_with_id))
-
           (return-from probeB_instantiate (make_leaf    name_with_id  owner  nil  probe_handler                         #|line 331|#)))#|line 332|#
   )
 (defun probeC_instantiate (&optional  reg  owner  name  template_data)
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 334|#
       (let ((name_with_id (gensymbol    "?C"                                                                            #|line 335|#)))
         (declare (ignorable name_with_id))
-
           (return-from probeC_instantiate (make_leaf    name_with_id  owner  nil  probe_handler                         #|line 336|#)))#|line 337|#
   )
 (defun probe_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                                                                                        #|line 339|#
       (let ((s (cdr (assoc '(cdr (assoc '(srepr  )  datum))  msg))))
-        (declare (ignorable s))
-                                                                                                                        #|line 340|#
+        (declare (ignorable s))                                                                                         #|line 340|#
           (print    (concatenate 'string  "... probe "  (concatenate 'string (cdr (assoc ' name  eh))  (concatenate 'string  ": "  s))) (cdr (assoc ' stderr  sys)) #|line 341|#))#|line 342|#
   )
 (defun trash_instantiate (&optional  reg  owner  name  template_data)
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 344|#
       (let ((name_with_id (gensymbol    "trash"                                                                         #|line 345|#)))
         (declare (ignorable name_with_id))
-
           (return-from trash_instantiate (make_leaf    name_with_id  owner  nil  trash_handler                          #|line 346|#)))#|line 347|#
   )
 (defun trash_handler (&optional  eh  msg)
@@ -434,14 +402,11 @@
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 368|#
       (let ((name_with_id (gensymbol    "deracer"                                                                       #|line 369|#)))
         (declare (ignorable name_with_id))
-
           (let ((inst (Deracer_Instance_Data    "idle" (TwoMessages    nil  nil )                                       #|line 370|#)))
             (declare (ignorable inst))
-
               (setf (cdr (assoc ' state  inst))  "idle")                                                                #|line 371|#
                 (let ((eh (make_leaf    name_with_id  owner  inst  deracer_handler                                      #|line 372|#)))
                   (declare (ignorable eh))
-
                     (return-from deracer_instantiate  eh)                                                               #|line 373|#)))#|line 374|#
   )
 (defun send_first_then_second (&optional  eh  inst)
@@ -453,8 +418,7 @@
 (defun deracer_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                                                                                        #|line 382|#
       (let (( inst (cdr (assoc ' instance_data  eh))))
-        (declare (ignorable  inst))
-                                                                                                                        #|line 383|#
+        (declare (ignorable  inst))                                                                                     #|line 383|#
           (cond
             (( equal   (cdr (assoc ' state  inst))  "idle")                                                             #|line 384|#
                   (cond
@@ -500,14 +464,12 @@
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 411|#
       (let ((name_with_id (gensymbol    "Low Level Read Text File"                                                      #|line 412|#)))
         (declare (ignorable name_with_id))
-
           (return-from low_level_read_text_file_instantiate (make_leaf    name_with_id  owner  nil  low_level_read_text_file_handler #|line 413|#)))#|line 414|#
   )
 (defun low_level_read_text_file_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                                                                                        #|line 416|#
       (let ((fname (cdr (assoc '(cdr (assoc '(srepr  )  datum))  msg))))
-        (declare (ignorable fname))
-                                                                                                                        #|line 417|#
+        (declare (ignorable fname))                                                                                     #|line 417|#
           ;; read text from a named file fname, send the text out on port "" else send error info on port "✗"
           ;; given eh and msg if needed
           (handler-bind ((error #'(lambda (condition) (send_string eh "✗" (format nil "~&~A~&" condition)))))
@@ -521,7 +483,6 @@
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 421|#
       (let ((name_with_id (gensymbol    "Ensure String Datum"                                                           #|line 422|#)))
         (declare (ignorable name_with_id))
-
           (return-from ensure_string_datum_instantiate (make_leaf    name_with_id  owner  nil  ensure_string_datum_handler #|line 423|#)))#|line 424|#
   )
 (defun ensure_string_datum_handler (&optional  eh  msg)
@@ -532,8 +493,7 @@
           )
         (t                                                                                                              #|line 429|#
               (let ((emsg  (concatenate 'string  "*** ensure: type error (expected a string datum) but got " (cdr (assoc ' datum  msg)))))
-                (declare (ignorable emsg))
-                                                                                                                        #|line 430|#
+                (declare (ignorable emsg))                                                                              #|line 430|#
                   (send_string    eh  "✗"  emsg  msg ))                                                                 #|line 431|#
           ))                                                                                                            #|line 432|#
   )
@@ -545,28 +505,23 @@
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 439|#
       (let ((name_with_id (gensymbol    "syncfilewrite"                                                                 #|line 440|#)))
         (declare (ignorable name_with_id))
-
           (let ((inst (Syncfilewrite_Data  )))
-            (declare (ignorable inst))
-                                                                                                                        #|line 441|#
+            (declare (ignorable inst))                                                                                  #|line 441|#
               (return-from syncfilewrite_instantiate (make_leaf    name_with_id  owner  inst  syncfilewrite_handler     #|line 442|#))))#|line 443|#
   )
 (defun syncfilewrite_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                                                                                        #|line 445|#
       (let (( inst (cdr (assoc ' instance_data  eh))))
-        (declare (ignorable  inst))
-                                                                                                                        #|line 446|#
+        (declare (ignorable  inst))                                                                                     #|line 446|#
           (cond
             (( equal    "filename" (cdr (assoc ' port  msg)))                                                           #|line 447|#
                   (setf (cdr (assoc ' filename  inst)) (cdr (assoc '(cdr (assoc '(srepr  )  datum))  msg)))             #|line 448|#
               )
             (( equal    "input" (cdr (assoc ' port  msg)))                                                              #|line 449|#
                   (let ((contents (cdr (assoc '(cdr (assoc '(srepr  )  datum))  msg))))
-                    (declare (ignorable contents))
-                                                                                                                        #|line 450|#
+                    (declare (ignorable contents))                                                                      #|line 450|#
                       (let (( f (open   (cdr (assoc ' filename  inst))  "w"                                             #|line 451|#)))
                         (declare (ignorable  f))
-
                           (cond
                             ((not (equal   f  nil))                                                                     #|line 452|#
                                   (cdr (assoc '(write   (cdr (assoc '(cdr (assoc '(srepr  )  datum))  msg))             #|line 453|#)  f))
@@ -588,17 +543,14 @@
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 466|#
       (let ((name_with_id (gensymbol    "stringconcat"                                                                  #|line 467|#)))
         (declare (ignorable name_with_id))
-
           (let ((instp (StringConcat_Instance_Data  )))
-            (declare (ignorable instp))
-                                                                                                                        #|line 468|#
+            (declare (ignorable instp))                                                                                 #|line 468|#
               (return-from stringconcat_instantiate (make_leaf    name_with_id  owner  instp  stringconcat_handler      #|line 469|#))))#|line 470|#
   )
 (defun stringconcat_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                                                                                        #|line 472|#
       (let (( inst (cdr (assoc ' instance_data  eh))))
-        (declare (ignorable  inst))
-                                                                                                                        #|line 473|#
+        (declare (ignorable  inst))                                                                                     #|line 473|#
           (cond
             (( equal    "1" (cdr (assoc ' port  msg)))                                                                  #|line 474|#
                   (setf (cdr (assoc ' buffer1  inst)) (clone_string   (cdr (assoc '(cdr (assoc '(srepr  )  datum))  msg)) #|line 475|#))
@@ -623,8 +575,7 @@
         (cond
           (( >=  (cdr (assoc ' count  inst))  2)                                                                        #|line 490|#
                 (let (( concatenated_string  ""))
-                  (declare (ignorable  concatenated_string))
-                                                                                                                        #|line 491|#
+                  (declare (ignorable  concatenated_string))                                                            #|line 491|#
                     (cond
                       (( equal    0 (len   (cdr (assoc ' buffer1  inst)) ))                                             #|line 492|#
                             (setf  concatenated_string (cdr (assoc ' buffer2  inst)))                                   #|line 493|#
@@ -645,20 +596,16 @@
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 507|#
       (let ((name_with_id (gensymbol    "shell_out"                                                                     #|line 508|#)))
         (declare (ignorable name_with_id))
-
           (let ((cmd (cdr (assoc '(split    template_data                                                               #|line 509|#)  shlex))))
             (declare (ignorable cmd))
-
               (return-from shell_out_instantiate (make_leaf    name_with_id  owner  cmd  shell_out_handler              #|line 510|#))))#|line 511|#
   )
 (defun shell_out_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                                                                                        #|line 513|#
       (let ((cmd (cdr (assoc ' instance_data  eh))))
-        (declare (ignorable cmd))
-                                                                                                                        #|line 514|#
+        (declare (ignorable cmd))                                                                                       #|line 514|#
           (let ((s (cdr (assoc '(cdr (assoc '(srepr  )  datum))  msg))))
-            (declare (ignorable s))
-                                                                                                                        #|line 515|#
+            (declare (ignorable s))                                                                                     #|line 515|#
               (multiple-value-setq ( stdout  stderr) (run_command    eh  cmd  s                                         #|line 516|#))
                 (cond
                   ((not (equal   stderr  nil))                                                                          #|line 517|#
@@ -672,10 +619,8 @@
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 523|##|line 524|##|line 525|#
           (let ((name_with_id (gensymbol    "strconst"                                                                  #|line 526|#)))
             (declare (ignorable name_with_id))
-
               (let (( s  template_data))
-                (declare (ignorable  s))
-                                                                                                                        #|line 527|#
+                (declare (ignorable  s))                                                                                #|line 527|#
                   (cond
                     ((not (equal   root_project  ""))                                                                   #|line 528|#
                           (setf  s (cdr (assoc '(sub    "_00_"  root_project  s )  re)))                                #|line 529|#
@@ -689,8 +634,7 @@
 (defun string_constant_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                                                                                        #|line 535|#
       (let ((s (cdr (assoc ' instance_data  eh))))
-        (declare (ignorable s))
-                                                                                                                        #|line 536|#
+        (declare (ignorable s))                                                                                         #|line 536|#
           (send_string    eh  ""  s  msg                                                                                #|line 537|#))#|line 538|#
   )
 (defun string_make_persistent (&optional  s)
@@ -705,13 +649,11 @@
 (defun initialize_component_palette (&optional  root_project  root_0D  diagram_source_files)
   (declare (ignorable  root_project  root_0D  diagram_source_files))                                                    #|line 557|#
       (let ((reg (make_component_registry  )))
-        (declare (ignorable reg))
-                                                                                                                        #|line 558|#
+        (declare (ignorable reg))                                                                                       #|line 558|#
           (loop for diagram_source in  diagram_source_files
             do                                                                                                          #|line 559|#
                 (let ((all_containers_within_single_file (json2internal    diagram_source                               #|line 560|#)))
                   (declare (ignorable all_containers_within_single_file))
-
                     (generate_shell_components    reg  all_containers_within_single_file                                #|line 561|#)
                       (loop for container in  all_containers_within_single_file
                         do                                                                                              #|line 562|#
@@ -724,11 +666,9 @@
 (defun print_error_maybe (&optional  main_container)
   (declare (ignorable  main_container))                                                                                 #|line 568|#
       (let ((error_port  "✗"))
-        (declare (ignorable error_port))
-                                                                                                                        #|line 569|#
+        (declare (ignorable error_port))                                                                                #|line 569|#
           (let ((err (fetch_first_output    main_container  error_port                                                  #|line 570|#)))
             (declare (ignorable err))
-
               (cond
                 (( and  (not (equal   err  nil)) ( <   0 (len   (trimws   (cdr (assoc '(srepr  )  err)) ) )))           #|line 571|#
                       (print    "___ !!! ERRORS !!! ___"                                                                #|line 572|#)
@@ -759,15 +699,13 @@
 (defun build_hierarchy (&optional  c)
   (declare (ignorable  c))                                                                                              #|line 599|#
       (let (( s  ""))
-        (declare (ignorable  s))
-                                                                                                                        #|line 600|#
+        (declare (ignorable  s))                                                                                        #|line 600|#
           (loop for child in (cdr (assoc ' children  c))
             do                                                                                                          #|line 601|#
                 (setf  s  (concatenate 'string  s (build_hierarchy    child )))                                         #|line 602|#
             )
             (let (( indent  ""))
-              (declare (ignorable  indent))
-                                                                                                                        #|line 603|#
+              (declare (ignorable  indent))                                                                             #|line 603|#
                 (loop for i in (loop for n from 0 below (cdr (assoc ' depth  c)) by 1 collect n)
                   do                                                                                                    #|line 604|#
                       (setf  indent (+  indent  "  "))                                                                  #|line 605|#
@@ -812,7 +750,6 @@
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 644|#
       (let ((instance_name (gensymbol    "fakepipe"                                                                     #|line 645|#)))
         (declare (ignorable instance_name))
-
           (return-from fakepipename_instantiate (make_leaf    instance_name  owner  nil  fakepipename_handler           #|line 646|#)))#|line 647|#
   )
 (defparameter  rand  0)                                                                                                 #|line 649|##|line 650|#
@@ -845,23 +782,17 @@
 (defun initialize (&optional )
   (declare (ignorable ))                                                                                                #|line 683|#
       (let ((root_of_project  (nth  1 argv)))
-        (declare (ignorable root_of_project))
-                                                                                                                        #|line 684|#
+        (declare (ignorable root_of_project))                                                                           #|line 684|#
           (let ((root_of_0D  (nth  2 argv)))
-            (declare (ignorable root_of_0D))
-                                                                                                                        #|line 685|#
+            (declare (ignorable root_of_0D))                                                                            #|line 685|#
               (let ((arg  (nth  3 argv)))
-                (declare (ignorable arg))
-                                                                                                                        #|line 686|#
+                (declare (ignorable arg))                                                                               #|line 686|#
                   (let ((main_container_name  (nth  4 argv)))
-                    (declare (ignorable main_container_name))
-                                                                                                                        #|line 687|#
+                    (declare (ignorable main_container_name))                                                           #|line 687|#
                       (let ((diagram_names  (nthcdr  5 (argv))))
-                        (declare (ignorable diagram_names))
-                                                                                                                        #|line 688|#
+                        (declare (ignorable diagram_names))                                                             #|line 688|#
                           (let ((palette (initialize_component_palette    root_project  root_0D  diagram_names          #|line 689|#)))
                             (declare (ignorable palette))
-
                               (return-from initialize (values  palette (list   root_of_project  root_of_0D  main_container_name  diagram_names  arg )))#|line 690|#))))))#|line 691|#
   )
 (defun start (&optional  palette  env)
@@ -872,25 +803,19 @@
   (declare (ignorable  palette  env  show_hierarchy  show_connections  show_traces  show_all_outputs))                  #|line 694|#
       #|  show_hierarchy∷⊥, show_connections∷⊥, show_traces∷⊥, show_all_outputs∷⊥ |#                                    #|line 695|#
         (let ((root_of_project (nth  0  env)))
-          (declare (ignorable root_of_project))
-                                                                                                                        #|line 696|#
+          (declare (ignorable root_of_project))                                                                         #|line 696|#
             (let ((root_of_0D (nth  1  env)))
-              (declare (ignorable root_of_0D))
-                                                                                                                        #|line 697|#
+              (declare (ignorable root_of_0D))                                                                          #|line 697|#
                 (let ((main_container_name (nth  2  env)))
-                  (declare (ignorable main_container_name))
-                                                                                                                        #|line 698|#
+                  (declare (ignorable main_container_name))                                                             #|line 698|#
                     (let ((diagram_names (nth  3  env)))
-                      (declare (ignorable diagram_names))
-                                                                                                                        #|line 699|#
+                      (declare (ignorable diagram_names))                                                               #|line 699|#
                         (let ((arg (nth  4  env)))
-                          (declare (ignorable arg))
-                                                                                                                        #|line 700|#
+                          (declare (ignorable arg))                                                                     #|line 700|#
                             (set_environment    root_of_project  root_of_0D                                             #|line 701|#)
                               #|  get entrypoint container |#                                                           #|line 702|#
                                 (let (( main_container (get_component_instance    palette  main_container_name  nil     #|line 703|#)))
                                   (declare (ignorable  main_container))
-
                                     (cond
                                       (( equal    nil  main_container)                                                  #|line 704|#
                                             (load_error    (concatenate 'string  "Couldn't find container with page name "  (concatenate 'string  main_container_name  (concatenate 'string  " in files "  (concatenate 'string  diagram_names  "(check tab names, or disable compression?)")))) #|line 708|#)#|line 709|#
@@ -907,10 +832,8 @@
                                             ((not  load_errors)                                                         #|line 716|#
                                                   (let (( arg (new_datum_string    arg                                  #|line 717|#)))
                                                     (declare (ignorable  arg))
-
                                                       (let (( msg (make_message    ""  arg                              #|line 718|#)))
                                                         (declare (ignorable  msg))
-
                                                           (inject    main_container  msg                                #|line 719|#)
                                                             (cond
                                                               ( show_all_outputs                                        #|line 720|#
@@ -935,14 +858,12 @@
   (declare (ignorable  eh  port  i  causing_message))                                                                   #|line 739|#
       (let ((datum (new_datum_int    i                                                                                  #|line 740|#)))
         (declare (ignorable datum))
-
           (send    eh  port  datum  causing_message                                                                     #|line 741|#))#|line 742|#
   )
 (defun send_bang (&optional  eh  port  causing_message)
   (declare (ignorable  eh  port  causing_message))                                                                      #|line 744|#
       (let ((datum (new_datum_bang  )))
-        (declare (ignorable datum))
-                                                                                                                        #|line 745|#
+        (declare (ignorable datum))                                                                                     #|line 745|#
           (send    eh  port  datum  causing_message                                                                     #|line 746|#))#|line 747|#
   )
 

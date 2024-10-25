@@ -6,8 +6,7 @@
 (defun gensymbol (&optional  s)
   (declare (ignorable  s))                                                                                              #|line 12|##|line 13|#
         (let ((name_with_id  (concatenate 'string  s (subscripted_digit    counter ))))
-          (declare (ignorable name_with_id))
-                                                                                                                        #|line 14|#
+          (declare (ignorable name_with_id))                                                                            #|line 14|#
             (setf  counter (+  counter  1))                                                                             #|line 15|#
               (return-from gensymbol  name_with_id)                                                                     #|line 16|#)#|line 17|#
   )
@@ -33,8 +32,7 @@
 (defun new_datum_string (&optional  s)
   (declare (ignorable  s))                                                                                              #|line 37|#
       (let ((d  (Datum)))
-        (declare (ignorable d))
-                                                                                                                        #|line 38|#
+        (declare (ignorable d))                                                                                         #|line 38|#
           (setf (cdr (assoc ' data  d))  s)                                                                             #|line 39|#
             (setf (cdr (assoc ' clone  d))  #'(lambda (&optional )(clone_datum_string    d                              #|line 40|#)))
               (setf (cdr (assoc ' reclaim  d))  #'(lambda (&optional )(reclaim_datum_string    d                        #|line 41|#)))
@@ -47,7 +45,6 @@
   (declare (ignorable  d))                                                                                              #|line 48|#
       (let ((d (new_datum_string   (cdr (assoc ' data  d))                                                              #|line 49|#)))
         (declare (ignorable d))
-
           (return-from clone_datum_string  d)                                                                           #|line 50|#)#|line 51|#
   )
 (defun reclaim_datum_string (&optional  src)
@@ -65,8 +62,7 @@
 (defun new_datum_bang (&optional )
   (declare (ignorable ))                                                                                                #|line 65|#
       (let ((p (Datum  )))
-        (declare (ignorable p))
-                                                                                                                        #|line 66|#
+        (declare (ignorable p))                                                                                         #|line 66|#
           (setf (cdr (assoc ' data  p))  t)                                                                             #|line 67|#
             (setf (cdr (assoc ' clone  p))  #'(lambda (&optional )(clone_datum_bang    p                                #|line 68|#)))
               (setf (cdr (assoc ' reclaim  p))  #'(lambda (&optional )(reclaim_datum_bang    p                          #|line 69|#)))
@@ -94,8 +90,7 @@
 (defun new_datum_tick (&optional )
   (declare (ignorable ))                                                                                                #|line 92|#
       (let ((p (new_datum_bang  )))
-        (declare (ignorable p))
-                                                                                                                        #|line 93|#
+        (declare (ignorable p))                                                                                         #|line 93|#
           (setf (cdr (assoc ' kind  p))  #'(lambda (&optional ) "tick"))                                                #|line 94|#
             (setf (cdr (assoc ' clone  p))  #'(lambda (&optional )(new_datum_tick  )))                                  #|line 95|#
               (setf (cdr (assoc ' srepr  p))  #'(lambda (&optional )(srepr_datum_tick  )))                              #|line 96|#
@@ -113,8 +108,7 @@
 (defun new_datum_bytes (&optional  b)
   (declare (ignorable  b))                                                                                              #|line 109|#
       (let ((p (Datum  )))
-        (declare (ignorable p))
-                                                                                                                        #|line 110|#
+        (declare (ignorable p))                                                                                         #|line 110|#
           (setf (cdr (assoc ' data  p))  b)                                                                             #|line 111|#
             (setf (cdr (assoc ' clone  p))  #'(lambda (&optional )(clone_datum_bytes    p                               #|line 112|#)))
               (setf (cdr (assoc ' reclaim  p))  #'(lambda (&optional )(reclaim_datum_bytes    p                         #|line 113|#)))
@@ -126,8 +120,7 @@
 (defun clone_datum_bytes (&optional  src)
   (declare (ignorable  src))                                                                                            #|line 120|#
       (let ((p (Datum  )))
-        (declare (ignorable p))
-                                                                                                                        #|line 121|#
+        (declare (ignorable p))                                                                                         #|line 121|#
           (setf (cdr (assoc ' clone  p)) (cdr (assoc ' clone  src)))                                                    #|line 122|#
             (setf (cdr (assoc ' reclaim  p)) (cdr (assoc ' reclaim  src)))                                              #|line 123|#
               (setf (cdr (assoc ' srepr  p)) (cdr (assoc ' srepr  src)))                                                #|line 124|#
@@ -155,8 +148,7 @@
 (defun new_datum_int (&optional  i)
   (declare (ignorable  i))                                                                                              #|line 146|#
       (let ((p (Datum  )))
-        (declare (ignorable p))
-                                                                                                                        #|line 147|#
+        (declare (ignorable p))                                                                                         #|line 147|#
           (setf (cdr (assoc ' data  p))  i)                                                                             #|line 148|#
             (setf (cdr (assoc ' clone  p))  #'(lambda (&optional )(clone_int    i                                       #|line 149|#)))
               (setf (cdr (assoc ' reclaim  p))  #'(lambda (&optional )(reclaim_int    i                                 #|line 150|#)))
@@ -169,7 +161,6 @@
   (declare (ignorable  i))                                                                                              #|line 157|#
       (let ((p (new_datum_int    i                                                                                      #|line 158|#)))
         (declare (ignorable p))
-
           (return-from clone_int  p)                                                                                    #|line 159|#)#|line 160|#
   )
 (defun reclaim_int (&optional  src)
@@ -197,17 +188,14 @@
   (declare (ignorable  port  datum))                                                                                    #|line 189|#
       (let ((p (clone_string    port                                                                                    #|line 190|#)))
         (declare (ignorable p))
-
           (let ((m (Message    p (cdr (assoc '(clone  )  datum))                                                        #|line 191|#)))
             (declare (ignorable m))
-
               (return-from make_message  m)                                                                             #|line 192|#))#|line 193|#
   )#|  Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations. |#             #|line 195|#
 (defun message_clone (&optional  message)
   (declare (ignorable  message))                                                                                        #|line 196|#
       (let ((m (Message   (clone_port   (cdr (assoc ' port  message)) ) (cdr (assoc '(cdr (assoc '(clone  )  datum))  message)) #|line 197|#)))
         (declare (ignorable m))
-
           (return-from message_clone  m)                                                                                #|line 198|#)#|line 199|#
   )#|  Frees a message. |#                                                                                              #|line 201|#
 (defun destroy_message (&optional  msg)
@@ -241,43 +229,35 @@
   (declare (ignorable  reg  owner  container_name  desc))                                                               #|line 233|##|line 234|#
         (let ((container (make_container    container_name  owner                                                       #|line 235|#)))
           (declare (ignorable container))
-
             (let ((children  nil))
-              (declare (ignorable children))
-                                                                                                                        #|line 236|#
+              (declare (ignorable children))                                                                            #|line 236|#
                 (let ((children_by_id  nil))
                   (declare (ignorable children_by_id))
-
                     #|  not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here |#       #|line 237|#
                       #|  collect children |#                                                                           #|line 238|#
                         (loop for child_desc in (cdr (assoc 'children  desc))
                           do                                                                                            #|line 239|#
                               (let ((child_instance (get_component_instance    reg (cdr (assoc 'name  child_desc))  container #|line 240|#)))
                                 (declare (ignorable child_instance))
-
                                   (cdr (assoc '(append    child_instance                                                #|line 241|#)  children))
                                     (setf (nth (cdr (assoc 'id  child_desc))  children_by_id)  child_instance))         #|line 242|#
                           )
                           (setf (cdr (assoc ' children  container))  children)                                          #|line 243|#
                             (let ((me  container))
-                              (declare (ignorable me))
-                                                                                                                        #|line 244|##|line 245|#
+                              (declare (ignorable me))                                                                  #|line 244|##|line 245|#
                                   (let ((connectors  nil))
-                                    (declare (ignorable connectors))
-                                                                                                                        #|line 246|#
+                                    (declare (ignorable connectors))                                                    #|line 246|#
                                       (loop for proto_conn in (cdr (assoc 'connections  desc))
                                         do                                                                              #|line 247|#
                                             (let ((connector (Connector  )))
-                                              (declare (ignorable connector))
-                                                                                                                        #|line 248|#
+                                              (declare (ignorable connector))                                           #|line 248|#
                                                 (cond
                                                   (( equal   (cdr (assoc 'dir  proto_conn))  enumDown)                  #|line 249|#
                                                         #|  JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''}, |##|line 250|#
                                                           (setf (cdr (assoc ' direction  connector))  "down")           #|line 251|#
                                                             (setf (cdr (assoc ' sender  connector)) (Sender   (cdr (assoc ' name  me))  me (cdr (assoc 'source_port  proto_conn)) #|line 252|#))
                                                               (let ((target_component (nth (cdr (assoc 'id (cdr (assoc 'target  proto_conn))))  children_by_id)))
-                                                                (declare (ignorable target_component))
-                                                                                                                        #|line 253|#
+                                                                (declare (ignorable target_component))                  #|line 253|#
                                                                   (cond
                                                                     (( equal    target_component  nil)                  #|line 254|#
                                                                           (load_error    (concatenate 'string  "internal error: .Down connection target internal error " (cdr (assoc 'target  proto_conn))) )#|line 255|#
@@ -290,11 +270,9 @@
                                                   (( equal   (cdr (assoc 'dir  proto_conn))  enumAcross)                #|line 259|#
                                                         (setf (cdr (assoc ' direction  connector))  "across")           #|line 260|#
                                                           (let ((source_component (nth (cdr (assoc 'id (cdr (assoc 'source  proto_conn))))  children_by_id)))
-                                                            (declare (ignorable source_component))
-                                                                                                                        #|line 261|#
+                                                            (declare (ignorable source_component))                      #|line 261|#
                                                               (let ((target_component (nth (cdr (assoc 'id (cdr (assoc 'target  proto_conn))))  children_by_id)))
-                                                                (declare (ignorable target_component))
-                                                                                                                        #|line 262|#
+                                                                (declare (ignorable target_component))                  #|line 262|#
                                                                   (cond
                                                                     (( equal    source_component  nil)                  #|line 263|#
                                                                           (load_error    (concatenate 'string  "internal error: .Across connection source not ok " (cdr (assoc 'source  proto_conn))) )#|line 264|#
@@ -314,8 +292,7 @@
                                                   (( equal   (cdr (assoc 'dir  proto_conn))  enumUp)                    #|line 272|#
                                                         (setf (cdr (assoc ' direction  connector))  "up")               #|line 273|#
                                                           (let ((source_component (nth (cdr (assoc 'id (cdr (assoc 'source  proto_conn))))  children_by_id)))
-                                                            (declare (ignorable source_component))
-                                                                                                                        #|line 274|#
+                                                            (declare (ignorable source_component))                      #|line 274|#
                                                               (cond
                                                                 (( equal    source_component  nil)                      #|line 275|#
                                                                       (print    (concatenate 'string  "internal error: .Up connection source not ok " (cdr (assoc 'source  proto_conn))) )#|line 276|#
@@ -375,25 +352,21 @@
 (defun sender_eq (&optional  s1  s2)
   (declare (ignorable  s1  s2))                                                                                         #|line 337|#
       (let ((same_components ( equal   (cdr (assoc ' component  s1)) (cdr (assoc ' component  s2)))))
-        (declare (ignorable same_components))
-                                                                                                                        #|line 338|#
+        (declare (ignorable same_components))                                                                           #|line 338|#
           (let ((same_ports ( equal   (cdr (assoc ' port  s1)) (cdr (assoc ' port  s2)))))
-            (declare (ignorable same_ports))
-                                                                                                                        #|line 339|#
+            (declare (ignorable same_ports))                                                                            #|line 339|#
               (return-from sender_eq ( and   same_components  same_ports))                                              #|line 340|#))#|line 341|#
   )#|  Delivers the given message to the receiver of this connector. |#                                                 #|line 343|##|line 344|#
 (defun deposit (&optional  parent  conn  message)
   (declare (ignorable  parent  conn  message))                                                                          #|line 345|#
       (let ((new_message (make_message   (cdr (assoc '(cdr (assoc ' port  receiver))  conn)) (cdr (assoc ' datum  message)) #|line 346|#)))
         (declare (ignorable new_message))
-
           (push_message    parent (cdr (assoc '(cdr (assoc ' component  receiver))  conn)) (cdr (assoc '(cdr (assoc ' queue  receiver))  conn))  new_message #|line 347|#))#|line 348|#
   )
 (defun force_tick (&optional  parent  eh)
   (declare (ignorable  parent  eh))                                                                                     #|line 350|#
       (let ((tick_msg (make_message    "." (new_datum_tick  )                                                           #|line 351|#)))
         (declare (ignorable tick_msg))
-
           (push_message    parent  eh (cdr (assoc ' inq  eh))  tick_msg                                                 #|line 352|#)
             (return-from force_tick  tick_msg)                                                                          #|line 353|#)#|line 354|#
   )
@@ -410,12 +383,10 @@
 (defun step_child (&optional  child  msg)
   (declare (ignorable  child  msg))                                                                                     #|line 366|#
       (let ((before_state (cdr (assoc ' state  child))))
-        (declare (ignorable before_state))
-                                                                                                                        #|line 367|#
+        (declare (ignorable before_state))                                                                              #|line 367|#
           (cdr (assoc '(handler    child  msg                                                                           #|line 368|#)  child))
             (let ((after_state (cdr (assoc ' state  child))))
-              (declare (ignorable after_state))
-                                                                                                                        #|line 369|#
+              (declare (ignorable after_state))                                                                         #|line 369|#
                 (return-from step_child (values ( and  ( equal    before_state  "idle") (not (equal   after_state  "idle"))) #|line 370|#( and  (not (equal   before_state  "idle")) (not (equal   after_state  "idle"))) #|line 371|#( and  (not (equal   before_state  "idle")) ( equal    after_state  "idle"))))#|line 372|#))#|line 373|#
   )
 (defun save_message (&optional  eh  msg)
@@ -437,17 +408,13 @@
                         (cond
                           ((not (cdr (assoc '(cdr (assoc '(empty  )  inq))  child)))                                    #|line 388|#
                                 (let ((msg (cdr (assoc '(cdr (assoc '(get  )  inq))  child))))
-                                  (declare (ignorable msg))
-                                                                                                                        #|line 389|#
+                                  (declare (ignorable msg))                                                             #|line 389|#
                                     (let (( began_long_run  nil))
-                                      (declare (ignorable  began_long_run))
-                                                                                                                        #|line 390|#
+                                      (declare (ignorable  began_long_run))                                             #|line 390|#
                                         (let (( continued_long_run  nil))
-                                          (declare (ignorable  continued_long_run))
-                                                                                                                        #|line 391|#
+                                          (declare (ignorable  continued_long_run))                                     #|line 391|#
                                             (let (( ended_long_run  nil))
-                                              (declare (ignorable  ended_long_run))
-                                                                                                                        #|line 392|#
+                                              (declare (ignorable  ended_long_run))                                     #|line 392|#
                                                 (multiple-value-setq ( began_long_run  continued_long_run  ended_long_run) (step_child    child  msg #|line 393|#))
                                                   (cond
                                                     ( began_long_run                                                    #|line 394|#
@@ -463,7 +430,6 @@
                                   ((not (equal  (cdr (assoc ' state  child))  "idle"))                                  #|line 401|#
                                         (let ((msg (force_tick    container  child                                      #|line 402|#)))
                                           (declare (ignorable msg))
-
                                             (cdr (assoc '(handler    child  msg                                         #|line 403|#)  child))
                                               (destroy_message    msg ))
                                     ))                                                                                  #|line 404|#
@@ -476,8 +442,7 @@
                             (loop while (not (cdr (assoc '(cdr (assoc '(empty  )  outq))  child)))
                               do                                                                                        #|line 410|#
                                   (let ((msg (cdr (assoc '(cdr (assoc '(get  )  outq))  child))))
-                                    (declare (ignorable msg))
-                                                                                                                        #|line 411|#
+                                    (declare (ignorable msg))                                                           #|line 411|#
                                       (route    container  child  msg                                                   #|line 412|#)
                                         (destroy_message    msg ))
                               )
@@ -499,11 +464,9 @@
   (declare (ignorable  container  from_component  message))                                                             #|line 430|#
       (let (( was_sent  nil))
         (declare (ignorable  was_sent))
-
           #|  for checking that output went somewhere (at least during bootstrap) |#                                    #|line 431|#
             (let (( fromname  ""))
-              (declare (ignorable  fromname))
-                                                                                                                        #|line 432|#
+              (declare (ignorable  fromname))                                                                           #|line 432|#
                 (cond
                   ((is_tick    message )                                                                                #|line 433|#
                         (loop for child in (cdr (assoc ' children  container))
@@ -518,8 +481,7 @@
                                 (setf  fromname (cdr (assoc ' name  from_component)))                                   #|line 439|#
                             ))
                           (let ((from_sender (Sender    fromname  from_component (cdr (assoc ' port  message))          #|line 440|#)))
-                            (declare (ignorable from_sender))
-                                                                                                                        #|line 441|#
+                            (declare (ignorable from_sender))                                                           #|line 441|#
                               (loop for connector in (cdr (assoc ' connections  container))
                                 do                                                                                      #|line 442|#
                                     (cond
