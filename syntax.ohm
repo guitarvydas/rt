@@ -38,6 +38,7 @@ syntax {
    Macro =
      | "#" "❲low_level_read_text_file_handler❳" "(" eh Comma msg Comma fname Comma ok Comma err ")" -- read
      | "#" "❲read_and_convert_json_file❳" "(" fname ")" -- racjf
+     | "#" "❲get_argv❳" "(" ")" -- getargv
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
    Defsynonym = Lval "≡" Exp Rec_Statement?

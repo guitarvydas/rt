@@ -34,6 +34,8 @@ CommaIdent [ _23 ident] = ‛«_23»«ident»’
 
 Macro_read [ _24 _25 _26 eh _27 msg _28 fname _29 ok _30 err _31] =‛«_24»«_25»«_26»«eh»«_27»«msg»«_28»«fname»«_29»«ok»«_30»«err»«_31»’
 Macro_racjf [ _32 _33 _34 fname _35] =‛«_32»«_33»«_34»«fname»«_35»’
+Macro_getargv [ _32 _33 _34 _35] =‛«_32»«_33»«_34»«_35»’
+
 Deftemp [ _37 Lval _38 Exp Rec_Statement?] = ‛«_37»«Lval»«_38»«Exp»«Rec_Statement»’
 Defsynonym_legal [ id _39 Exp Rec_Statement?] = ‛«id»«_39»«Exp»«Rec_Statement»’
 Defsynonym_illegal [ e _39 Exp Rec_Statement?] = ‛«e» ⎝ error - LHS must be a single identifier for defsynonym ⎠ «_39»«Exp»«Rec_Statement» ’

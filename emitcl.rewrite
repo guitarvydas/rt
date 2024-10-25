@@ -15,7 +15,7 @@ Defvar [ __ lval _eq e line?] = ‛\n(defparameter «lval» «e»)«line»’
 Defconst [ __ lval _eq e line?] = ‛\n(defparameter «lval» «e»)’
 Defn [ _4 ident Formals StatementBlock line?] = 
   ⎡ functionName=‛«ident»’
-    ‛\n(defun «ident» (&optional «Formals»)«StatementBlock»)’
+    ‛\n(defun «ident» (&optional «Formals»)⤷\n(declare (ignorable «Formals»))«StatementBlock»⤶)’
   ⎦
 
 Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛\n(defun «ident» (&optional «Formals»)«line1»⤷«line2»\n(list⤷«init»⤶⤶)«line3»)\n’
@@ -48,10 +48,13 @@ Macro_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4
 
 Macro_racjf [_octothorpe _racjf lp fname rp] = ‛
   ;; read json from a named file and convert it into internal form (a tree of routings)
-  ;; return the routings from the function or print an error message and return nil
-(handler-bind ((error #'(lambda (condition) nil)))⤷
+  ;; return the routings from the function or raise an error
   (with-open-file (json-stream "~/projects/rtlarson/eyeballs.json" :direction :input)⤷
-    (json:decode-json json-stream)))⤶⤶
+    (json:decode-json json-stream))⤶
+’
+
+Macro_getargv [_octothorpe _getrv lp rp] = ‛
+  (error 'NIY)
 ’
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n(let ((«lval» «e»))⤷«rec»⤶)’

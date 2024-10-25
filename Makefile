@@ -8,8 +8,8 @@ D2J=./das2json/mac/das2json
 
 
 
-all: generated-py
-#all: generated-cl
+#all: generated-py
+all: generated-cl
 
 generated-py: rt2py.drawio py0d.py *.ohm *.rewrite ${SRC}.a ${SRC}.b
 	${D2J} rt2py.drawio

@@ -119,7 +119,11 @@ defn new_datum_bytes (b) {
 
 defn clone_datum_bytes (src) {
     p ≡ Datum ()
-    p ≡ src
+    p.clone ⇐ src.clone
+    p.reclaim ⇐ src.reclaim
+    p.srepr ⇐ src.srepr
+    p.raw ⇐ src.raw
+    p.kind ⇐ src.kind
     p.data ⇐ src.clone ()
     return p
 }
@@ -241,8 +245,6 @@ defn container_instantiator (reg, owner, container_name, desc) {
     
     connectors ≡ []
     for proto_conn in desc@connections {
-        source_component ≡ ϕ
-        target_component ≡ ϕ
         connector ≡ Connector ()
         if proto_conn@dir = enumDown {
             ⌈ JSON: {'dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},⌉
@@ -385,6 +387,9 @@ defn step_children (container, causingMessage) {
         if (not (is_self (child, container))){
             if (not (child.inq.empty ())){
                 msg ≡ child.inq.get ()
+		deftemp began_long_run ⇐ ϕ
+		deftemp continued_long_run ⇐ ϕ
+		deftemp ended_long_run ⇐ ϕ
                 [began_long_run, continued_long_run, ended_long_run] ⇐ step_child (child, msg)
                 if began_long_run {
                     save_message (child, msg)
@@ -427,7 +432,7 @@ defn route (container, from_component, message) {
     deftemp fromname ⇐ “”
     if is_tick (message){
         for child in container.children {
-            attempt_tick (container, child, message) }
+            attempt_tick (container, child) }
         was_sent ⇐ ⊤ }
     else {
         if (not (is_self (from_component, container))) {

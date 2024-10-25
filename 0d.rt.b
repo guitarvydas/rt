@@ -58,10 +58,10 @@ defn get_component_instance (reg, full_name, owner) {
             owner_name ≡ “”
             instance_name ≡ template_name
             if ϕ != owner {
-                owner_name ≡ owner.name
-                instance_name ≡ strcons (owner_name, strcons (“.”, template_name))}
+                owner_name ⇐ owner.name
+                instance_name ⇐ strcons (owner_name, strcons (“.”, template_name))}
             else{
-                instance_name ≡ template_name}
+                instance_name ⇐ template_name}
             instance ≡ template.instantiator (reg, owner, instance_name, template.template_data)
             instance.depth ⇐ calculate_depth (instance)
             return instance }}
@@ -77,12 +77,12 @@ defn calculate_depth (eh) {
 }
 
 defn dump_registry (reg) {
-    print ()
+    nl ()
     print (“*** PALETTE ***”)
     for c in reg.templates{
         print (c.name)}
     print (“***************”)
-    print ()
+    nl ()
 }
 
 defn print_stats (reg) {
@@ -380,7 +380,7 @@ defn send_first_then_second (eh, inst) {
 }
 
 defn deracer_handler (eh, msg) {
-    inst ⇐ eh.instance_data
+    deftemp inst ⇐ eh.instance_data
     if inst.state = “idle” {
         if “1” = msg.port{
             inst.buffer.first ⇐ msg
@@ -575,20 +575,24 @@ defn print_error_maybe (main_container) {
 
 ⌈ debugging helpers⌉
 
+defn nl () {
+    print (“”)
+}
+
 defn dump_outputs (main_container) {
-    print ()
+    nl ()
     print (“___ Outputs ___”)
     print_output_list (main_container)
 }
 
 defn trace_outputs (main_container) {
-    print ()
+    nl ()
     print (“___ Message Traces ___”)
     print_routing_trace (main_container)
 }
 
 defn dump_hierarchy (main_container) {
-    print ()
+    nl ()
     print (strcons (“___ Hierarchy ___”, (build_hierarchy (main_container))))
 }
 
@@ -603,11 +607,11 @@ defn build_hierarchy (c) {
 }
 
 defn dump_connections (c) {
-    print ()
+    nl ()
     print (“___ connections ___”)
     dump_possible_connections (c)
     for child in c.children{
-        print ()
+        nl ()
         dump_possible_connections (child)}
 }
 
@@ -672,6 +676,9 @@ defn initialize_stock_components (reg) {
     register_component (reg, Template ( “fakepipename”, ϕ, fakepipename_instantiate))
 }
 
+defn argv () {
+    # get_argv ()
+}
 
 defn initialize () {
     root_of_project ≡ nthargv (1) 
