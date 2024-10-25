@@ -161,6 +161,9 @@ defn run_command (eh, cmd, s) {
 import queue
 import sys
 
+defn freshQueue () {
+    #freshQueue ()
+}
 
 ⌈ Eh_States :: enum { idle, active }⌉
 defobj Eh () {
