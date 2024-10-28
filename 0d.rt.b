@@ -512,6 +512,8 @@ defn shell_out_instantiate (reg, owner, name, template_data) {
 defn shell_out_handler (eh, msg) {
     cmd ≡ eh.instance_data
     s ≡ msg.datum.srepr ()
+    deftemp stdout ⇐ ϕ
+    deftemp stderr ⇐ ϕ
     [stdout, stderr] ⇐ run_command (eh, cmd, s)
     if stderr != ϕ{
         send_string (eh, “✗”, stderr, msg)}

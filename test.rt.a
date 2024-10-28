@@ -1,3 +1,4 @@
-defn start (palette, env, show_hierarchy, show_connections, show_traces, show_all_outputs) {
-                print (routing_trace_all (main_container))
+defn s () {
+  x ≡ 1
+  y ⇐ 2
 }
