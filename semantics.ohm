@@ -114,6 +114,7 @@ semantics {
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
+      | "↪︎" ident -- subr
       | External -- external
       | kw<"range"> "(" Exp ")" -- range
       | string -- string

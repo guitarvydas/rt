@@ -130,6 +130,7 @@ emit {
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
+      | "↪︎" ident -- subr
       | kw<"range"> "(" Exp ")" -- range
       | ident Actuals -- callident
       | string -- string

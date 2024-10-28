@@ -188,8 +188,8 @@ defn make_container (name, owner) {
     eh ≡ Eh ()
     eh.name ⇐ name
     eh.owner ⇐ owner
-    eh.handler ⇐ container_handler
-    eh.inject ⇐ container_injector
+    eh.handler ⇐ ↪︎container_handler
+    eh.inject ⇐ ↪︎container_injector
     eh.state ⇐ “idle”
     eh.kind ⇐ “container”
     return eh
@@ -318,21 +318,21 @@ defn set_environment (rproject, r0D) {
 
 defn probe_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“?”)
-    return make_leaf (name_with_id, owner, ϕ, probe_handler)
+    return make_leaf (name_with_id, owner, ϕ, ↪︎probe_handler)
 }
 defn probeA_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“?A”)
-    return make_leaf (name_with_id, owner,  ϕ,  probe_handler)
+    return make_leaf (name_with_id, owner,  ϕ,  ↪︎probe_handler)
 }
 
 defn probeB_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol(“?B”)
-    return make_leaf (name_with_id, owner,  ϕ,  probe_handler)
+    return make_leaf (name_with_id, owner,  ϕ,  ↪︎probe_handler)
 }
 
 defn probeC_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol(“?C”)
-    return make_leaf (name_with_id, owner,  ϕ,  probe_handler)
+    return make_leaf (name_with_id, owner,  ϕ,  ↪︎probe_handler)
 }
 
 defn probe_handler (eh, msg) {
@@ -342,7 +342,7 @@ defn probe_handler (eh, msg) {
 
 defn trash_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“trash”)
-    return make_leaf (name_with_id, owner, ϕ, trash_handler)
+    return make_leaf (name_with_id, owner, ϕ, ↪︎trash_handler)
 }
 
 defn trash_handler (eh, msg) {
@@ -368,7 +368,7 @@ defn deracer_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“deracer”)
     inst ≡ Deracer_Instance_Data (“idle”, TwoMessages (ϕ, ϕ))
     inst.state ⇐ “idle”
-    eh ≡ make_leaf (name_with_id, owner, inst, deracer_handler)
+    eh ≡ make_leaf (name_with_id, owner, inst, ↪︎deracer_handler)
     return eh
 }
 
@@ -419,7 +419,7 @@ defn low_level_read_text_file_handler (eh, msg) {
 
 defn ensure_string_datum_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol(“Ensure String Datum”)
-    return make_leaf (name_with_id, owner, ϕ, ensure_string_datum_handler)
+    return make_leaf (name_with_id, owner, ϕ, ↪︎ensure_string_datum_handler)
 }
 
 defn ensure_string_datum_handler (eh, msg) {
@@ -438,7 +438,7 @@ defobj Syncfilewrite_Data () {
 defn syncfilewrite_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“syncfilewrite”)
     inst ≡ Syncfilewrite_Data ()
-    return make_leaf (name_with_id, owner, inst, syncfilewrite_handler)
+    return make_leaf (name_with_id, owner, inst, ↪︎syncfilewrite_handler)
 }
 
 defn syncfilewrite_handler (eh, msg) {
@@ -465,7 +465,7 @@ defobj StringConcat_Instance_Data () {
 defn stringconcat_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“stringconcat”)
     instp ≡ StringConcat_Instance_Data ()
-    return make_leaf (name_with_id, owner, instp, stringconcat_handler)
+    return make_leaf (name_with_id, owner, instp, ↪︎stringconcat_handler)
 }
 
 defn stringconcat_handler (eh, msg) {
@@ -506,7 +506,7 @@ defn maybe_stringconcat (eh, inst, msg) {
 defn shell_out_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“shell_out”)
     cmd ≡ shlex.split (template_data)
-    return make_leaf (name_with_id, owner, cmd, shell_out_handler)
+    return make_leaf (name_with_id, owner, cmd, ↪︎shell_out_handler)
 }
 
 defn shell_out_handler (eh, msg) {
@@ -528,7 +528,7 @@ defn string_constant_instantiate (reg, owner, name, template_data) {
         s ⇐ re.sub (“_00_”, root_project, s)}
     if root_0D != “”{
         s ⇐ re.sub (“_0D_”, root_0D, s)}
-    return make_leaf (name_with_id, owner, s, string_constant_handler)
+    return make_leaf (name_with_id, owner, s, ↪︎string_constant_handler)
 }
 
 defn string_constant_handler (eh, msg) {
@@ -642,7 +642,7 @@ defn runtime_error (s) {
 
 defn fakepipename_instantiate (reg, owner, name, template_data) {
     instance_name ≡ gensymbol (“fakepipe”)
-    return make_leaf (instance_name, owner, ϕ, fakepipename_handler)
+    return make_leaf (instance_name, owner, ϕ, ↪︎fakepipename_handler)
 }
 
 defvar rand ⇐ 0
@@ -659,20 +659,20 @@ defn fakepipename_handler (eh, msg) {
 
 
 defn initialize_stock_components (reg) {
-    register_component (reg, Template ( “1then2”, ϕ, deracer_instantiate))
-    register_component (reg, Template ( “?”, ϕ, probe_instantiate))
-    register_component (reg, Template ( “?A”, ϕ, probeA_instantiate))
-    register_component (reg, Template ( “?B”, ϕ, probeB_instantiate))
-    register_component (reg, Template ( “?C”, ϕ, probeC_instantiate))
-    register_component (reg, Template ( “trash”, ϕ, trash_instantiate))
+    register_component (reg, Template ( “1then2”, ϕ, ↪︎deracer_instantiate))
+    register_component (reg, Template ( “?”, ϕ, ↪︎probe_instantiate))
+    register_component (reg, Template ( “?A”, ϕ, ↪︎probeA_instantiate))
+    register_component (reg, Template ( “?B”, ϕ, ↪︎probeB_instantiate))
+    register_component (reg, Template ( “?C”, ϕ, ↪︎probeC_instantiate))
+    register_component (reg, Template ( “trash”, ϕ, ↪︎trash_instantiate))
 
-    register_component (reg, Template ( “Low Level Read Text File”, ϕ, low_level_read_text_file_instantiate))
-    register_component (reg, Template ( “Ensure String Datum”, ϕ, ensure_string_datum_instantiate))
+    register_component (reg, Template ( “Low Level Read Text File”, ϕ, ↪︎low_level_read_text_file_instantiate))
+    register_component (reg, Template ( “Ensure String Datum”, ϕ, ↪︎ensure_string_datum_instantiate))
 
-    register_component (reg, Template ( “syncfilewrite”, ϕ, syncfilewrite_instantiate))
-    register_component (reg, Template ( “stringconcat”, ϕ, stringconcat_instantiate))
+    register_component (reg, Template ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate))
+    register_component (reg, Template ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate))
     ⌈ for fakepipe⌉
-    register_component (reg, Template ( “fakepipename”, ϕ, fakepipename_instantiate))
+    register_component (reg, Template ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate))
 }
 
 defn argv () {

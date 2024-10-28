@@ -96,6 +96,7 @@ Atom_phi [ phi] =‛«phi»’
 Atom_true [ _119] =‛«_119»’
 Atom_false [ _120] =‛«_120»’
 Atom_external [m] =‛«m»’
+Atom_subr [_subrref ident] =‛«_subrref»«ident»’
 Atom_range [ _122 _123 Exp _124] =‛«_122»«_123»«Exp»«_124»’
 Atom_string [ string] =‛«string»’
 Atom_number [ number] =‛«number»’

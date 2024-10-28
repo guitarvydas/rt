@@ -57,8 +57,8 @@ External_getargv [_octothorpe _getrv lp rp] = ‛
   (error 'NIY)
 ’
 
-External_freshQueue [_octothorpe _83 _84 ident _85] =‛ (***)’
-External_freshStack [_octothorpe _83 _84 ident _85] =‛ nil’
+External_freshQueue [_octothorpe _83 _84 _85] =‛ (make-instance 'Queue)’
+External_freshStack [_octothorpe _83 _84 _85] =‛ nil’
 External_fresh [_octothorpe _83 _84 ident _85] =‛ («ident»)’
 External_car [_octothorpe _83 _84 e _85 ] =‛ (car «e»)’
 External_cdr [_octothorpe _83 _84 e _85 ] =‛ (cdr «e»)’
@@ -140,6 +140,7 @@ Atom_neg [ _87 Primary ] =‛ -«Primary»’
 Atom_phi [ phi] =‛ nil’
 Atom_true [ _88] =‛ t’
 Atom_false [ _89] =‛ nil’
+Atom_subr [_ ident] = ‛ #'«ident»’
 Atom_range [ _91 _92 Exp _93] =‛(loop for n from 0 below «Exp» by 1 collect n)’
 Atom_string [ string] =‛ «string»’
 Atom_number [ number] =‛ «number»’
