@@ -148,7 +148,7 @@
                                                 (declare (ignorable name))                                              #|line 109|#
                                                   (let ((cmd (cdr (assoc '(strip  )  (subseq  name 1)))))
                                                     (declare (ignorable cmd))                                           #|line 110|#
-                                                      (let ((generated_leaf (Template    name  shell_out_instantiate  cmd #|line 111|#)))
+                                                      (let ((generated_leaf (Template    name  #'shell_out_instantiate  cmd #|line 111|#)))
                                                         (declare (ignorable generated_leaf))
                                                           (register_component    reg  generated_leaf                    #|line 112|#))))
                                           )
@@ -157,7 +157,7 @@
                                                 (declare (ignorable name))                                              #|line 114|#
                                                   (let ((s  (subseq  name 1)))
                                                     (declare (ignorable s))                                             #|line 115|#
-                                                      (let ((generated_leaf (Template    name  string_constant_instantiate  s #|line 116|#)))
+                                                      (let ((generated_leaf (Template    name  #'string_constant_instantiate  s #|line 116|#)))
                                                         (declare (ignorable generated_leaf))
                                                           (register_component_allow_overwriting    reg  generated_leaf  #|line 117|#))))#|line 118|#
                                           ))                                                                            #|line 119|#
@@ -464,7 +464,7 @@
   (declare (ignorable  reg  owner  name  template_data))                                                                #|line 410|#
       (let ((name_with_id (gensymbol    "Low Level Read Text File"                                                      #|line 411|#)))
         (declare (ignorable name_with_id))
-          (return-from low_level_read_text_file_instantiate (make_leaf    name_with_id  owner  nil  low_level_read_text_file_handler #|line 412|#)))#|line 413|#
+          (return-from low_level_read_text_file_instantiate (make_leaf    name_with_id  owner  nil  #'low_level_read_text_file_handler #|line 412|#)))#|line 413|#
   )
 (defun low_level_read_text_file_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                                                                                        #|line 415|#
@@ -657,7 +657,7 @@
                     (generate_shell_components    reg  all_containers_within_single_file                                #|line 560|#)
                       (loop for container in  all_containers_within_single_file
                         do                                                                                              #|line 561|#
-                            (register_component    reg (Template   (cdr (assoc 'name  container)) #|  template_data =  |# container #|  instantiator =  |# container_instantiator ) )
+                            (register_component    reg (Template   (cdr (assoc 'name  container)) #|  template_data =  |# container #|  instantiator =  |# #'container_instantiator ) )
                         ))                                                                                              #|line 562|#
             )
             (initialize_stock_components    reg                                                                         #|line 563|#)
@@ -781,13 +781,13 @@
   )
 (defun initialize (&optional )
   (declare (ignorable ))                                                                                                #|line 682|#
-      (let ((root_of_project  (nth  1 argv)))
+      (let ((root_of_project  (nth  1 (argv))))
         (declare (ignorable root_of_project))                                                                           #|line 683|#
-          (let ((root_of_0D  (nth  2 argv)))
+          (let ((root_of_0D  (nth  2 (argv))))
             (declare (ignorable root_of_0D))                                                                            #|line 684|#
-              (let ((arg  (nth  3 argv)))
+              (let ((arg  (nth  3 (argv))))
                 (declare (ignorable arg))                                                                               #|line 685|#
-                  (let ((main_container_name  (nth  4 argv)))
+                  (let ((main_container_name  (nth  4 (argv))))
                     (declare (ignorable main_container_name))                                                           #|line 686|#
                       (let ((diagram_names  (nthcdr  5 (argv))))
                         (declare (ignorable diagram_names))                                                             #|line 687|#

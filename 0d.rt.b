@@ -108,12 +108,12 @@ defn generate_shell_components (reg, container_list) {
                 if first_char_is (child_descriptor@name, “$”) {
                     name ≡ child_descriptor@name
                     cmd ≡ #stringcdr (name).strip ()
-                    generated_leaf ≡ Template (name, shell_out_instantiate, cmd)
+                    generated_leaf ≡ Template (name,  ↪︎shell_out_instantiate, cmd)
                     register_component (reg, generated_leaf)
                 } elif first_char_is (child_descriptor@name, “'”) {
                     name ≡ child_descriptor@name
                     s ≡ #stringcdr (name)
-                    generated_leaf ≡ Template (name, string_constant_instantiate, s)
+                    generated_leaf ≡ Template (name,  ↪︎string_constant_instantiate, s)
                     register_component_allow_overwriting (reg, generated_leaf)
 		}
 	    }
@@ -409,7 +409,7 @@ defn deracer_handler (eh, msg) {
 
 defn low_level_read_text_file_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol(“Low Level Read Text File”)
-    return make_leaf (name_with_id, owner, ϕ, low_level_read_text_file_handler)
+    return make_leaf (name_with_id, owner, ϕ,  ↪︎low_level_read_text_file_handler)
 }
 
 defn low_level_read_text_file_handler (eh, msg) {
@@ -559,7 +559,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
         all_containers_within_single_file ≡ json2internal (diagram_source)
         generate_shell_components (reg, all_containers_within_single_file)
         for container in all_containers_within_single_file{
-            register_component (reg, Template (container@name , ⌈ template_data = ⌉container, ⌈ instantiator = ⌉container_instantiator))}}
+            register_component (reg, Template (container@name , ⌈ template_data = ⌉container, ⌈ instantiator = ⌉ ↪︎container_instantiator))}}
     initialize_stock_components (reg)
     return reg
 }

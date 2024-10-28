@@ -63,7 +63,7 @@ External_fresh [_octothorpe _83 _84 ident _85] =‛ («ident»)’
 External_car [_octothorpe _83 _84 e _85 ] =‛ (car «e»)’
 External_cdr [_octothorpe _83 _84 e _85 ] =‛ (cdr «e»)’
 External_nthargvcdr [_octothorpe _83 lb n rb ] =‛ (nthcdr «n» (argv))’
-External_nthargv [_octothorpe _83 _84 n _85 ] =‛ (nth «n» argv)’
+External_nthargv [_octothorpe _83 _84 n _85 ] =‛ (nth «n» (argv))’
 External_stringcdr [_octothorpe _83 _84 e _85 ] =‛ (subseq «e» 1)’
 External_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» «e2»)’
 
