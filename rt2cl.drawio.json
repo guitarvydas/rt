@@ -709,10 +709,6 @@
             {
                 "name": "$ ./ndsl peephole.ohm peephole.rewrite",
                 "id": 5
-            },
-            {
-                "name": "?A",
-                "id": 10
             }
         ],
         "connections": [
@@ -730,15 +726,15 @@
                 "target_port": ""
             },
             {
-                "dir": 0,
+                "dir": 2,
                 "source": {
-                    "name": "",
-                    "id": 0
+                    "name": "$ ./ndsl peephole.ohm peephole.rewrite",
+                    "id": 5
                 },
                 "source_port": "",
                 "target": {
-                    "name": "?A",
-                    "id": 10
+                    "name": "",
+                    "id": 0
                 },
                 "target_port": ""
             },
@@ -754,19 +750,6 @@
                     "id": 0
                 },
                 "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "$ ./ndsl peephole.ohm peephole.rewrite",
-                    "id": 5
-                },
-                "source_port": "",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": ""
             }
         ]
     }

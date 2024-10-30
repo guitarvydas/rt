@@ -25,7 +25,7 @@ StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1�
 Rec_Statement [line1? R_Statement line2?] = ‛«line1»«R_Statement»«line2»’
 R_Statement_globals [ _24 ident1  cidents* scope?] =‛«scope»’
 R_Statement_comment [s rec?] =‛\n«s»«rec»’
-R_Statement_external [x] = ‛«x»’
+R_Statement_external [x rec?] = ‛\n«x»«rec»’
 R_Statement_if [ IfStatement] =‛«IfStatement»’
 R_Statement_pass [ _27 scope?] =‛\n#| pass |#«scope»’
 R_Statement_return [ _29 ReturnExp] =‛\n(return-from ⟪functionName⟫ ⤷«ReturnExp»⤶)’
@@ -36,7 +36,9 @@ R_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
 R_Statement_line [line rec?] = ‛«line»«rec»’
 CommaIdent [_comma ident] = ‛, «ident»’
 
-External_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
+External [x line?] = ‛«x»«line»’
+
+ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
 ;; read text from a named file «fname», send the text out on port «ok» else send error info on port «err»
 ;; given «eh» and «msg» if needed
 (handler-bind ((error #'(lambda (condition) (send_string «eh» «err» (format nil "~&~A~&" condition)))))⤷
@@ -46,26 +48,38 @@ External_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _com
       (send_string «eh» «ok» contents))))⤶⤶⤶
 ’
 
-External_racjf [_octothorpe _racjf lp fname rp] = ‛
+ExternalPhrase_racjf [_octothorpe _racjf lp fname rp] = ‛
   ;; read json from a named file and convert it into internal form (a tree of routings)
   ;; return the routings from the function or raise an error
   (with-open-file (json-stream "~/projects/rtlarson/eyeballs.json" :direction :input)⤷
     (json:decode-json json-stream))⤶
 ’
 
-External_getargv [_octothorpe _getrv lp rp] = ‛
+ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛
   (error 'NIY)
 ’
 
-External_freshQueue [_octothorpe _83 _84 _85] =‛ (make-instance 'Queue)’
-External_freshStack [_octothorpe _83 _84 _85] =‛ nil’
-External_fresh [_octothorpe _83 _84 ident _85] =‛ («ident»)’
-External_car [_octothorpe _83 _84 e _85 ] =‛ (car «e»)’
-External_cdr [_octothorpe _83 _84 e _85 ] =‛ (cdr «e»)’
-External_nthargvcdr [_octothorpe _83 lb n rb ] =‛ (nthcdr «n» (argv))’
-External_nthargv [_octothorpe _83 _84 n _85 ] =‛ (nth «n» (argv))’
-External_stringcdr [_octothorpe _83 _84 e _85 ] =‛ (subseq «e» 1)’
-External_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» «e2»)’
+ExternalPhrase_freshQueue [_octothorpe _83 _84 _85] =‛ (make-instance 'Queue)’
+ExternalPhrase_freshStack [_octothorpe _83 _84 _85] =‛ nil’
+ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ («ident»)’
+ExternalPhrase_car [_octothorpe _83 _84 e _85 ] =‛ (car «e»)’
+ExternalPhrase_cdr [_octothorpe _83 _84 e _85 ] =‛ (cdr «e»)’
+ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ (nthcdr «n» (argv))’
+ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ (nth «n» (argv))’
+ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ (subseq «e» 1)’
+ExternalPhrase_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» «e2»)’
+ExternalPhrase_basename [_octothorpe _basename lp s rp] = ‛(let ((p (parse-namestring «s»)))(format nil "~a.~a" (pathname-name p) (pathname-type p)))’
+ExternalPhrase_preamble [_octothorpe _preamble lb rp] = ‛(load "~/quicklisp/setup.lisp")\n’
+ExternalPhrase_print_stdout [_octothorpe _ lp e rp] = ‛(format *standard-output* "~a" «e»)’
+ExternalPhrase_print_stderr [_octothorpe _ lp e rp] = ‛(format *error-output* "~a" «e»)’
+ExternalPhrase_print_nl [_octothorpe _ lp rp] = ‛(format *standard-output* "~%")’
+ExternalPhrase_split_string_for_shell [_octothorpe _ lp s rp] = ‛(split-sequence '(#\\space) «s»)’
+ExternalPhrase_substitute [_octothorpe _ lp new_item _comma1 old_item _comma2 s rp] = ‛(substitute «new_item» «old_item» «s»)’
+
+run_command (multiple-value-bind (out err rc) (uiop::run-program "ls -l" :output :string :error :string) (values out err rc))
+
+
+ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n(let ((«lval» «e»))⤷\n(declare (ignorable «lval»))«rec»⤶)’
 Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec»’

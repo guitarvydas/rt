@@ -57,8 +57,16 @@ emit {
      | "#" xkw<"print_nl"> "(" ")" -- print_nl
      | "#" xkw<"split_string_for_shell"> "(" Exp ")" -- split_string_for_shell
      | "#" xkw<"substitute"> "(" Exp Comma Exp Comma Exp ")" -- substitute
+     | "#" xkw<"run_command"> "(" Cmd Comma Args Comma ret Comma rc Comma stdout Comma stderr ")" -- run_command
      | "#" ident "(" StuffInsideParentheses* ")" -- unrecognized
 
+   Cmd = Exp
+   Args = Exp
+   ret = ident
+   rc = ident
+   stdout = ident
+   stderr = ident
+   
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
    Defsynonym =
      | Lval errorMessage "≡" Exp Rec_Statement? -- illegal

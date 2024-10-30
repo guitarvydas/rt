@@ -126,19 +126,10 @@ defn first_char_is (s, c) {
     return c = first_char (s)
 }
 
-⌈ this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here⌉
+
+⌈ TODO: #run_command needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here⌉
 ⌈ I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped⌉
-defn run_command (eh, cmd, s) {
-    ⌈ capture_output ∷ ⊤⌉
-    ret ≡ subprocess.run (cmd,  s, “UTF_8”)
-    if  not (ret.returncode = 0){
-        if ret.stderr != ϕ{
-            return [“”, ret.stderr]}
-        else{
-            return [“”, #strcons (“error in shell_out ”, ret.returncode)]}}
-    else{
-        return [ret.stdout, ϕ]}
-}
+
 
 ⌈ Data for an asyncronous component _ effectively, a function with input⌉
 ⌈ and output queues of messages.⌉
@@ -494,13 +485,16 @@ defn shell_out_instantiate (reg, owner, name, template_data) {
 defn shell_out_handler (eh, msg) {
     cmd ≡ eh.instance_data
     s ≡ msg.datum.srepr ()
+    deftemp ret ⇐ ϕ
+    deftemp rc ⇐ ϕ
     deftemp stdout ⇐ ϕ
     deftemp stderr ⇐ ϕ
-    [stdout, stderr] ⇐ run_command (eh, cmd, s)
-    if stderr != ϕ{
-        send_string (eh, “✗”, stderr, msg)}
-    else{
-        send_string (eh, “”, stdout, msg)}
+    #run_command (cmd, s, ret, rc, stdout, stderr)
+    if rc != 0 {
+        send_string (eh, “✗”, stderr, msg)
+    } else {
+        send_string (eh, “”, stdout, msg)
+    }
 }
 
 defn string_constant_instantiate (reg, owner, name, template_data) {
@@ -508,10 +502,12 @@ defn string_constant_instantiate (reg, owner, name, template_data) {
     global root_0D
     name_with_id ≡ gensymbol (“strconst”)
     deftemp s ⇐ template_data
-    if root_project != “”{
-        s ⇐ re.sub (“_00_”, root_project, s)}
-    if root_0D != “”{
-        s ⇐ re.sub (“_0D_”, root_0D, s)}
+    if root_project != “” {
+        s ⇐ #substitute (“_00_”, root_project, s)
+    }
+    if root_0D != “” {
+        s ⇐ #substitute (“_0D_”, root_0D, s)
+    }
     return make_leaf (name_with_id, owner, s, ↪︎string_constant_handler)
 }
 
