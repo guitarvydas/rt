@@ -1,6 +1,5 @@
-defn s () {
-  x ≡ 1
-  #print_stdout (x)
-  #print_stdout ()
-  #print_nl ()
+defn print_stats (reg) {
+    #print_stdout (7)
+    #print_stdout (8)
+    #print_stdout (9)
 }

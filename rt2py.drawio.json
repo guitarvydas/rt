@@ -12,16 +12,24 @@
                 "id": 11
             },
             {
+                "name": "?B",
+                "id": 15
+            },
+            {
                 "name": "Exhale Python",
                 "id": 16
             },
             {
-                "name": "Semantics Check",
-                "id": 20
+                "name": "?A",
+                "id": 22
             },
             {
                 "name": "Syntax Check",
                 "id": 23
+            },
+            {
+                "name": "Semantics Check",
+                "id": 27
             }
         ],
         "connections": [
@@ -41,26 +49,13 @@
             {
                 "dir": 1,
                 "source": {
-                    "name": "RT to Python",
-                    "id": 11
-                },
-                "source_port": "",
-                "target": {
-                    "name": "Exhale Python",
-                    "id": 16
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
                     "name": "Syntax Check",
                     "id": 23
                 },
                 "source_port": "",
                 "target": {
                     "name": "Semantics Check",
-                    "id": 20
+                    "id": 27
                 },
                 "target_port": ""
             },
@@ -81,7 +76,7 @@
                 "dir": 1,
                 "source": {
                     "name": "Semantics Check",
-                    "id": 20
+                    "id": 27
                 },
                 "source_port": "",
                 "target": {
@@ -91,10 +86,75 @@
                 "target_port": ""
             },
             {
+                "dir": 1,
+                "source": {
+                    "name": "RT to Python",
+                    "id": 11
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Exhale Python",
+                    "id": 16
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Semantics Check",
+                    "id": 27
+                },
+                "source_port": "",
+                "target": {
+                    "name": "?A",
+                    "id": 22
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "RT to Python",
+                    "id": 11
+                },
+                "source_port": "",
+                "target": {
+                    "name": "?B",
+                    "id": 15
+                },
+                "target_port": ""
+            },
+            {
                 "dir": 2,
                 "source": {
                     "name": "Exhale Python",
                     "id": 16
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Semantics Check",
+                    "id": 27
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Syntax Check",
+                    "id": 23
                 },
                 "source_port": "\u2717",
                 "target": {
@@ -134,32 +194,6 @@
                 "source": {
                     "name": "Inhale",
                     "id": 6
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Semantics Check",
-                    "id": 20
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Syntax Check",
-                    "id": 23
                 },
                 "source_port": "\u2717",
                 "target": {
@@ -899,16 +933,20 @@
         "name": "Exhale Python",
         "children": [
             {
-                "name": "Python Indenter",
-                "id": 3
-            },
-            {
                 "name": "Decode For Python",
                 "id": 5
             },
             {
                 "name": "Uninternalize",
                 "id": 10
+            },
+            {
+                "name": "?C",
+                "id": 14
+            },
+            {
+                "name": "Python Indenter",
+                "id": 17
             }
         ],
         "connections": [
@@ -928,6 +966,19 @@
             {
                 "dir": 1,
                 "source": {
+                    "name": "Uninternalize",
+                    "id": 10
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Python Indenter",
+                    "id": 17
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
                     "name": "Decode For Python",
                     "id": 5
                 },
@@ -946,8 +997,8 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "Python Indenter",
-                    "id": 3
+                    "name": "?C",
+                    "id": 14
                 },
                 "target_port": ""
             },
@@ -967,21 +1018,8 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "Decode For Python",
-                    "id": 5
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
                     "name": "Python Indenter",
-                    "id": 3
+                    "id": 17
                 },
                 "source_port": "",
                 "target": {
@@ -994,7 +1032,20 @@
                 "dir": 2,
                 "source": {
                     "name": "Python Indenter",
-                    "id": 3
+                    "id": 17
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Decode For Python",
+                    "id": 5
                 },
                 "source_port": "\u2717",
                 "target": {

@@ -1,4 +1,4 @@
- // pseudo Python to Python re-formatter
+ // pseudo-Python to Python reformatter
 function indenter (str) {
     indentation = [];
     let result = '';
@@ -15,29 +15,30 @@ function indenter (str) {
  // we emit code using bracketed notation → and ← which is compatible
  // lisp pretty-printing, which allows easier debugging of the transpiled code
  // then, for Python, we convert the bracketing into indentation...
- function indent1 (s) {
-   let opens = (s.match (/⤷/g) || []).length;
-   let closes = (s.match (/⤶/g) || []).length;
-     // let r0 = s.trim ();
-     let r0 = s;
-   let r1 = r0.replace (/⤷/g, '');
-   let r2 = r1.replace (/⤶/g, '');
-   let spaces = indentation.join ('');
-   let r  = spaces + r2.replace (/\n/g, spaces);
-   let diff = opens - closes;
-   if (diff > 0) {
-       while (diff > 0) {
-           indentation.push ('    ');
-           diff -=1;
-       }
-   } else {
-     while (diff < 0) {
-         indentation.pop ();
-         diff += 1;
-     }
-   }
-   return r;
- }
+function indent1 (s) {
+    let opens = (s.match (/⤷/g) || []).length;
+    let closes = (s.match (/⤶/g) || []).length;
+    
+    // let r0 = s.trim ();
+    let r0 = s;
+    let r1 = r0.replace (/⤷/g, '');
+    let r2 = r1.replace (/⤶/g, '');
+    let diff = opens - closes;
+    if (diff > 0) {
+	while (diff > 0) {
+            indentation.push ('    ');
+            diff -=1;
+	}
+    } else {
+	while (diff < 0) {
+            indentation.pop ();
+            diff += 1;
+	}
+    }
+    let spaces = indentation.join ('');
+    let r  = spaces + r2.replace (/\n/g, spaces);
+    return r;
+}
 
 import * as fs from 'fs';
 let inp = fs.readFileSync(0, 'utf-8');

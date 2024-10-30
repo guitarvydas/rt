@@ -320,7 +320,7 @@ defn probeC_instantiate (reg, owner, name, template_data) {
 
 defn probe_handler (eh, msg) {
     s ≡ msg.datum.srepr ()
-    #print_stdout (#strcons (“... probe ”, #strcons (eh.name, #strcons (“: ”, s))), sys.stderr)
+    #print_stderr (#strcons (“... probe ”, #strcons (eh.name, #strcons (“: ”, s))))
 }
 
 defn trash_instantiate (reg, owner, name, template_data) {
