@@ -7,6 +7,7 @@ TopLevel_defconst [ Defconst] =‛«Defconst»’
 TopLevel_defn [ Defn] =‛«Defn»’
 TopLevel_defobj [ Defobj] =‛«Defobj»’
 TopLevel_import [ Import] =‛«Import»’
+TopLevel_external [x] =‛«x»’
 TopLevel_comment [s line?] =‛«s»«line»’
 TopLevel_line [line] =‛«line»’
 
@@ -21,7 +22,7 @@ StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1�
 Rec_Statement [line1? R_Statement line2?] = ‛«line1»«R_Statement»«line2»’
 R_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
 R_Statement_comment [s rec?] =‛\n«s»«rec»’
-R_Statement_external [x] = ‛«x»’
+R_Statement_external [x rec?] = ‛«x»«rec»’
 R_Statement_if [ IfStatement] =‛«IfStatement»’
 R_Statement_pass [ _27 scope?] =‛\npass«scope»’
 R_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
@@ -32,7 +33,8 @@ R_Statement_call [ Lval scope?] =‛\n«Lval»«scope»’
 R_Statement_line [line rec?] = ‛«line»«rec»’
 CommaIdent [_comma ident] = ‛, «ident»’
 
-External_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
+External [x line?] = ‛«x»«line»’
+ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
     try:⤷
         f = open («fname»)⤶
     except Exception as e:⤷
@@ -48,7 +50,7 @@ External_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _com
         send_string (eh, «err», f"open error on file '{«fname»}'", «msg»)⤶
 ’
 
-External_racjf [_octothorpe _racjf lp fname rp] = ‛
+ExternalPhrase_racjf [_octothorpe _racjf lp fname rp] = ‛
     try:⤷
         fil = open(«fname», “r”)
         json_data = fil.read()
@@ -62,17 +64,30 @@ External_racjf [_octothorpe _racjf lp fname rp] = ‛
         print ("Error decoding JSON in file: '{e}'")
         return None⤶
 ’
-External_getargv [_octothorpe _getrv lp rp] = ‛ sys.argv’
-External_freshQueue [_octothorpe _ lp rp] = ‛ queue.Queue ()’
-External_freshStack [_octothorpe _ lp rp] = ‛ queue.LifoQueue ()’
-External_fresh [_octothorpe _83 _84 ident _85] =‛ «ident» ()’
-External_car [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
-External_cdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’
-External_nthargvcdr [_octothorpe _83 lb n rb ] =‛ sys.argv[«n»:] ’
-External_nthargv [_octothorpe _83 _84 n _85 ] =‛ sys.argv[«n»] ’
-External_stringcdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’
-External_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ str(«e1») + «e2» ’
-
+ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛ sys.argv’
+ExternalPhrase_freshQueue [_octothorpe _ lp rp] = ‛ queue.Queue ()’
+ExternalPhrase_freshStack [_octothorpe _ lp rp] = ‛ queue.LifoQueue ()’
+ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ «ident» ()’
+ExternalPhrase_car [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
+ExternalPhrase_cdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’
+ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ sys.argv[«n»:] ’
+ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ sys.argv[«n»] ’
+ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’
+ExternalPhrase_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ str(«e1») + «e2» ’
+ExternalPhrase_basename [_octothorpe _basename lp s rp] = ‛ os.path.basename («s»)’
+ExternalPhrase_preamble [_octothorpe _preamble lb rp] = ‛
+import sys
+import re
+import subprocess
+import shlex
+import os
+import json
+import queue
+’
+ExternalPhrase_print_stdout [_octothorpe _basename lp e rp] = ‛ print («e»)’
+ExternalPhrase_print_stderr [_octothorpe _basename lp e rp] = ‛ print («e», file=sys.stderr)’
+ExternalPhrase_print_nl [_octothorpe _basename lp rp] = ‛ print ()’
+ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«octothorpe» «ident» ⎝ error - unrecognized external ⎠ «lp»«stuff»«rp» ’
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n«lval» = «e»«rec»’
 Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec»’
@@ -146,6 +161,10 @@ Atom_ident [ ident ] =‛ «ident»’
 
 PrimaryComma [ Primary _94? line?] = ‛«Primary»«_94»«line»’
 PairComma [ Pair _95?] = ‛«Pair»«_95»’
+
+StuffInsideParentheses_rec [lp stuff* rp] = ‛«lp»«stuff»«rp»’
+StuffInsideParentheses_default [x] = ‛«x»’
+
 Lval [ Exp ] = ‛«Exp»’
 keyword [ _144] = ‛«_144»’
 Formals_noformals [ _148 _149] =‛«_148»«_149»’

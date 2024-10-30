@@ -7,6 +7,7 @@ TopLevel_defconst [ Defconst] =‛«Defconst»’
 TopLevel_defn [ Defn] =‛«Defn»’
 TopLevel_defobj [ Defobj] =‛«Defobj»’
 TopLevel_import [ Import] =‛«Import»’
+TopLevel_external [x] =‛«x»’
 TopLevel_comment [ comment] =‛«comment»’
 TopLevel_line [line] =‛«line»’
 
@@ -19,7 +20,7 @@ StatementBlock [ line1? lb line2 Rec_Statement rb line4?] = ‛«line1»«lb»«
 
 Rec_Statement [line1? r_stmt line2?] = ‛«line1»«r_stmt»«line2»’
 R_Statement_comment [ comment Rec_Statement?] =‛«comment»«Rec_Statement»’
-R_Statement_external [x] =‛«x»’
+R_Statement_external [x rec?] =‛«x»«rec»’
 R_Statement_deftemp [ Deftemp] =‛«Deftemp»’
 R_Statement_defsynonym [ Defsynonym] =‛«Defsynonym»’
 R_Statement_globals [ _18 ident CommaIdent* Rec_Statement?] =‛«_18»«ident»«CommaIdent»«Rec_Statement»’
@@ -34,7 +35,7 @@ R_Statement_line [ line Rec_Statement?] =‛«line»«Rec_Statement»’
 
 CommaIdent [ _23 ident] = ‛«_23»«ident»’
 
-External [_octothorpe id lpar expcomma* rpar] = ‛«_octothorpe»«id»«lpar»«expcomma»«rpar»’
+External [_octothorpe id lpar expcomma* rpar line?] = ‛«_octothorpe»«id»«lpar»«expcomma»«rpar»«line»’
 
 Deftemp [ _37 Lval _38 Exp Rec_Statement?] = ‛«_37»«Lval»«_38»«Exp»«Rec_Statement»’
 Defsynonym [ Lval _39 Exp Rec_Statement?] = ‛«Lval»«_39»«Exp»«Rec_Statement»’

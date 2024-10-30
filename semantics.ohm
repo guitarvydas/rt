@@ -7,6 +7,7 @@ semantics {
     | Defn -- defn
     | Defobj -- defobj
     | Import -- import
+    | External -- external
     | comment line? -- comment
     | line -- line
 
@@ -21,7 +22,7 @@ semantics {
    Rec_Statement = line? R_Statement line?
    R_Statement =
      | comment Rec_Statement? -- comment
-     | External -- external
+     | External Rec_Statement? -- external
      | Deftemp -- deftemp
      | Defsynonym -- defsynonym     
      | kw<"global"> ident CommaIdent* Rec_Statement? -- globals
@@ -35,7 +36,7 @@ semantics {
      | line Rec_Statement? -- line
    CommaIdent = Comma ident
 
-   External = "#" ident "(" ExpComma* ")"
+   External = "#" ident "(" ExpComma* ")" line?
 
    Deftemp = kw<"deftemp"> Lval "⇐" Exp Rec_Statement?
    Defsynonym =

@@ -1,6 +1,4 @@
-import os
-import json
-import sys
+
 
 
 defobj Component_Registry () {
@@ -18,7 +16,7 @@ defn read_and_convert_json_file (filename) {
 }
 
 defn json2internal (container_xml) {
-    fname ≡ os.path.basename (container_xml)
+    fname ≡ #basename (container_xml)
     routings ≡ read_and_convert_json_file (fname)
     return routings
 }
@@ -78,15 +76,15 @@ defn calculate_depth (eh) {
 
 defn dump_registry (reg) {
     nl ()
-    print (“*** PALETTE ***”)
+    #print_stdout (“*** PALETTE ***”)
     for c in reg.templates{
         print (c.name)}
-    print (“***************”)
+    #print_stdout (“***************”)
     nl ()
 }
 
 defn print_stats (reg) {
-    print (#strcons (“registry statistics: ”, reg.stats))
+    #print_stdout (#strcons (“registry statistics: ”, reg.stats))
 }
 
 defn mangle_name (s) {
@@ -94,7 +92,6 @@ defn mangle_name (s) {
     return s
 }
 
-import subprocess
 defn generate_shell_components (reg, container_list) {
     ⌈ [⌉
     ⌈     {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},⌉
@@ -157,9 +154,6 @@ defn run_command (eh, cmd, s) {
 ⌈ `instance_data` is a pointer to instance data that the `leaf_handler`⌉
 ⌈ function may want whenever it is invoked again.⌉
 ⌈⌉
-
-import queue
-import sys
 
 ⌈ Eh_States :: enum { idle, active }⌉
 defobj Eh () {
@@ -242,7 +236,7 @@ defn output_list (eh) {
 ⌈ Utility for printing an array of messages.⌉
 defn print_output_list (eh) {
     for m in list (eh.outq.queue) {
-        print (format_message (m))}
+        #print_stdout (format_message (m))}
 }
 
 defn spaces (n) {
@@ -272,19 +266,13 @@ defn fetch_first_output (eh, port) {
 defn print_specific_output (eh, port) {
     ⌈ port ∷ “”⌉
     deftemp datum ⇐ fetch_first_output (eh, port)
-    deftemp outf ⇐ ϕ
-    if datum != ϕ{
-        outf ⇐ sys.stdout
-        print (datum.srepr (), outf)}
+    #print_stdout (datum.srepr ())
 }
 defn print_specific_output_to_stderr (eh, port) {
     ⌈ port ∷ “”⌉
     deftemp datum ⇐ fetch_first_output (eh, port)
-    deftemp outf ⇐ ϕ
-    if datum != ϕ{
-        ⌈ I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in...⌉
-        outf ⇐ sys.stderr
-        print (datum.srepr (), outf)}
+    ⌈ I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in...⌉
+    #print_stderr (datum.srepr ())
 }
 
 defn put_output (eh, msg) {
@@ -293,18 +281,13 @@ defn put_output (eh, msg) {
 
 defn injector_NIY (eh, msg) {
    ⌈ print (f'Injector not implemented for this component “{eh.name}“ kind ∷ {eh.kind} port ∷ “{msg.port}“')⌉
-   print (#strcons (“Injector not implemented for this component ”,
+   #print_stdout (#strcons (“Injector not implemented for this component ”,
             #strcons (eh.name,
 	      #strcons (“ kind ∷ ”,
 	        #strcons (eh.kind,
 		  #strcons (“,  port ∷ ”, msg.port))))))
     exit ()
 }
-
-import sys
-import re
-import subprocess
-import shlex
 
 defvar root_project ⇐ “”
 defvar root_0D ⇐ “”
@@ -337,7 +320,7 @@ defn probeC_instantiate (reg, owner, name, template_data) {
 
 defn probe_handler (eh, msg) {
     s ≡ msg.datum.srepr ()
-    print (#strcons (“... probe ”, #strcons (eh.name, #strcons (“: ”, s))), sys.stderr)
+    #print_stdout (#strcons (“... probe ”, #strcons (eh.name, #strcons (“: ”, s))), sys.stderr)
 }
 
 defn trash_instantiate (reg, owner, name, template_data) {
@@ -547,8 +530,6 @@ defn string_clone (s) {
     return s
 }
 
-import sys
-
 ⌈ usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ...⌉
 ⌈ where ${_00_} is the root directory for the project⌉
 ⌈ where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python)⌉
@@ -570,31 +551,31 @@ defn print_error_maybe (main_container) {
     error_port ≡ “✗”
     err ≡ fetch_first_output (main_container, error_port)
     if (err !=  ϕ) and (0 < len (trimws (err.srepr ()))){
-        print (“___ !!! ERRORS !!! ___”)
+        #print_stdout (“___ !!! ERRORS !!! ___”)
         print_specific_output (main_container, error_port, ⊥)}
 }
 
 ⌈ debugging helpers⌉
 
 defn nl () {
-    print (“”)
+    #print_stdout (“”)
 }
 
 defn dump_outputs (main_container) {
     nl ()
-    print (“___ Outputs ___”)
+    #print_stdout (“___ Outputs ___”)
     print_output_list (main_container)
 }
 
 defn trace_outputs (main_container) {
     nl ()
-    print (“___ Message Traces ___”)
+    #print_stdout (“___ Message Traces ___”)
     print_routing_trace (main_container)
 }
 
 defn dump_hierarchy (main_container) {
     nl ()
-    print (#strcons (“___ Hierarchy ___”, (build_hierarchy (main_container))))
+    #print_stdout (#strcons (“___ Hierarchy ___”, (build_hierarchy (main_container))))
 }
 
 defn build_hierarchy (c) {
@@ -609,7 +590,7 @@ defn build_hierarchy (c) {
 
 defn dump_connections (c) {
     nl ()
-    print (“___ connections ___”)
+    #print_stdout (“___ connections ___”)
     dump_possible_connections (c)
     for child in c.children{
         nl ()
@@ -630,14 +611,14 @@ defvar runtime_errors ⇐ ⊥
 
 defn load_error (s) {
     global load_errors
-    print (s)
+    #print_stdout (s)
     quit ()
     load_errors ⇐ ⊤
 }
 
 defn runtime_error (s) {
     global runtime_errors
-    print (s)
+    #print_stdout (s)
     quit ()
     runtime_errors ⇐ ⊤
 }
@@ -724,12 +705,12 @@ defn start_with_debug (palette, env, show_hierarchy, show_connections, show_trac
             print_error_maybe (main_container)
             print_specific_output (main_container, “”)
             if show_traces {
-                print (“--- routing traces ---”)
-                print (routing_trace_all (main_container))
+                #print_stdout (“--- routing traces ---”)
+                #print_stdout (routing_trace_all (main_container))
              }
         }
         if show_all_outputs {
-            print (“--- done ---”)
+            #print_stdout (“--- done ---”)
         }
     }
 }

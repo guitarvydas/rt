@@ -1,4 +1,6 @@
 defn s () {
   x ≡ 1
-  y ⇐ 2
+  #print_stdout (x)
+  #print_stdout ()
+  #print_nl ()
 }
