@@ -23,6 +23,8 @@ function indent1 (s) {
     let r0 = s;
     let r1 = r0.replace (/⤷/g, '');
     let r2 = r1.replace (/⤶/g, '');
+    let spaces = indentation.join ('');
+    let r  = spaces + r2
     let diff = opens - closes;
     if (diff > 0) {
 	while (diff > 0) {
@@ -35,10 +37,8 @@ function indent1 (s) {
             diff += 1;
 	}
     }
-    let spaces = indentation.join ('');
-    let r  = spaces + r2.replace (/\n/g, spaces);
     return r;
-}
+ }
 
 import * as fs from 'fs';
 let inp = fs.readFileSync(0, 'utf-8');

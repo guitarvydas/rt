@@ -14,15 +14,15 @@ TopLevel_line [line] =‛«line»’
 kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e line?] = ‛\n«lval» = «e»«line»’
 Defconst [ __ lval _eq e line?] = ‛\n«lval» = «e»«line»’
-Defn [ _4 ident Formals StatementBlock line?] = ‛\ndef «ident» «Formals»:«StatementBlock»«line»’
+Defn [ _4 ident Formals StatementBlock line?] = ‛\ndef «ident» «Formals»:«StatementBlock»«line»\n’
 Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛\nclass «ident»:⤷\ndef __init__ (self,«Formals»):«line1»⤷«line2»«init»«line3»⤶⤶\n’
 Import [ _10 ident line?] = ‛\nimport «ident»«line»’
-StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1»«line2»⤷«Statement»«line3»«line4»⤶\n’
+StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1»«line2»⤷«Statement»«line3»«line4»⤶’
 
 Rec_Statement [line1? R_Statement line2?] = ‛«line1»«R_Statement»«line2»’
 R_Statement_globals [ _24 ident1  cidents* scope?] =‛\nglobal «ident1»«cidents»«scope»’
 R_Statement_comment [s rec?] =‛\n«s»«rec»’
-R_Statement_external [x rec?] = ‛«x»«rec»’
+R_Statement_external [x rec?] = ‛\n«x»«rec»’
 R_Statement_if [ IfStatement] =‛«IfStatement»’
 R_Statement_pass [ _27 scope?] =‛\npass«scope»’
 R_Statement_return [ _29 ReturnExp] =‛\nreturn «ReturnExp»’
@@ -216,6 +216,6 @@ ok [p] = ‛«p»’
 err [p] = ‛«p»’
 port [s] = ‛«s»’
 
-line [lb cs* rb] = ‛«lb»«cs»«rb»\n’
+line [lb cs* rb] = ‛«lb»«cs»«rb»’
 Comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
 }

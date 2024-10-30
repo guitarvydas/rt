@@ -36,8 +36,6 @@ function indent1 (s) {
             diff += 1;
 	}
     }
-    let spaces = indentation.join ('');
-    let r  = spaces + r2.replace (/\n/g, spaces);
     return r;
 }
 
