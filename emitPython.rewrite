@@ -8,7 +8,7 @@ TopLevel_defn [ Defn] =‛«Defn»’
 TopLevel_defobj [ Defobj] =‛«Defobj»’
 TopLevel_import [ Import] =‛«Import»’
 TopLevel_external [x] =‛«x»’
-TopLevel_comment [s line?] =‛«s»«line»’
+TopLevel_comment [s line?] =‛\n«s»«line»’
 TopLevel_line [line] =‛«line»’
 
 kw [ s] = ‛«s»’
@@ -96,8 +96,8 @@ Defsynonym_legal [id _eqv e rec?] = ‛\n«id» = «e»«rec»’
 
 InitStatement [ _mark ident _33 Exp fluff*] = ‛\nself.«ident» = «Exp» «fluff»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif «Exp»:«StatementBlock»«ElifStatement»«ElseStatement»«rec»’
-ElifStatement [ _37 Exp StatementBlock] = ‛elif «Exp»:«StatementBlock»’
-ElseStatement [ _39 StatementBlock] = ‛else:«StatementBlock»’
+ElifStatement [ _37 Exp StatementBlock] = ‛\nelif «Exp»:«StatementBlock»’
+ElseStatement [ _39 StatementBlock] = ‛\nelse:«StatementBlock»’
 ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor «ident» in «Exp»:«StatementBlock»«rec»’
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile «Exp»:«StatementBlock»«rec»’
 
@@ -144,7 +144,7 @@ Atom_external [x] = ‛«x»’
 Atom_emptylistconst [ _72 _73] =‛«_72»«_73»’
 Atom_emptydict [ _76 _77] =‛«_76»«_77»’
 Atom_paren [ _70 Exp _71] =‛«_70»«Exp»«_71»’
-Atom_listconst [ lb line1? PrimaryComma+ line2? rb] =‛«lb»«line1»«PrimaryComma»«rb»«line2»’
+Atom_listconst [ lb line1? PrimaryComma+ line2? rb] =‛«lb»«PrimaryComma»«rb»«line2»’
 Atom_dict [ _78 line1? PairComma+ line2? _79] =‛«_78»«line1»«PairComma»«line2»«_79»’
 Atom_lambda [ _80 Formals? _81 Exp] =‛ lambda «Formals»: «Exp»’
 Atom_pos [ _86 Primary ] =‛ +«Primary»’
@@ -217,5 +217,5 @@ err [p] = ‛«p»’
 port [s] = ‛«s»’
 
 line [lb cs* rb] = ‛«lb»«cs»«rb»’
-Comma [line1? _comma line2?] = ‛«line1»«_comma»«line2»’
+Comma [line1? _comma line2?] = ‛«_comma»’
 }
