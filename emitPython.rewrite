@@ -87,6 +87,9 @@ import queue
 ExternalPhrase_print_stdout [_octothorpe _basename lp e rp] = ‛print («e»)’
 ExternalPhrase_print_stderr [_octothorpe _basename lp e rp] = ‛print («e», file=sys.stderr)’
 ExternalPhrase_print_nl [_octothorpe _basename lp rp] = ‛print ()’
+ExternalPhrase_split_string_for_shell [_octothorpe _basename lp s rp] = ‛shlex.split («s»)’
+ExternalPhrase_substitute [_octothorpe _basename lp find _comma1 replace _comma2 s rp] = ‛re.sub («find», «replace», «s»)’
+
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n«lval» = «e»«rec»’

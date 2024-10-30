@@ -508,10 +508,12 @@ defn string_constant_instantiate (reg, owner, name, template_data) {
     global root_0D
     name_with_id ≡ gensymbol (“strconst”)
     deftemp s ⇐ template_data
-    if root_project != “”{
-        s ⇐ re.sub (“_00_”, root_project, s)}
-    if root_0D != “”{
-        s ⇐ re.sub (“_0D_”, root_0D, s)}
+    if root_project != “” {
+        s ⇐ #substitute (“_00_”, root_project, s)
+    }
+    if root_0D != “” {
+        s ⇐ #substitute (“_0D_”, root_0D, s)
+    }
     return make_leaf (name_with_id, owner, s, ↪︎string_constant_handler)
 }
 
