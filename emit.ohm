@@ -59,8 +59,9 @@ emit {
      | "#" xkw<"substitute"> "(" Exp Comma Exp Comma Exp ")" -- substitute
      | "#" xkw<"run_command"> "(" Cmd Comma Args Comma ret Comma rc Comma stdout Comma stderr ")" -- run_command
      | "#" xkw<"abort"> "(" ")" -- abort
-     | "#" xkw<"tostr"> "(" Exp ")" -- tostr
+     | "#" xkw<"asstr"> "(" Exp ")" -- asstr
      | "#" xkw<"len"> "(" Exp ")" -- len
+     | "#" xkw<"asbytes"> "(" Exp ")" -- asbytes
 
      | "#" ident "(" StuffInsideParentheses* ")" -- unrecognized
 

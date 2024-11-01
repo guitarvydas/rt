@@ -42,7 +42,7 @@ defn new_datum_string (s) {
     d.clone ⇐ λ: clone_datum_string (d)
     d.reclaim ⇐ λ: reclaim_datum_string (d)    
     d.srepr ⇐ λ: srepr_datum_string (d)
-    d.raw ⇐ λ: raw_datum_string (d)    
+    d.raw ⇐ #asbytes (d.data)
     d.kind ⇐ λ: “string”
     return d
 }
@@ -58,10 +58,6 @@ defn reclaim_datum_string (src) {
 
 defn srepr_datum_string (d) {
   return d.data
-}
-
-defn raw_datum_string (d) {
-  return bytearray (d.data,“UTF_8”)
 }
 
 defn new_datum_bang () {
@@ -166,7 +162,7 @@ defn reclaim_int (src) {
 }
 
 defn srepr_datum_int (i) {
-  return #tostr (i)
+  return #asstr (i)
 }
 
 defn raw_datum_int (i) {
@@ -447,19 +443,11 @@ defn route (container, from_component, message) {
                 was_sent ⇐ ⊤}}}
     if not (was_sent) {
         print (“\n\n*** Error: ***”)
-        dump_possible_connections (container)
-        print_routing_trace (container)
         print (“***”)
         print (#strcons (container.name, #strcons (“: message '”, #strcons (message.port, #strcons (“' from ”, #strcons (fromname, “ dropped on floor...”))))))
         print (“***”)
         #abort ()
     }
-}
-
-defn dump_possible_connections (container) {
-    print (#strcons (“*** possible connections for ”, #strcons (container.name, “:”)))
-    for connector in container.connections {
-        print (#strcons (connector.direction, #strcons (“ ”, #strcons (connector.sender.name, #strcons (“.”, #strcons (connector.sender.port, #strcons (“ -> ”, #strcons (connector.receiver.name, #strcons (“.”, connector.receiver.port))))))))) }
 }
 
 defn any_child_ready (container) {
@@ -471,10 +459,6 @@ defn any_child_ready (container) {
 
 defn child_is_ready (eh) {
     return (not (eh.outq.empty ())) or (not (eh.inq.empty ())) or ( eh.state != “idle”) or (any_child_ready (eh))
-}
-
-defn print_routing_trace (eh) {
-    print (routing_trace_all (eh))
 }
 
 defn append_routing_descriptor (container, desc) {

@@ -1,6 +1,6 @@
 % rewrite emitCL {
 
-Main [ TopLevel+] = ‛(ql:quickload :cl-json)\n«TopLevel»’
+Main [ TopLevel+] = ‛«TopLevel»’
 
 TopLevel_defvar [ Defvar] =‛«Defvar»’
 TopLevel_defconst [ Defconst] =‛«Defconst»’
@@ -69,7 +69,7 @@ ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ (nth «n» (argv))’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ (subseq «e» 1)’
 ExternalPhrase_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» «e2»)’
 ExternalPhrase_basename [_octothorpe _basename lp s rp] = ‛(let ((p (parse-namestring «s»)))(format nil "~a.~a" (pathname-name p) (pathname-type p)))’
-ExternalPhrase_preamble [_octothorpe _preamble lb rp] = ‛(load "~/quicklisp/setup.lisp")\n’
+ExternalPhrase_preamble [_octothorpe _preamble lb rp] = ‛(load "~/quicklisp/setup.lisp")\n(ql:quickload :cl-json)\n’
 ExternalPhrase_print_stdout [_octothorpe _ lp e rp] = ‛(format *standard-output* "~a" «e»)’
 ExternalPhrase_print_stderr [_octothorpe _ lp e rp] = ‛(format *error-output* "~a" «e»)’
 ExternalPhrase_print_nl [_octothorpe _ lp rp] = ‛(format *standard-output* "~%")’
@@ -78,8 +78,9 @@ ExternalPhrase_substitute [_octothorpe _ lp new_item _comma1 old_item _comma2 s 
 
 ExternalPhrase_run_command [_octothorpe _ lp cmd _comma1 args _comma2 ret _comma3 rc _comma4 out _comma5 errout rp] = ‛(multiple-value-setq («out» «errout» «rc») (uiop::run-program (concatenate 'string «cmd» " " «args») :output :string :error :string))’
 ExternalPhrase_abort [_octothorpe _ lp rp] = ‛(uiop:quit)’
-ExternalPhrase_tostr [_octothorpe _ lp e rp] = ‛(format nil "~a" «e»)’
+ExternalPhrase_asstr [_octothorpe _ lp e rp] = ‛(format nil "~a" «e»)’
 ExternalPhrase_len [_octothorpe _ lp e rp] = ‛(length «e»)’
+ExternalPhrase_asbytes [_octothorpe _ lp e rp] = ‛(coerce «e» 'simple-vector)’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 
