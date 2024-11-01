@@ -269,16 +269,6 @@ defn put_output (eh, msg) {
     eh.outq.put (msg)
 }
 
-defn injector_NIY (eh, msg) {
-   ⌈ print (f'Injector not implemented for this component “{eh.name}“ kind ∷ {eh.kind} port ∷ “{msg.port}“')⌉
-   #print_stdout (#strcons (“Injector not implemented for this component ”,
-            #strcons (eh.name,
-	      #strcons (“ kind ∷ ”,
-	        #strcons (eh.kind,
-		  #strcons (“,  port ∷ ”, msg.port))))))
-    exit ()
-}
-
 defvar root_project ⇐ “”
 defvar root_0D ⇐ “”
 
@@ -457,13 +447,13 @@ defn stringconcat_handler (eh, msg) {
 }
 
 defn maybe_stringconcat (eh, inst, msg) {
-    if (0 = len (inst.buffer1)) and (0 = len (inst.buffer2)){
+    if (0 = #len (inst.buffer1)) and (0 = #len (inst.buffer2)){
         runtime_error (“something is wrong in stringconcat, both strings are 0 length”)}
     if inst.count >= 2{
         deftemp concatenated_string ⇐ “”
-        if 0 = len (inst.buffer1){
+        if 0 = #len (inst.buffer1){
             concatenated_string ⇐ inst.buffer2}
-        elif 0 = len (inst.buffer2){
+        elif 0 = #len (inst.buffer2){
             concatenated_string ⇐ inst.buffer1}
         else{
             concatenated_string ⇐ inst.buffer1 + inst.buffer2}        
@@ -478,7 +468,7 @@ defn maybe_stringconcat (eh, inst, msg) {
 ⌈ this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here⌉
 defn shell_out_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“shell_out”)
-    cmd = #split_string_for_shell (template_data)
+    cmd ≡ #split_string_for_shell (template_data)
     return make_leaf (name_with_id, owner, cmd, ↪︎shell_out_handler)
 }
 
@@ -545,9 +535,9 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
 defn print_error_maybe (main_container) {
     error_port ≡ “✗”
     err ≡ fetch_first_output (main_container, error_port)
-    if (err !=  ϕ) and (0 < len (trimws (err.srepr ()))){
+    if (err !=  ϕ) and (0 < #len (trimws (err.srepr ()))){
         #print_stdout (“___ !!! ERRORS !!! ___”)
-        print_specific_output (main_container, error_port, ⊥)}
+        print_specific_output (main_container, error_port)}
 }
 
 ⌈ debugging helpers⌉

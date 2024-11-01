@@ -58,7 +58,12 @@ emit {
      | "#" xkw<"split_string_for_shell"> "(" Exp ")" -- split_string_for_shell
      | "#" xkw<"substitute"> "(" Exp Comma Exp Comma Exp ")" -- substitute
      | "#" xkw<"run_command"> "(" Cmd Comma Args Comma ret Comma rc Comma stdout Comma stderr ")" -- run_command
+     | "#" xkw<"abort"> "(" ")" -- abort
+     | "#" xkw<"tostr"> "(" Exp ")" -- tostr
+     | "#" xkw<"len"> "(" Exp ")" -- len
+
      | "#" ident "(" StuffInsideParentheses* ")" -- unrecognized
+
 
    Cmd = Exp
    Args = Exp
@@ -194,7 +199,11 @@ emit {
     Pair = string ":" Exp Comma?
   
 
-  andOrIn = (kw<"and"> | kw<"or"> | kw<"in">)
+  andOrIn =
+    | kw<"and"> -- and
+    | kw<"or"> -- or
+    | kw<"in"> -- in
+
   boolOp = (boolEq | boolNeq | "<=" | ">=" | ">" | "<")
   boolEq = "="
   boolNeq = "!="

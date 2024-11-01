@@ -170,7 +170,7 @@
   )
 (defun srepr_datum_int (&optional  i)
   (declare (ignorable  i))                                                                                              #|line 168|#
-  (return-from srepr_datum_int (str    i                                                                                #|line 169|#))#|line 170|#
+  (return-from srepr_datum_int (format nil "~a"  i)                                                                     #|line 169|#)#|line 170|#
   )
 (defun raw_datum_int (&optional  i)
   (declare (ignorable  i))                                                                                              #|line 172|#
@@ -500,43 +500,43 @@
           (print    "***"                                                                                               #|line 452|#)
           (print    (concatenate 'string (cdr (assoc ' name  container))  (concatenate 'string  ": message '"  (concatenate 'string (cdr (assoc ' port  message))  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor..."))))) #|line 453|#)
           (print    "***"                                                                                               #|line 454|#)
-          (exit  )                                                                                                      #|line 455|#
-          ))))                                                                                                          #|line 456|#
+          (uiop:quit)                                                                                                   #|line 455|##|line 456|#
+          ))))                                                                                                          #|line 457|#
   )
 (defun dump_possible_connections (&optional  container)
-  (declare (ignorable  container))                                                                                      #|line 458|#
-  (print    (concatenate 'string  "*** possible connections for "  (concatenate 'string (cdr (assoc ' name  container))  ":")) #|line 459|#)
+  (declare (ignorable  container))                                                                                      #|line 459|#
+  (print    (concatenate 'string  "*** possible connections for "  (concatenate 'string (cdr (assoc ' name  container))  ":")) #|line 460|#)
   (loop for connector in (cdr (assoc ' connections  container))
-    do                                                                                                                  #|line 460|#
-    (print    (concatenate 'string (cdr (assoc ' direction  connector))  (concatenate 'string  " "  (concatenate 'string (cdr (assoc '(cdr (assoc ' name  sender))  connector))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc '(cdr (assoc ' port  sender))  connector))  (concatenate 'string  " -> "  (concatenate 'string (cdr (assoc '(cdr (assoc ' name  receiver))  connector))  (concatenate 'string  "." (cdr (assoc '(cdr (assoc ' port  receiver))  connector)))))))))) )#|line 461|#
-    )                                                                                                                   #|line 462|#
+    do                                                                                                                  #|line 461|#
+    (print    (concatenate 'string (cdr (assoc ' direction  connector))  (concatenate 'string  " "  (concatenate 'string (cdr (assoc '(cdr (assoc ' name  sender))  connector))  (concatenate 'string  "."  (concatenate 'string (cdr (assoc '(cdr (assoc ' port  sender))  connector))  (concatenate 'string  " -> "  (concatenate 'string (cdr (assoc '(cdr (assoc ' name  receiver))  connector))  (concatenate 'string  "." (cdr (assoc '(cdr (assoc ' port  receiver))  connector)))))))))) )#|line 462|#
+    )                                                                                                                   #|line 463|#
   )
 (defun any_child_ready (&optional  container)
-  (declare (ignorable  container))                                                                                      #|line 464|#
+  (declare (ignorable  container))                                                                                      #|line 465|#
   (loop for child in (cdr (assoc ' children  container))
-    do                                                                                                                  #|line 465|#
+    do                                                                                                                  #|line 466|#
     (cond
-      ((child_is_ready    child )                                                                                       #|line 466|#
+      ((child_is_ready    child )                                                                                       #|line 467|#
         (return-from any_child_ready  t)
-        ))                                                                                                              #|line 467|#
+        ))                                                                                                              #|line 468|#
     )
-  (return-from any_child_ready  nil)                                                                                    #|line 468|##|line 469|#
+  (return-from any_child_ready  nil)                                                                                    #|line 469|##|line 470|#
   )
 (defun child_is_ready (&optional  eh)
-  (declare (ignorable  eh))                                                                                             #|line 471|#
-  (return-from child_is_ready ( or  ( or  ( or  (not (cdr (assoc '(cdr (assoc '(empty  )  outq))  eh))) (not (cdr (assoc '(cdr (assoc '(empty  )  inq))  eh)))) (not (equal  (cdr (assoc ' state  eh))  "idle"))) (any_child_ready    eh )))#|line 472|##|line 473|#
+  (declare (ignorable  eh))                                                                                             #|line 472|#
+  (return-from child_is_ready ( or  ( or  ( or  (not (cdr (assoc '(cdr (assoc '(empty  )  outq))  eh))) (not (cdr (assoc '(cdr (assoc '(empty  )  inq))  eh)))) (not (equal  (cdr (assoc ' state  eh))  "idle"))) (any_child_ready    eh )))#|line 473|##|line 474|#
   )
 (defun print_routing_trace (&optional  eh)
-  (declare (ignorable  eh))                                                                                             #|line 475|#
-  (print   (routing_trace_all    eh )                                                                                   #|line 476|#)#|line 477|#
+  (declare (ignorable  eh))                                                                                             #|line 476|#
+  (print   (routing_trace_all    eh )                                                                                   #|line 477|#)#|line 478|#
   )
 (defun append_routing_descriptor (&optional  container  desc)
-  (declare (ignorable  container  desc))                                                                                #|line 479|#
-  (cdr (assoc '(cdr (assoc '(put    desc                                                                                #|line 480|#)  routings))  container))#|line 481|#
+  (declare (ignorable  container  desc))                                                                                #|line 480|#
+  (cdr (assoc '(cdr (assoc '(put    desc                                                                                #|line 481|#)  routings))  container))#|line 482|#
   )
 (defun container_injector (&optional  container  message)
-  (declare (ignorable  container  message))                                                                             #|line 483|#
-  (container_handler    container  message                                                                              #|line 484|#)#|line 485|#
+  (declare (ignorable  container  message))                                                                             #|line 484|#
+  (container_handler    container  message                                                                              #|line 485|#)#|line 486|#
   )
 
 

@@ -1,12 +1,7 @@
-defn gensymbol (s) {
-    s ⇐ #substitute (“_00_”, root_project, s)
-    global counter
-    name_with_id ≡ #strcons (s, subscripted_digit (counter))
-    counter ⇐ counter + 1
-    return name_with_id
-}
-defn print_stats (reg) {
-    #print_stdout (7)
-    #print_stdout (8)
-    #print_stdout (9)
+defn shell_out_instantiate (reg, owner, name, template_data) {
+    if template_name in reg.templates {
+        x = 1
+    } else {
+        y = 2
+    }
 }

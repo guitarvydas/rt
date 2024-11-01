@@ -1,4 +1,4 @@
-% rewrite emitCLrwr {
+% rewrite emitCL {
 
 Main [ TopLevel+] = ‛(ql:quickload :cl-json)\n«TopLevel»’
 
@@ -76,8 +76,10 @@ ExternalPhrase_print_nl [_octothorpe _ lp rp] = ‛(format *standard-output* "~%
 ExternalPhrase_split_string_for_shell [_octothorpe _ lp s rp] = ‛(split-sequence '(#\\space) «s»)’
 ExternalPhrase_substitute [_octothorpe _ lp new_item _comma1 old_item _comma2 s rp] = ‛(substitute «new_item» «old_item» «s»)’
 
-run_command (multiple-value-bind (out err rc) (uiop::run-program "ls -l" :output :string :error :string) (values out err rc))
-
+ExternalPhrase_run_command [_octothorpe _ lp cmd _comma1 args _comma2 ret _comma3 rc _comma4 out _comma5 errout rp] = ‛(multiple-value-setq («out» «errout» «rc») (uiop::run-program (concatenate 'string «cmd» " " «args») :output :string :error :string))’
+ExternalPhrase_abort [_octothorpe _ lp rp] = ‛(uiop:quit)’
+ExternalPhrase_tostr [_octothorpe _ lp e rp] = ‛(format nil "~a" «e»)’
+ExternalPhrase_len [_octothorpe _ lp e rp] = ‛(length «e»)’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 
@@ -182,7 +184,11 @@ number_fract [ num* _160 den+] =‛«num».«den»’
 number_whole [ digit+] =‛«digit»’
 Pair [ string _161 Exp _162?] = ‛\n(setf (gethash «string» ⟪freshdict⟫) ⤷«Exp»⤶)’
 
-andOrIn [op] = ‛ «op» ’
+andOrIn_and [op] = ‛ and ’
+andOrIn_or [op] = ‛ or ’
+andOrIn_in [op] = ‛ assoc ’
+
+
 boolOp [ _191] = ‛ «_191» ’
 boolEq [op] = ‛equal ’
 boolNeq [op] = ‛equal ’

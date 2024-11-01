@@ -166,7 +166,7 @@ defn reclaim_int (src) {
 }
 
 defn srepr_datum_int (i) {
-  return str (i)
+  return #tostr (i)
 }
 
 defn raw_datum_int (i) {
@@ -452,7 +452,8 @@ defn route (container, from_component, message) {
         print (“***”)
         print (#strcons (container.name, #strcons (“: message '”, #strcons (message.port, #strcons (“' from ”, #strcons (fromname, “ dropped on floor...”))))))
         print (“***”)
-        exit () }
+        #abort ()
+    }
 }
 
 defn dump_possible_connections (container) {
