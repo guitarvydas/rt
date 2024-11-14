@@ -254,7 +254,7 @@ emit {
     | ~"⌈" ~"⌉" any -- other
 
   errorMessage = "⎝" errorchar* "⎠"
-  errorchar = 
+  errorchar =  
     | "⎝" errorchar* "⎠" -- rec
     | ~"⎝" ~"⎠" any -- other
 

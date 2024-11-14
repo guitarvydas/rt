@@ -1,14 +1,16 @@
 #	'ensure that formatted text option in draw.io is disabled everywhere'
 
-#SRC=test.rt
+SRC=test.rt
 #SRC=test.err.rt
-SRC=0d.rt
+#SRC=0d.rt
 
 D2J=./das2json/mac/das2json
 
 
+all:
+	python3 choreographer.py
 
-all: generated-py
+#all: generated-py
 #all: generated-cl
 
 generated-py: rt2py.drawio py0d.py *.ohm *.rewrite ${SRC}.a ${SRC}.b
