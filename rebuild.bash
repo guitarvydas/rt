@@ -1,5 +1,8 @@
 #!/bin/bash
-SRC=test.rt
+set -e
+SRC=count.rt
+#SRC=test.rt
+#SRC=0d.rt
 D2J=./das2json/mac/das2json
 echo '#77 CL test successful' >generated.lisp
 echo '#77 line 2 CL test successful' >>generated.lisp
@@ -13,7 +16,6 @@ python3 mvline.py generated.b.py 60 >/tmp/generated.b.py
 mv /tmp/generated.b.py ./generated.b.py
 python3 errcheck.py generated.b.py
 cat generated.a.py generated.b.py >generated.py
-python3 generated.py
 ${D2J} rt2cl.drawio
 ./generate-cl-chunk.bash ${SRC}.a generated.a.lisp
 ./generate-cl-chunk.bash ${SRC}.b generated.b.lisp

@@ -1,0 +1,10 @@
+
+Error: Line 2, col 46:
+  1 | ❲defn❳ ❲install❳ (❲reg❳) {⎩1⎭
+> 2 |     ❲register_component❳ (❲reg❳, ❲Template❳ ("❲Count❳", ❲None❳, ❲instantiator❳))⎩2⎭
+                                                   ^
+  3 | }⎩3⎭
+Expected "❲", a digit, ".", "“", "↪︎", "#", "⊥", "⊤", "ϕ", "-", "+", "λ", "{", "[", "(", or ")"
+
+grammar = "syntax"
+

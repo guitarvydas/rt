@@ -59,6 +59,7 @@ class FileWatcher:
                     self.file_timestamps[file] = current_mtime
                 elif current_mtime != last_mtime:
                     # File has changed
+                    print (f'File {file} has changed')
                     changed = True
                     self.file_timestamps[file] = current_mtime
             except OSError as e:
@@ -67,6 +68,7 @@ class FileWatcher:
 
     async def run_rebuild(self):
         """Run rebuild.bash and return result"""
+        print (f'rebuild')
         try:
             process = await asyncio.create_subprocess_exec(
                 './rebuild.bash',
@@ -128,12 +130,15 @@ class FileWatcher:
         while True:
             if self.check_files_changed():
                 # Run rebuild script only if changes detected in existing files
+                print (f'watch_and_rebuild: clear')
                 await self.clear ()
                 return_code, stderr = await self.run_rebuild()
                 
+                print (f'watch_and_rebuild: {return_code} {stderr}')
+
                 if return_code != 0:
                     error_message = {
-                        "Errors": f"Build failed with code {return_code}\n{stderr}"
+                        "Errors": f"Build failed with code {return_code}{stderr}"
                     }
                     await self.broadcast_message(error_message)
                 else:

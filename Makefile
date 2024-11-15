@@ -1,6 +1,7 @@
 #	'ensure that formatted text option in draw.io is disabled everywhere'
 
-SRC=test.rt
+#SRC=test.rt
+SRC=count.rt
 #SRC=test.err.rt
 #SRC=0d.rt
 

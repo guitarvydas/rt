@@ -10,23 +10,25 @@
             gap: 20px;
         }
         
-        .kvbox {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-        }
-        
         .tagbox {
             margin-bottom: 5px;
             padding: 5px;
             font-family: monospace;
         }
         
-        .textarea {
-            width: 100%;
-            font-family: monospace;
-            padding: 5px;
+        .kvbox {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
+
+	.textarea {
+	    width: 100%;
+	    font-family: monospace;
+	    overflow: scroll;
+	    white-space: pre; 
+	}
+	
     </style>
 </head>
 <body>
@@ -35,7 +37,7 @@
         <div class="row">
             <div class="kvbox">
                 <input type="text" class="tagbox" value="CommonLisp">
-                <textarea class="textarea" rows="15" readonly></textarea>
+                <textarea class="textarea" rows="15" columns="30" readonly></textarea>
             </div>
             <div class="kvbox">
                 <input type="text" class="tagbox" value="Python">
@@ -103,7 +105,6 @@
                 // Clear each kvbox
                 tagboxes.forEach(tagbox => {
                     const tagValue = tagbox.value;
-		    console.log (`clearing ${tagValue}`);
                     const textarea = tagbox.nextElementSibling;
                     textarea.value = "-";
                 });

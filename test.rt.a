@@ -1,6 +1,6 @@
 defn shell_out_instantiate (reg, owner, name, template_data) {
     if template_name in reg.templates {
-        x = 57
+        x = 58
     } else {
         y = 2
     }

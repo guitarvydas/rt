@@ -4,3 +4,5 @@ emit.ohm
 rebuild.bash
 test.rt.a
 test.rt.b
+count.rt.a
+count.rt.b

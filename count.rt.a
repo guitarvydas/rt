@@ -1,0 +1,21 @@
+defn install (reg) {
+    register_component (reg, Template (“Count”, ϕ, instantiator))
+}
+
+defvar counter ⇐ 0
+defvar direction ⇐ 1
+
+defn handler (eh, msg) {
+    global counter, direction
+    if msg.port = “adv” {
+        counter ⇐ counter + direction
+        send_int (eh, “”, counter, msg)
+    } elif msg.port = “rev” {
+        direction ⇐ direction * -1
+    }
+}
+
+defn instantiator (reg, owner, name, template_data) {
+    name_with_id ≡ gensymbol (“Count”)
+    return make_leaf (name_with_id, owner, ϕ, handler)
+}
