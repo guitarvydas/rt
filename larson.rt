@@ -7,14 +7,14 @@ defn count_install (reg) {
     register_component (reg, Template (“Count”, ϕ, count_instantiator))
 }
 
-defvar counter ⇐ 0
+defvar count_counter ⇐ 0
 defvar direction ⇐ 1
 
 defn count_handler (eh, msg) {
-    global counter, direction
+    global count_counter, direction
     if msg.port = “adv” {
-        counter ⇐ counter + direction
-        send_int (eh, “”, counter, msg)
+        count_counter ⇐ count_counter + direction
+        send_int (eh, “”, count_counter, msg)
     } elif msg.port = “rev” {
         direction ⇐ direction * -1
     }

@@ -1021,13 +1021,13 @@ def send_bang (eh,port,causing_message):                    #line 676
 def count_install (reg):                                    #line 6
     register_component ( reg,Template ( "Count", None, count_instantiator))#line 7#line 8#line 9
 
-counter =  0                                                #line 10
+count_counter =  0                                          #line 10
 direction =  1                                              #line 11#line 12
 def count_handler (eh,msg):                                 #line 13
-    global counter, direction                               #line 14
+    global count_counter, direction                         #line 14
     if  msg. port ==  "adv":                                #line 15
-        counter =  counter+ direction                       #line 16
-        send_int ( eh, "", counter, msg)                    #line 17
+        count_counter =  count_counter+ direction           #line 16
+        send_int ( eh, "", count_counter, msg)              #line 17
     elif  msg. port ==  "rev":                              #line 18
         direction =  direction* - 1                         #line 19#line 20#line 21#line 22
 
