@@ -2,27 +2,26 @@
 
 (defun install (&optional  reg)
   (declare (ignorable  reg))                                #|line 1|#
-  (register_component    reg (Template    "Count"  nil  instantiator )  #|line 2|#) #|line 3|#
-  )
-(defparameter  counter  0)                                  #|line 5|#
-(defparameter  direction  1)                                #|line 6|# #|line 7|#
-(defun handler (&optional  eh  msg)
-  (declare (ignorable  eh  msg))                            #|line 8|# #|line 9|#
-  (cond
-    (( equal   (cdr (assoc ' port  msg))  "adv")            #|line 10|#
-      (setf  counter (+  counter  direction))               #|line 11|#
-      (send_int    eh  ""  counter  msg                     #|line 12|#)
-      )
-    (( equal   (cdr (assoc ' port  msg))  "rev")            #|line 13|#
-      (setf  direction (*  direction  - 1))                 #|line 14|# #|line 15|#
-      ))                                                    #|line 16|#
+  (funcall (quote register_component)   reg (funcall (quote Template)   "@"  nil  instantiator )  #|line 2|#) #|line 3|#
   )
 (defun instantiator (&optional  reg  owner  name  template_data)
-  (declare (ignorable  reg  owner  name  template_data))    #|line 18|#
-  (let ((name_with_id (gensymbol    "Count"                 #|line 19|#)))
+  (declare (ignorable  reg  owner  name  template_data))    #|line 5|#
+  (let ((name_with_id (funcall (quote gensymbol)   "@"      #|line 6|#)))
     (declare (ignorable name_with_id))
-    (return-from instantiator (make_leaf    name_with_id  owner  nil  handler  #|line 20|#))) #|line 21|#
+    (return-from instantiator (funcall (quote make_leaf)   name_with_id  owner  nil  handler  #|line 7|#))) #|line 8|#
   )
+(defun handler (&optional  eh  msg)
+  (declare (ignorable  eh  msg))                            #|line 10|#
+  (setf  s (cdr (assoc (quote(cdr (assoc (quote(funcall (quote srepr) ))  datum)))  msg))) #|line 11|#
+  (setf  i (funcall (quote int)   s                         #|line 12|#))
+  (loop while ( >   i  0)
+    do
+      (progn                                                #|line 13|#
+        (setf  s  (concatenate 'string  " "  s)             #|line 14|#)
+        (setf  i (-  i  1))                                 #|line 15|# #|line 16|#
+        ))
+    (funcall (quote print)   s                              #|line 17|#) #|line 18|#
+    )
 
 
 

@@ -76,6 +76,7 @@ class FileWatcher:
                 stderr=asyncio.subprocess.PIPE
             )
             stdout, stderr = await process.communicate()
+            print (f'run_rebuild /{process.returncode}/ /{stdout.decode ()}/ /{stderr.decode ()}/')
             return process.returncode, stderr.decode()
         except Exception as e:
             return 1, str(e)

@@ -15,10 +15,12 @@ def move_line_to_column_140(line):
 
 def highlight_substring(line):
     # Highlight the substring between '>>>' and '<<<' in bright red
-    line = re.sub(r'(>>>.*?<<<)', r'\033[91m\1\033[0m', line)
+    # on command line... line = re.sub(r'(>>>.*?<<<)', r'\033[91m\1\033[0m', line)
+    line = re.sub(r'(>>>.*?<<<)', r'\1', line)
     # Move '#line' to the 140th column and highlight it in bright red
     line = move_line_to_column_140(line)
-    line = re.sub(r'(#line.*)', r'\033[91m\1\033[0m', line)
+    # on command line ...line = re.sub(r'(#line.*)', r'\033[91m\1\033[0m', line)
+    line = re.sub(r'(#line.*)', r'\1', line)
     return line
 
 def check_for_stars(source_code):
@@ -27,7 +29,7 @@ def check_for_stars(source_code):
         if '>>>' in line:
             found = True
             highlighted_line = highlight_substring(line)            
-            print(f"{highlighted_line}")
+            print(f"\n{highlighted_line}", file=sys.stderr)
     
     if found:
         sys.exit(1)

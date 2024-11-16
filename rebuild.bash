@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
-SRC=count.rt
+SRC=monitor.rt
+#SRC=delay.rt
+#SRC=reverser.rt
+#SRC=decode.rt
+#SRC=count.rt
 #SRC=test.rt
 #SRC=0d.rt
 D2J=./das2json/mac/das2json

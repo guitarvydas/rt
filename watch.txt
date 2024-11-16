@@ -3,6 +3,8 @@ emitcl.rewrite
 emit.ohm
 rebuild.bash
 test.rt.a
-test.rt.b
 count.rt.a
-count.rt.b
+decode.rt.a
+reverser.rt.a
+delay.rt.a
+monitor.rt.a

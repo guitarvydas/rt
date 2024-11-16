@@ -89,12 +89,12 @@ Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec�
 Defsynonym_legal [id _eqv e rec?] = ‛\n(let ((«id» «e»))⤷\n(declare (ignorable «id»))«rec»⤶)’
 
 
-InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(cons '«ident» «Exp») «fluff»’
+InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(cons (quot «ident») «Exp») «fluff»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\n(cond ⤷\n(«Exp»⤷«StatementBlock»⤶)«ElifStatement»«ElseStatement»⤶)«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp»⤷«StatementBlock»⤶)’
 ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶)’
 ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident» in «Exp»⤷\ndo«StatementBlock»)⤶«rec»’
-WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo«StatementBlock»⤶)«rec»’
+WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo⤷\n(progn⤷«StatementBlock»⤶)⤶)«rec»’
 
 Assignment_multiple [ lb Lvals+ rb _assign Exp rec?] =‛\n(multiple-value-setq («Lvals») ⤷«Exp»⤶)«rec»’
 
@@ -129,9 +129,9 @@ ExpExp_basic [ Primary] =‛«Primary»’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 Primary_plain [p] = ‛«p»’
 
-PrimaryIndexed_lookupident [p _at key] = ‛(cdr (assoc '«key» «p»))’
+PrimaryIndexed_lookupident [p _at key] = ‛(cdr (assoc (quote«key») «p»))’
 PrimaryIndexed_lookup [p _at key] = ‛(cdr (assoc «key» «p»))’
-PrimaryIndexed_field [p _dot key] = ‛(cdr (assoc '«key» «p»))’ 
+PrimaryIndexed_field [p _dot key] = ‛(cdr (assoc (quote«key») «p»))’ 
 PrimaryIndexed_index [p lb e rb] = ‛(nth «e» «p»)’ 
 PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
 PrimaryIndexed_atom [a] = ‛«a»’
@@ -139,7 +139,7 @@ PrimaryIndexed_atom [a] = ‛«a»’
 
 Atom_external [x] = ‛«x»’
 
-Atom_callident [id actuals] = ‛(funcall '«id» «actuals»)’
+Atom_callident [id actuals] = ‛(funcall (quote «id») «actuals»)’
 
 Atom_emptylistconst [ _72 _73] =‛ nil’
 Atom_emptydict [ _76 _77] =‛ nil’
