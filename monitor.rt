@@ -1,13 +1,13 @@
-defn install (reg) {
-    register_component (reg, Template (“@”, ϕ, instantiator))
+defn monitor_install (reg) {
+    register_component (reg, Template (“@”, ϕ, monitor_instantiator))
 }
 
-defn instantiator (reg, owner, name, template_data) {      
+defn monitor_instantiator (reg, owner, name, template_data) {      
     name_with_id ≡ gensymbol (“@”)
-    return make_leaf (name_with_id, owner, ϕ, handler)
+    return make_leaf (name_with_id, owner, ϕ, monitor_handler)
 }
 
-defn handler (eh, msg) {
+defn monitor_handler (eh, msg) {
     s ⇐ msg.datum.srepr ()
     i ⇐ int (s)
     while i > 0 {

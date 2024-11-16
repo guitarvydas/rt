@@ -1015,114 +1015,132 @@ def send_bang (eh,port,causing_message):                    #line 676
 
 
 
-                                                            #line 1#line 2
-# Larson Scanner components                                 #line 3#line 4
-# Count                                                     #line 5
-def count_install (reg):                                    #line 6
-    register_component ( reg,Template ( "Count", None, count_instantiator))#line 7#line 8#line 9
 
-count_counter =  0                                          #line 10
-direction =  1                                              #line 11#line 12
-def count_handler (eh,msg):                                 #line 13
-    global count_counter, direction                         #line 14
-    if  msg. port ==  "adv":                                #line 15
-        count_counter =  count_counter+ direction           #line 16
-        send_int ( eh, "", count_counter, msg)              #line 17
-    elif  msg. port ==  "rev":                              #line 18
-        direction =  direction* - 1                         #line 19#line 20#line 21#line 22
+def count_install (reg):                                    #line 1
+    register_component ( reg,Template ( "Count", None, count_instantiator))#line 2#line 3#line 4
 
-def count_instantiator (reg,owner,name,template_data):      #line 23
-    name_with_id = gensymbol ( "Count")                     #line 24
-    return make_leaf ( name_with_id, owner, None, count_handler)#line 25#line 26#line 27
+count_counter =  0                                          #line 5
+direction =  1                                              #line 6#line 7
+def count_handler (eh,msg):                                 #line 8
+    global count_counter, direction                         #line 9
+    if  msg. port ==  "adv":                                #line 10
+        count_counter =  count_counter+ direction           #line 11
+        send_int ( eh, "", count_counter, msg)              #line 12
+    elif  msg. port ==  "rev":                              #line 13
+        direction =  direction* - 1                         #line 14#line 15#line 16#line 17
 
-# decode                                                    #line 28
-def decode_install (reg):                                   #line 29
-    register_component ( reg,Template ( "Decode", None, decode_instantiator))#line 30#line 31#line 32
+def count_instantiator (reg,owner,name,template_data):      #line 18
+    name_with_id = gensymbol ( "Count")                     #line 19
+    return make_leaf ( name_with_id, owner, None, count_handler)#line 20#line 21
 
-decode_digits = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]#line 33
-def decode_handler (eh,msg):                                #line 34
-    global decode_digits                                    #line 35
-    i = int ( msg. datum.raw ())                            #line 36
-    if  i >=  0 and  i <=  9:                               #line 37
-        send_string ( eh, decode_digits [ i], decode_digits [ i], msg)#line 38#line 39
-    send_bang ( eh, "done", msg)                            #line 40#line 41#line 42
 
-def decode_instantiator (reg,owner,name,template_data):     #line 43
-    name_with_id = gensymbol ( "Decode")                    #line 44
-    return make_leaf ( name_with_id, owner, None, decode_handler)#line 45#line 46#line 47
 
-# reverser                                                  #line 48
-def reverser_install (reg):                                 #line 49
-    register_component ( reg,Template ( "Reverser", None, reverser_instantiator))#line 50#line 51#line 52
 
-reverser_state =  "J"                                       #line 53#line 54
-def reverser_handler (eh,msg):                              #line 55
-    global reverser_state                                   #line 56
-    if  reverser_state ==  "K":                             #line 57
-        if  msg. port ==  "J":                              #line 58
-            send_bang ( eh, "", msg)                        #line 59
-            reverser_state =  "J"                           #line 60
-        else:                                               #line 61
-            pass                                            #line 62#line 63
-    elif  reverser_state ==  "J":                           #line 64
-        if  msg. port ==  "K":                              #line 65
-            send_bang ( eh, "", msg)                        #line 66
-            reverser_state =  "K"                           #line 67
-        else:                                               #line 68
-            pass                                            #line 69#line 70#line 71#line 72#line 73
 
-def reverser_instantiator (reg,owner,name,template_data):   #line 74
-    name_with_id = gensymbol ( "Reverser")                  #line 75
-    return make_leaf ( name_with_id, owner, None, reverser_handler)#line 76#line 77#line 78
 
-# delay                                                     #line 79
-def delay_install (reg):                                    #line 80
-    register_component ( reg,Template ( "Delay", None, reverser_instantiator))#line 81#line 82#line 83
+
+def decode_install (reg):                                   #line 1
+    register_component ( reg,Template ( "Decode", None, decode_instantiator))#line 2#line 3#line 4
+
+decode_digits = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]#line 5
+def decode_handler (eh,msg):                                #line 6
+    global decode_digits                                    #line 7
+    i = int ( msg. datum.raw ())                            #line 8
+    if  i >=  0 and  i <=  9:                               #line 9
+        send_string ( eh, decode_digits [ i], decode_digits [ i], msg)#line 10#line 11
+    send_bang ( eh, "done", msg)                            #line 12#line 13#line 14
+
+def decode_instantiator (reg,owner,name,template_data):     #line 15
+    name_with_id = gensymbol ( "Decode")                    #line 16
+    return make_leaf ( name_with_id, owner, None, decode_handler)#line 17
+
+
+
+
+
+
+
+def reverser_install (reg):                                 #line 1
+    register_component ( reg,Template ( "Reverser", None, reverser_instantiator))#line 2#line 3#line 4
+
+reverser_state =  "J"                                       #line 5#line 6
+def reverser_handler (eh,msg):                              #line 7
+    global reverser_state                                   #line 8
+    if  reverser_state ==  "K":                             #line 9
+        if  msg. port ==  "J":                              #line 10
+            send_bang ( eh, "", msg)                        #line 11
+            reverser_state =  "J"                           #line 12
+        else:                                               #line 13
+            pass                                            #line 14#line 15
+    elif  reverser_state ==  "J":                           #line 16
+        if  msg. port ==  "K":                              #line 17
+            send_bang ( eh, "", msg)                        #line 18
+            reverser_state =  "K"                           #line 19
+        else:                                               #line 20
+            pass                                            #line 21#line 22#line 23#line 24#line 25
+
+def reverser_instantiator (reg,owner,name,template_data):   #line 26
+    name_with_id = gensymbol ( "Reverser")                  #line 27
+    return make_leaf ( name_with_id, owner, None, reverser_handler)#line 28#line 29
+
+
+
+
+
+
+
+def delay_install (reg):                                    #line 1
+    register_component ( reg,Template ( "Delay", None, delay_instantiator))#line 2#line 3#line 4
 
 class Delay_Info:
-    def __init__ (self,):                                   #line 84
-        self.counter =  None                                #line 85
-        self.saved_message =  None                          #line 86#line 87
-                                                            #line 88
-def delay_instantiator (reg,owner,name,template_data):      #line 89
-    name_with_id = gensymbol ( "delay")                     #line 90
-    info = Delay_Info ()                                    #line 91
-    return make_leaf ( name_with_id, owner, info, delay_handler)#line 92#line 93#line 94
+    def __init__ (self,):                                   #line 5
+        self.counter =  0                                   #line 6
+        self.saved_message =  None                          #line 7#line 8
+                                                            #line 9
+def delay_instantiator (reg,owner,name,template_data):      #line 10
+    name_with_id = gensymbol ( "delay")                     #line 11
+    info = Delay_Info ()                                    #line 12
+    return make_leaf ( name_with_id, owner, info, delay_handler)#line 13#line 14#line 15
 
-DELAYDELAY =  50000                                         #line 95#line 96
-def first_time (m):                                         #line 97
-    return not is_tick ( m)                                 #line 98#line 99#line 100
+DELAYDELAY =  50000                                         #line 16#line 17
+def first_time (m):                                         #line 18
+    return not is_tick ( m)                                 #line 19#line 20#line 21
 
-def delay_handler (eh,msg):                                 #line 101
-    info =  eh. instance_data                               #line 102
-    if first_time ( msg):                                   #line 103
-        info. saved_message =  msg                          #line 104
+def delay_handler (eh,msg):                                 #line 22
+    info =  eh. instance_data                               #line 23
+    if first_time ( msg):                                   #line 24
+        info. saved_message =  msg                          #line 25
         set_active ( eh)
-        # tell engine to keep running this component with ;ticks' #line 105#line 106#line 107
-    count =  info. counter                                  #line 108
-    counter =  count. counter+ 1                            #line 109
-    if  count >=  DELAYDELAY:                               #line 110
+        # tell engine to keep running this component with ;ticks' #line 26#line 27#line 28
+    count =  info. counter                                  #line 29
+    next =  count+ 1                                        #line 30
+    if  info. counter >=  DELAYDELAY:                       #line 31
         set_idle ( eh)
-        # tell engine that we're finally done               #line 111
-        forward ( eh, "", info. saved_message)              #line 112
-        count =  0                                          #line 113#line 114
-    info. counter =  count                                  #line 115#line 116#line 117
-                                                            #line 118
-# monitor                                                   #line 119
-def monitor_install (reg):                                  #line 120
-    register_component ( reg,Template ( "@", None, monitor_instantiator))#line 121#line 122#line 123
+        # tell engine that we're finally done               #line 32
+        forward ( eh, "", info. saved_message)              #line 33
+        next =  0                                           #line 34#line 35
+    info. counter =  next                                   #line 36#line 37#line 38
 
-def monitor_instantiator (reg,owner,name,template_data):    #line 124
-    name_with_id = gensymbol ( "@")                         #line 125
-    return make_leaf ( name_with_id, owner, None, monitor_handler)#line 126#line 127#line 128
 
-def monitor_handler (eh,msg):                               #line 129
-    s =  msg. datum.srepr ()                                #line 130
-    i = int ( s)                                            #line 131
-    while  i >  0:                                          #line 132
-        s =  str( " ") +  s                                 #line 133
-        i =  i- 1                                           #line 134#line 135
-    print ( s)                                              #line 136#line 137
+
+
+
+
+
+def monitor_install (reg):                                  #line 1
+    register_component ( reg,Template ( "@", None, monitor_instantiator))#line 2#line 3#line 4
+
+def monitor_instantiator (reg,owner,name,template_data):    #line 5
+    name_with_id = gensymbol ( "@")                         #line 6
+    return make_leaf ( name_with_id, owner, None, monitor_handler)#line 7#line 8#line 9
+
+def monitor_handler (eh,msg):                               #line 10
+    s =  msg. datum.srepr ()                                #line 11
+    i = int ( s)                                            #line 12
+    while  i >  0:                                          #line 13
+        s =  str( " ") +  s                                 #line 14
+        i =  i- 1                                           #line 15#line 16
+    print ( s)                                              #line 17#line 18
 
 
 
