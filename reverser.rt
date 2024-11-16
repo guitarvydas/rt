@@ -1,5 +1,5 @@
 defn reverser_install (reg) {
-    register_component (reg, Template (“Reverser”, ϕ, reverser_instantiator))
+    register_component (reg, Template (“Reverser”, ϕ, ↪︎reverser_instantiator))
 }
 
 defvar reverser_state ⇐ “J”
@@ -25,5 +25,5 @@ defn reverser_handler (eh, msg) {
 
 defn reverser_instantiator (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“Reverser”)
-    return make_leaf (name_with_id, owner, ϕ, reverser_handler)
+    return make_leaf (name_with_id, owner, ϕ, ↪︎reverser_handler)
 }

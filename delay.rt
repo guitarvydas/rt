@@ -1,5 +1,5 @@
 defn delay_install (reg) {
-    register_component (reg, Template (“Delay”, None, delay_instantiator))
+    register_component (reg, Template (“Delay”, ϕ, ↪︎delay_instantiator))
 }
                            
 defobj Delay_Info () {
@@ -10,7 +10,7 @@ defobj Delay_Info () {
 defn delay_instantiator (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“delay”)
     info ≡ Delay_Info ()
-    return make_leaf (name_with_id, owner, info, delay_handler)
+    return make_leaf (name_with_id, owner, info, ↪︎delay_handler)
 }
 
 defvar DELAYDELAY ⇐ 50000
@@ -27,7 +27,7 @@ defn delay_handler (eh, msg) {
     }
     
     count ≡ info.counter
-    next ⇐ count + 1
+    deftemp next ⇐ count + 1
     if info.counter >= DELAYDELAY {
         set_idle (eh) ⌈ tell engine that we're finally done ⌉
         forward (eh, “”, info.saved_message)

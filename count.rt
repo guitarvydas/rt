@@ -1,7 +1,3 @@
-defn count_install (reg) {
-    register_component (reg, Template (“Count”, ϕ, count_instantiator))
-}
-
 defvar count_counter ⇐ 0
 defvar direction ⇐ 1
 
@@ -17,5 +13,10 @@ defn count_handler (eh, msg) {
 
 defn count_instantiator (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“Count”)
-    return make_leaf (name_with_id, owner, ϕ, count_handler)
+    return make_leaf (name_with_id, owner, ϕ, ↪︎count_handler)
 }
+
+defn count_install (reg) {
+    register_component (reg, Template (“Count”, ϕ, ↪︎count_instantiator))
+}
+

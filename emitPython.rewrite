@@ -97,6 +97,7 @@ ExternalPhrase_abort [_octothorpe _ lp rp] = ‛exit ()’
 ExternalPhrase_asstr [_octothorpe _ lp e rp] = ‛str («e»)’
 ExternalPhrase_len [_octothorpe _ lp e rp] = ‛len («e»)’
 ExternalPhrase_asbytes [_octothorpe _ lp e rp] = ‛bytearray («e»,“UTF_8”)’
+ExternalPhrase_asint [_octothorpe _ lp e rp] = ‛int («e»)’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 

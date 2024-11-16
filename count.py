@@ -1,21 +1,21 @@
 
 
-def count_install (reg):                                    #line 1
-    register_component ( reg,Template ( "Count", None, count_instantiator))#line 2#line 3#line 4
+count_counter =  0                                          #line 1
+direction =  1                                              #line 2#line 3
+def count_handler (eh,msg):                                 #line 4
+    global count_counter, direction                         #line 5
+    if  msg. port ==  "adv":                                #line 6
+        count_counter =  count_counter+ direction           #line 7
+        send_int ( eh, "", count_counter, msg)              #line 8
+    elif  msg. port ==  "rev":                              #line 9
+        direction =  direction* - 1                         #line 10#line 11#line 12#line 13
 
-count_counter =  0                                          #line 5
-direction =  1                                              #line 6#line 7
-def count_handler (eh,msg):                                 #line 8
-    global count_counter, direction                         #line 9
-    if  msg. port ==  "adv":                                #line 10
-        count_counter =  count_counter+ direction           #line 11
-        send_int ( eh, "", count_counter, msg)              #line 12
-    elif  msg. port ==  "rev":                              #line 13
-        direction =  direction* - 1                         #line 14#line 15#line 16#line 17
+def count_instantiator (reg,owner,name,template_data):      #line 14
+    name_with_id = gensymbol ( "Count")                     #line 15
+    return make_leaf ( name_with_id, owner, None, count_handler)#line 16#line 17#line 18
 
-def count_instantiator (reg,owner,name,template_data):      #line 18
-    name_with_id = gensymbol ( "Count")                     #line 19
-    return make_leaf ( name_with_id, owner, None, count_handler)#line 20#line 21
+def count_install (reg):                                    #line 19
+    register_component ( reg,Template ( "Count", None, count_instantiator))#line 20#line 21#line 22
 
 
 

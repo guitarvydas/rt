@@ -81,6 +81,7 @@ ExternalPhrase_abort [_octothorpe _ lp rp] = ‛(uiop:quit)’
 ExternalPhrase_asstr [_octothorpe _ lp e rp] = ‛(format nil "~a" «e»)’
 ExternalPhrase_len [_octothorpe _ lp e rp] = ‛(length «e»)’
 ExternalPhrase_asbytes [_octothorpe _ lp e rp] = ‛(coerce «e» 'simple-vector)’
+ExternalPhrase_asint [_octothorpe _ lp e rp] = ‛(parse-integer «e»)’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 
@@ -89,11 +90,11 @@ Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec�
 Defsynonym_legal [id _eqv e rec?] = ‛\n(let ((«id» «e»))⤷\n(declare (ignorable «id»))«rec»⤶)’
 
 
-InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(cons (quot «ident») «Exp») «fluff»’
+InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(cons (quote «ident») «Exp») «fluff»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\n(cond ⤷\n(«Exp»⤷«StatementBlock»⤶)«ElifStatement»«ElseStatement»⤶)«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp»⤷«StatementBlock»⤶)’
 ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶)’
-ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident» in «Exp»⤷\ndo«StatementBlock»)⤶«rec»’
+ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident» in «Exp»⤷\ndo⤷\n(progn⤷\n«ident»«StatementBlock»))⤶⤶⤶«rec»’
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo⤷\n(progn⤷«StatementBlock»⤶)⤶)«rec»’
 
 Assignment_multiple [ lb Lvals+ rb _assign Exp rec?] =‛\n(multiple-value-setq («Lvals») ⤷«Exp»⤶)«rec»’
@@ -129,9 +130,9 @@ ExpExp_basic [ Primary] =‛«Primary»’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 Primary_plain [p] = ‛«p»’
 
-PrimaryIndexed_lookupident [p _at key] = ‛(cdr (assoc (quote«key») «p»))’
+PrimaryIndexed_lookupident [p _at key] = ‛(cdr (assoc (quote «key») «p»))’
 PrimaryIndexed_lookup [p _at key] = ‛(cdr (assoc «key» «p»))’
-PrimaryIndexed_field [p _dot key] = ‛(cdr (assoc (quote«key») «p»))’ 
+PrimaryIndexed_field [p _dot key] = ‛(cdr (assoc (quote «key») «p»))’ 
 PrimaryIndexed_index [p lb e rb] = ‛(nth «e» «p»)’ 
 PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
 PrimaryIndexed_atom [a] = ‛«a»’
