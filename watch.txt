@@ -8,3 +8,6 @@ decode.rt.a
 reverser.rt.a
 delay.rt.a
 monitor.rt.a
+larson.rt.a
+larson.rt.b
+

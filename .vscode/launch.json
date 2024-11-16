@@ -5,14 +5,28 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python Debugger: Current File with Arguments",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "args": [".", "../0D/python", "", "main","scanner.drawio.json"]
+        },
+        {
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/temp.nanodsl.mjs",
-            "args": ["junk.inhaled.txt"]
+            "program": "${workspaceFolder}/larson.py",
+            "args": [
+                ".",
+                "../0D/python",
+                "",
+                "main",
+                "scanner.drawio.json"
+            ]
         }
     ]
 }

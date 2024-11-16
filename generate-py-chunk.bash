@@ -1,5 +1,6 @@
 #!/bin/bash
 # usage ./generate-chunk.bash ${SRC}.a generated.a.py
+echo generate chunk py $1 $2
 set -e
 src=$1
 gen=$2

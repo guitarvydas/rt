@@ -1,6 +1,7 @@
 #!/bin/bash
 # usage ./generate-chunk.bash ${SRC}.a generated.a.lisp
 set -e
+set -v
 src=$1
 gen=$2
 python3 main.py . 0D/python $src main rt2cl.drawio.json >$gen
