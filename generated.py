@@ -196,51 +196,51 @@ def container_instantiator (reg,owner,container_name,desc): #line 231
     children_by_id = {}
     # not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here#line 235
     # collect children                                      #line 236
-    for child_desc in  desc ["children"]:                   #line 237
-        child_instance = get_component_instance ( reg, child_desc ["name"], container)#line 238
+    for child_desc in  desc [ "children"]:                  #line 237
+        child_instance = get_component_instance ( reg, child_desc [ "name"], container)#line 238
         children.append ( child_instance)                   #line 239
-        children_by_id [ child_desc ["id"]] =  child_instance#line 240
+        children_by_id [ child_desc [ "id"]] =  child_instance#line 240
     container. children =  children                         #line 241
     me =  container                                         #line 242#line 243
     connectors = []                                         #line 244
-    for proto_conn in  desc ["connections"]:                #line 245
+    for proto_conn in  desc [ "connections"]:               #line 245
         connector = Connector ()                            #line 246
-        if  proto_conn ["dir"] ==  enumDown:                #line 247
+        if  proto_conn [ "dir"] ==  enumDown:               #line 247
             # JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},#line 248
             connector. direction =  "down"                  #line 249
-            connector. sender = Sender ( me. name, me, proto_conn ["source_port"])#line 250
-            target_component =  children_by_id [ proto_conn ["target"] ["id"]]#line 251
+            connector. sender = Sender ( me. name, me, proto_conn [ "source_port"])#line 250
+            target_component =  children_by_id [ proto_conn [ "target" [ "id"]]]#line 251
             if ( target_component ==  None):                #line 252
-                load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn ["target"] )#line 253
+                load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn [ "target"] )#line 253
             else:                                           #line 254
-                connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn ["target_port"], target_component)#line 255
+                connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn [ "target_port"], target_component)#line 255
                 connectors.append ( connector)              #line 256
-        elif  proto_conn ["dir"] ==  enumAcross:            #line 257
+        elif  proto_conn [ "dir"] ==  enumAcross:           #line 257
             connector. direction =  "across"                #line 258
-            source_component =  children_by_id [ proto_conn ["source"] ["id"]]#line 259
-            target_component =  children_by_id [ proto_conn ["target"] ["id"]]#line 260
+            source_component =  children_by_id [ proto_conn [ "source" [ "id"]]]#line 259
+            target_component =  children_by_id [ proto_conn [ "target" [ "id"]]]#line 260
             if  source_component ==  None:                  #line 261
-                load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn ["source"] )#line 262
+                load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn [ "source"] )#line 262
             else:                                           #line 263
-                connector. sender = Sender ( source_component. name, source_component, proto_conn ["source_port"])#line 264
+                connector. sender = Sender ( source_component. name, source_component, proto_conn [ "source_port"])#line 264
                 if  target_component ==  None:              #line 265
                     load_error ( str( "internal error: .Across connection target not ok ") +  proto_conn. target )#line 266
                 else:                                       #line 267
-                    connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn ["target_port"], target_component)#line 268
+                    connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn [ "target_port"], target_component)#line 268
                     connectors.append ( connector)          #line 269
-        elif  proto_conn ["dir"] ==  enumUp:                #line 270
+        elif  proto_conn [ "dir"] ==  enumUp:               #line 270
             connector. direction =  "up"                    #line 271
-            source_component =  children_by_id [ proto_conn ["source"] ["id"]]#line 272
+            source_component =  children_by_id [ proto_conn [ "source" [ "id"]]]#line 272
             if  source_component ==  None:                  #line 273
-                print ( str( "internal error: .Up connection source not ok ") +  proto_conn ["source"] )#line 274
+                print ( str( "internal error: .Up connection source not ok ") +  proto_conn [ "source"] )#line 274
             else:                                           #line 275
-                connector. sender = Sender ( source_component. name, source_component, proto_conn ["source_port"])#line 276
-                connector. receiver = Receiver ( me. name, container. outq, proto_conn ["target_port"], me)#line 277
+                connector. sender = Sender ( source_component. name, source_component, proto_conn [ "source_port"])#line 276
+                connector. receiver = Receiver ( me. name, container. outq, proto_conn [ "target_port"], me)#line 277
                 connectors.append ( connector)              #line 278
-        elif  proto_conn ["dir"] ==  enumThrough:           #line 279
+        elif  proto_conn [ "dir"] ==  enumThrough:          #line 279
             connector. direction =  "through"               #line 280
-            connector. sender = Sender ( me. name, me, proto_conn ["source_port"])#line 281
-            connector. receiver = Receiver ( me. name, container. outq, proto_conn ["target_port"], me)#line 282
+            connector. sender = Sender ( me. name, me, proto_conn [ "source_port"])#line 281
+            connector. receiver = Receiver ( me. name, container. outq, proto_conn [ "target_port"], me)#line 282
             connectors.append ( connector)                  #line 283#line 284
     container. connections =  connectors                    #line 285
     return  container                                       #line 286#line 287#line 288
@@ -450,7 +450,7 @@ def abstracted_register_component (reg,template,ok_to_overwrite):#line 35
     name = mangle_name ( template. name)                    #line 36
     if  name in  reg. templates and not  ok_to_overwrite:   #line 37
         load_error ( str( "Component ") +  str( template. name) +  " already declared"  )#line 38
-    reg. templates [( name)] =  template                    #line 39
+    reg. templates [name] =  template                       #line 39
     return  reg                                             #line 40#line 41#line 42
 
 def register_multiple_components (reg,templates):           #line 43
@@ -509,14 +509,14 @@ def generate_shell_components (reg,container_list):         #line 95
         for diagram in  container_list:                     #line 101
             # loop through every component in the diagram and look for names that start with “$“#line 102
             # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 103
-            for child_descriptor in  diagram ["children"]:  #line 104
-                if first_char_is ( child_descriptor ["name"], "$"):#line 105
-                    name =  child_descriptor ["name"]       #line 106
+            for child_descriptor in  diagram [ "children"]: #line 104
+                if first_char_is ( child_descriptor [ "name"], "$"):#line 105
+                    name =  child_descriptor [ "name"]      #line 106
                     cmd =   name[1:] .strip ()              #line 107
                     generated_leaf = Template ( name, shell_out_instantiate, cmd)#line 108
                     register_component ( reg, generated_leaf)#line 109
-                elif first_char_is ( child_descriptor ["name"], "'"):#line 110
-                    name =  child_descriptor ["name"]       #line 111
+                elif first_char_is ( child_descriptor [ "name"], "'"):#line 110
+                    name =  child_descriptor [ "name"]      #line 111
                     s =   name[1:]                          #line 112
                     generated_leaf = Template ( name, string_constant_instantiate, s)#line 113
                     register_component_allow_overwriting ( reg, generated_leaf)#line 114#line 115#line 116#line 117#line 118#line 119#line 120
@@ -888,7 +888,7 @@ def initialize_component_palette (root_project,root_0D,diagram_source_files):#li
         all_containers_within_single_file = json2internal ( diagram_source)#line 527
         generate_shell_components ( reg, all_containers_within_single_file)#line 528
         for container in  all_containers_within_single_file:#line 529
-            register_component ( reg,Template ( container ["name"], container, container_instantiator))#line 530
+            register_component ( reg,Template ( container [ "name"], container, container_instantiator))#line 530
     initialize_stock_components ( reg)                      #line 531
     return  reg                                             #line 532#line 533#line 534
 

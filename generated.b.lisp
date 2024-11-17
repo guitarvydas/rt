@@ -2,7 +2,7 @@
                                                             #|line 1|# #|line 2|# #|line 3|#
 (defun Component_Registry (&optional )                      #|line 4|#
   (list
-    (cons (quote templates)  nil)                           #|line 5|#) #|line 6|#)
+    (cons (quote templates)  (make-hash-table :test 'equal))  #|line 5|#) #|line 6|#)
                                                             #|line 7|#
 (defun Template (&optional  name  template_data  instantiator) #|line 8|#
   (list
@@ -51,7 +51,7 @@
       (( and  ( assoc   name (cdr (assoc  templates  reg))) (not  ok_to_overwrite)) #|line 37|#
         (funcall (quote load_error)   (concatenate 'string  "Component "  (concatenate 'string (cdr (assoc  name  template))  " already declared")) ) #|line 38|#
         ))
-    (setf (cdr (assoc (cdr (assoc  name  templates))  reg))  template) #|line 39|#
+    (setf (cdr (assoc (gethash (quote name)  templates)  reg))  template) #|line 39|#
     (return-from abstracted_register_component  reg)        #|line 40|#) #|line 41|#
   )
 (defun register_multiple_components (&optional  reg  templates)
@@ -146,13 +146,13 @@
             diagram                                         #|line 101|#
             #|  loop through every component in the diagram and look for names that start with “$“ |# #|line 102|#
             #|  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |# #|line 103|#
-            (loop for child_descriptor in (cdr (assoc (quote children)  diagram))
+            (loop for child_descriptor in (gethash  "children"  diagram)
               do
                 (progn
                   child_descriptor                          #|line 104|#
                   (cond
-                    ((funcall (quote first_char_is)  (cdr (assoc (quote name)  child_descriptor))  "$" ) #|line 105|#
-                      (let ((name (cdr (assoc (quote name)  child_descriptor))))
+                    ((funcall (quote first_char_is)  (gethash  "name"  child_descriptor)  "$" ) #|line 105|#
+                      (let ((name (gethash  "name"  child_descriptor)))
                         (declare (ignorable name))          #|line 106|#
                         (let ((cmd (cdr (assoc (funcall (quote strip) )  (subseq  name 1)))))
                           (declare (ignorable cmd))         #|line 107|#
@@ -160,8 +160,8 @@
                             (declare (ignorable generated_leaf))
                             (funcall (quote register_component)   reg  generated_leaf  #|line 109|#))))
                       )
-                    ((funcall (quote first_char_is)  (cdr (assoc (quote name)  child_descriptor))  "'" ) #|line 110|#
-                      (let ((name (cdr (assoc (quote name)  child_descriptor))))
+                    ((funcall (quote first_char_is)  (gethash  "name"  child_descriptor)  "'" ) #|line 110|#
+                      (let ((name (gethash  "name"  child_descriptor)))
                         (declare (ignorable name))          #|line 111|#
                         (let ((s  (subseq  name 1)          #|line 112|#))
                           (declare (ignorable s))
@@ -646,7 +646,7 @@
               do
                 (progn
                   container                                 #|line 529|#
-                  (funcall (quote register_component)   reg (funcall (quote Template)  (cdr (assoc (quote name)  container))  #|  template_data =  |# container  #|  instantiator =  |# #'container_instantiator ) )
+                  (funcall (quote register_component)   reg (funcall (quote Template)  (gethash  "name"  container)  #|  template_data =  |# container  #|  instantiator =  |# #'container_instantiator ) )
                   )))                                       #|line 530|#
           ))
     (funcall (quote initialize_stock_components)   reg      #|line 531|#)

@@ -135,8 +135,8 @@ ExpExp_basic [ Primary] =‛«Primary»’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 Primary_plain [p] = ‛«p»’
 
-PrimaryIndexed_lookupident [p _at key] = ‛(cdr (assoc (quote «key») «p»))’
-PrimaryIndexed_lookup [p _at key] = ‛(cdr (assoc «key» «p»))’
+PrimaryIndexed_lookupident [p _at key] = ‛(gethash (quote «key») «p»)’
+PrimaryIndexed_lookup [p _at key] = ‛(gethash «key» «p»)’
 PrimaryIndexed_field [p _dot key] = ‛(cdr (assoc «key» «p»))’ 
 PrimaryIndexed_index [p lb e rb] = ‛(nth «e» «p»)’ 
 PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
@@ -148,7 +148,7 @@ Atom_external [x] = ‛«x»’
 Atom_callident [id actuals] = ‛(funcall (quote «id») «actuals»)’
 
 Atom_emptylistconst [ _72 _73] =‛ nil’
-Atom_emptydict [ _76 _77] =‛ nil’
+Atom_emptydict [ _76 _77] =‛ (make-hash-table :test 'equal)’
 Atom_paren [ _70 Exp _71] =‛«Exp»’
 Atom_listconst [lb line1? PrimaryComma+ line2? rb] =‛(list «line1» «PrimaryComma»)«line2»’
 

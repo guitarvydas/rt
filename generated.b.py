@@ -47,7 +47,7 @@ def abstracted_register_component (reg,template,ok_to_overwrite):#line 35
     name = mangle_name ( template. name)                    #line 36
     if  name in  reg. templates and not  ok_to_overwrite:   #line 37
         load_error ( str( "Component ") +  str( template. name) +  " already declared"  )#line 38
-    reg. templates [( name)] =  template                    #line 39
+    reg. templates [name] =  template                       #line 39
     return  reg                                             #line 40#line 41#line 42
 
 def register_multiple_components (reg,templates):           #line 43
@@ -106,14 +106,14 @@ def generate_shell_components (reg,container_list):         #line 95
         for diagram in  container_list:                     #line 101
             # loop through every component in the diagram and look for names that start with “$“#line 102
             # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 103
-            for child_descriptor in  diagram ["children"]:  #line 104
-                if first_char_is ( child_descriptor ["name"], "$"):#line 105
-                    name =  child_descriptor ["name"]       #line 106
+            for child_descriptor in  diagram [ "children"]: #line 104
+                if first_char_is ( child_descriptor [ "name"], "$"):#line 105
+                    name =  child_descriptor [ "name"]      #line 106
                     cmd =   name[1:] .strip ()              #line 107
                     generated_leaf = Template ( name, shell_out_instantiate, cmd)#line 108
                     register_component ( reg, generated_leaf)#line 109
-                elif first_char_is ( child_descriptor ["name"], "'"):#line 110
-                    name =  child_descriptor ["name"]       #line 111
+                elif first_char_is ( child_descriptor [ "name"], "'"):#line 110
+                    name =  child_descriptor [ "name"]      #line 111
                     s =   name[1:]                          #line 112
                     generated_leaf = Template ( name, string_constant_instantiate, s)#line 113
                     register_component_allow_overwriting ( reg, generated_leaf)#line 114#line 115#line 116#line 117#line 118#line 119#line 120
@@ -485,7 +485,7 @@ def initialize_component_palette (root_project,root_0D,diagram_source_files):#li
         all_containers_within_single_file = json2internal ( diagram_source)#line 527
         generate_shell_components ( reg, all_containers_within_single_file)#line 528
         for container in  all_containers_within_single_file:#line 529
-            register_component ( reg,Template ( container ["name"], container, container_instantiator))#line 530
+            register_component ( reg,Template ( container [ "name"], container, container_instantiator))#line 530
     initialize_stock_components ( reg)                      #line 531
     return  reg                                             #line 532#line 533#line 534
 

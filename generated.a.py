@@ -196,51 +196,51 @@ def container_instantiator (reg,owner,container_name,desc): #line 231
     children_by_id = {}
     # not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here#line 235
     # collect children                                      #line 236
-    for child_desc in  desc ["children"]:                   #line 237
-        child_instance = get_component_instance ( reg, child_desc ["name"], container)#line 238
+    for child_desc in  desc [ "children"]:                  #line 237
+        child_instance = get_component_instance ( reg, child_desc [ "name"], container)#line 238
         children.append ( child_instance)                   #line 239
-        children_by_id [ child_desc ["id"]] =  child_instance#line 240
+        children_by_id [ child_desc [ "id"]] =  child_instance#line 240
     container. children =  children                         #line 241
     me =  container                                         #line 242#line 243
     connectors = []                                         #line 244
-    for proto_conn in  desc ["connections"]:                #line 245
+    for proto_conn in  desc [ "connections"]:               #line 245
         connector = Connector ()                            #line 246
-        if  proto_conn ["dir"] ==  enumDown:                #line 247
+        if  proto_conn [ "dir"] ==  enumDown:               #line 247
             # JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},#line 248
             connector. direction =  "down"                  #line 249
-            connector. sender = Sender ( me. name, me, proto_conn ["source_port"])#line 250
-            target_component =  children_by_id [ proto_conn ["target"] ["id"]]#line 251
+            connector. sender = Sender ( me. name, me, proto_conn [ "source_port"])#line 250
+            target_component =  children_by_id [ proto_conn [ "target" [ "id"]]]#line 251
             if ( target_component ==  None):                #line 252
-                load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn ["target"] )#line 253
+                load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn [ "target"] )#line 253
             else:                                           #line 254
-                connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn ["target_port"], target_component)#line 255
+                connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn [ "target_port"], target_component)#line 255
                 connectors.append ( connector)              #line 256
-        elif  proto_conn ["dir"] ==  enumAcross:            #line 257
+        elif  proto_conn [ "dir"] ==  enumAcross:           #line 257
             connector. direction =  "across"                #line 258
-            source_component =  children_by_id [ proto_conn ["source"] ["id"]]#line 259
-            target_component =  children_by_id [ proto_conn ["target"] ["id"]]#line 260
+            source_component =  children_by_id [ proto_conn [ "source" [ "id"]]]#line 259
+            target_component =  children_by_id [ proto_conn [ "target" [ "id"]]]#line 260
             if  source_component ==  None:                  #line 261
-                load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn ["source"] )#line 262
+                load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn [ "source"] )#line 262
             else:                                           #line 263
-                connector. sender = Sender ( source_component. name, source_component, proto_conn ["source_port"])#line 264
+                connector. sender = Sender ( source_component. name, source_component, proto_conn [ "source_port"])#line 264
                 if  target_component ==  None:              #line 265
                     load_error ( str( "internal error: .Across connection target not ok ") +  proto_conn. target )#line 266
                 else:                                       #line 267
-                    connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn ["target_port"], target_component)#line 268
+                    connector. receiver = Receiver ( target_component. name, target_component. inq, proto_conn [ "target_port"], target_component)#line 268
                     connectors.append ( connector)          #line 269
-        elif  proto_conn ["dir"] ==  enumUp:                #line 270
+        elif  proto_conn [ "dir"] ==  enumUp:               #line 270
             connector. direction =  "up"                    #line 271
-            source_component =  children_by_id [ proto_conn ["source"] ["id"]]#line 272
+            source_component =  children_by_id [ proto_conn [ "source" [ "id"]]]#line 272
             if  source_component ==  None:                  #line 273
-                print ( str( "internal error: .Up connection source not ok ") +  proto_conn ["source"] )#line 274
+                print ( str( "internal error: .Up connection source not ok ") +  proto_conn [ "source"] )#line 274
             else:                                           #line 275
-                connector. sender = Sender ( source_component. name, source_component, proto_conn ["source_port"])#line 276
-                connector. receiver = Receiver ( me. name, container. outq, proto_conn ["target_port"], me)#line 277
+                connector. sender = Sender ( source_component. name, source_component, proto_conn [ "source_port"])#line 276
+                connector. receiver = Receiver ( me. name, container. outq, proto_conn [ "target_port"], me)#line 277
                 connectors.append ( connector)              #line 278
-        elif  proto_conn ["dir"] ==  enumThrough:           #line 279
+        elif  proto_conn [ "dir"] ==  enumThrough:          #line 279
             connector. direction =  "through"               #line 280
-            connector. sender = Sender ( me. name, me, proto_conn ["source_port"])#line 281
-            connector. receiver = Receiver ( me. name, container. outq, proto_conn ["target_port"], me)#line 282
+            connector. sender = Sender ( me. name, me, proto_conn [ "source_port"])#line 281
+            connector. receiver = Receiver ( me. name, container. outq, proto_conn [ "target_port"], me)#line 282
             connectors.append ( connector)                  #line 283#line 284
     container. connections =  connectors                    #line 285
     return  container                                       #line 286#line 287#line 288

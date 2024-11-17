@@ -228,86 +228,86 @@
     (declare (ignorable container))
     (let ((children  nil))
       (declare (ignorable children))                        #|line 234|#
-      (let ((children_by_id  nil))
+      (let ((children_by_id  (make-hash-table :test 'equal)))
         (declare (ignorable children_by_id))
         #|  not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here |# #|line 235|#
         #|  collect children |#                             #|line 236|#
-        (loop for child_desc in (cdr (assoc (quote children)  desc))
+        (loop for child_desc in (gethash  "children"  desc)
           do
             (progn
               child_desc                                    #|line 237|#
-              (let ((child_instance (funcall (quote get_component_instance)   reg (cdr (assoc (quote name)  child_desc))  container  #|line 238|#)))
+              (let ((child_instance (funcall (quote get_component_instance)   reg (gethash  "name"  child_desc)  container  #|line 238|#)))
                 (declare (ignorable child_instance))
                 (cdr (assoc (funcall (quote append)   child_instance  #|line 239|#)  children))
-                (setf (nth (cdr (assoc (quote id)  child_desc))  children_by_id)  child_instance)) #|line 240|#
+                (setf (nth (gethash  "id"  child_desc)  children_by_id)  child_instance)) #|line 240|#
               ))
         (setf (cdr (assoc  children  container))  children) #|line 241|#
         (let ((me  container))
           (declare (ignorable me))                          #|line 242|# #|line 243|#
           (let ((connectors  nil))
             (declare (ignorable connectors))                #|line 244|#
-            (loop for proto_conn in (cdr (assoc (quote connections)  desc))
+            (loop for proto_conn in (gethash  "connections"  desc)
               do
                 (progn
                   proto_conn                                #|line 245|#
                   (let ((connector (funcall (quote Connector) )))
                     (declare (ignorable connector))         #|line 246|#
                     (cond
-                      (( equal   (cdr (assoc (quote dir)  proto_conn))  enumDown) #|line 247|#
+                      (( equal   (gethash  "dir"  proto_conn)  enumDown) #|line 247|#
                         #|  JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''}, |# #|line 248|#
                         (setf (cdr (assoc  direction  connector))  "down") #|line 249|#
-                        (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  me))  me (cdr (assoc (quote source_port)  proto_conn))  #|line 250|#))
-                        (let ((target_component (nth (cdr (assoc (quote id) (cdr (assoc (quote target)  proto_conn))))  children_by_id)))
+                        (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  me))  me (gethash  "source_port"  proto_conn)  #|line 250|#))
+                        (let ((target_component (nth (gethash (gethash  "id"  "target")  proto_conn)  children_by_id)))
                           (declare (ignorable target_component)) #|line 251|#
                           (cond
                             (( equal    target_component  nil) #|line 252|#
-                              (funcall (quote load_error)   (concatenate 'string  "internal error: .Down connection target internal error " (cdr (assoc (quote target)  proto_conn))) ) #|line 253|#
+                              (funcall (quote load_error)   (concatenate 'string  "internal error: .Down connection target internal error " (gethash  "target"  proto_conn)) ) #|line 253|#
                               )
                             (t                              #|line 254|#
-                              (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  target_component)) (cdr (assoc  inq  target_component)) (cdr (assoc (quote target_port)  proto_conn))  target_component  #|line 255|#))
+                              (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  target_component)) (cdr (assoc  inq  target_component)) (gethash  "target_port"  proto_conn)  target_component  #|line 255|#))
                               (cdr (assoc (funcall (quote append)   connector )  connectors))
                               )))                           #|line 256|#
                         )
-                      (( equal   (cdr (assoc (quote dir)  proto_conn))  enumAcross) #|line 257|#
+                      (( equal   (gethash  "dir"  proto_conn)  enumAcross) #|line 257|#
                         (setf (cdr (assoc  direction  connector))  "across") #|line 258|#
-                        (let ((source_component (nth (cdr (assoc (quote id) (cdr (assoc (quote source)  proto_conn))))  children_by_id)))
+                        (let ((source_component (nth (gethash (gethash  "id"  "source")  proto_conn)  children_by_id)))
                           (declare (ignorable source_component)) #|line 259|#
-                          (let ((target_component (nth (cdr (assoc (quote id) (cdr (assoc (quote target)  proto_conn))))  children_by_id)))
+                          (let ((target_component (nth (gethash (gethash  "id"  "target")  proto_conn)  children_by_id)))
                             (declare (ignorable target_component)) #|line 260|#
                             (cond
                               (( equal    source_component  nil) #|line 261|#
-                                (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection source not ok " (cdr (assoc (quote source)  proto_conn))) ) #|line 262|#
+                                (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection source not ok " (gethash  "source"  proto_conn)) ) #|line 262|#
                                 )
                               (t                            #|line 263|#
-                                (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  source_component))  source_component (cdr (assoc (quote source_port)  proto_conn))  #|line 264|#))
+                                (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  source_component))  source_component (gethash  "source_port"  proto_conn)  #|line 264|#))
                                 (cond
                                   (( equal    target_component  nil) #|line 265|#
                                     (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection target not ok " (cdr (assoc  target  proto_conn))) ) #|line 266|#
                                     )
                                   (t                        #|line 267|#
-                                    (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  target_component)) (cdr (assoc  inq  target_component)) (cdr (assoc (quote target_port)  proto_conn))  target_component  #|line 268|#))
+                                    (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  target_component)) (cdr (assoc  inq  target_component)) (gethash  "target_port"  proto_conn)  target_component  #|line 268|#))
                                     (cdr (assoc (funcall (quote append)   connector )  connectors))
                                     ))
                                 ))))                        #|line 269|#
                         )
-                      (( equal   (cdr (assoc (quote dir)  proto_conn))  enumUp) #|line 270|#
+                      (( equal   (gethash  "dir"  proto_conn)  enumUp) #|line 270|#
                         (setf (cdr (assoc  direction  connector))  "up") #|line 271|#
-                        (let ((source_component (nth (cdr (assoc (quote id) (cdr (assoc (quote source)  proto_conn))))  children_by_id)))
+                        (let ((source_component (nth (gethash (gethash  "id"  "source")  proto_conn)  children_by_id)))
                           (declare (ignorable source_component)) #|line 272|#
                           (cond
                             (( equal    source_component  nil) #|line 273|#
-                              (funcall (quote print)   (concatenate 'string  "internal error: .Up connection source not ok " (cdr (assoc (quote source)  proto_conn))) ) #|line 274|#
+                              (funcall (quote print)   (concatenate 'string  "internal error: .Up connection source not ok " (gethash  "source"  proto_conn)) ) #|line 274|#
                               )
                             (t                              #|line 275|#
-                              (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  source_component))  source_component (cdr (assoc (quote source_port)  proto_conn))  #|line 276|#))
-                              (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  me)) (cdr (assoc  outq  container)) (cdr (assoc (quote target_port)  proto_conn))  me  #|line 277|#))
+                              (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  source_component))  source_component (gethash  "source_port"  proto_conn)  #|line 276|#))
+                              (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  me)) (cdr (assoc  outq  container)) (gethash  "target_port"  proto_conn)  me  #|line 277|#))
                               (cdr (assoc (funcall (quote append)   connector )  connectors))
                               )))                           #|line 278|#
                         )
-                      (( equal   (cdr (assoc (quote dir)  proto_conn))  enumThrough) #|line 279|#
+                      (( equal   (gethash  "dir"  proto_conn)  enumThrough) #|line 279|#
                         (setf (cdr (assoc  direction  connector))  "through") #|line 280|#
-                        (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  me))  me (cdr (assoc (quote source_port)  proto_conn))  #|line 281|#))
-                        (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  me)) (cdr (assoc  outq  container)) (cdr (assoc (quote target_port)  proto_conn))  me  #|line 282|#))
+                        (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  me))  me (gethash  "source_port"  proto_conn)  #|line 281|#))
+                        (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  me)) (cdr (assoc  outq  container)) (gethash  "target_port"  proto_conn)  me  #|line 282|#))
                         (cdr (assoc (funcall (quote append)   connector )  connectors))
                         )))                                 #|line 283|#
                   ))                                        #|line 284|#

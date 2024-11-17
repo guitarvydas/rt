@@ -36,7 +36,7 @@ defn abstracted_register_component (reg, template, ok_to_overwrite) {
     name ≡ mangle_name (template.name)
     if name in reg.templates and not ok_to_overwrite {
         load_error (#strcons (“Component ”, #strcons (template.name, “ already declared”)))}
-    reg.templates@(name) ⇐ template
+    reg.templates@name ⇐ template
     return reg
 }
 
@@ -101,14 +101,14 @@ defn generate_shell_components (reg, container_list) {
         for diagram in container_list {
             ⌈ loop through every component in the diagram and look for names that start with “$“⌉
             ⌈ {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},⌉
-            for child_descriptor in diagram@children {
-                if first_char_is (child_descriptor@name, “$”) {
-                    name ≡ child_descriptor@name
+            for child_descriptor in diagram@“children” {
+                if first_char_is (child_descriptor@“name”, “$”) {
+                    name ≡ child_descriptor@“name”
                     cmd ≡ #stringcdr (name).strip ()
                     generated_leaf ≡ Template (name,  ↪︎shell_out_instantiate, cmd)
                     register_component (reg, generated_leaf)
-                } elif first_char_is (child_descriptor@name, “'”) {
-                    name ≡ child_descriptor@name
+                } elif first_char_is (child_descriptor@“name”, “'”) {
+                    name ≡ child_descriptor@“name”
                     s ≡ #stringcdr (name)
                     generated_leaf ≡ Template (name,  ↪︎string_constant_instantiate, s)
                     register_component_allow_overwriting (reg, generated_leaf)
@@ -527,7 +527,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
         all_containers_within_single_file ≡ json2internal (diagram_source)
         generate_shell_components (reg, all_containers_within_single_file)
         for container in all_containers_within_single_file{
-            register_component (reg, Template (container@name , ⌈ template_data = ⌉container, ⌈ instantiator = ⌉ ↪︎container_instantiator))}}
+            register_component (reg, Template (container@“name” , ⌈ template_data = ⌉container, ⌈ instantiator = ⌉ ↪︎container_instantiator))}}
     initialize_stock_components (reg)
     return reg
 }
