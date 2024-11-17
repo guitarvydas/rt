@@ -24,26 +24,26 @@
   )
 (defun delay_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 22|#
-  (let ((info (cdr (assoc (quote  instance_data)  eh))))
+  (let ((info (cdr (assoc  instance_data  eh))))
     (declare (ignorable info))                              #|line 23|#
     (cond
       ((funcall (quote first_time)   msg )                  #|line 24|#
-        (setf (cdr (assoc (quote  saved_message)  info))  msg) #|line 25|#
+        (setf (cdr (assoc  saved_message  info))  msg)      #|line 25|#
         (funcall (quote set_active)   eh )
         #|  tell engine to keep running this component with ;ticks'  |# #|line 26|# #|line 27|#
         ))                                                  #|line 28|#
-    (let ((count (cdr (assoc (quote  counter)  info))))
+    (let ((count (cdr (assoc  counter  info))))
       (declare (ignorable count))                           #|line 29|#
       (let (( next (+  count  1)))
         (declare (ignorable  next))                         #|line 30|#
         (cond
-          (( >=  (cdr (assoc (quote  counter)  info))  DELAYDELAY) #|line 31|#
+          (( >=  (cdr (assoc  counter  info))  DELAYDELAY)  #|line 31|#
             (funcall (quote set_idle)   eh )
             #|  tell engine that we're finally done  |#     #|line 32|#
-            (funcall (quote forward)   eh  "" (cdr (assoc (quote  saved_message)  info))  #|line 33|#)
+            (funcall (quote forward)   eh  "" (cdr (assoc  saved_message  info))  #|line 33|#)
             (setf  next  0)                                 #|line 34|# #|line 35|#
             ))
-        (setf (cdr (assoc (quote  counter)  info))  next)   #|line 36|#))) #|line 37|#
+        (setf (cdr (assoc  counter  info))  next)           #|line 36|#))) #|line 37|#
   )
 
 

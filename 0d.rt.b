@@ -36,7 +36,7 @@ defn abstracted_register_component (reg, template, ok_to_overwrite) {
     name ≡ mangle_name (template.name)
     if name in reg.templates and not ok_to_overwrite {
         load_error (#strcons (“Component ”, #strcons (template.name, “ already declared”)))}
-    reg.templates[name] ⇐ template
+    reg.templates@(name) ⇐ template
     return reg
 }
 

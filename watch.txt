@@ -2,10 +2,11 @@ emitPython.rewrite
 emitcl.rewrite
 emit.ohm
 rebuild.bash
-test.rt.a
+test.rt
 count.rt
 decode.rt
 reverser.rt
 delay.rt
 monitor.rt
-
+0d.rt.a
+0d.rt.b

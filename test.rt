@@ -1,0 +1,7 @@
+defn f (reg, template) {
+    reg.templates[name] ⇐ template
+    reg.templates@name ⇐ template
+    reg.templates@“Count” ⇐ template
+    reg.templates@(name) ⇐ template
+    return reg
+}

@@ -34,17 +34,17 @@
   (declare (ignorable  s))                                  #|line 39|#
   (let ((d  (Datum)                                         #|line 40|#))
     (declare (ignorable d))
-    (setf (cdr (assoc (quote  data)  d))  s)                #|line 41|#
-    (setf (cdr (assoc (quote  clone)  d))  #'(lambda (&optional )(funcall (quote clone_datum_string)   d  #|line 42|#)))
-    (setf (cdr (assoc (quote  reclaim)  d))  #'(lambda (&optional )(funcall (quote reclaim_datum_string)   d  #|line 43|#)))
-    (setf (cdr (assoc (quote  srepr)  d))  #'(lambda (&optional )(funcall (quote srepr_datum_string)   d  #|line 44|#)))
-    (setf (cdr (assoc (quote  raw)  d)) (coerce (cdr (assoc (quote  data)  d)) 'simple-vector) #|line 45|#)
-    (setf (cdr (assoc (quote  kind)  d))  #'(lambda (&optional ) "string")) #|line 46|#
+    (setf (cdr (assoc  data  d))  s)                        #|line 41|#
+    (setf (cdr (assoc  clone  d))  #'(lambda (&optional )(funcall (quote clone_datum_string)   d  #|line 42|#)))
+    (setf (cdr (assoc  reclaim  d))  #'(lambda (&optional )(funcall (quote reclaim_datum_string)   d  #|line 43|#)))
+    (setf (cdr (assoc  srepr  d))  #'(lambda (&optional )(funcall (quote srepr_datum_string)   d  #|line 44|#)))
+    (setf (cdr (assoc  raw  d)) (coerce (cdr (assoc  data  d)) 'simple-vector) #|line 45|#)
+    (setf (cdr (assoc  kind  d))  #'(lambda (&optional ) "string")) #|line 46|#
     (return-from new_datum_string  d)                       #|line 47|#) #|line 48|#
   )
 (defun clone_datum_string (&optional  d)
   (declare (ignorable  d))                                  #|line 50|#
-  (let ((d (funcall (quote new_datum_string)  (cdr (assoc (quote  data)  d))  #|line 51|#)))
+  (let ((d (funcall (quote new_datum_string)  (cdr (assoc  data  d))  #|line 51|#)))
     (declare (ignorable d))
     (return-from clone_datum_string  d)                     #|line 52|#) #|line 53|#
   )
@@ -54,18 +54,18 @@
   )
 (defun srepr_datum_string (&optional  d)
   (declare (ignorable  d))                                  #|line 59|#
-  (return-from srepr_datum_string (cdr (assoc (quote  data)  d))) #|line 60|# #|line 61|#
+  (return-from srepr_datum_string (cdr (assoc  data  d)))   #|line 60|# #|line 61|#
   )
 (defun new_datum_bang (&optional )
   (declare (ignorable ))                                    #|line 63|#
   (let ((p (funcall (quote Datum) )))
     (declare (ignorable p))                                 #|line 64|#
-    (setf (cdr (assoc (quote  data)  p))  t)                #|line 65|#
-    (setf (cdr (assoc (quote  clone)  p))  #'(lambda (&optional )(funcall (quote clone_datum_bang)   p  #|line 66|#)))
-    (setf (cdr (assoc (quote  reclaim)  p))  #'(lambda (&optional )(funcall (quote reclaim_datum_bang)   p  #|line 67|#)))
-    (setf (cdr (assoc (quote  srepr)  p))  #'(lambda (&optional )(funcall (quote srepr_datum_bang) ))) #|line 68|#
-    (setf (cdr (assoc (quote  raw)  p))  #'(lambda (&optional )(funcall (quote raw_datum_bang) ))) #|line 69|#
-    (setf (cdr (assoc (quote  kind)  p))  #'(lambda (&optional ) "bang")) #|line 70|#
+    (setf (cdr (assoc  data  p))  t)                        #|line 65|#
+    (setf (cdr (assoc  clone  p))  #'(lambda (&optional )(funcall (quote clone_datum_bang)   p  #|line 66|#)))
+    (setf (cdr (assoc  reclaim  p))  #'(lambda (&optional )(funcall (quote reclaim_datum_bang)   p  #|line 67|#)))
+    (setf (cdr (assoc  srepr  p))  #'(lambda (&optional )(funcall (quote srepr_datum_bang) ))) #|line 68|#
+    (setf (cdr (assoc  raw  p))  #'(lambda (&optional )(funcall (quote raw_datum_bang) ))) #|line 69|#
+    (setf (cdr (assoc  kind  p))  #'(lambda (&optional ) "bang")) #|line 70|#
     (return-from new_datum_bang  p)                         #|line 71|#) #|line 72|#
   )
 (defun clone_datum_bang (&optional  d)
@@ -88,10 +88,10 @@
   (declare (ignorable ))                                    #|line 90|#
   (let ((p (funcall (quote new_datum_bang) )))
     (declare (ignorable p))                                 #|line 91|#
-    (setf (cdr (assoc (quote  kind)  p))  #'(lambda (&optional ) "tick")) #|line 92|#
-    (setf (cdr (assoc (quote  clone)  p))  #'(lambda (&optional )(funcall (quote new_datum_tick) ))) #|line 93|#
-    (setf (cdr (assoc (quote  srepr)  p))  #'(lambda (&optional )(funcall (quote srepr_datum_tick) ))) #|line 94|#
-    (setf (cdr (assoc (quote  raw)  p))  #'(lambda (&optional )(funcall (quote raw_datum_tick) ))) #|line 95|#
+    (setf (cdr (assoc  kind  p))  #'(lambda (&optional ) "tick")) #|line 92|#
+    (setf (cdr (assoc  clone  p))  #'(lambda (&optional )(funcall (quote new_datum_tick) ))) #|line 93|#
+    (setf (cdr (assoc  srepr  p))  #'(lambda (&optional )(funcall (quote srepr_datum_tick) ))) #|line 94|#
+    (setf (cdr (assoc  raw  p))  #'(lambda (&optional )(funcall (quote raw_datum_tick) ))) #|line 95|#
     (return-from new_datum_tick  p)                         #|line 96|#) #|line 97|#
   )
 (defun srepr_datum_tick (&optional )
@@ -106,24 +106,24 @@
   (declare (ignorable  b))                                  #|line 107|#
   (let ((p (funcall (quote Datum) )))
     (declare (ignorable p))                                 #|line 108|#
-    (setf (cdr (assoc (quote  data)  p))  b)                #|line 109|#
-    (setf (cdr (assoc (quote  clone)  p))  #'(lambda (&optional )(funcall (quote clone_datum_bytes)   p  #|line 110|#)))
-    (setf (cdr (assoc (quote  reclaim)  p))  #'(lambda (&optional )(funcall (quote reclaim_datum_bytes)   p  #|line 111|#)))
-    (setf (cdr (assoc (quote  srepr)  p))  #'(lambda (&optional )(funcall (quote srepr_datum_bytes)   b  #|line 112|#)))
-    (setf (cdr (assoc (quote  raw)  p))  #'(lambda (&optional )(funcall (quote raw_datum_bytes)   b  #|line 113|#)))
-    (setf (cdr (assoc (quote  kind)  p))  #'(lambda (&optional ) "bytes")) #|line 114|#
+    (setf (cdr (assoc  data  p))  b)                        #|line 109|#
+    (setf (cdr (assoc  clone  p))  #'(lambda (&optional )(funcall (quote clone_datum_bytes)   p  #|line 110|#)))
+    (setf (cdr (assoc  reclaim  p))  #'(lambda (&optional )(funcall (quote reclaim_datum_bytes)   p  #|line 111|#)))
+    (setf (cdr (assoc  srepr  p))  #'(lambda (&optional )(funcall (quote srepr_datum_bytes)   b  #|line 112|#)))
+    (setf (cdr (assoc  raw  p))  #'(lambda (&optional )(funcall (quote raw_datum_bytes)   b  #|line 113|#)))
+    (setf (cdr (assoc  kind  p))  #'(lambda (&optional ) "bytes")) #|line 114|#
     (return-from new_datum_bytes  p)                        #|line 115|#) #|line 116|#
   )
 (defun clone_datum_bytes (&optional  src)
   (declare (ignorable  src))                                #|line 118|#
   (let ((p (funcall (quote Datum) )))
     (declare (ignorable p))                                 #|line 119|#
-    (setf (cdr (assoc (quote  clone)  p)) (cdr (assoc (quote  clone)  src))) #|line 120|#
-    (setf (cdr (assoc (quote  reclaim)  p)) (cdr (assoc (quote  reclaim)  src))) #|line 121|#
-    (setf (cdr (assoc (quote  srepr)  p)) (cdr (assoc (quote  srepr)  src))) #|line 122|#
-    (setf (cdr (assoc (quote  raw)  p)) (cdr (assoc (quote  raw)  src))) #|line 123|#
-    (setf (cdr (assoc (quote  kind)  p)) (cdr (assoc (quote  kind)  src))) #|line 124|#
-    (setf (cdr (assoc (quote  data)  p)) (cdr (assoc (quote (funcall (quote clone) ))  src))) #|line 125|#
+    (setf (cdr (assoc  clone  p)) (cdr (assoc  clone  src))) #|line 120|#
+    (setf (cdr (assoc  reclaim  p)) (cdr (assoc  reclaim  src))) #|line 121|#
+    (setf (cdr (assoc  srepr  p)) (cdr (assoc  srepr  src))) #|line 122|#
+    (setf (cdr (assoc  raw  p)) (cdr (assoc  raw  src)))    #|line 123|#
+    (setf (cdr (assoc  kind  p)) (cdr (assoc  kind  src)))  #|line 124|#
+    (setf (cdr (assoc  data  p)) (cdr (assoc (funcall (quote clone) )  src))) #|line 125|#
     (return-from clone_datum_bytes  p)                      #|line 126|#) #|line 127|#
   )
 (defun reclaim_datum_bytes (&optional  src)
@@ -132,11 +132,11 @@
   )
 (defun srepr_datum_bytes (&optional  d)
   (declare (ignorable  d))                                  #|line 133|#
-  (return-from srepr_datum_bytes (cdr (assoc (quote (cdr (assoc (quote (funcall (quote decode)   "UTF_8"  #|line 134|#))  data)))  d))) #|line 135|#
+  (return-from srepr_datum_bytes (cdr (assoc (cdr (assoc (funcall (quote decode)   "UTF_8"  #|line 134|#)  data))  d))) #|line 135|#
   )
 (defun raw_datum_bytes (&optional  d)
   (declare (ignorable  d))                                  #|line 136|#
-  (return-from raw_datum_bytes (cdr (assoc (quote  data)  d))) #|line 137|# #|line 138|#
+  (return-from raw_datum_bytes (cdr (assoc  data  d)))      #|line 137|# #|line 138|#
   )
 (defun new_datum_handle (&optional  h)
   (declare (ignorable  h))                                  #|line 140|#
@@ -146,12 +146,12 @@
   (declare (ignorable  i))                                  #|line 144|#
   (let ((p (funcall (quote Datum) )))
     (declare (ignorable p))                                 #|line 145|#
-    (setf (cdr (assoc (quote  data)  p))  i)                #|line 146|#
-    (setf (cdr (assoc (quote  clone)  p))  #'(lambda (&optional )(funcall (quote clone_int)   i  #|line 147|#)))
-    (setf (cdr (assoc (quote  reclaim)  p))  #'(lambda (&optional )(funcall (quote reclaim_int)   i  #|line 148|#)))
-    (setf (cdr (assoc (quote  srepr)  p))  #'(lambda (&optional )(funcall (quote srepr_datum_int)   i  #|line 149|#)))
-    (setf (cdr (assoc (quote  raw)  p))  #'(lambda (&optional )(funcall (quote raw_datum_int)   i  #|line 150|#)))
-    (setf (cdr (assoc (quote  kind)  p))  #'(lambda (&optional ) "int")) #|line 151|#
+    (setf (cdr (assoc  data  p))  i)                        #|line 146|#
+    (setf (cdr (assoc  clone  p))  #'(lambda (&optional )(funcall (quote clone_int)   i  #|line 147|#)))
+    (setf (cdr (assoc  reclaim  p))  #'(lambda (&optional )(funcall (quote reclaim_int)   i  #|line 148|#)))
+    (setf (cdr (assoc  srepr  p))  #'(lambda (&optional )(funcall (quote srepr_datum_int)   i  #|line 149|#)))
+    (setf (cdr (assoc  raw  p))  #'(lambda (&optional )(funcall (quote raw_datum_int)   i  #|line 150|#)))
+    (setf (cdr (assoc  kind  p))  #'(lambda (&optional ) "int")) #|line 151|#
     (return-from new_datum_int  p)                          #|line 152|#) #|line 153|#
   )
 (defun clone_int (&optional  i)
@@ -185,13 +185,13 @@
   (declare (ignorable  port  datum))                        #|line 187|#
   (let ((p (funcall (quote clone_string)   port             #|line 188|#)))
     (declare (ignorable p))
-    (let ((m (funcall (quote Message)   p (cdr (assoc (quote (funcall (quote clone) ))  datum))  #|line 189|#)))
+    (let ((m (funcall (quote Message)   p (cdr (assoc (funcall (quote clone) )  datum))  #|line 189|#)))
       (declare (ignorable m))
       (return-from make_message  m)                         #|line 190|#)) #|line 191|#
   ) #|  Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations. |# #|line 193|#
 (defun message_clone (&optional  message)
   (declare (ignorable  message))                            #|line 194|#
-  (let ((m (funcall (quote Message)  (funcall (quote clone_port)  (cdr (assoc (quote  port)  message)) ) (cdr (assoc (quote (cdr (assoc (quote (funcall (quote clone) ))  datum)))  message))  #|line 195|#)))
+  (let ((m (funcall (quote Message)  (funcall (quote clone_port)  (cdr (assoc  port  message)) ) (cdr (assoc (cdr (assoc (funcall (quote clone) )  datum))  message))  #|line 195|#)))
     (declare (ignorable m))
     (return-from message_clone  m)                          #|line 196|#) #|line 197|#
   ) #|  Frees a message. |#                                 #|line 199|#
@@ -215,7 +215,7 @@
       (return-from format_message  "ϕ")                     #|line 216|#
       )
     (t                                                      #|line 217|#
-      (return-from format_message  (concatenate 'string  "⟪"  (concatenate 'string (cdr (assoc (quote  port)  m))  (concatenate 'string  "⦂"  (concatenate 'string (cdr (assoc (quote (cdr (assoc (quote (funcall (quote srepr) ))  datum)))  m))  "⟫")))) #|line 221|#) #|line 222|#
+      (return-from format_message  (concatenate 'string  "⟪"  (concatenate 'string (cdr (assoc  port  m))  (concatenate 'string  "⦂"  (concatenate 'string (cdr (assoc (cdr (assoc (funcall (quote srepr) )  datum))  m))  "⟫")))) #|line 221|#) #|line 222|#
       ))                                                    #|line 223|#
   )                                                         #|line 225|#
 (defparameter  enumDown  0)
@@ -238,10 +238,10 @@
               child_desc                                    #|line 237|#
               (let ((child_instance (funcall (quote get_component_instance)   reg (cdr (assoc (quote name)  child_desc))  container  #|line 238|#)))
                 (declare (ignorable child_instance))
-                (cdr (assoc (quote (funcall (quote append)   child_instance  #|line 239|#))  children))
+                (cdr (assoc (funcall (quote append)   child_instance  #|line 239|#)  children))
                 (setf (nth (cdr (assoc (quote id)  child_desc))  children_by_id)  child_instance)) #|line 240|#
               ))
-        (setf (cdr (assoc (quote  children)  container))  children) #|line 241|#
+        (setf (cdr (assoc  children  container))  children) #|line 241|#
         (let ((me  container))
           (declare (ignorable me))                          #|line 242|# #|line 243|#
           (let ((connectors  nil))
@@ -255,8 +255,8 @@
                     (cond
                       (( equal   (cdr (assoc (quote dir)  proto_conn))  enumDown) #|line 247|#
                         #|  JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''}, |# #|line 248|#
-                        (setf (cdr (assoc (quote  direction)  connector))  "down") #|line 249|#
-                        (setf (cdr (assoc (quote  sender)  connector)) (funcall (quote Sender)  (cdr (assoc (quote  name)  me))  me (cdr (assoc (quote source_port)  proto_conn))  #|line 250|#))
+                        (setf (cdr (assoc  direction  connector))  "down") #|line 249|#
+                        (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  me))  me (cdr (assoc (quote source_port)  proto_conn))  #|line 250|#))
                         (let ((target_component (nth (cdr (assoc (quote id) (cdr (assoc (quote target)  proto_conn))))  children_by_id)))
                           (declare (ignorable target_component)) #|line 251|#
                           (cond
@@ -264,12 +264,12 @@
                               (funcall (quote load_error)   (concatenate 'string  "internal error: .Down connection target internal error " (cdr (assoc (quote target)  proto_conn))) ) #|line 253|#
                               )
                             (t                              #|line 254|#
-                              (setf (cdr (assoc (quote  receiver)  connector)) (funcall (quote Receiver)  (cdr (assoc (quote  name)  target_component)) (cdr (assoc (quote  inq)  target_component)) (cdr (assoc (quote target_port)  proto_conn))  target_component  #|line 255|#))
-                              (cdr (assoc (quote (funcall (quote append)   connector ))  connectors))
+                              (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  target_component)) (cdr (assoc  inq  target_component)) (cdr (assoc (quote target_port)  proto_conn))  target_component  #|line 255|#))
+                              (cdr (assoc (funcall (quote append)   connector )  connectors))
                               )))                           #|line 256|#
                         )
                       (( equal   (cdr (assoc (quote dir)  proto_conn))  enumAcross) #|line 257|#
-                        (setf (cdr (assoc (quote  direction)  connector))  "across") #|line 258|#
+                        (setf (cdr (assoc  direction  connector))  "across") #|line 258|#
                         (let ((source_component (nth (cdr (assoc (quote id) (cdr (assoc (quote source)  proto_conn))))  children_by_id)))
                           (declare (ignorable source_component)) #|line 259|#
                           (let ((target_component (nth (cdr (assoc (quote id) (cdr (assoc (quote target)  proto_conn))))  children_by_id)))
@@ -279,19 +279,19 @@
                                 (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection source not ok " (cdr (assoc (quote source)  proto_conn))) ) #|line 262|#
                                 )
                               (t                            #|line 263|#
-                                (setf (cdr (assoc (quote  sender)  connector)) (funcall (quote Sender)  (cdr (assoc (quote  name)  source_component))  source_component (cdr (assoc (quote source_port)  proto_conn))  #|line 264|#))
+                                (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  source_component))  source_component (cdr (assoc (quote source_port)  proto_conn))  #|line 264|#))
                                 (cond
                                   (( equal    target_component  nil) #|line 265|#
-                                    (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection target not ok " (cdr (assoc (quote  target)  proto_conn))) ) #|line 266|#
+                                    (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection target not ok " (cdr (assoc  target  proto_conn))) ) #|line 266|#
                                     )
                                   (t                        #|line 267|#
-                                    (setf (cdr (assoc (quote  receiver)  connector)) (funcall (quote Receiver)  (cdr (assoc (quote  name)  target_component)) (cdr (assoc (quote  inq)  target_component)) (cdr (assoc (quote target_port)  proto_conn))  target_component  #|line 268|#))
-                                    (cdr (assoc (quote (funcall (quote append)   connector ))  connectors))
+                                    (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  target_component)) (cdr (assoc  inq  target_component)) (cdr (assoc (quote target_port)  proto_conn))  target_component  #|line 268|#))
+                                    (cdr (assoc (funcall (quote append)   connector )  connectors))
                                     ))
                                 ))))                        #|line 269|#
                         )
                       (( equal   (cdr (assoc (quote dir)  proto_conn))  enumUp) #|line 270|#
-                        (setf (cdr (assoc (quote  direction)  connector))  "up") #|line 271|#
+                        (setf (cdr (assoc  direction  connector))  "up") #|line 271|#
                         (let ((source_component (nth (cdr (assoc (quote id) (cdr (assoc (quote source)  proto_conn))))  children_by_id)))
                           (declare (ignorable source_component)) #|line 272|#
                           (cond
@@ -299,19 +299,19 @@
                               (funcall (quote print)   (concatenate 'string  "internal error: .Up connection source not ok " (cdr (assoc (quote source)  proto_conn))) ) #|line 274|#
                               )
                             (t                              #|line 275|#
-                              (setf (cdr (assoc (quote  sender)  connector)) (funcall (quote Sender)  (cdr (assoc (quote  name)  source_component))  source_component (cdr (assoc (quote source_port)  proto_conn))  #|line 276|#))
-                              (setf (cdr (assoc (quote  receiver)  connector)) (funcall (quote Receiver)  (cdr (assoc (quote  name)  me)) (cdr (assoc (quote  outq)  container)) (cdr (assoc (quote target_port)  proto_conn))  me  #|line 277|#))
-                              (cdr (assoc (quote (funcall (quote append)   connector ))  connectors))
+                              (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  source_component))  source_component (cdr (assoc (quote source_port)  proto_conn))  #|line 276|#))
+                              (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  me)) (cdr (assoc  outq  container)) (cdr (assoc (quote target_port)  proto_conn))  me  #|line 277|#))
+                              (cdr (assoc (funcall (quote append)   connector )  connectors))
                               )))                           #|line 278|#
                         )
                       (( equal   (cdr (assoc (quote dir)  proto_conn))  enumThrough) #|line 279|#
-                        (setf (cdr (assoc (quote  direction)  connector))  "through") #|line 280|#
-                        (setf (cdr (assoc (quote  sender)  connector)) (funcall (quote Sender)  (cdr (assoc (quote  name)  me))  me (cdr (assoc (quote source_port)  proto_conn))  #|line 281|#))
-                        (setf (cdr (assoc (quote  receiver)  connector)) (funcall (quote Receiver)  (cdr (assoc (quote  name)  me)) (cdr (assoc (quote  outq)  container)) (cdr (assoc (quote target_port)  proto_conn))  me  #|line 282|#))
-                        (cdr (assoc (quote (funcall (quote append)   connector ))  connectors))
+                        (setf (cdr (assoc  direction  connector))  "through") #|line 280|#
+                        (setf (cdr (assoc  sender  connector)) (funcall (quote Sender)  (cdr (assoc  name  me))  me (cdr (assoc (quote source_port)  proto_conn))  #|line 281|#))
+                        (setf (cdr (assoc  receiver  connector)) (funcall (quote Receiver)  (cdr (assoc  name  me)) (cdr (assoc  outq  container)) (cdr (assoc (quote target_port)  proto_conn))  me  #|line 282|#))
+                        (cdr (assoc (funcall (quote append)   connector )  connectors))
                         )))                                 #|line 283|#
                   ))                                        #|line 284|#
-            (setf (cdr (assoc (quote  connections)  container))  connectors) #|line 285|#
+            (setf (cdr (assoc  connections  container))  connectors) #|line 285|#
             (return-from container_instantiator  container) #|line 286|#))))) #|line 287|#
   ) #|  The default handler for container components. |#    #|line 289|#
 (defun container_handler (&optional  container  message)
@@ -330,7 +330,7 @@
     )
   (defun fifo_is_empty (&optional  fifo)
     (declare (ignorable  fifo))                             #|line 301|#
-    (return-from fifo_is_empty (cdr (assoc (quote (funcall (quote empty) ))  fifo))) #|line 302|# #|line 303|#
+    (return-from fifo_is_empty (cdr (assoc (funcall (quote empty) )  fifo))) #|line 302|# #|line 303|#
     ) #|  Routing connection for a container component. The `direction` field has |# #|line 305|# #|  no affect on the default message routing system _ it is there for debugging |# #|line 306|# #|  purposes, or for reading by other tools. |# #|line 307|# #|line 308|#
   (defun Connector (&optional )                             #|line 309|#
     (list
@@ -353,29 +353,29 @@
                                                             #|line 333|# #|  Checks if two senders match, by pointer equality and port name matching. |# #|line 334|#
   (defun sender_eq (&optional  s1  s2)
     (declare (ignorable  s1  s2))                           #|line 335|#
-    (let ((same_components ( equal   (cdr (assoc (quote  component)  s1)) (cdr (assoc (quote  component)  s2)))))
+    (let ((same_components ( equal   (cdr (assoc  component  s1)) (cdr (assoc  component  s2)))))
       (declare (ignorable same_components))                 #|line 336|#
-      (let ((same_ports ( equal   (cdr (assoc (quote  port)  s1)) (cdr (assoc (quote  port)  s2)))))
+      (let ((same_ports ( equal   (cdr (assoc  port  s1)) (cdr (assoc  port  s2)))))
         (declare (ignorable same_ports))                    #|line 337|#
         (return-from sender_eq ( and   same_components  same_ports)) #|line 338|#)) #|line 339|#
     ) #|  Delivers the given message to the receiver of this connector. |# #|line 341|# #|line 342|#
   (defun deposit (&optional  parent  conn  message)
     (declare (ignorable  parent  conn  message))            #|line 343|#
-    (let ((new_message (funcall (quote make_message)  (cdr (assoc (quote (cdr (assoc (quote  port)  receiver)))  conn)) (cdr (assoc (quote  datum)  message))  #|line 344|#)))
+    (let ((new_message (funcall (quote make_message)  (cdr (assoc (cdr (assoc  port  receiver))  conn)) (cdr (assoc  datum  message))  #|line 344|#)))
       (declare (ignorable new_message))
-      (funcall (quote push_message)   parent (cdr (assoc (quote (cdr (assoc (quote  component)  receiver)))  conn)) (cdr (assoc (quote (cdr (assoc (quote  queue)  receiver)))  conn))  new_message  #|line 345|#)) #|line 346|#
+      (funcall (quote push_message)   parent (cdr (assoc (cdr (assoc  component  receiver))  conn)) (cdr (assoc (cdr (assoc  queue  receiver))  conn))  new_message  #|line 345|#)) #|line 346|#
     )
   (defun force_tick (&optional  parent  eh)
     (declare (ignorable  parent  eh))                       #|line 348|#
     (let ((tick_msg (funcall (quote make_message)   "." (funcall (quote new_datum_tick) )  #|line 349|#)))
       (declare (ignorable tick_msg))
-      (funcall (quote push_message)   parent  eh (cdr (assoc (quote  inq)  eh))  tick_msg  #|line 350|#)
+      (funcall (quote push_message)   parent  eh (cdr (assoc  inq  eh))  tick_msg  #|line 350|#)
       (return-from force_tick  tick_msg)                    #|line 351|#) #|line 352|#
     )
   (defun push_message (&optional  parent  receiver  inq  m)
     (declare (ignorable  parent  receiver  inq  m))         #|line 354|#
-    (cdr (assoc (quote (funcall (quote put)   m             #|line 355|#))  inq))
-    (cdr (assoc (quote (cdr (assoc (quote (funcall (quote put)   receiver  #|line 356|#))  visit_ordering)))  parent)) #|line 357|#
+    (cdr (assoc (funcall (quote put)   m                    #|line 355|#)  inq))
+    (cdr (assoc (cdr (assoc (funcall (quote put)   receiver  #|line 356|#)  visit_ordering))  parent)) #|line 357|#
     )
   (defun is_self (&optional  child  container)
     (declare (ignorable  child  container))                 #|line 359|#
@@ -384,25 +384,25 @@
     )
   (defun step_child (&optional  child  msg)
     (declare (ignorable  child  msg))                       #|line 364|#
-    (let ((before_state (cdr (assoc (quote  state)  child))))
+    (let ((before_state (cdr (assoc  state  child))))
       (declare (ignorable before_state))                    #|line 365|#
-      (cdr (assoc (quote (funcall (quote handler)   child  msg  #|line 366|#))  child))
-      (let ((after_state (cdr (assoc (quote  state)  child))))
+      (cdr (assoc (funcall (quote handler)   child  msg     #|line 366|#)  child))
+      (let ((after_state (cdr (assoc  state  child))))
         (declare (ignorable after_state))                   #|line 367|#
         (return-from step_child (values ( and  ( equal    before_state  "idle") (not (equal   after_state  "idle")))  #|line 368|#( and  (not (equal   before_state  "idle")) (not (equal   after_state  "idle")))  #|line 369|#( and  (not (equal   before_state  "idle")) ( equal    after_state  "idle")))) #|line 370|#)) #|line 371|#
     )
   (defun save_message (&optional  eh  msg)
     (declare (ignorable  eh  msg))                          #|line 373|#
-    (cdr (assoc (quote (cdr (assoc (quote (funcall (quote put)   msg  #|line 374|#))  saved_messages)))  eh)) #|line 375|#
+    (cdr (assoc (cdr (assoc (funcall (quote put)   msg      #|line 374|#)  saved_messages))  eh)) #|line 375|#
     )
   (defun fetch_saved_message_and_clear (&optional  eh)
     (declare (ignorable  eh))                               #|line 377|#
-    (return-from fetch_saved_message_and_clear (cdr (assoc (quote (cdr (assoc (quote (funcall (quote get) ))  saved_messages)))  eh))) #|line 378|# #|line 379|#
+    (return-from fetch_saved_message_and_clear (cdr (assoc (cdr (assoc (funcall (quote get) )  saved_messages))  eh))) #|line 378|# #|line 379|#
     )
   (defun step_children (&optional  container  causingMessage)
     (declare (ignorable  container  causingMessage))        #|line 381|#
-    (setf (cdr (assoc (quote  state)  container))  "idle")  #|line 382|#
-    (loop for child in (funcall (quote list)  (cdr (assoc (quote (cdr (assoc (quote  queue)  visit_ordering)))  container)) )
+    (setf (cdr (assoc  state  container))  "idle")          #|line 382|#
+    (loop for child in (funcall (quote list)  (cdr (assoc (cdr (assoc  queue  visit_ordering))  container)) )
       do
         (progn
           child                                             #|line 383|#
@@ -410,8 +410,8 @@
           (cond
             ((not (funcall (quote is_self)   child  container )) #|line 385|#
               (cond
-                ((not (cdr (assoc (quote (cdr (assoc (quote (funcall (quote empty) ))  inq)))  child))) #|line 386|#
-                  (let ((msg (cdr (assoc (quote (cdr (assoc (quote (funcall (quote get) ))  inq)))  child))))
+                ((not (cdr (assoc (cdr (assoc (funcall (quote empty) )  inq))  child))) #|line 386|#
+                  (let ((msg (cdr (assoc (cdr (assoc (funcall (quote get) )  inq))  child))))
                     (declare (ignorable msg))               #|line 387|#
                     (let (( began_long_run  nil))
                       (declare (ignorable  began_long_run)) #|line 388|#
@@ -431,22 +431,22 @@
                   )
                 (t                                          #|line 398|#
                   (cond
-                    ((not (equal  (cdr (assoc (quote  state)  child))  "idle")) #|line 399|#
+                    ((not (equal  (cdr (assoc  state  child))  "idle")) #|line 399|#
                       (let ((msg (funcall (quote force_tick)   container  child  #|line 400|#)))
                         (declare (ignorable msg))
-                        (cdr (assoc (quote (funcall (quote handler)   child  msg  #|line 401|#))  child))
+                        (cdr (assoc (funcall (quote handler)   child  msg  #|line 401|#)  child))
                         (funcall (quote destroy_message)   msg ))
                       ))                                    #|line 402|#
                   ))                                        #|line 403|#
               (cond
-                (( equal   (cdr (assoc (quote  state)  child))  "active") #|line 404|#
+                (( equal   (cdr (assoc  state  child))  "active") #|line 404|#
                   #|  if child remains active, then the container must remain active and must propagate “ticks“ to child |# #|line 405|#
-                  (setf (cdr (assoc (quote  state)  container))  "active") #|line 406|#
+                  (setf (cdr (assoc  state  container))  "active") #|line 406|#
                   ))                                        #|line 407|#
-              (loop while (not (cdr (assoc (quote (cdr (assoc (quote (funcall (quote empty) ))  outq)))  child)))
+              (loop while (not (cdr (assoc (cdr (assoc (funcall (quote empty) )  outq))  child)))
                 do
                   (progn                                    #|line 408|#
-                    (let ((msg (cdr (assoc (quote (cdr (assoc (quote (funcall (quote get) ))  outq)))  child))))
+                    (let ((msg (cdr (assoc (cdr (assoc (funcall (quote get) )  outq))  child))))
                       (declare (ignorable msg))             #|line 409|#
                       (funcall (quote route)   container  child  msg  #|line 410|#)
                       (funcall (quote destroy_message)   msg ))
@@ -457,13 +457,13 @@
     (defun attempt_tick (&optional  parent  eh)
       (declare (ignorable  parent  eh))                     #|line 416|#
       (cond
-        ((not (equal  (cdr (assoc (quote  state)  eh))  "idle")) #|line 417|#
+        ((not (equal  (cdr (assoc  state  eh))  "idle"))    #|line 417|#
           (funcall (quote force_tick)   parent  eh )        #|line 418|#
           ))                                                #|line 419|#
       )
     (defun is_tick (&optional  msg)
       (declare (ignorable  msg))                            #|line 421|#
-      (return-from is_tick ( equal    "tick" (cdr (assoc (quote (cdr (assoc (quote (funcall (quote kind) ))  datum)))  msg)))) #|line 422|# #|line 423|#
+      (return-from is_tick ( equal    "tick" (cdr (assoc (cdr (assoc (funcall (quote kind) )  datum))  msg)))) #|line 422|# #|line 423|#
       ) #|  Routes a single message to all matching destinations, according to |# #|line 425|# #|  the container's connection network. |# #|line 426|# #|line 427|#
     (defun route (&optional  container  from_component  message)
       (declare (ignorable  container  from_component  message)) #|line 428|#
@@ -474,7 +474,7 @@
           (declare (ignorable  fromname))                   #|line 430|#
           (cond
             ((funcall (quote is_tick)   message )           #|line 431|#
-              (loop for child in (cdr (assoc (quote  children)  container))
+              (loop for child in (cdr (assoc  children  container))
                 do
                   (progn
                     child                                   #|line 432|#
@@ -485,16 +485,16 @@
             (t                                              #|line 435|#
               (cond
                 ((not (funcall (quote is_self)   from_component  container )) #|line 436|#
-                  (setf  fromname (cdr (assoc (quote  name)  from_component))) #|line 437|#
+                  (setf  fromname (cdr (assoc  name  from_component))) #|line 437|#
                   ))
-              (let ((from_sender (funcall (quote Sender)   fromname  from_component (cdr (assoc (quote  port)  message))  #|line 438|#)))
+              (let ((from_sender (funcall (quote Sender)   fromname  from_component (cdr (assoc  port  message))  #|line 438|#)))
                 (declare (ignorable from_sender))           #|line 439|#
-                (loop for connector in (cdr (assoc (quote  connections)  container))
+                (loop for connector in (cdr (assoc  connections  container))
                   do
                     (progn
                       connector                             #|line 440|#
                       (cond
-                        ((funcall (quote sender_eq)   from_sender (cdr (assoc (quote  sender)  connector)) ) #|line 441|#
+                        ((funcall (quote sender_eq)   from_sender (cdr (assoc  sender  connector)) ) #|line 441|#
                           (funcall (quote deposit)   container  connector  message  #|line 442|#)
                           (setf  was_sent  t)
                           ))
@@ -504,14 +504,14 @@
             ((not  was_sent)                                #|line 444|#
               (funcall (quote print)   "\n\n*** Error: ***"  #|line 445|#)
               (funcall (quote print)   "***"                #|line 446|#)
-              (funcall (quote print)   (concatenate 'string (cdr (assoc (quote  name)  container))  (concatenate 'string  ": message '"  (concatenate 'string (cdr (assoc (quote  port)  message))  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))  #|line 447|#)
+              (funcall (quote print)   (concatenate 'string (cdr (assoc  name  container))  (concatenate 'string  ": message '"  (concatenate 'string (cdr (assoc  port  message))  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))  #|line 447|#)
               (funcall (quote print)   "***"                #|line 448|#)
               (uiop:quit)                                   #|line 449|# #|line 450|#
               ))))                                          #|line 451|#
       )
     (defun any_child_ready (&optional  container)
       (declare (ignorable  container))                      #|line 453|#
-      (loop for child in (cdr (assoc (quote  children)  container))
+      (loop for child in (cdr (assoc  children  container))
         do
           (progn
             child                                           #|line 454|#
@@ -524,11 +524,11 @@
       )
     (defun child_is_ready (&optional  eh)
       (declare (ignorable  eh))                             #|line 460|#
-      (return-from child_is_ready ( or  ( or  ( or  (not (cdr (assoc (quote (cdr (assoc (quote (funcall (quote empty) ))  outq)))  eh))) (not (cdr (assoc (quote (cdr (assoc (quote (funcall (quote empty) ))  inq)))  eh)))) (not (equal  (cdr (assoc (quote  state)  eh))  "idle"))) (funcall (quote any_child_ready)   eh ))) #|line 461|# #|line 462|#
+      (return-from child_is_ready ( or  ( or  ( or  (not (cdr (assoc (cdr (assoc (funcall (quote empty) )  outq))  eh))) (not (cdr (assoc (cdr (assoc (funcall (quote empty) )  inq))  eh)))) (not (equal  (cdr (assoc  state  eh))  "idle"))) (funcall (quote any_child_ready)   eh ))) #|line 461|# #|line 462|#
       )
     (defun append_routing_descriptor (&optional  container  desc)
       (declare (ignorable  container  desc))                #|line 464|#
-      (cdr (assoc (quote (cdr (assoc (quote (funcall (quote put)   desc  #|line 465|#))  routings)))  container)) #|line 466|#
+      (cdr (assoc (cdr (assoc (funcall (quote put)   desc   #|line 465|#)  routings))  container)) #|line 466|#
       )
     (defun container_injector (&optional  container  message)
       (declare (ignorable  container  message))             #|line 468|#
@@ -586,13 +586,13 @@
   )
 (defun abstracted_register_component (&optional  reg  template  ok_to_overwrite)
   (declare (ignorable  reg  template  ok_to_overwrite))     #|line 35|#
-  (let ((name (funcall (quote mangle_name)  (cdr (assoc (quote  name)  template))  #|line 36|#)))
+  (let ((name (funcall (quote mangle_name)  (cdr (assoc  name  template))  #|line 36|#)))
     (declare (ignorable name))
     (cond
-      (( and  ( assoc   name (cdr (assoc (quote  templates)  reg))) (not  ok_to_overwrite)) #|line 37|#
-        (funcall (quote load_error)   (concatenate 'string  "Component "  (concatenate 'string (cdr (assoc (quote  name)  template))  " already declared")) ) #|line 38|#
+      (( and  ( assoc   name (cdr (assoc  templates  reg))) (not  ok_to_overwrite)) #|line 37|#
+        (funcall (quote load_error)   (concatenate 'string  "Component "  (concatenate 'string (cdr (assoc  name  template))  " already declared")) ) #|line 38|#
         ))
-    (setf (cdr (assoc (quote (nth  name  templates))  reg))  template) #|line 39|#
+    (setf (cdr (assoc (cdr (assoc  name  templates))  reg))  template) #|line 39|#
     (return-from abstracted_register_component  reg)        #|line 40|#) #|line 41|#
   )
 (defun register_multiple_components (&optional  reg  templates)
@@ -609,8 +609,8 @@
   (let ((template_name (funcall (quote mangle_name)   full_name  #|line 49|#)))
     (declare (ignorable template_name))
     (cond
-      (( assoc   template_name (cdr (assoc (quote  templates)  reg))) #|line 50|#
-        (let ((template (cdr (assoc (quote (nth  template_name  templates))  reg))))
+      (( assoc   template_name (cdr (assoc  templates  reg))) #|line 50|#
+        (let ((template (cdr (assoc (nth  template_name  templates)  reg))))
           (declare (ignorable template))                    #|line 51|#
           (cond
             (( equal    template  nil)                      #|line 52|#
@@ -624,15 +624,15 @@
                   (declare (ignorable instance_name))       #|line 57|#
                   (cond
                     ((not (equal   nil  owner))             #|line 58|#
-                      (setf  owner_name (cdr (assoc (quote  name)  owner))) #|line 59|#
+                      (setf  owner_name (cdr (assoc  name  owner))) #|line 59|#
                       (setf  instance_name  (concatenate 'string  owner_name  (concatenate 'string  "."  template_name))) #|line 60|#
                       )
                     (t                                      #|line 61|#
                       (setf  instance_name  template_name)  #|line 62|#
                       ))
-                  (let ((instance (cdr (assoc (quote (funcall (quote instantiator)   reg  owner  instance_name (cdr (assoc (quote  template_data)  template))  #|line 63|#))  template))))
+                  (let ((instance (cdr (assoc (funcall (quote instantiator)   reg  owner  instance_name (cdr (assoc  template_data  template))  #|line 63|#)  template))))
                     (declare (ignorable instance))
-                    (setf (cdr (assoc (quote  depth)  instance)) (funcall (quote calculate_depth)   instance  #|line 64|#))
+                    (setf (cdr (assoc  depth  instance)) (funcall (quote calculate_depth)   instance  #|line 64|#))
                     (return-from get_component_instance  instance))))
               )))                                           #|line 65|#
         )
@@ -644,29 +644,29 @@
 (defun calculate_depth (&optional  eh)
   (declare (ignorable  eh))                                 #|line 70|#
   (cond
-    (( equal   (cdr (assoc (quote  owner)  eh))  nil)       #|line 71|#
+    (( equal   (cdr (assoc  owner  eh))  nil)               #|line 71|#
       (return-from calculate_depth  0)                      #|line 72|#
       )
     (t                                                      #|line 73|#
-      (return-from calculate_depth (+  1 (funcall (quote calculate_depth)  (cdr (assoc (quote  owner)  eh)) ))) #|line 74|#
+      (return-from calculate_depth (+  1 (funcall (quote calculate_depth)  (cdr (assoc  owner  eh)) ))) #|line 74|#
       ))                                                    #|line 75|#
   )
 (defun dump_registry (&optional  reg)
   (declare (ignorable  reg))                                #|line 77|#
   (funcall (quote nl) )                                     #|line 78|#
   (format *standard-output* "~a"  "*** PALETTE ***")        #|line 79|#
-  (loop for c in (cdr (assoc (quote  templates)  reg))
+  (loop for c in (cdr (assoc  templates  reg))
     do
       (progn
         c                                                   #|line 80|#
-        (funcall (quote print)  (cdr (assoc (quote  name)  c)) ) #|line 81|#
+        (funcall (quote print)  (cdr (assoc  name  c)) )    #|line 81|#
         ))
   (format *standard-output* "~a"  "***************")        #|line 82|#
   (funcall (quote nl) )                                     #|line 83|# #|line 84|#
   )
 (defun print_stats (&optional  reg)
   (declare (ignorable  reg))                                #|line 86|#
-  (format *standard-output* "~a"  (concatenate 'string  "registry statistics: " (cdr (assoc (quote  stats)  reg)))) #|line 87|# #|line 88|#
+  (format *standard-output* "~a"  (concatenate 'string  "registry statistics: " (cdr (assoc  stats  reg)))) #|line 87|# #|line 88|#
   )
 (defun mangle_name (&optional  s)
   (declare (ignorable  s))                                  #|line 90|#
@@ -695,7 +695,7 @@
                     ((funcall (quote first_char_is)  (cdr (assoc (quote name)  child_descriptor))  "$" ) #|line 105|#
                       (let ((name (cdr (assoc (quote name)  child_descriptor))))
                         (declare (ignorable name))          #|line 106|#
-                        (let ((cmd (cdr (assoc (quote (funcall (quote strip) ))  (subseq  name 1)))))
+                        (let ((cmd (cdr (assoc (funcall (quote strip) )  (subseq  name 1)))))
                           (declare (ignorable cmd))         #|line 107|#
                           (let ((generated_leaf (funcall (quote Template)   name  #'shell_out_instantiate  cmd  #|line 108|#)))
                             (declare (ignorable generated_leaf))
@@ -744,24 +744,24 @@
   (declare (ignorable  name  owner))                        #|line 171|#
   (let ((eh (funcall (quote Eh) )))
     (declare (ignorable eh))                                #|line 172|#
-    (setf (cdr (assoc (quote  name)  eh))  name)            #|line 173|#
-    (setf (cdr (assoc (quote  owner)  eh))  owner)          #|line 174|#
-    (setf (cdr (assoc (quote  handler)  eh))  #'container_handler) #|line 175|#
-    (setf (cdr (assoc (quote  inject)  eh))  #'container_injector) #|line 176|#
-    (setf (cdr (assoc (quote  state)  eh))  "idle")         #|line 177|#
-    (setf (cdr (assoc (quote  kind)  eh))  "container")     #|line 178|#
+    (setf (cdr (assoc  name  eh))  name)                    #|line 173|#
+    (setf (cdr (assoc  owner  eh))  owner)                  #|line 174|#
+    (setf (cdr (assoc  handler  eh))  #'container_handler)  #|line 175|#
+    (setf (cdr (assoc  inject  eh))  #'container_injector)  #|line 176|#
+    (setf (cdr (assoc  state  eh))  "idle")                 #|line 177|#
+    (setf (cdr (assoc  kind  eh))  "container")             #|line 178|#
     (return-from make_container  eh)                        #|line 179|#) #|line 180|#
   ) #|  Creates a new leaf component out of a handler function, and a data parameter |# #|line 182|# #|  that will be passed back to your handler when called. |# #|line 183|# #|line 184|#
 (defun make_leaf (&optional  name  owner  instance_data  handler)
   (declare (ignorable  name  owner  instance_data  handler)) #|line 185|#
   (let ((eh (funcall (quote Eh) )))
     (declare (ignorable eh))                                #|line 186|#
-    (setf (cdr (assoc (quote  name)  eh))  (concatenate 'string (cdr (assoc (quote  name)  owner))  (concatenate 'string  "."  name)) #|line 187|#)
-    (setf (cdr (assoc (quote  owner)  eh))  owner)          #|line 188|#
-    (setf (cdr (assoc (quote  handler)  eh))  handler)      #|line 189|#
-    (setf (cdr (assoc (quote  instance_data)  eh))  instance_data) #|line 190|#
-    (setf (cdr (assoc (quote  state)  eh))  "idle")         #|line 191|#
-    (setf (cdr (assoc (quote  kind)  eh))  "leaf")          #|line 192|#
+    (setf (cdr (assoc  name  eh))  (concatenate 'string (cdr (assoc  name  owner))  (concatenate 'string  "."  name)) #|line 187|#)
+    (setf (cdr (assoc  owner  eh))  owner)                  #|line 188|#
+    (setf (cdr (assoc  handler  eh))  handler)              #|line 189|#
+    (setf (cdr (assoc  instance_data  eh))  instance_data)  #|line 190|#
+    (setf (cdr (assoc  state  eh))  "idle")                 #|line 191|#
+    (setf (cdr (assoc  kind  eh))  "leaf")                  #|line 192|#
     (return-from make_leaf  eh)                             #|line 193|#) #|line 194|#
   ) #|  Sends a message on the given `port` with `data`, placing it on the output |# #|line 196|# #|  of the given component. |# #|line 197|# #|line 198|#
 (defun send (&optional  eh  port  datum  causingMessage)
@@ -780,21 +780,21 @@
   )
 (defun forward (&optional  eh  port  msg)
   (declare (ignorable  eh  port  msg))                      #|line 210|#
-  (let ((fwdmsg (funcall (quote make_message)   port (cdr (assoc (quote  datum)  msg))  #|line 211|#)))
+  (let ((fwdmsg (funcall (quote make_message)   port (cdr (assoc  datum  msg))  #|line 211|#)))
     (declare (ignorable fwdmsg))
     (funcall (quote put_output)   eh  msg                   #|line 212|#)) #|line 213|#
   )
 (defun inject (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 215|#
-  (cdr (assoc (quote (funcall (quote inject)   eh  msg      #|line 216|#))  eh)) #|line 217|#
+  (cdr (assoc (funcall (quote inject)   eh  msg             #|line 216|#)  eh)) #|line 217|#
   ) #|  Returns a list of all output messages on a container. |# #|line 219|# #|  For testing / debugging purposes. |# #|line 220|# #|line 221|#
 (defun output_list (&optional  eh)
   (declare (ignorable  eh))                                 #|line 222|#
-  (return-from output_list (cdr (assoc (quote  outq)  eh))) #|line 223|# #|line 224|#
+  (return-from output_list (cdr (assoc  outq  eh)))         #|line 223|# #|line 224|#
   ) #|  Utility for printing an array of messages. |#       #|line 226|#
 (defun print_output_list (&optional  eh)
   (declare (ignorable  eh))                                 #|line 227|#
-  (loop for m in (funcall (quote list)  (cdr (assoc (quote (cdr (assoc (quote  queue)  outq)))  eh)) )
+  (loop for m in (funcall (quote list)  (cdr (assoc (cdr (assoc  queue  outq))  eh)) )
     do
       (progn
         m                                                   #|line 228|#
@@ -815,21 +815,21 @@
   )
 (defun set_active (&optional  eh)
   (declare (ignorable  eh))                                 #|line 239|#
-  (setf (cdr (assoc (quote  state)  eh))  "active")         #|line 240|# #|line 241|#
+  (setf (cdr (assoc  state  eh))  "active")                 #|line 240|# #|line 241|#
   )
 (defun set_idle (&optional  eh)
   (declare (ignorable  eh))                                 #|line 243|#
-  (setf (cdr (assoc (quote  state)  eh))  "idle")           #|line 244|# #|line 245|#
+  (setf (cdr (assoc  state  eh))  "idle")                   #|line 244|# #|line 245|#
   ) #|  Utility for printing a specific output message. |#  #|line 247|# #|line 248|#
 (defun fetch_first_output (&optional  eh  port)
   (declare (ignorable  eh  port))                           #|line 249|#
-  (loop for msg in (funcall (quote list)  (cdr (assoc (quote (cdr (assoc (quote  queue)  outq)))  eh)) )
+  (loop for msg in (funcall (quote list)  (cdr (assoc (cdr (assoc  queue  outq))  eh)) )
     do
       (progn
         msg                                                 #|line 250|#
         (cond
-          (( equal   (cdr (assoc (quote  port)  msg))  port) #|line 251|#
-            (return-from fetch_first_output (cdr (assoc (quote  datum)  msg)))
+          (( equal   (cdr (assoc  port  msg))  port)        #|line 251|#
+            (return-from fetch_first_output (cdr (assoc  datum  msg)))
             ))                                              #|line 252|#
         ))
   (return-from fetch_first_output  nil)                     #|line 253|# #|line 254|#
@@ -839,7 +839,7 @@
   #|  port ∷ “” |#                                          #|line 257|#
   (let (( datum (funcall (quote fetch_first_output)   eh  port  #|line 258|#)))
     (declare (ignorable  datum))
-    (format *standard-output* "~a" (cdr (assoc (quote (funcall (quote srepr) ))  datum))) #|line 259|#) #|line 260|#
+    (format *standard-output* "~a" (cdr (assoc (funcall (quote srepr) )  datum))) #|line 259|#) #|line 260|#
   )
 (defun print_specific_output_to_stderr (&optional  eh  port)
   (declare (ignorable  eh  port))                           #|line 261|#
@@ -847,11 +847,11 @@
   (let (( datum (funcall (quote fetch_first_output)   eh  port  #|line 263|#)))
     (declare (ignorable  datum))
     #|  I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in... |# #|line 264|#
-    (format *error-output* "~a" (cdr (assoc (quote (funcall (quote srepr) ))  datum))) #|line 265|#) #|line 266|#
+    (format *error-output* "~a" (cdr (assoc (funcall (quote srepr) )  datum))) #|line 265|#) #|line 266|#
   )
 (defun put_output (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 268|#
-  (cdr (assoc (quote (cdr (assoc (quote (funcall (quote put)   msg  #|line 269|#))  outq)))  eh)) #|line 270|#
+  (cdr (assoc (cdr (assoc (funcall (quote put)   msg        #|line 269|#)  outq))  eh)) #|line 270|#
   )
 (defparameter  root_project  "")                            #|line 272|#
 (defparameter  root_0D  "")                                 #|line 273|# #|line 274|#
@@ -886,9 +886,9 @@
   )
 (defun probe_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 301|#
-  (let ((s (cdr (assoc (quote (cdr (assoc (quote (funcall (quote srepr) ))  datum)))  msg))))
+  (let ((s (cdr (assoc (cdr (assoc (funcall (quote srepr) )  datum))  msg))))
     (declare (ignorable s))                                 #|line 302|#
-    (format *error-output* "~a"  (concatenate 'string  "... probe "  (concatenate 'string (cdr (assoc (quote  name)  eh))  (concatenate 'string  ": "  s)))) #|line 303|#) #|line 304|#
+    (format *error-output* "~a"  (concatenate 'string  "... probe "  (concatenate 'string (cdr (assoc  name  eh))  (concatenate 'string  ": "  s)))) #|line 303|#) #|line 304|#
   )
 (defun trash_instantiate (&optional  reg  owner  name  template_data)
   (declare (ignorable  reg  owner  name  template_data))    #|line 306|#
@@ -921,56 +921,56 @@
     (declare (ignorable name_with_id))
     (let ((inst (funcall (quote Deracer_Instance_Data)   "idle" (funcall (quote TwoMessages)   nil  nil )  #|line 332|#)))
       (declare (ignorable inst))
-      (setf (cdr (assoc (quote  state)  inst))  "idle")     #|line 333|#
+      (setf (cdr (assoc  state  inst))  "idle")             #|line 333|#
       (let ((eh (funcall (quote make_leaf)   name_with_id  owner  inst  #'deracer_handler  #|line 334|#)))
         (declare (ignorable eh))
         (return-from deracer_instantiate  eh)               #|line 335|#))) #|line 336|#
   )
 (defun send_first_then_second (&optional  eh  inst)
   (declare (ignorable  eh  inst))                           #|line 338|#
-  (funcall (quote forward)   eh  "1" (cdr (assoc (quote (cdr (assoc (quote  first)  buffer)))  inst))  #|line 339|#)
-  (funcall (quote forward)   eh  "2" (cdr (assoc (quote (cdr (assoc (quote  second)  buffer)))  inst))  #|line 340|#)
+  (funcall (quote forward)   eh  "1" (cdr (assoc (cdr (assoc  first  buffer))  inst))  #|line 339|#)
+  (funcall (quote forward)   eh  "2" (cdr (assoc (cdr (assoc  second  buffer))  inst))  #|line 340|#)
   (funcall (quote reclaim_Buffers_from_heap)   inst         #|line 341|#) #|line 342|#
   )
 (defun deracer_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 344|#
-  (let (( inst (cdr (assoc (quote  instance_data)  eh))))
+  (let (( inst (cdr (assoc  instance_data  eh))))
     (declare (ignorable  inst))                             #|line 345|#
     (cond
-      (( equal   (cdr (assoc (quote  state)  inst))  "idle") #|line 346|#
+      (( equal   (cdr (assoc  state  inst))  "idle")        #|line 346|#
         (cond
-          (( equal    "1" (cdr (assoc (quote  port)  msg))) #|line 347|#
-            (setf (cdr (assoc (quote (cdr (assoc (quote  first)  buffer)))  inst))  msg) #|line 348|#
-            (setf (cdr (assoc (quote  state)  inst))  "waitingForSecond") #|line 349|#
+          (( equal    "1" (cdr (assoc  port  msg)))         #|line 347|#
+            (setf (cdr (assoc (cdr (assoc  first  buffer))  inst))  msg) #|line 348|#
+            (setf (cdr (assoc  state  inst))  "waitingForSecond") #|line 349|#
             )
-          (( equal    "2" (cdr (assoc (quote  port)  msg))) #|line 350|#
-            (setf (cdr (assoc (quote (cdr (assoc (quote  second)  buffer)))  inst))  msg) #|line 351|#
-            (setf (cdr (assoc (quote  state)  inst))  "waitingForFirst") #|line 352|#
+          (( equal    "2" (cdr (assoc  port  msg)))         #|line 350|#
+            (setf (cdr (assoc (cdr (assoc  second  buffer))  inst))  msg) #|line 351|#
+            (setf (cdr (assoc  state  inst))  "waitingForFirst") #|line 352|#
             )
           (t                                                #|line 353|#
-            (funcall (quote runtime_error)   (concatenate 'string  "bad msg.port (case A) for deracer " (cdr (assoc (quote  port)  msg))) )
+            (funcall (quote runtime_error)   (concatenate 'string  "bad msg.port (case A) for deracer " (cdr (assoc  port  msg))) )
             ))                                              #|line 354|#
         )
-      (( equal   (cdr (assoc (quote  state)  inst))  "waitingForFirst") #|line 355|#
+      (( equal   (cdr (assoc  state  inst))  "waitingForFirst") #|line 355|#
         (cond
-          (( equal    "1" (cdr (assoc (quote  port)  msg))) #|line 356|#
-            (setf (cdr (assoc (quote (cdr (assoc (quote  first)  buffer)))  inst))  msg) #|line 357|#
+          (( equal    "1" (cdr (assoc  port  msg)))         #|line 356|#
+            (setf (cdr (assoc (cdr (assoc  first  buffer))  inst))  msg) #|line 357|#
             (funcall (quote send_first_then_second)   eh  inst  #|line 358|#)
-            (setf (cdr (assoc (quote  state)  inst))  "idle") #|line 359|#
+            (setf (cdr (assoc  state  inst))  "idle")       #|line 359|#
             )
           (t                                                #|line 360|#
-            (funcall (quote runtime_error)   (concatenate 'string  "bad msg.port (case B) for deracer " (cdr (assoc (quote  port)  msg))) )
+            (funcall (quote runtime_error)   (concatenate 'string  "bad msg.port (case B) for deracer " (cdr (assoc  port  msg))) )
             ))                                              #|line 361|#
         )
-      (( equal   (cdr (assoc (quote  state)  inst))  "waitingForSecond") #|line 362|#
+      (( equal   (cdr (assoc  state  inst))  "waitingForSecond") #|line 362|#
         (cond
-          (( equal    "2" (cdr (assoc (quote  port)  msg))) #|line 363|#
-            (setf (cdr (assoc (quote (cdr (assoc (quote  second)  buffer)))  inst))  msg) #|line 364|#
+          (( equal    "2" (cdr (assoc  port  msg)))         #|line 363|#
+            (setf (cdr (assoc (cdr (assoc  second  buffer))  inst))  msg) #|line 364|#
             (funcall (quote send_first_then_second)   eh  inst  #|line 365|#)
-            (setf (cdr (assoc (quote  state)  inst))  "idle") #|line 366|#
+            (setf (cdr (assoc  state  inst))  "idle")       #|line 366|#
             )
           (t                                                #|line 367|#
-            (funcall (quote runtime_error)   (concatenate 'string  "bad msg.port (case C) for deracer " (cdr (assoc (quote  port)  msg))) )
+            (funcall (quote runtime_error)   (concatenate 'string  "bad msg.port (case C) for deracer " (cdr (assoc  port  msg))) )
             ))                                              #|line 368|#
         )
       (t                                                    #|line 369|#
@@ -985,7 +985,7 @@
   )
 (defun low_level_read_text_file_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 378|#
-  (let ((fname (cdr (assoc (quote (cdr (assoc (quote (funcall (quote srepr) ))  datum)))  msg))))
+  (let ((fname (cdr (assoc (cdr (assoc (funcall (quote srepr) )  datum))  msg))))
     (declare (ignorable fname))                             #|line 379|#
 
     ;; read text from a named file fname, send the text out on port "" else send error info on port "✗"
@@ -1006,11 +1006,11 @@
 (defun ensure_string_datum_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 388|#
   (cond
-    (( equal    "string" (cdr (assoc (quote (cdr (assoc (quote (funcall (quote kind) ))  datum)))  msg))) #|line 389|#
+    (( equal    "string" (cdr (assoc (cdr (assoc (funcall (quote kind) )  datum))  msg))) #|line 389|#
       (funcall (quote forward)   eh  ""  msg )              #|line 390|#
       )
     (t                                                      #|line 391|#
-      (let ((emsg  (concatenate 'string  "*** ensure: type error (expected a string datum) but got " (cdr (assoc (quote  datum)  msg))) #|line 392|#))
+      (let ((emsg  (concatenate 'string  "*** ensure: type error (expected a string datum) but got " (cdr (assoc  datum  msg))) #|line 392|#))
         (declare (ignorable emsg))
         (funcall (quote send_string)   eh  "✗"  emsg  msg )) #|line 393|#
       ))                                                    #|line 394|#
@@ -1029,25 +1029,25 @@
   )
 (defun syncfilewrite_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 407|#
-  (let (( inst (cdr (assoc (quote  instance_data)  eh))))
+  (let (( inst (cdr (assoc  instance_data  eh))))
     (declare (ignorable  inst))                             #|line 408|#
     (cond
-      (( equal    "filename" (cdr (assoc (quote  port)  msg))) #|line 409|#
-        (setf (cdr (assoc (quote  filename)  inst)) (cdr (assoc (quote (cdr (assoc (quote (funcall (quote srepr) ))  datum)))  msg))) #|line 410|#
+      (( equal    "filename" (cdr (assoc  port  msg)))      #|line 409|#
+        (setf (cdr (assoc  filename  inst)) (cdr (assoc (cdr (assoc (funcall (quote srepr) )  datum))  msg))) #|line 410|#
         )
-      (( equal    "input" (cdr (assoc (quote  port)  msg))) #|line 411|#
-        (let ((contents (cdr (assoc (quote (cdr (assoc (quote (funcall (quote srepr) ))  datum)))  msg))))
+      (( equal    "input" (cdr (assoc  port  msg)))         #|line 411|#
+        (let ((contents (cdr (assoc (cdr (assoc (funcall (quote srepr) )  datum))  msg))))
           (declare (ignorable contents))                    #|line 412|#
-          (let (( f (funcall (quote open)  (cdr (assoc (quote  filename)  inst))  "w"  #|line 413|#)))
+          (let (( f (funcall (quote open)  (cdr (assoc  filename  inst))  "w"  #|line 413|#)))
             (declare (ignorable  f))
             (cond
               ((not (equal   f  nil))                       #|line 414|#
-                (cdr (assoc (quote (funcall (quote write)  (cdr (assoc (quote (cdr (assoc (quote (funcall (quote srepr) ))  datum)))  msg))  #|line 415|#))  f))
-                (cdr (assoc (quote (funcall (quote close) ))  f)) #|line 416|#
+                (cdr (assoc (funcall (quote write)  (cdr (assoc (cdr (assoc (funcall (quote srepr) )  datum))  msg))  #|line 415|#)  f))
+                (cdr (assoc (funcall (quote close) )  f))   #|line 416|#
                 (funcall (quote send)   eh  "done" (funcall (quote new_datum_bang) )  msg ) #|line 417|#
                 )
               (t                                            #|line 418|#
-                (funcall (quote send_string)   eh  "✗"  (concatenate 'string  "open error on file " (cdr (assoc (quote  filename)  inst)))  msg )
+                (funcall (quote send_string)   eh  "✗"  (concatenate 'string  "open error on file " (cdr (assoc  filename  inst)))  msg )
                 ))))                                        #|line 419|#
         )))                                                 #|line 420|#
   )
@@ -1067,47 +1067,47 @@
   )
 (defun stringconcat_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 434|#
-  (let (( inst (cdr (assoc (quote  instance_data)  eh))))
+  (let (( inst (cdr (assoc  instance_data  eh))))
     (declare (ignorable  inst))                             #|line 435|#
     (cond
-      (( equal    "1" (cdr (assoc (quote  port)  msg)))     #|line 436|#
-        (setf (cdr (assoc (quote  buffer1)  inst)) (funcall (quote clone_string)  (cdr (assoc (quote (cdr (assoc (quote (funcall (quote srepr) ))  datum)))  msg))  #|line 437|#))
-        (setf (cdr (assoc (quote  count)  inst)) (+ (cdr (assoc (quote  count)  inst))  1)) #|line 438|#
+      (( equal    "1" (cdr (assoc  port  msg)))             #|line 436|#
+        (setf (cdr (assoc  buffer1  inst)) (funcall (quote clone_string)  (cdr (assoc (cdr (assoc (funcall (quote srepr) )  datum))  msg))  #|line 437|#))
+        (setf (cdr (assoc  count  inst)) (+ (cdr (assoc  count  inst))  1)) #|line 438|#
         (funcall (quote maybe_stringconcat)   eh  inst  msg ) #|line 439|#
         )
-      (( equal    "2" (cdr (assoc (quote  port)  msg)))     #|line 440|#
-        (setf (cdr (assoc (quote  buffer2)  inst)) (funcall (quote clone_string)  (cdr (assoc (quote (cdr (assoc (quote (funcall (quote srepr) ))  datum)))  msg))  #|line 441|#))
-        (setf (cdr (assoc (quote  count)  inst)) (+ (cdr (assoc (quote  count)  inst))  1)) #|line 442|#
+      (( equal    "2" (cdr (assoc  port  msg)))             #|line 440|#
+        (setf (cdr (assoc  buffer2  inst)) (funcall (quote clone_string)  (cdr (assoc (cdr (assoc (funcall (quote srepr) )  datum))  msg))  #|line 441|#))
+        (setf (cdr (assoc  count  inst)) (+ (cdr (assoc  count  inst))  1)) #|line 442|#
         (funcall (quote maybe_stringconcat)   eh  inst  msg ) #|line 443|#
         )
       (t                                                    #|line 444|#
-        (funcall (quote runtime_error)   (concatenate 'string  "bad msg.port for stringconcat: " (cdr (assoc (quote  port)  msg)))  #|line 445|#) #|line 446|#
+        (funcall (quote runtime_error)   (concatenate 'string  "bad msg.port for stringconcat: " (cdr (assoc  port  msg)))  #|line 445|#) #|line 446|#
         )))                                                 #|line 447|#
   )
 (defun maybe_stringconcat (&optional  eh  inst  msg)
   (declare (ignorable  eh  inst  msg))                      #|line 449|#
   (cond
-    (( and  ( equal    0 (length (cdr (assoc (quote  buffer1)  inst)))) ( equal    0 (length (cdr (assoc (quote  buffer2)  inst))))) #|line 450|#
+    (( and  ( equal    0 (length (cdr (assoc  buffer1  inst)))) ( equal    0 (length (cdr (assoc  buffer2  inst))))) #|line 450|#
       (funcall (quote runtime_error)   "something is wrong in stringconcat, both strings are 0 length" ) #|line 451|#
       ))
   (cond
-    (( >=  (cdr (assoc (quote  count)  inst))  2)           #|line 452|#
+    (( >=  (cdr (assoc  count  inst))  2)                   #|line 452|#
       (let (( concatenated_string  ""))
         (declare (ignorable  concatenated_string))          #|line 453|#
         (cond
-          (( equal    0 (length (cdr (assoc (quote  buffer1)  inst)))) #|line 454|#
-            (setf  concatenated_string (cdr (assoc (quote  buffer2)  inst))) #|line 455|#
+          (( equal    0 (length (cdr (assoc  buffer1  inst)))) #|line 454|#
+            (setf  concatenated_string (cdr (assoc  buffer2  inst))) #|line 455|#
             )
-          (( equal    0 (length (cdr (assoc (quote  buffer2)  inst)))) #|line 456|#
-            (setf  concatenated_string (cdr (assoc (quote  buffer1)  inst))) #|line 457|#
+          (( equal    0 (length (cdr (assoc  buffer2  inst)))) #|line 456|#
+            (setf  concatenated_string (cdr (assoc  buffer1  inst))) #|line 457|#
             )
           (t                                                #|line 458|#
-            (setf  concatenated_string (+ (cdr (assoc (quote  buffer1)  inst)) (cdr (assoc (quote  buffer2)  inst)))) #|line 459|#
+            (setf  concatenated_string (+ (cdr (assoc  buffer1  inst)) (cdr (assoc  buffer2  inst)))) #|line 459|#
             ))
         (funcall (quote send_string)   eh  ""  concatenated_string  msg  #|line 460|#)
-        (setf (cdr (assoc (quote  buffer1)  inst))  nil)    #|line 461|#
-        (setf (cdr (assoc (quote  buffer2)  inst))  nil)    #|line 462|#
-        (setf (cdr (assoc (quote  count)  inst))  0))       #|line 463|#
+        (setf (cdr (assoc  buffer1  inst))  nil)            #|line 461|#
+        (setf (cdr (assoc  buffer2  inst))  nil)            #|line 462|#
+        (setf (cdr (assoc  count  inst))  0))               #|line 463|#
       ))                                                    #|line 464|#
   ) #|  |#                                                  #|line 466|# #|line 467|# #|  this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here |# #|line 468|#
 (defun shell_out_instantiate (&optional  reg  owner  name  template_data)
@@ -1120,9 +1120,9 @@
   )
 (defun shell_out_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 475|#
-  (let ((cmd (cdr (assoc (quote  instance_data)  eh))))
+  (let ((cmd (cdr (assoc  instance_data  eh))))
     (declare (ignorable cmd))                               #|line 476|#
-    (let ((s (cdr (assoc (quote (cdr (assoc (quote (funcall (quote srepr) ))  datum)))  msg))))
+    (let ((s (cdr (assoc (cdr (assoc (funcall (quote srepr) )  datum))  msg))))
       (declare (ignorable s))                               #|line 477|#
       (let (( ret  nil))
         (declare (ignorable  ret))                          #|line 478|#
@@ -1159,7 +1159,7 @@
   )
 (defun string_constant_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 504|#
-  (let ((s (cdr (assoc (quote  instance_data)  eh))))
+  (let ((s (cdr (assoc  instance_data  eh))))
     (declare (ignorable s))                                 #|line 505|#
     (funcall (quote send_string)   eh  ""  s  msg           #|line 506|#)) #|line 507|#
   )
@@ -1200,7 +1200,7 @@
     (let ((err (funcall (quote fetch_first_output)   main_container  error_port  #|line 537|#)))
       (declare (ignorable err))
       (cond
-        (( and  (not (equal   err  nil)) ( <   0 (length (funcall (quote trimws)  (cdr (assoc (quote (funcall (quote srepr) ))  err)) )))) #|line 538|#
+        (( and  (not (equal   err  nil)) ( <   0 (length (funcall (quote trimws)  (cdr (assoc (funcall (quote srepr) )  err)) )))) #|line 538|#
           (format *standard-output* "~a"  "___ !!! ERRORS !!! ___") #|line 539|#
           (funcall (quote print_specific_output)   main_container  error_port ) #|line 540|#
           ))))                                              #|line 541|#
@@ -1218,7 +1218,7 @@
 (defun trimws (&optional  s)
   (declare (ignorable  s))                                  #|line 555|#
   #|  remove whitespace from front and back of string |#    #|line 556|#
-  (return-from trimws (cdr (assoc (quote (funcall (quote strip) ))  s))) #|line 557|# #|line 558|#
+  (return-from trimws (cdr (assoc (funcall (quote strip) )  s))) #|line 557|# #|line 558|#
   )
 (defun clone_string (&optional  s)
   (declare (ignorable  s))                                  #|line 560|#
@@ -1269,7 +1269,12 @@
 (defun argv (&optional )
   (declare (ignorable ))                                    #|line 616|#
 
-  (error 'NIY)
+  (or
+  #+CLISP *args*
+  #+SBCL *posix-argv*
+  #+LISPWORKS system:*line-arguments-list*
+  #+CMU extensions:*command-line-words*
+  nil)
                                                             #|line 617|# #|line 618|#
   )
 (defun initialize (&optional )

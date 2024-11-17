@@ -7,7 +7,7 @@
 (defparameter  decode_digits (list   "0"  "1"  "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9" )) #|line 5|#
 (defun decode_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 6|# #|line 7|#
-  (let (( i (parse-integer (cdr (assoc (quote (cdr (assoc (quote (funcall (quote raw) ))  datum)))  msg))) #|line 8|#))
+  (let (( i (parse-integer (cdr (assoc (cdr (assoc (funcall (quote raw) )  datum))  msg))) #|line 8|#))
     (declare (ignorable  i))
     (cond
       (( and  ( >=   i  0) ( <=   i  9))                    #|line 9|#

@@ -450,7 +450,7 @@ def abstracted_register_component (reg,template,ok_to_overwrite):#line 35
     name = mangle_name ( template. name)                    #line 36
     if  name in  reg. templates and not  ok_to_overwrite:   #line 37
         load_error ( str( "Component ") +  str( template. name) +  " already declared"  )#line 38
-    reg. templates [ name] =  template                      #line 39
+    reg. templates [( name)] =  template                    #line 39
     return  reg                                             #line 40#line 41#line 42
 
 def register_multiple_components (reg,templates):           #line 43

@@ -56,7 +56,12 @@ ExternalPhrase_racjf [_octothorpe _racjf lp fname rp] = ‛
 ’
 
 ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛
-  (error 'NIY)
+(or 
+   #+CLISP *args*
+   #+SBCL *posix-argv*  
+   #+LISPWORKS system:*line-arguments-list*
+   #+CMU extensions:*command-line-words*
+   nil)
 ’
 
 ExternalPhrase_freshQueue [_octothorpe _83 _84 _85] =‛ (make-instance 'Queue)’
@@ -132,7 +137,7 @@ Primary_plain [p] = ‛«p»’
 
 PrimaryIndexed_lookupident [p _at key] = ‛(cdr (assoc (quote «key») «p»))’
 PrimaryIndexed_lookup [p _at key] = ‛(cdr (assoc «key» «p»))’
-PrimaryIndexed_field [p _dot key] = ‛(cdr (assoc (quote «key») «p»))’ 
+PrimaryIndexed_field [p _dot key] = ‛(cdr (assoc «key» «p»))’ 
 PrimaryIndexed_index [p lb e rb] = ‛(nth «e» «p»)’ 
 PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
 PrimaryIndexed_atom [a] = ‛«a»’

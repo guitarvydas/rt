@@ -12,7 +12,7 @@
   )
 (defun monitor_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 10|#
-  (let (( s (cdr (assoc (quote (cdr (assoc (quote (funcall (quote srepr) ))  datum)))  msg))))
+  (let (( s (cdr (assoc (cdr (assoc (funcall (quote srepr) )  datum))  msg))))
     (declare (ignorable  s))                                #|line 11|#
     (let (( i (parse-integer  s)                            #|line 12|#))
       (declare (ignorable  i))
