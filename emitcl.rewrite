@@ -80,28 +80,17 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 (defun dict-fresh () nil)
 
 (defun dict-lookup (d key-string)
-  (let ((key (intern (string-upcase key-string) "KEYWORD")))
-    (let ((pair (assoc key d :test 'equal)))
+    (let ((pair (assoc key-string d :test 'equal)))
       (if pair
           (cdr pair)
-        nil))))
-
-(defun set-dict-lookup (d key-string v)
-  (let ((key (intern (string-upcase key-string) "KEYWORD")))
-    (let ((pair (assoc key d :test 'equal)))
-      (if pair
-          (setf (cdr pair) v)
-	  (push (cons key v) d)))))
-
-(defsetf dict-lookup set-dict-lookup)
+        nil)))
 
 (defun dict-is-dict? (d) (listp d))
 
 (defun dict-in? (key-string d)
   (if (and d (dict-is-dict? d))
-    (let ((key (intern (string-upcase key-string) "KEYWORD")))
-      (let ((pair (assoc key d :test 'equal)))
-       (if pair t nil)))
+       (let ((pair (assoc key-string d :test 'equal)))
+         (if pair t nil))
     nil))
 
 (defun field (key obj) 
@@ -180,7 +169,7 @@ ExpExp_basic [ Primary] =‛«Primary»’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 Primary_plain [p] = ‛«p»’
 
-PrimaryIndexed_lookupident [p _at key] = ‛(dict-lookup «p» (quote «key»))’
+PrimaryIndexed_lookupident [p _at key] = ‛(dict-lookup «p» "«key»")’
 PrimaryIndexed_lookup [p _at key] = ‛(dict-lookup  «p» «key»)’
 PrimaryIndexed_fieldident [p _dot key] = ‛(field "«key»" «p»)’ 
 PrimaryIndexed_field [p _dot key] = ‛(field «key» «p»)’ 

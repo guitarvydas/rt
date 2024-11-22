@@ -1,4 +1,31 @@
-defn a () {
-  #pair(x,y)
-  #push(w,v)
+#preamble ()
+
+defobj Component_Registry () {
+        • templates ⇐ {}
+}
+
+defobj Template (name) {
+        • name ⇐ name
+}
+
+defn make_component_registry () {
+    return Component_Registry ()
+}
+
+defn register_component (reg, template) { return abstracted_register_component (reg, template) }
+
+defn abstracted_register_component (reg, template) {
+    name ≡ template.name
+    templates_alist ≡ reg.templates
+    #push (reg, #pair (“templates”, #push (templates_alist, #pair (name, template))))
+    return reg
+}
+
+defn test () {
+  deftemp reg ⇐ make_component_registry ()
+  reg ⇐ register_component (reg, Template ( “c1”))
+  reg ⇐ register_component (reg, Template ( “c2”))
+  reg ⇐ register_component (reg, Template ( “c3”))
+  #print_stdout (#inkvs (“c2”, reg.templates))
+  return reg.templates@c2
 }
