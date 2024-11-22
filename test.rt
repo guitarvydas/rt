@@ -4,8 +4,10 @@ defobj Component_Registry () {
         • templates ⇐ {}
 }
 
-defobj Template (name) {
+defobj Template (name, template_data, instantiator) {
         • name ⇐ name
+        • template_data ⇐ template_data
+        • instantiator ⇐ instantiator
 }
 
 defn make_component_registry () {
@@ -23,9 +25,9 @@ defn abstracted_register_component (reg, template) {
 
 defn test () {
   deftemp reg ⇐ make_component_registry ()
-  reg ⇐ register_component (reg, Template ( “c1”))
-  reg ⇐ register_component (reg, Template ( “c2”))
-  reg ⇐ register_component (reg, Template ( “c3”))
+  reg ⇐ register_component (reg, Template ( “c1”, 1, 2))
+  reg ⇐ register_component (reg, Template ( “c2”, 3, 4))
+  reg ⇐ register_component (reg, Template ( “c3”, 5, 6))
   #print_stdout (#inkvs (“c2”, reg.templates))
-  return reg.templates@c2
+  return reg.templates@“c2”
 }

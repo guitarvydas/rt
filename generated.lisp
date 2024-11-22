@@ -33,36 +33,38 @@ nil))))
   (list
     (cons "templates"  nil)                                 #|line 4|#) #|line 5|#)
                                                             #|line 6|#
-(defun Template (&optional  name)                           #|line 7|#
+(defun Template (&optional  name  template_data  instantiator) #|line 7|#
   (list
-    (cons "name"  name)                                     #|line 8|#) #|line 9|#)
-                                                            #|line 10|#
+    (cons "name"  name)                                     #|line 8|#
+    (cons "template_data"  template_data)                   #|line 9|#
+    (cons "instantiator"  instantiator)                     #|line 10|#) #|line 11|#)
+                                                            #|line 12|#
 (defun make_component_registry (&optional )
-  (declare (ignorable ))                                    #|line 11|#
-  (return-from make_component_registry (funcall (quote Component_Registry) )) #|line 12|# #|line 13|#
+  (declare (ignorable ))                                    #|line 13|#
+  (return-from make_component_registry (funcall (quote Component_Registry) )) #|line 14|# #|line 15|#
   )
 (defun register_component (&optional  reg  template)
   (declare (ignorable  reg  template))
-  (return-from register_component (funcall (quote abstracted_register_component)   reg  template )) #|line 15|#
+  (return-from register_component (funcall (quote abstracted_register_component)   reg  template )) #|line 17|#
   )
 (defun abstracted_register_component (&optional  reg  template)
-  (declare (ignorable  reg  template))                      #|line 17|#
+  (declare (ignorable  reg  template))                      #|line 19|#
   (let ((name (field "name"  template)))
-    (declare (ignorable name))                              #|line 18|#
+    (declare (ignorable name))                              #|line 20|#
     (let ((templates_alist (field "templates"  reg)))
-      (declare (ignorable templates_alist))                 #|line 19|#
-      (setf  reg (cons (cons  "templates" (setf  templates_alist (cons (cons  name  template)  templates_alist)))  reg)) #|line 20|#
-      (return-from abstracted_register_component  reg)      #|line 21|#)) #|line 22|#
+      (declare (ignorable templates_alist))                 #|line 21|#
+      (setf  reg (cons (cons  "templates" (setf  templates_alist (cons (cons  name  template)  templates_alist)))  reg)) #|line 22|#
+      (return-from abstracted_register_component  reg)      #|line 23|#)) #|line 24|#
   )
 (defun test (&optional )
-  (declare (ignorable ))                                    #|line 24|#
+  (declare (ignorable ))                                    #|line 26|#
   (let (( reg (funcall (quote make_component_registry) )))
-    (declare (ignorable  reg))                              #|line 25|#
-    (setf  reg (funcall (quote register_component)   reg (funcall (quote Template)   "c1" )  #|line 26|#))
-    (setf  reg (funcall (quote register_component)   reg (funcall (quote Template)   "c2" )  #|line 27|#))
-    (setf  reg (funcall (quote register_component)   reg (funcall (quote Template)   "c3" )  #|line 28|#))
-    (format *standard-output* "~a" (dict-in?  "c2" (field "templates"  reg))) #|line 29|#
-    (return-from test (dict-lookup (field "templates"  reg) "c2")) #|line 30|#) #|line 31|#
+    (declare (ignorable  reg))                              #|line 27|#
+    (setf  reg (funcall (quote register_component)   reg (funcall (quote Template)   "c1"  1  2 )  #|line 28|#))
+    (setf  reg (funcall (quote register_component)   reg (funcall (quote Template)   "c2"  3  4 )  #|line 29|#))
+    (setf  reg (funcall (quote register_component)   reg (funcall (quote Template)   "c3"  5  6 )  #|line 30|#))
+    (format *standard-output* "~a" (dict-in?  "c2" (field "templates"  reg))) #|line 31|#
+    (return-from test (dict-lookup  (field "templates"  reg)  "c2")) #|line 32|#) #|line 33|#
   )
 
 

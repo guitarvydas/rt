@@ -13,28 +13,30 @@ class Component_Registry:
         self.templates = {}                                 #line 4#line 5
                                                             #line 6
 class Template:
-    def __init__ (self,name):                               #line 7
-        self.name =  name                                   #line 8#line 9
-                                                            #line 10
-def make_component_registry ():                             #line 11
-    return Component_Registry ()                            #line 12#line 13#line 14
+    def __init__ (self,name,template_data,instantiator):    #line 7
+        self.name =  name                                   #line 8
+        self.template_data =  template_data                 #line 9
+        self.instantiator =  instantiator                   #line 10#line 11
+                                                            #line 12
+def make_component_registry ():                             #line 13
+    return Component_Registry ()                            #line 14#line 15#line 16
 
 def register_component (reg,template):
-    return abstracted_register_component ( reg, template)   #line 15#line 16
+    return abstracted_register_component ( reg, template)   #line 17#line 18
 
-def abstracted_register_component (reg,template):           #line 17
-    name =  template.name                                   #line 18
-    templates_alist =  reg.templates                        #line 19
-    reg.insert (NIY ( "templates",  templates_alist.insert (NIY ( name,  template))))#line 20
-    return  reg                                             #line 21#line 22#line 23
+def abstracted_register_component (reg,template):           #line 19
+    name =  template.name                                   #line 20
+    templates_alist =  reg.templates                        #line 21
+    reg.insert (NIY ( "templates",  templates_alist.insert (NIY ( name,  template))))#line 22
+    return  reg                                             #line 23#line 24#line 25
 
-def test ():                                                #line 24
-    reg = make_component_registry ()                        #line 25
-    reg = register_component ( reg,Template ( "c1"))        #line 26
-    reg = register_component ( reg,Template ( "c2"))        #line 27
-    reg = register_component ( reg,Template ( "c3"))        #line 28
-    print (( "c2" in  reg.templates))                       #line 29
-    return  reg.templates [c2]                              #line 30#line 31
+def test ():                                                #line 26
+    reg = make_component_registry ()                        #line 27
+    reg = register_component ( reg,Template ( "c1", 1, 2))  #line 28
+    reg = register_component ( reg,Template ( "c2", 3, 4))  #line 29
+    reg = register_component ( reg,Template ( "c3", 5, 6))  #line 30
+    print (( "c2" in  reg.templates))                       #line 31
+    return  reg.templates [ "c2"]                           #line 32#line 33
 
 
 
