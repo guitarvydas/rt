@@ -94,6 +94,7 @@ syntax {
     Primary =
       | Primary "@" ident -- lookupident
       | Primary "@" Primary -- lookup
+      | Primary "." ident -- fieldident
       | Primary "." Primary -- field
       | Primary "[" Exp "]" -- index
       | Primary "[" digit+ ":" "]" -- nthslice

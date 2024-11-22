@@ -37,7 +37,7 @@
         <div class="row">
             <div class="kvbox">
                 <input type="text" class="tagbox" value="CommonLisp">
-                <textarea class="textarea" rows="15" columns="30" readonly></textarea>
+                <textarea id="cl" class="textarea" rows="15" columns="30" readonly></textarea>
             </div>
             <div class="kvbox">
                 <input type="text" class="tagbox" value="Python">
@@ -57,7 +57,7 @@
         <div class="row">
             <div class="kvbox">
                 <input type="text" class="tagbox" value="Errors">
-                <textarea class="textarea" rows="5" readonly></textarea>
+                <textarea id="errors" class="textarea" rows="5" readonly></textarea>
             </div>
         </div>
 
@@ -85,14 +85,26 @@
         // WebSocket event handlers
         ws.onopen = () => {
             console.log('Connected to WebSocket server');
+	    box = document.getElementById('cl');
+	    box.value = '-- opened --';
+	    box = document.getElementById('errors');
+	    box.value = '-- opened --';
         };
 
         ws.onerror = (error) => {
             console.error('WebSocket error:', error);
+	    box = document.getElementById('cl');
+	    box.value = '-- websocket error --';
+	    box = document.getElementById('errors');
+	    box.value = '-- websocket error --';
         };
 
         ws.onclose = () => {
             console.log('Disconnected from WebSocket server');
+	    box = document.getElementById('cl');
+	    box.value = '-- disconnected --';
+	    box = document.getElementById('errors');
+	    box.value = '-- disconnected --';
         };
 
         ws.onmessage = (event) => {

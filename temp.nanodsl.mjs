@@ -152,7 +152,7 @@ return exit_rule ("char_tab");
 },
 char_newline : function (c,) {
 enter_rule ("char_newline");
-    set_return (`-NL-`);
+    set_return (`\n`);
 return exit_rule ("char_newline");
 },
 char_other : function (c,) {

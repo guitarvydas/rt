@@ -10,7 +10,7 @@
   (cond
     (( equal    reverser_state  "K")                        #|line 9|#
       (cond
-        (( equal   (cdr (assoc  port  msg))  "J")           #|line 10|#
+        (( equal   (field "port"  msg)  "J")                #|line 10|#
           (funcall (quote send_bang)   eh  ""  msg          #|line 11|#)
           (setf  reverser_state  "J")                       #|line 12|#
           )
@@ -20,7 +20,7 @@
       )
     (( equal    reverser_state  "J")                        #|line 16|#
       (cond
-        (( equal   (cdr (assoc  port  msg))  "K")           #|line 17|#
+        (( equal   (field "port"  msg)  "K")                #|line 17|#
           (funcall (quote send_bang)   eh  ""  msg          #|line 18|#)
           (setf  reverser_state  "K")                       #|line 19|#
           )

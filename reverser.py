@@ -7,13 +7,13 @@ reverser_state =  "J"                                       #line 5#line 6
 def reverser_handler (eh,msg):                              #line 7
     global reverser_state                                   #line 8
     if  reverser_state ==  "K":                             #line 9
-        if  msg. port ==  "J":                              #line 10
+        if  msg.port ==  "J":                               #line 10
             send_bang ( eh, "", msg)                        #line 11
             reverser_state =  "J"                           #line 12
         else:                                               #line 13
             pass                                            #line 14#line 15
     elif  reverser_state ==  "J":                           #line 16
-        if  msg. port ==  "K":                              #line 17
+        if  msg.port ==  "K":                               #line 17
             send_bang ( eh, "", msg)                        #line 18
             reverser_state =  "K"                           #line 19
         else:                                               #line 20

@@ -18,19 +18,19 @@ def first_time (m):                                         #line 18
     return not is_tick ( m)                                 #line 19#line 20#line 21
 
 def delay_handler (eh,msg):                                 #line 22
-    info =  eh. instance_data                               #line 23
+    info =  eh.instance_data                                #line 23
     if first_time ( msg):                                   #line 24
-        info. saved_message =  msg                          #line 25
+        info.saved_message =  msg                           #line 25
         set_active ( eh)
         # tell engine to keep running this component with ;ticks' #line 26#line 27#line 28
-    count =  info. counter                                  #line 29
+    count =  info.counter                                   #line 29
     next =  count+ 1                                        #line 30
-    if  info. counter >=  DELAYDELAY:                       #line 31
+    if  info.counter >=  DELAYDELAY:                        #line 31
         set_idle ( eh)
         # tell engine that we're finally done               #line 32
-        forward ( eh, "", info. saved_message)              #line 33
+        forward ( eh, "", info.saved_message)               #line 33
         next =  0                                           #line 34#line 35
-    info. counter =  next                                   #line 36#line 37#line 38
+    info.counter =  next                                    #line 36#line 37#line 38
 
 
 

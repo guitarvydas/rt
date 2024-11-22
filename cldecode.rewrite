@@ -10,6 +10,6 @@
   char_encodedurb [c] = ‛R-’
   char_space [c] = ‛-’
   char_tab [c] = ‛-TAB-’
-  char_newline [c] = ‛-NL-’
+  char_newline [c] = ‛\n’
   char_other [c] = ‛«c»’
 }

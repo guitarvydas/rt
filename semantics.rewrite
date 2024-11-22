@@ -1,6 +1,6 @@
 % rewrite semantics {
 
-Main [ TopLevel+] = ‛«TopLevel»’
+Main [ TopLevel+] = ‛\n«TopLevel»’
 
 TopLevel_defvar [ Defvar] =‛«Defvar»’
 TopLevel_defconst [ Defconst] =‛«Defconst»’
@@ -8,7 +8,7 @@ TopLevel_defn [ Defn] =‛«Defn»’
 TopLevel_defobj [ Defobj] =‛«Defobj»’
 TopLevel_import [ Import] =‛«Import»’
 TopLevel_external [x] =‛«x»’
-TopLevel_comment [ comment line?] =‛«comment»«line»’
+TopLevel_comment [ comment line?] =‛«comment»«line»\n’
 TopLevel_line [line] =‛«line»’
 Defvar [ _2 Lval _3 Exp line?] = ‛«_2»«Lval»«_3»«Exp»«line»’
 Defconst [ _5 Lval _6 Exp line?] = ‛«_5»«Lval»«_6»«Exp»«line»’
@@ -18,7 +18,7 @@ Import [ _14 ident line?] = ‛«_14»«ident»«line»’
 StatementBlock [ line1? lb line2? Rec_Statement line3? rb line4?] = ‛«line1»«lb»«line2»«Rec_Statement»«line3»«rb»«line4»’
 
 Rec_Statement [line1? R_Statement line2?] = ‛«line1»«R_Statement»«line2»’
-R_Statement_comment [ comment Rec_Statement?] =‛«comment»«Rec_Statement»’
+R_Statement_comment [ comment Rec_Statement?] =‛«comment»\n«Rec_Statement»’
 R_Statement_external [x rec?] =‛«x»«rec»’
 R_Statement_deftemp [ Deftemp] =‛«Deftemp»’
 R_Statement_defsynonym [ Defsynonym] =‛«Defsynonym»’
@@ -77,6 +77,7 @@ ExpExp_basic [ Primary] =‛«Primary»’
 
 Primary_lookupident [ Primary _69 ident] =‛«Primary»«_69»«ident»’
 Primary_lookup [ Primary _70 ePrimary] =‛«Primary»«_70»«ePrimary»’
+Primary_fieldident [ Primary _71 e] =‛«Primary»«_71»«e»’
 Primary_field [ Primary _71 e] =‛«Primary»«_71»«e»’
 Primary_index [ Primary _72 Exp _73] =‛«Primary»«_72»«Exp»«_73»’
 Primary_nthslice [ Primary _74 digit+ _75 _76] =‛«Primary»«_74»«digit»«_75»«_76»’
@@ -143,7 +144,7 @@ ident [ _233 idchar+ _234] = ‛«_233»«idchar»«_234»’
 
 idchar_rec [ _235 idchar+ _236] =‛«_235»«idchar»«_236»’
 idchar_other [ any] =‛«any»’
-comment [ _239 commentchar* _240] = ‛«_239»«commentchar»«_240»’
+comment [ _239 commentchar* _240] = ‛«_239»«commentchar»«_240»\n’
 
 commentchar_rec [ _241 commentchar* _242] =‛«_241»«commentchar»«_242»’
 commentchar_other [ any] =‛«any»’

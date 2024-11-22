@@ -11,13 +11,13 @@ defobj Template (name, template_data, instantiator) {
         • instantiator ⇐ instantiator
 }
 
-defn read_and_convert_json_file (filename) {
-    # read_and_convert_json_file (filename)
+defn read_and_convert_json_file (pathname, filename) {
+    # read_and_convert_json_file (pathname, filename)
 }
 
-defn json2internal (container_xml) {
+defn json2internal (pathname, container_xml) {
     fname ≡ #basename (container_xml)
-    routings ≡ read_and_convert_json_file (fname)
+    routings ≡ read_and_convert_json_file (pathname, fname)
     return routings
 }
 
@@ -34,15 +34,13 @@ defn register_component_allow_overwriting (reg, template) { return abstracted_re
 
 defn abstracted_register_component (reg, template, ok_to_overwrite) {
     name ≡ mangle_name (template.name)
-    if name in reg.templates and not ok_to_overwrite {
-        load_error (#strcons (“Component ”, #strcons (template.name, “ already declared”)))}
-    reg.templates@name ⇐ template
-    return reg
-}
-
-defn register_multiple_components (reg, templates) {
-    for template in templates {
-        register_component (reg, template)}
+    if #inkvs (name, reg.templates) and not ok_to_overwrite {
+        load_error (#strcons (“Component /”, #strcons (template.name, “/ already declared”)))
+	return reg
+    } else {
+        #push (reg, #pair (“templates”, #pair (name, template)))
+	return reg
+    }
 }
 
 defn get_component_instance (reg, full_name, owner) {
@@ -50,7 +48,7 @@ defn get_component_instance (reg, full_name, owner) {
     if template_name in reg.templates {
         template ≡ reg.templates[template_name]
         if (template = ϕ) {
-            load_error (#strcons (“Registry Error: Can't find component ”, #strcons (template_name, “ (does it need to be declared in components_to_include_in_project?”)))
+            load_error (#strcons (“Registry Error (A): Can't find component /”, #strcons (template_name, “/”)))
             return ϕ}
         else {
             owner_name ≡ “”
@@ -64,7 +62,7 @@ defn get_component_instance (reg, full_name, owner) {
             instance.depth ⇐ calculate_depth (instance)
             return instance }}
     else {
-            load_error (#strcons (“Registry Error: Can't find component ”, #strcons (template_name, “ (does it need to be declared in components_to_include_in_project?”)))
+            load_error (#strcons (“Registry Error (B): Can't find component /”, #strcons (template_name, “/”)))
             return ϕ}
 }
 defn calculate_depth (eh) {
@@ -97,6 +95,7 @@ defn generate_shell_components (reg, container_list) {
     ⌈     {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},⌉
     ⌈     {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []}⌉
     ⌈ ]⌉
+    deftemp regkvs ⇐ reg
     if ϕ != container_list {
         for diagram in container_list {
             ⌈ loop through every component in the diagram and look for names that start with “$“⌉
@@ -106,20 +105,21 @@ defn generate_shell_components (reg, container_list) {
                     name ≡ child_descriptor@“name”
                     cmd ≡ #stringcdr (name).strip ()
                     generated_leaf ≡ Template (name,  ↪︎shell_out_instantiate, cmd)
-                    register_component (reg, generated_leaf)
+                    #push (regkvs, register_component (regkvs, generated_leaf))
                 } elif first_char_is (child_descriptor@“name”, “'”) {
                     name ≡ child_descriptor@“name”
                     s ≡ #stringcdr (name)
                     generated_leaf ≡ Template (name,  ↪︎string_constant_instantiate, s)
-                    register_component_allow_overwriting (reg, generated_leaf)
+                    #push (regkvs, register_component_allow_overwriting (regkvs, generated_leaf))
 		}
 	    }
 	}
     }
+    return regkvs
 }
 
 defn first_char (s) {
-    return #car (s)
+    return #stringcar (s)
 }
 
 defn first_char_is (s, c) {
@@ -519,16 +519,16 @@ defn string_clone (s) {
 ⌈ where ${_00_} is the root directory for the project⌉
 ⌈ where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python)⌉
 
-
-
 defn initialize_component_palette (root_project, root_0D, diagram_source_files) {
-    reg ≡ make_component_registry ()
-    for diagram_source in diagram_source_files{
-        all_containers_within_single_file ≡ json2internal (diagram_source)
-        generate_shell_components (reg, all_containers_within_single_file)
-        for container in all_containers_within_single_file{
-            register_component (reg, Template (container@“name” , ⌈ template_data = ⌉container, ⌈ instantiator = ⌉ ↪︎container_instantiator))}}
-    initialize_stock_components (reg)
+    deftemp reg ⇐ make_component_registry ()
+    for diagram_source in diagram_source_files {
+        all_containers_within_single_file ≡ json2internal (root_project, diagram_source)
+        reg ⇐ generate_shell_components (reg, all_containers_within_single_file)
+        for container in all_containers_within_single_file {
+            #push (reg, register_component (reg, Template (container@“name” , ⌈ template_data=⌉ container, ⌈ instantiator=⌉ ↪︎container_instantiator)))
+	}
+    }
+    reg ⇐ initialize_stock_components (reg)
     return reg
 }
 
@@ -567,14 +567,13 @@ defvar runtime_errors ⇐ ⊥
 defn load_error (s) {
     global load_errors
     #print_stdout (s)
-    quit ()
+    #print_nl ()
     load_errors ⇐ ⊤
 }
 
 defn runtime_error (s) {
     global runtime_errors
     #print_stdout (s)
-    quit ()
     runtime_errors ⇐ ⊤
 }
 
@@ -595,22 +594,22 @@ defn fakepipename_handler (eh, msg) {
 ⌈ all of the the built_in leaves are listed here⌉
 ⌈ future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project⌉
 
-
 defn initialize_stock_components (reg) {
-    register_component (reg, Template ( “1then2”, ϕ, ↪︎deracer_instantiate))
-    register_component (reg, Template ( “?”, ϕ, ↪︎probe_instantiate))
-    register_component (reg, Template ( “?A”, ϕ, ↪︎probeA_instantiate))
-    register_component (reg, Template ( “?B”, ϕ, ↪︎probeB_instantiate))
-    register_component (reg, Template ( “?C”, ϕ, ↪︎probeC_instantiate))
-    register_component (reg, Template ( “trash”, ϕ, ↪︎trash_instantiate))
+    deftemp regkvs ⇐ register_component (reg, Template ( “1then2”, ϕ, ↪︎deracer_instantiate))
+    #push (regkvs, register_component (regkvs, Template ( “?”, ϕ, ↪︎probe_instantiate)))
+    #push (regkvs, register_component (regkvs, Template ( “?A”, ϕ, ↪︎probeA_instantiate)))
+    #push (regkvs, register_component (regkvs, Template ( “?B”, ϕ, ↪︎probeB_instantiate)))
+    #push (regkvs, register_component (regkvs, Template ( “?C”, ϕ, ↪︎probeC_instantiate)))
+    #push (regkvs, register_component (regkvs, Template ( “trash”, ϕ, ↪︎trash_instantiate)))
 
-    register_component (reg, Template ( “Low Level Read Text File”, ϕ, ↪︎low_level_read_text_file_instantiate))
-    register_component (reg, Template ( “Ensure String Datum”, ϕ, ↪︎ensure_string_datum_instantiate))
+    #push (regkvs, register_component (regkvs, Template ( “Low Level Read Text File”, ϕ, ↪︎low_level_read_text_file_instantiate)))
+    #push (regkvs, register_component (regkvs, Template ( “Ensure String Datum”, ϕ, ↪︎ensure_string_datum_instantiate)))
 
-    register_component (reg, Template ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate))
-    register_component (reg, Template ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate))
-    ⌈ for fakepipe⌉
-    register_component (reg, Template ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate))
+    #push (regkvs, register_component (regkvs, Template ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate)))
+    #push (regkvs, register_component (regkvs, Template ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate)))
+       ⌈ for fakepipe⌉
+    #push (regkvs, register_component (regkvs, Template ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate)))
+    return regkvs
 }
 
 defn argv () {
@@ -623,7 +622,7 @@ defn initialize () {
     arg ≡ #nthargv (3)
     main_container_name ≡ #nthargv (4)
     diagram_names ≡ #nthargvcdr (5)
-    palette ≡ initialize_component_palette (root_project, root_0D, diagram_names)
+    palette ≡ initialize_component_palette (root_of_project, root_of_0D, diagram_names)
     return [palette, [root_of_project, root_of_0D, main_container_name, diagram_names, arg]]
 }
 
@@ -639,10 +638,10 @@ defn start_helper (palette, env, show_all_outputs) {
     ⌈ get entrypoint container⌉
     deftemp main_container ⇐ get_component_instance(palette, main_container_name, ϕ)
     if ϕ = main_container {
-        load_error (#strcons (“Couldn't find container with page name ”,
+        load_error (#strcons (“Couldn't find container with page name /”,
 	              #strcons (main_container_name,
-		        #strcons (“ in files ”,
-			  #strcons (diagram_names, “(check tab names, or disable compression?)”)))))
+		        #strcons (“/ in files ”,
+			  #strcons (#asstr (diagram_names), “ (check tab names, or disable compression?)”)))))
     }
     if not load_errors {
         deftemp arg ⇐ new_datum_string (arg)

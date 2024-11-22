@@ -50,7 +50,7 @@ ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 o
         send_string (eh, «err», f"open error on file '{«fname»}'", «msg»)⤶
 ’
 
-ExternalPhrase_racjf [_octothorpe _racjf lp fname rp] = ‛
+ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
     try:⤷
         fil = open(«fname», “r”)
         json_data = fil.read()
@@ -72,6 +72,7 @@ ExternalPhrase_car [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
 ExternalPhrase_cdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’
 ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ sys.argv[«n»:] ’
 ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ sys.argv[«n»] ’
+ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’
 ExternalPhrase_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ str(«e1») + «e2» ’
 ExternalPhrase_basename [_octothorpe _basename lp s rp] = ‛ os.path.basename («s»)’
@@ -98,6 +99,9 @@ ExternalPhrase_asstr [_octothorpe _ lp e rp] = ‛str («e»)’
 ExternalPhrase_len [_octothorpe _ lp e rp] = ‛len («e»)’
 ExternalPhrase_asbytes [_octothorpe _ lp e rp] = ‛bytearray («e»,“UTF_8”)’
 ExternalPhrase_asint [_octothorpe _ lp e rp] = ‛int («e»)’
+ExternalPhrase_in [_octothorpe _ lp e _comma kvs rp] = ‛(«e» in «kvs»)’
+ExternalPhrase_pair [_octothorpe _ lp key _comma e rp] = ‛NIY («key», «e»)’
+ExternalPhrase_push [_octothorpe _ lp v _comma e rp] = ‛«v».insert («e»)’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 
@@ -147,6 +151,7 @@ Primary_plain [p] = ‛«p»’
 
 PrimaryIndexed_lookupident [p _at key] = ‛«p» [«key»]’
 PrimaryIndexed_lookup [p _at key] = ‛«p» [«key»]’
+PrimaryIndexed_fieldident [p _dot key] = ‛«p».«key»’ 
 PrimaryIndexed_field [p _dot key] = ‛«p».«key»’ 
 PrimaryIndexed_index [p lb e rb] = ‛«p» [«e»]’ 
 PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛«p» [«ds»:]’

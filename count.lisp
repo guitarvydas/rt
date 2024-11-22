@@ -5,11 +5,11 @@
 (defun count_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 4|# #|line 5|#
   (cond
-    (( equal   (cdr (assoc  port  msg))  "adv")             #|line 6|#
+    (( equal   (field "port"  msg)  "adv")                  #|line 6|#
       (setf  count_counter (+  count_counter  direction))   #|line 7|#
       (funcall (quote send_int)   eh  ""  count_counter  msg  #|line 8|#)
       )
-    (( equal   (cdr (assoc  port  msg))  "rev")             #|line 9|#
+    (( equal   (field "port"  msg)  "rev")                  #|line 9|#
       (setf  direction (*  direction  - 1))                 #|line 10|# #|line 11|#
       ))                                                    #|line 12|#
   )
