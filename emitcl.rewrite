@@ -52,10 +52,9 @@ ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 o
 ’
 
 ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
-  ;; read json from a named file and convert it into internal form (a tree of routings)
-  ;; return the routings from the function or raise an error
+  ;; read json from a named file and convert it into internal form (a list of Container alists)
   (with-open-file (json-stream (format nil "~a/~a" «pathname» «fname») :direction :input)⤷
-    (json:decode-json json-stream))⤶
+    (rewrite-json (json:decode-json json-stream)))⤶
 ’
 
 ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛
@@ -79,8 +78,10 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 (ql:quickload :cl-json)
 (defun dict-fresh () nil)
 
+(defun key-mangle (s) (string-upcase s))
+
 (defun dict-lookup (d key-string)
-    (let ((pair (assoc key-string d :test 'equal)))
+    (let ((pair (assoc (key-mangle key-string) d :test 'equal)))
       (if pair
           (cdr pair)
         nil)))
@@ -89,7 +90,7 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 
 (defun dict-in? (key-string d)
   (if (and d (dict-is-dict? d))
-       (let ((pair (assoc key-string d :test 'equal)))
+       (let ((pair (assoc (key-mangle key-string) d :test 'equal)))
          (if pair t nil))
     nil))
 
@@ -104,6 +105,40 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
         nil))))
 
 (defsetf field set-field)
+
+(defun is-pair? (x)
+  (and
+    (listp x)
+    (symbolp (car x))))
+
+(defun is-json-object? (x)
+  (and
+    (listp x)
+    (not (atom (cdr x)))
+    (= 1 (length x))
+    (is-pair? x)))
+
+(defun is-json-array? (x)
+  (and
+    (listp x)
+    (listp (car x))))
+
+(defun rewrite-pair (pair)
+  (let ((k (if (symbolp (car pair)) 
+               (symbol-name (car pair))
+             (car pair))))
+    (let ((x (cdr pair)))
+      (let ((v (if (or (is-json-object? x) (is-json-array? x))
+                   (rewrite-json x)
+                 x)))
+        (cons k v)))))
+                         
+(defun rewrite-json (x)
+  (cond 
+    ((is-pair? x) (rewrite-pair x))
+    ((is-json-object? x) (mapcar #'rewrite-json x))
+    ((is-json-array? x) (mapcar #'rewrite-json x))))    
+
 ’
 
 ExternalPhrase_print_stdout [_octothorpe _ lp e rp] = ‛(format *standard-output* "~a" «e»)’

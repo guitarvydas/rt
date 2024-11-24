@@ -890,126 +890,127 @@ def initialize_component_palette (root_project,root_0D,diagram_source_files):#li
         reg = generate_shell_components ( reg, all_containers_within_single_file)#line 527
         for container in  all_containers_within_single_file:#line 528
             reg.insert (register_component ( reg,Template ( container [ "name"], container, container_instantiator)))#line 529#line 530#line 531
-    reg = initialize_stock_components ( reg)                #line 532
-    return  reg                                             #line 533#line 534#line 535
+    print ( reg)                                            #line 532
+    reg = initialize_stock_components ( reg)                #line 533
+    return  reg                                             #line 534#line 535#line 536
 
-def print_error_maybe (main_container):                     #line 536
-    error_port =  "✗"                                       #line 537
-    err = fetch_first_output ( main_container, error_port)  #line 538
-    if ( err!= None) and ( 0 < len (trimws ( err.srepr ()))):#line 539
-        print ( "___ !!! ERRORS !!! ___")                   #line 540
-        print_specific_output ( main_container, error_port) #line 541#line 542#line 543
+def print_error_maybe (main_container):                     #line 537
+    error_port =  "✗"                                       #line 538
+    err = fetch_first_output ( main_container, error_port)  #line 539
+    if ( err!= None) and ( 0 < len (trimws ( err.srepr ()))):#line 540
+        print ( "___ !!! ERRORS !!! ___")                   #line 541
+        print_specific_output ( main_container, error_port) #line 542#line 543#line 544
 
-# debugging helpers                                         #line 544#line 545
-def nl ():                                                  #line 546
-    print ( "")                                             #line 547#line 548#line 549
+# debugging helpers                                         #line 545#line 546
+def nl ():                                                  #line 547
+    print ( "")                                             #line 548#line 549#line 550
 
-def dump_outputs (main_container):                          #line 550
-    nl ()                                                   #line 551
-    print ( "___ Outputs ___")                              #line 552
-    print_output_list ( main_container)                     #line 553#line 554#line 555
+def dump_outputs (main_container):                          #line 551
+    nl ()                                                   #line 552
+    print ( "___ Outputs ___")                              #line 553
+    print_output_list ( main_container)                     #line 554#line 555#line 556
 
-def trimws (s):                                             #line 556
-    # remove whitespace from front and back of string       #line 557
-    return  s.strip ()                                      #line 558#line 559#line 560
+def trimws (s):                                             #line 557
+    # remove whitespace from front and back of string       #line 558
+    return  s.strip ()                                      #line 559#line 560#line 561
 
-def clone_string (s):                                       #line 561
-    return  s                                               #line 562#line 563#line 564
+def clone_string (s):                                       #line 562
+    return  s                                               #line 563#line 564#line 565
 
-load_errors =  False                                        #line 565
-runtime_errors =  False                                     #line 566#line 567
-def load_error (s):                                         #line 568
-    global load_errors                                      #line 569
-    print ( s)                                              #line 570
-    print ()                                                #line 571
-    load_errors =  True                                     #line 572#line 573#line 574
+load_errors =  False                                        #line 566
+runtime_errors =  False                                     #line 567#line 568
+def load_error (s):                                         #line 569
+    global load_errors                                      #line 570
+    print ( s)                                              #line 571
+    print ()                                                #line 572
+    load_errors =  True                                     #line 573#line 574#line 575
 
-def runtime_error (s):                                      #line 575
-    global runtime_errors                                   #line 576
-    print ( s)                                              #line 577
-    runtime_errors =  True                                  #line 578#line 579#line 580
+def runtime_error (s):                                      #line 576
+    global runtime_errors                                   #line 577
+    print ( s)                                              #line 578
+    runtime_errors =  True                                  #line 579#line 580#line 581
 
-def fakepipename_instantiate (reg,owner,name,template_data):#line 581
-    instance_name = gensymbol ( "fakepipe")                 #line 582
-    return make_leaf ( instance_name, owner, None, fakepipename_handler)#line 583#line 584#line 585
+def fakepipename_instantiate (reg,owner,name,template_data):#line 582
+    instance_name = gensymbol ( "fakepipe")                 #line 583
+    return make_leaf ( instance_name, owner, None, fakepipename_handler)#line 584#line 585#line 586
 
-rand =  0                                                   #line 586#line 587
-def fakepipename_handler (eh,msg):                          #line 588
-    global rand                                             #line 589
+rand =  0                                                   #line 587#line 588
+def fakepipename_handler (eh,msg):                          #line 589
+    global rand                                             #line 590
     rand =  rand+ 1
-    # not very random, but good enough _ 'rand' must be unique within a single run#line 590
-    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)#line 591#line 592#line 593
-                                                            #line 594
-# all of the the built_in leaves are listed here            #line 595
-# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 596#line 597
-def initialize_stock_components (reg):                      #line 598
-    regkvs = register_component ( reg,Template ( "1then2", None, deracer_instantiate))#line 599
-    regkvs.insert (register_component ( regkvs,Template ( "?", None, probe_instantiate)))#line 600
-    regkvs.insert (register_component ( regkvs,Template ( "?A", None, probeA_instantiate)))#line 601
-    regkvs.insert (register_component ( regkvs,Template ( "?B", None, probeB_instantiate)))#line 602
-    regkvs.insert (register_component ( regkvs,Template ( "?C", None, probeC_instantiate)))#line 603
-    regkvs.insert (register_component ( regkvs,Template ( "trash", None, trash_instantiate)))#line 604#line 605
-    regkvs.insert (register_component ( regkvs,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate)))#line 606
-    regkvs.insert (register_component ( regkvs,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate)))#line 607#line 608
-    regkvs.insert (register_component ( regkvs,Template ( "syncfilewrite", None, syncfilewrite_instantiate)))#line 609
-    regkvs.insert (register_component ( regkvs,Template ( "stringconcat", None, stringconcat_instantiate)))#line 610
-    # for fakepipe                                          #line 611
-    regkvs.insert (register_component ( regkvs,Template ( "fakepipename", None, fakepipename_instantiate)))#line 612
-    return  regkvs                                          #line 613#line 614#line 615
+    # not very random, but good enough _ 'rand' must be unique within a single run#line 591
+    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)#line 592#line 593#line 594
+                                                            #line 595
+# all of the the built_in leaves are listed here            #line 596
+# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 597#line 598
+def initialize_stock_components (reg):                      #line 599
+    regkvs = register_component ( reg,Template ( "1then2", None, deracer_instantiate))#line 600
+    regkvs.insert (register_component ( regkvs,Template ( "?", None, probe_instantiate)))#line 601
+    regkvs.insert (register_component ( regkvs,Template ( "?A", None, probeA_instantiate)))#line 602
+    regkvs.insert (register_component ( regkvs,Template ( "?B", None, probeB_instantiate)))#line 603
+    regkvs.insert (register_component ( regkvs,Template ( "?C", None, probeC_instantiate)))#line 604
+    regkvs.insert (register_component ( regkvs,Template ( "trash", None, trash_instantiate)))#line 605#line 606
+    regkvs.insert (register_component ( regkvs,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate)))#line 607
+    regkvs.insert (register_component ( regkvs,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate)))#line 608#line 609
+    regkvs.insert (register_component ( regkvs,Template ( "syncfilewrite", None, syncfilewrite_instantiate)))#line 610
+    regkvs.insert (register_component ( regkvs,Template ( "stringconcat", None, stringconcat_instantiate)))#line 611
+    # for fakepipe                                          #line 612
+    regkvs.insert (register_component ( regkvs,Template ( "fakepipename", None, fakepipename_instantiate)))#line 613
+    return  regkvs                                          #line 614#line 615#line 616
 
-def argv ():                                                #line 616
-    sys.argv                                                #line 617#line 618#line 619
+def argv ():                                                #line 617
+    sys.argv                                                #line 618#line 619#line 620
 
-def initialize ():                                          #line 620
-    root_of_project =  sys.argv[ 1]                         #line 621
-    root_of_0D =  sys.argv[ 2]                              #line 622
-    arg =  sys.argv[ 3]                                     #line 623
-    main_container_name =  sys.argv[ 4]                     #line 624
-    diagram_names =  sys.argv[ 5:]                          #line 625
-    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)#line 626
-    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 627#line 628#line 629
+def initialize ():                                          #line 621
+    root_of_project =  sys.argv[ 1]                         #line 622
+    root_of_0D =  sys.argv[ 2]                              #line 623
+    arg =  sys.argv[ 3]                                     #line 624
+    main_container_name =  sys.argv[ 4]                     #line 625
+    diagram_names =  sys.argv[ 5:]                          #line 626
+    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)#line 627
+    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 628#line 629#line 630
 
 def start (palette,env):
-    start_helper ( palette, env, False)                     #line 630
+    start_helper ( palette, env, False)                     #line 631
 
 def start_show_all (palette,env):
-    start_helper ( palette, env, True)                      #line 631
+    start_helper ( palette, env, True)                      #line 632
 
-def start_helper (palette,env,show_all_outputs):            #line 632
-    root_of_project =  env [ 0]                             #line 633
-    root_of_0D =  env [ 1]                                  #line 634
-    main_container_name =  env [ 2]                         #line 635
-    diagram_names =  env [ 3]                               #line 636
-    arg =  env [ 4]                                         #line 637
-    set_environment ( root_of_project, root_of_0D)          #line 638
-    # get entrypoint container                              #line 639
-    main_container = get_component_instance ( palette, main_container_name, None)#line 640
-    if  None ==  main_container:                            #line 641
-        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 645#line 646
-    if not  load_errors:                                    #line 647
-        arg = new_datum_string ( arg)                       #line 648
-        msg = make_message ( "", arg)                       #line 649
-        inject ( main_container, msg)                       #line 650
-        if  show_all_outputs:                               #line 651
-            dump_outputs ( main_container)                  #line 652
-        else:                                               #line 653
-            print_error_maybe ( main_container)             #line 654
-            outp = fetch_first_output ( main_container, "") #line 655
-            if  None ==  outp:                              #line 656
-                print ( "(no outputs)")                     #line 657
-            else:                                           #line 658
-                print_specific_output ( main_container, "") #line 659#line 660#line 661
-        if  show_all_outputs:                               #line 662
-            print ( "--- done ---")                         #line 663#line 664#line 665#line 666#line 667
-                                                            #line 668#line 669
-# utility functions                                         #line 670
-def send_int (eh,port,i,causing_message):                   #line 671
-    datum = new_datum_int ( i)                              #line 672
-    send ( eh, port, datum, causing_message)                #line 673#line 674#line 675
+def start_helper (palette,env,show_all_outputs):            #line 633
+    root_of_project =  env [ 0]                             #line 634
+    root_of_0D =  env [ 1]                                  #line 635
+    main_container_name =  env [ 2]                         #line 636
+    diagram_names =  env [ 3]                               #line 637
+    arg =  env [ 4]                                         #line 638
+    set_environment ( root_of_project, root_of_0D)          #line 639
+    # get entrypoint container                              #line 640
+    main_container = get_component_instance ( palette, main_container_name, None)#line 641
+    if  None ==  main_container:                            #line 642
+        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 646#line 647
+    if not  load_errors:                                    #line 648
+        arg = new_datum_string ( arg)                       #line 649
+        msg = make_message ( "", arg)                       #line 650
+        inject ( main_container, msg)                       #line 651
+        if  show_all_outputs:                               #line 652
+            dump_outputs ( main_container)                  #line 653
+        else:                                               #line 654
+            print_error_maybe ( main_container)             #line 655
+            outp = fetch_first_output ( main_container, "") #line 656
+            if  None ==  outp:                              #line 657
+                print ( "(no outputs)")                     #line 658
+            else:                                           #line 659
+                print_specific_output ( main_container, "") #line 660#line 661#line 662
+        if  show_all_outputs:                               #line 663
+            print ( "--- done ---")                         #line 664#line 665#line 666#line 667#line 668
+                                                            #line 669#line 670
+# utility functions                                         #line 671
+def send_int (eh,port,i,causing_message):                   #line 672
+    datum = new_datum_int ( i)                              #line 673
+    send ( eh, port, datum, causing_message)                #line 674#line 675#line 676
 
-def send_bang (eh,port,causing_message):                    #line 676
-    datum = new_datum_bang ()                               #line 677
-    send ( eh, port, datum, causing_message)                #line 678#line 679#line 680
+def send_bang (eh,port,causing_message):                    #line 677
+    datum = new_datum_bang ()                               #line 678
+    send ( eh, port, datum, causing_message)                #line 679#line 680#line 681
 
 
 

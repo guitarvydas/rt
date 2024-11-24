@@ -529,6 +529,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
             #push (reg, register_component (reg, Template (container@“name” , ⌈ template_data=⌉ container, ⌈ instantiator=⌉ ↪︎container_instantiator)))
 	}
     }
+    #print_stdout (reg)
     reg ⇐ initialize_stock_components (reg)
     return reg
 }

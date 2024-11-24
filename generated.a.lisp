@@ -3,29 +3,20 @@
 (ql:quickload :cl-json)
 (defun dict-fresh () nil)
 
+(defun key-mangle (s) (string-upcase s))
+
 (defun dict-lookup (d key-string)
-(let ((key (intern (string-upcase key-string) "KEYWORD")))
-(let ((pair (assoc key d :test 'equal)))
+(let ((pair (assoc (key-mangle key-string) d :test 'equal)))
 (if pair
 (cdr pair)
-nil))))
-
-(defun set-dict-lookup (d key-string v)
-(let ((key (intern (string-upcase key-string) "KEYWORD")))
-(let ((pair (assoc key d :test 'equal)))
-(if pair
-(setf (cdr pair) v)
-(push (cons key v) d)))))
-
-(defsetf dict-lookup set-dict-lookup)
+nil)))
 
 (defun dict-is-dict? (d) (listp d))
 
 (defun dict-in? (key-string d)
 (if (and d (dict-is-dict? d))
-(let ((key (intern (string-upcase key-string) "KEYWORD")))
-(let ((pair (assoc key d :test 'equal)))
-(if pair t nil)))
+(let ((pair (assoc (key-mangle key-string) d :test 'equal)))
+(if pair t nil))
 nil))
 
 (defun field (key obj)
@@ -39,6 +30,40 @@ nil))
 nil))))
 
 (defsetf field set-field)
+
+(defun is-pair? (x)
+(and
+(listp x)
+(symbolp (car x))))
+
+(defun is-json-object? (x)
+(and
+(listp x)
+(not (atom (cdr x)))
+(= 1 (length x))
+(is-pair? x)))
+
+(defun is-json-array? (x)
+(and
+(listp x)
+(listp (car x))))
+
+(defun rewrite-pair (pair)
+(let ((k (if (symbolp (car pair))
+(symbol-name (car pair))
+(car pair))))
+(let ((x (cdr pair)))
+(let ((v (if (or (is-json-object? x) (is-json-array? x))
+(rewrite-json x)
+x)))
+(cons k v)))))
+
+(defun rewrite-json (x)
+(cond
+((is-pair? x) (rewrite-pair x))
+((is-json-object? x) (mapcar #'rewrite-json x))
+((is-json-array? x) (mapcar #'rewrite-json x))))
+
                                                             #|line 1|# #|line 2|#
 (defparameter  counter  0)                                  #|line 3|# #|line 4|#
 (defparameter  digits (list                                 #|line 5|#  "₀"  "₁"  "₂"  "₃"  "₄"  "₅"  "₆"  "₇"  "₈"  "₉"  "₁₀"  "₁₁"  "₁₂"  "₁₃"  "₁₄"  "₁₅"  "₁₆"  "₁₇"  "₁₈"  "₁₉"  "₂₀"  "₂₁"  "₂₂"  "₂₃"  "₂₄"  "₂₅"  "₂₆"  "₂₇"  "₂₈"  "₂₉" )) #|line 11|# #|line 12|# #|line 13|#
