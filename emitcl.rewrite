@@ -53,8 +53,8 @@ ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 o
 
 ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
   ;; read json from a named file and convert it into internal form (a list of Container alists)
-  (with-open-file (json-stream (format nil "~a/~a" «pathname» «fname») :direction :input)⤷
-    (rewrite-json (json:decode-json json-stream)))⤶
+  (with-open-file (f (format nil "~a/~a.lisp" «pathname» «fname») :direction :input)⤷
+    (read f))⤶
 ’
 
 ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛
@@ -78,7 +78,7 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 (ql:quickload :cl-json)
 (defun dict-fresh () nil)
 
-(defun key-mangle (s) (string-upcase s))
+(defun key-mangle (s) s)
 
 (defun dict-lookup (d key-string)
     (let ((pair (assoc (key-mangle key-string) d :test 'equal)))

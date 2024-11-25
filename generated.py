@@ -954,63 +954,63 @@ def initialize_stock_components (reg):                      #line 599
     regkvs.insert (register_component ( regkvs,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate)))#line 608#line 609
     regkvs.insert (register_component ( regkvs,Template ( "syncfilewrite", None, syncfilewrite_instantiate)))#line 610
     regkvs.insert (register_component ( regkvs,Template ( "stringconcat", None, stringconcat_instantiate)))#line 611
-    # for fakepipe                                          #line 612
-    regkvs.insert (register_component ( regkvs,Template ( "fakepipename", None, fakepipename_instantiate)))#line 613
-    return  regkvs                                          #line 614#line 615#line 616
+    # for fakepipe
+    regkvs.insert (register_component ( regkvs,Template ( "fakepipename", None, fakepipename_instantiate)))#line 612
+    return  regkvs                                          #line 613#line 614#line 615
 
-def argv ():                                                #line 617
-    sys.argv                                                #line 618#line 619#line 620
+def argv ():                                                #line 616
+    sys.argv                                                #line 617#line 618#line 619
 
-def initialize ():                                          #line 621
-    root_of_project =  sys.argv[ 1]                         #line 622
-    root_of_0D =  sys.argv[ 2]                              #line 623
-    arg =  sys.argv[ 3]                                     #line 624
-    main_container_name =  sys.argv[ 4]                     #line 625
-    diagram_names =  sys.argv[ 5:]                          #line 626
-    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)#line 627
-    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 628#line 629#line 630
+def initialize ():                                          #line 620
+    root_of_project =  sys.argv[ 1]                         #line 621
+    root_of_0D =  sys.argv[ 2]                              #line 622
+    arg =  sys.argv[ 3]                                     #line 623
+    main_container_name =  sys.argv[ 4]                     #line 624
+    diagram_names =  sys.argv[ 5:]                          #line 625
+    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)#line 626
+    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 627#line 628#line 629
 
 def start (palette,env):
-    start_helper ( palette, env, False)                     #line 631
+    start_helper ( palette, env, False)                     #line 630
 
 def start_show_all (palette,env):
-    start_helper ( palette, env, True)                      #line 632
+    start_helper ( palette, env, True)                      #line 631
 
-def start_helper (palette,env,show_all_outputs):            #line 633
-    root_of_project =  env [ 0]                             #line 634
-    root_of_0D =  env [ 1]                                  #line 635
-    main_container_name =  env [ 2]                         #line 636
-    diagram_names =  env [ 3]                               #line 637
-    arg =  env [ 4]                                         #line 638
-    set_environment ( root_of_project, root_of_0D)          #line 639
-    # get entrypoint container                              #line 640
-    main_container = get_component_instance ( palette, main_container_name, None)#line 641
-    if  None ==  main_container:                            #line 642
-        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 646#line 647
-    if not  load_errors:                                    #line 648
-        arg = new_datum_string ( arg)                       #line 649
-        msg = make_message ( "", arg)                       #line 650
-        inject ( main_container, msg)                       #line 651
-        if  show_all_outputs:                               #line 652
-            dump_outputs ( main_container)                  #line 653
-        else:                                               #line 654
-            print_error_maybe ( main_container)             #line 655
-            outp = fetch_first_output ( main_container, "") #line 656
-            if  None ==  outp:                              #line 657
-                print ( "(no outputs)")                     #line 658
-            else:                                           #line 659
-                print_specific_output ( main_container, "") #line 660#line 661#line 662
-        if  show_all_outputs:                               #line 663
-            print ( "--- done ---")                         #line 664#line 665#line 666#line 667#line 668
-                                                            #line 669#line 670
-# utility functions                                         #line 671
-def send_int (eh,port,i,causing_message):                   #line 672
-    datum = new_datum_int ( i)                              #line 673
-    send ( eh, port, datum, causing_message)                #line 674#line 675#line 676
+def start_helper (palette,env,show_all_outputs):            #line 632
+    root_of_project =  env [ 0]                             #line 633
+    root_of_0D =  env [ 1]                                  #line 634
+    main_container_name =  env [ 2]                         #line 635
+    diagram_names =  env [ 3]                               #line 636
+    arg =  env [ 4]                                         #line 637
+    set_environment ( root_of_project, root_of_0D)          #line 638
+    # get entrypoint container                              #line 639
+    main_container = get_component_instance ( palette, main_container_name, None)#line 640
+    if  None ==  main_container:                            #line 641
+        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 645#line 646
+    if not  load_errors:                                    #line 647
+        arg = new_datum_string ( arg)                       #line 648
+        msg = make_message ( "", arg)                       #line 649
+        inject ( main_container, msg)                       #line 650
+        if  show_all_outputs:                               #line 651
+            dump_outputs ( main_container)                  #line 652
+        else:                                               #line 653
+            print_error_maybe ( main_container)             #line 654
+            outp = fetch_first_output ( main_container, "") #line 655
+            if  None ==  outp:                              #line 656
+                print ( "(no outputs)")                     #line 657
+            else:                                           #line 658
+                print_specific_output ( main_container, "") #line 659#line 660#line 661
+        if  show_all_outputs:                               #line 662
+            print ( "--- done ---")                         #line 663#line 664#line 665#line 666#line 667
+                                                            #line 668#line 669
+# utility functions                                         #line 670
+def send_int (eh,port,i,causing_message):                   #line 671
+    datum = new_datum_int ( i)                              #line 672
+    send ( eh, port, datum, causing_message)                #line 673#line 674#line 675
 
-def send_bang (eh,port,causing_message):                    #line 677
-    datum = new_datum_bang ()                               #line 678
-    send ( eh, port, datum, causing_message)                #line 679#line 680#line 681
+def send_bang (eh,port,causing_message):                    #line 676
+    datum = new_datum_bang ()                               #line 677
+    send ( eh, port, datum, causing_message)                #line 678#line 679#line 680
 
 
 

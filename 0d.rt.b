@@ -609,8 +609,7 @@ defn initialize_stock_components (reg) {
 
     #push (regkvs, register_component (regkvs, Template ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate)))
     #push (regkvs, register_component (regkvs, Template ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate)))
-       ⌈ for fakepipe⌉
-    #push (regkvs, register_component (regkvs, Template ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate)))
+       ⌈ for fakepipe⌉    #push (regkvs, register_component (regkvs, Template ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate)))
     return regkvs
 }
 

@@ -3,7 +3,7 @@
 (ql:quickload :cl-json)
 (defun dict-fresh () nil)
 
-(defun key-mangle (s) (string-upcase s))
+(defun key-mangle (s) s)
 
 (defun dict-lookup (d key-string)
 (let ((pair (assoc (key-mangle key-string) d :test 'equal)))
