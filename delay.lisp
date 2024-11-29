@@ -5,8 +5,10 @@
   (funcall (quote register_component)   reg (funcall (quote Template)   "Delay"  nil  #'delay_instantiator )  #|line 2|#) #|line 3|#
   )
 (defclass Delay_Info ()                                     #|line 5|#
-  ((counter :accessor counter :initarg :counter :initform  0)  #|line 6|# ⫶ counter (saved_message :accessor saved_message :initarg :saved_message :initform  nil)  #|line 7|# ⫶ saved_message ) #|line 8|#))
-(defun fresh-Delay_Info ()
+  (
+  (counter :accessor counter :initarg :counter :initform  0)  #|line 6|#⫶ counter
+  (saved_message :accessor saved_message :initarg :saved_message :initform  nil)  #|line 7|#⫶ saved_message ) #|line 8|#))
+(defun fresh-Delay_Info (undefined)
 (make-instance 'Delay_Info undefined))
                                                             #|line 9|#
 (defun delay_instantiator (&optional  reg  owner  name  template_data)

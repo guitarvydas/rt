@@ -1,33 +1,5 @@
-#preamble ()
-
-defobj Component_Registry () {
-        • templates ⇐ {}
+defobj Datum () {
+      • a ⇐ ϕ
+      • b ⇐ ϕ
 }
 
-defobj Template (name, template_data, instantiator) {
-        • name ⇐ name
-        • template_data ⇐ template_data
-        • instantiator ⇐ instantiator
-}
-
-defn make_component_registry () {
-    return Component_Registry ()
-}
-
-defn register_component (reg, template) { return abstracted_register_component (reg, template) }
-
-defn abstracted_register_component (reg, template) {
-    name ≡ template.name
-    templates_alist ≡ reg.templates
-    #push (reg, #pair (“templates”, #push (templates_alist, #pair (name, template))))
-    return reg
-}
-
-defn test () {
-  deftemp reg ⇐ make_component_registry ()
-  reg ⇐ register_component (reg, Template ( “c1”, 1, 2))
-  reg ⇐ register_component (reg, Template ( “c2”, 3, 4))
-  reg ⇐ register_component (reg, Template ( “c3”, 5, 6))
-  #print_stdout (#inkvs (“c2”, reg.templates))
-  return reg.templates@“c2”
-}

@@ -72,8 +72,14 @@ x)))
       ))                                                    #|line 28|#
   )
 (defclass Datum ()                                          #|line 30|#
-  ((data :accessor data :initarg :data :initform  nil)      #|line 31|# ⫶ data (clone :accessor clone :initarg :clone :initform  nil)  #|line 32|# ⫶ clone (reclaim :accessor reclaim :initarg :reclaim :initform  nil)  #|line 33|# ⫶ reclaim (srepr :accessor srepr :initarg :srepr :initform  nil)  #|line 34|# ⫶ srepr (kind :accessor kind :initarg :kind :initform  nil)  #|line 35|# ⫶ kind (raw :accessor raw :initarg :raw :initform  nil)  #|line 36|# ⫶ raw ) #|line 37|#))
-(defun fresh-Datum ()
+  (
+  (data :accessor data :initarg :data :initform  nil)       #|line 31|#⫶ data
+  (clone :accessor clone :initarg :clone :initform  nil)    #|line 32|#⫶ clone
+  (reclaim :accessor reclaim :initarg :reclaim :initform  nil)  #|line 33|#⫶ reclaim
+  (srepr :accessor srepr :initarg :srepr :initform  nil)    #|line 34|#⫶ srepr
+  (kind :accessor kind :initarg :kind :initform  nil)       #|line 35|#⫶ kind
+  (raw :accessor raw :initarg :raw :initform  nil)          #|line 36|#⫶ raw ) #|line 37|#))
+(defun fresh-Datum (undefined)
 (make-instance 'Datum undefined))
                                                             #|line 38|#
 (defun new_datum_string (&optional  s)
@@ -219,8 +225,10 @@ x)))
   (return-from raw_datum_int  i)                            #|line 169|# #|line 170|#
   ) #|  Message passed to a leaf component. |#              #|line 172|# #|  |# #|line 173|# #|  `port` refers to the name of the incoming or outgoing port of this component. |# #|line 174|# #|  `datum` is the data attached to this message. |# #|line 175|#
 (defclass Message ()                                        #|line 176|#
-  ((port :accessor port :initarg :port :initform  port)     #|line 177|# ⫶ port (datum :accessor datum :initarg :datum :initform  datum)  #|line 178|# ⫶ datum ) #|line 179|#))
-(defun fresh-Message ( port  datum)
+  (
+  (port :accessor port :initarg :port :initform  port)      #|line 177|#⫶ port
+  (datum :accessor datum :initarg :datum :initform  datum)  #|line 178|#⫶ datum ) #|line 179|#))
+(defun fresh-Message (undefined)
 (make-instance 'Message undefined))
                                                             #|line 180|#
 (defun clone_port (&optional  s)
@@ -381,18 +389,28 @@ x)))
     (return-from fifo_is_empty (funcall (slot-value empty  fifo) )) #|line 305|# #|line 306|#
     ) #|  Routing connection for a container component. The `direction` field has |# #|line 308|# #|  no affect on the default message routing system _ it is there for debugging |# #|line 309|# #|  purposes, or for reading by other tools. |# #|line 310|# #|line 311|#
   (defclass Connector ()                                    #|line 312|#
-    ((direction :accessor direction :initarg :direction :initform  nil)  #|  down, across, up, through |# #|line 313|# ⫶ direction (sender :accessor sender :initarg :sender :initform  nil)  #|line 314|# ⫶ sender (receiver :accessor receiver :initarg :receiver :initform  nil)  #|line 315|# ⫶ receiver ) #|line 316|#))
-  (defun fresh-Connector ()
+    (
+    (direction :accessor direction :initarg :direction :initform  nil)  #|  down, across, up, through |# #|line 313|#⫶ direction
+    (sender :accessor sender :initarg :sender :initform  nil)  #|line 314|#⫶ sender
+    (receiver :accessor receiver :initarg :receiver :initform  nil)  #|line 315|#⫶ receiver ) #|line 316|#))
+  (defun fresh-Connector (undefined)
   (make-instance 'Connector undefined))
                                                             #|line 317|# #|  `Sender` is used to “pattern match“ which `Receiver` a message should go to, |# #|line 318|# #|  based on component ID (pointer) and port name. |# #|line 319|# #|line 320|#
   (defclass Sender ()                                       #|line 321|#
-    ((name :accessor name :initarg :name :initform  name)   #|line 322|# ⫶ name (component :accessor component :initarg :component :initform  component)  #|  from |# #|line 323|# ⫶ component (port :accessor port :initarg :port :initform  port)  #|  from's port |# #|line 324|# ⫶ port ) #|line 325|#))
-  (defun fresh-Sender ( name  component  port)
+    (
+    (name :accessor name :initarg :name :initform  name)    #|line 322|#⫶ name
+    (component :accessor component :initarg :component :initform  component)  #|  from |# #|line 323|#⫶ component
+    (port :accessor port :initarg :port :initform  port)  #|  from's port |# #|line 324|#⫶ port ) #|line 325|#))
+  (defun fresh-Sender (undefined)
   (make-instance 'Sender undefined))
                                                             #|line 326|# #|  `Receiver` is a handle to a destination queue, and a `port` name to assign |# #|line 327|# #|  to incoming messages to this queue. |# #|line 328|# #|line 329|#
   (defclass Receiver ()                                     #|line 330|#
-    ((name :accessor name :initarg :name :initform  name)   #|line 331|# ⫶ name (queue :accessor queue :initarg :queue :initform  queue)  #|  queue (input | output) of receiver |# #|line 332|# ⫶ queue (port :accessor port :initarg :port :initform  port)  #|  destination port |# #|line 333|# ⫶ port (component :accessor component :initarg :component :initform  component)  #|  to (for bootstrap debug) |# #|line 334|# ⫶ component ) #|line 335|#))
-  (defun fresh-Receiver ( name  queue  port  component)
+    (
+    (name :accessor name :initarg :name :initform  name)    #|line 331|#⫶ name
+    (queue :accessor queue :initarg :queue :initform  queue)  #|  queue (input | output) of receiver |# #|line 332|#⫶ queue
+    (port :accessor port :initarg :port :initform  port)  #|  destination port |# #|line 333|#⫶ port
+    (component :accessor component :initarg :component :initform  component)  #|  to (for bootstrap debug) |# #|line 334|#⫶ component ) #|line 335|#))
+  (defun fresh-Receiver (undefined)
   (make-instance 'Receiver undefined))
                                                             #|line 336|# #|  Checks if two senders match, by pointer equality and port name matching. |# #|line 337|#
   (defun sender_eq (&optional  s1  s2)
@@ -586,13 +604,17 @@ x)))
 
                                                             #|line 1|# #|line 2|# #|line 3|#
 (defclass Component_Registry ()                             #|line 4|#
-  ((templates :accessor templates :initarg :templates :initform  nil)  #|line 5|# ⫶ templates ) #|line 6|#))
-(defun fresh-Component_Registry ()
+  (
+  (templates :accessor templates :initarg :templates :initform  nil)  #|line 5|#⫶ templates ) #|line 6|#))
+(defun fresh-Component_Registry (undefined)
 (make-instance 'Component_Registry undefined))
                                                             #|line 7|#
 (defclass Template ()                                       #|line 8|#
-  ((name :accessor name :initarg :name :initform  name)     #|line 9|# ⫶ name (template_data :accessor template_data :initarg :template_data :initform  template_data)  #|line 10|# ⫶ template_data (instantiator :accessor instantiator :initarg :instantiator :initform  instantiator)  #|line 11|# ⫶ instantiator ) #|line 12|#))
-(defun fresh-Template ( name  template_data  instantiator)
+  (
+  (name :accessor name :initarg :name :initform  name)      #|line 9|#⫶ name
+  (template_data :accessor template_data :initarg :template_data :initform  template_data)  #|line 10|#⫶ template_data
+  (instantiator :accessor instantiator :initarg :instantiator :initform  instantiator)  #|line 11|#⫶ instantiator ) #|line 12|#))
+(defun fresh-Template (undefined)
 (make-instance 'Template undefined))
                                                             #|line 13|#
 (defun read_and_convert_json_file (&optional  pathname  filename)
@@ -761,8 +783,24 @@ x)))
   (return-from first_char_is ( equal    c (funcall (quote first_char)   s  #|line 125|#))) #|line 126|#
   )                                                         #|line 128|# #|  TODO: #run_command needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here |# #|line 129|# #|  I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped |# #|line 130|# #|line 131|# #|line 132|# #|  Data for an asyncronous component _ effectively, a function with input |# #|line 133|# #|  and output queues of messages. |# #|line 134|# #|  |# #|line 135|# #|  Components can either be a user_supplied function (“lea“), or a “container“ |# #|line 136|# #|  that routes messages to child components according to a list of connections |# #|line 137|# #|  that serve as a message routing table. |# #|line 138|# #|  |# #|line 139|# #|  Child components themselves can be leaves or other containers. |# #|line 140|# #|  |# #|line 141|# #|  `handler` invokes the code that is attached to this component. |# #|line 142|# #|  |# #|line 143|# #|  `instance_data` is a pointer to instance data that the `leaf_handler` |# #|line 144|# #|  function may want whenever it is invoked again. |# #|line 145|# #|  |# #|line 146|# #|line 147|# #|  Eh_States :: enum { idle, active } |# #|line 148|#
 (defclass Eh ()                                             #|line 149|#
-  ((name :accessor name :initarg :name :initform  "")       #|line 150|# ⫶ name (inq :accessor inq :initarg :inq :initform  (make-instance 'Queue) #|line 151|#)  ⫶ inq (outq :accessor outq :initarg :outq :initform  (make-instance 'Queue) #|line 152|#)  ⫶ outq (owner :accessor owner :initarg :owner :initform  nil)  #|line 153|# ⫶ owner (saved_messages :accessor saved_messages :initarg :saved_messages :initform  nil)  #|  stack of saved message(s) |# #|line 154|# ⫶ saved_messages (children :accessor children :initarg :children :initform  nil)  #|line 155|# ⫶ children (visit_ordering :accessor visit_ordering :initarg :visit_ordering :initform  (make-instance 'Queue) #|line 156|#)  ⫶ visit_ordering (connections :accessor connections :initarg :connections :initform  nil)  #|line 157|# ⫶ connections (routings :accessor routings :initarg :routings :initform  (make-instance 'Queue) #|line 158|#)  ⫶ routings (handler :accessor handler :initarg :handler :initform  nil)  #|line 159|# ⫶ handler (inject :accessor inject :initarg :inject :initform  nil)  #|line 160|# ⫶ inject (instance_data :accessor instance_data :initarg :instance_data :initform  nil)  #|line 161|# ⫶ instance_data (state :accessor state :initarg :state :initform  "idle")  #|line 162|# #|  bootstrap debugging |# #|line 163|# ⫶ state (kind :accessor kind :initarg :kind :initform  nil)  #|  enum { container, leaf, } |# #|line 164|# ⫶ kind (trace :accessor trace :initarg :trace :initform  nil)  #|  set '⊤' if logging is enabled and if this component should be traced, (⊥ means silence, no tracing for this component) |# #|line 165|# ⫶ trace (depth :accessor depth :initarg :depth :initform  0)  #|  hierarchical depth of component, 0=top, 1=1st child of top, 2=1st child of 1st child of top, etc. |# #|line 166|# ⫶ depth ) #|line 167|#))
-(defun fresh-Eh ()
+  (
+  (name :accessor name :initarg :name :initform  "")        #|line 150|#⫶ name
+  (inq :accessor inq :initarg :inq :initform  (make-instance 'Queue) #|line 151|#) ⫶ inq
+  (outq :accessor outq :initarg :outq :initform  (make-instance 'Queue) #|line 152|#) ⫶ outq
+  (owner :accessor owner :initarg :owner :initform  nil)    #|line 153|#⫶ owner
+  (saved_messages :accessor saved_messages :initarg :saved_messages :initform  nil)  #|  stack of saved message(s) |# #|line 154|#⫶ saved_messages
+  (children :accessor children :initarg :children :initform  nil)  #|line 155|#⫶ children
+  (visit_ordering :accessor visit_ordering :initarg :visit_ordering :initform  (make-instance 'Queue) #|line 156|#) ⫶ visit_ordering
+  (connections :accessor connections :initarg :connections :initform  nil)  #|line 157|#⫶ connections
+  (routings :accessor routings :initarg :routings :initform  (make-instance 'Queue) #|line 158|#) ⫶ routings
+  (handler :accessor handler :initarg :handler :initform  nil)  #|line 159|#⫶ handler
+  (inject :accessor inject :initarg :inject :initform  nil)  #|line 160|#⫶ inject
+  (instance_data :accessor instance_data :initarg :instance_data :initform  nil)  #|line 161|#⫶ instance_data
+  (state :accessor state :initarg :state :initform  "idle")  #|line 162|# #|  bootstrap debugging |# #|line 163|#⫶ state
+  (kind :accessor kind :initarg :kind :initform  nil)  #|  enum { container, leaf, } |# #|line 164|#⫶ kind
+  (trace :accessor trace :initarg :trace :initform  nil)  #|  set '⊤' if logging is enabled and if this component should be traced, (⊥ means silence, no tracing for this component) |# #|line 165|#⫶ trace
+  (depth :accessor depth :initarg :depth :initform  0)  #|  hierarchical depth of component, 0=top, 1=1st child of top, 2=1st child of 1st child of top, etc. |# #|line 166|#⫶ depth ) #|line 167|#))
+(defun fresh-Eh (undefined)
 (make-instance 'Eh undefined))
                                                             #|line 168|# #|  Creates a component that acts as a container. It is the same as a `Eh` instance |# #|line 169|# #|  whose handler function is `container_handler`. |# #|line 170|#
 (defun make_container (&optional  name  owner)
@@ -927,13 +965,17 @@ x)))
   #| pass |#                                                #|line 313|# #|line 314|#
   )
 (defclass TwoMessages ()                                    #|line 315|#
-  ((first :accessor first :initarg :first :initform  first)  #|line 316|# ⫶ first (second :accessor second :initarg :second :initform  second)  #|line 317|# ⫶ second ) #|line 318|#))
-(defun fresh-TwoMessages ( first  second)
+  (
+  (first :accessor first :initarg :first :initform  first)  #|line 316|#⫶ first
+  (second :accessor second :initarg :second :initform  second)  #|line 317|#⫶ second ) #|line 318|#))
+(defun fresh-TwoMessages (undefined)
 (make-instance 'TwoMessages undefined))
                                                             #|line 319|# #|  Deracer_States :: enum { idle, waitingForFirst, waitingForSecond } |# #|line 320|#
 (defclass Deracer_Instance_Data ()                          #|line 321|#
-  ((state :accessor state :initarg :state :initform  state)  #|line 322|# ⫶ state (buffer :accessor buffer :initarg :buffer :initform  buffer)  #|line 323|# ⫶ buffer ) #|line 324|#))
-(defun fresh-Deracer_Instance_Data ( state  buffer)
+  (
+  (state :accessor state :initarg :state :initform  state)  #|line 322|#⫶ state
+  (buffer :accessor buffer :initarg :buffer :initform  buffer)  #|line 323|#⫶ buffer ) #|line 324|#))
+(defun fresh-Deracer_Instance_Data (undefined)
 (make-instance 'Deracer_Instance_Data undefined))
                                                             #|line 325|#
 (defun reclaim_Buffers_from_heap (&optional  inst)
@@ -1041,8 +1083,9 @@ x)))
       ))                                                    #|line 394|#
   )
 (defclass Syncfilewrite_Data ()                             #|line 396|#
-  ((filename :accessor filename :initarg :filename :initform  "")  #|line 397|# ⫶ filename ) #|line 398|#))
-(defun fresh-Syncfilewrite_Data ()
+  (
+  (filename :accessor filename :initarg :filename :initform  "")  #|line 397|#⫶ filename ) #|line 398|#))
+(defun fresh-Syncfilewrite_Data (undefined)
 (make-instance 'Syncfilewrite_Data undefined))
                                                             #|line 399|# #|  temp copy for bootstrap, sends “done“ (error during bootstrap if not wired) |# #|line 400|#
 (defun syncfilewrite_instantiate (&optional  reg  owner  name  template_data)
@@ -1078,8 +1121,11 @@ x)))
         )))                                                 #|line 420|#
   )
 (defclass StringConcat_Instance_Data ()                     #|line 422|#
-  ((buffer1 :accessor buffer1 :initarg :buffer1 :initform  nil)  #|line 423|# ⫶ buffer1 (buffer2 :accessor buffer2 :initarg :buffer2 :initform  nil)  #|line 424|# ⫶ buffer2 (count :accessor count :initarg :count :initform  0)  #|line 425|# ⫶ count ) #|line 426|#))
-(defun fresh-StringConcat_Instance_Data ()
+  (
+  (buffer1 :accessor buffer1 :initarg :buffer1 :initform  nil)  #|line 423|#⫶ buffer1
+  (buffer2 :accessor buffer2 :initarg :buffer2 :initform  nil)  #|line 424|#⫶ buffer2
+  (count :accessor count :initarg :count :initform  0)      #|line 425|#⫶ count ) #|line 426|#))
+(defun fresh-StringConcat_Instance_Data (undefined)
 (make-instance 'StringConcat_Instance_Data undefined))
                                                             #|line 427|#
 (defun stringconcat_instantiate (&optional  reg  owner  name  template_data)

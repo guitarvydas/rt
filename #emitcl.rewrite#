@@ -20,10 +20,9 @@ Defn [ _4 ident Formals StatementBlock line?] =
 
 Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛
 (defclass «ident» ()«line1»⤷«line2»
-  (⤷⎨part ‛«init»’ ‛0’⎬⤶⤶))«line3»\n
-  
-(defun fresh-«ident» (⎨part ‛«init»’ ‛1’⎬)⤷
-  (make-instance '«ident» ⎨part ‛«init»’ ‛2’⎬)⤶)
+  («init»⤶)«line3»))
+(defun fresh-«ident» (⎨part ‛«Formals»’ ‛0’⎬)
+  (make-instance '«ident» ⎨part ‛«Formals»’ ‛1’⎬))
 ’
 
 Import [ _10 ident line?] = ‛’
@@ -156,7 +155,8 @@ Deftemp [_deftemp lval _mutate e rec?] = ‛\n(let ((«lval» «e»))⤷\n(decla
 Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec»’
 Defsynonym_legal [id _eqv e rec?] = ‛\n(let ((«id» «e»))⤷\n(declare (ignorable «id»))«rec»⤶)’
 
-InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(«ident» :accessor «ident» :initarg :«ident» :initform «Exp») «fluff», «ident» , :«ident» «ident» ,’
+
+InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(«ident» :accessor «ident» :initarg :«ident» :initform «Exp») «fluff» ⫶ «ident» ’
 
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\n(cond ⤷\n(«Exp»⤷«StatementBlock»⤶)«ElifStatement»«ElseStatement»⤶)«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp»⤷«StatementBlock»⤶)’

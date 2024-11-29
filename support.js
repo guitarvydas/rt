@@ -12,8 +12,10 @@ function getlineinc () {
 }
 
 function part (s, i) {
-    let lis = s.split ("⫶");
-    return lis [i];
+    let lis = s.split (",");
+    //return lis [i+0];
+    //return `[[/${i}/ ... /${lis.length}/ ... /${lis[1]}/]]`
+    return `${lis [i]}`
 }
 
 

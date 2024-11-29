@@ -6,4 +6,6 @@
 - 01:00 - break
 - 02:24 - resume
 - 3:12 - finally installed pip env (rt)
-
+- 3:44 - return from iOS18 crash
+- 4:07 - break
+- 4:45 - resume

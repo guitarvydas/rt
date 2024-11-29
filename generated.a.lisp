@@ -72,8 +72,14 @@ x)))
       ))                                                    #|line 28|#
   )
 (defclass Datum ()                                          #|line 30|#
-  ((data :accessor data :initarg :data :initform  nil)      #|line 31|# ⫶ data (clone :accessor clone :initarg :clone :initform  nil)  #|line 32|# ⫶ clone (reclaim :accessor reclaim :initarg :reclaim :initform  nil)  #|line 33|# ⫶ reclaim (srepr :accessor srepr :initarg :srepr :initform  nil)  #|line 34|# ⫶ srepr (kind :accessor kind :initarg :kind :initform  nil)  #|line 35|# ⫶ kind (raw :accessor raw :initarg :raw :initform  nil)  #|line 36|# ⫶ raw ) #|line 37|#))
-(defun fresh-Datum ()
+  (
+  (data :accessor data :initarg :data :initform  nil)       #|line 31|#⫶ data
+  (clone :accessor clone :initarg :clone :initform  nil)    #|line 32|#⫶ clone
+  (reclaim :accessor reclaim :initarg :reclaim :initform  nil)  #|line 33|#⫶ reclaim
+  (srepr :accessor srepr :initarg :srepr :initform  nil)    #|line 34|#⫶ srepr
+  (kind :accessor kind :initarg :kind :initform  nil)       #|line 35|#⫶ kind
+  (raw :accessor raw :initarg :raw :initform  nil)          #|line 36|#⫶ raw ) #|line 37|#))
+(defun fresh-Datum (undefined)
 (make-instance 'Datum undefined))
                                                             #|line 38|#
 (defun new_datum_string (&optional  s)
@@ -219,8 +225,10 @@ x)))
   (return-from raw_datum_int  i)                            #|line 169|# #|line 170|#
   ) #|  Message passed to a leaf component. |#              #|line 172|# #|  |# #|line 173|# #|  `port` refers to the name of the incoming or outgoing port of this component. |# #|line 174|# #|  `datum` is the data attached to this message. |# #|line 175|#
 (defclass Message ()                                        #|line 176|#
-  ((port :accessor port :initarg :port :initform  port)     #|line 177|# ⫶ port (datum :accessor datum :initarg :datum :initform  datum)  #|line 178|# ⫶ datum ) #|line 179|#))
-(defun fresh-Message ( port  datum)
+  (
+  (port :accessor port :initarg :port :initform  port)      #|line 177|#⫶ port
+  (datum :accessor datum :initarg :datum :initform  datum)  #|line 178|#⫶ datum ) #|line 179|#))
+(defun fresh-Message (undefined)
 (make-instance 'Message undefined))
                                                             #|line 180|#
 (defun clone_port (&optional  s)
@@ -381,18 +389,28 @@ x)))
     (return-from fifo_is_empty (funcall (slot-value empty  fifo) )) #|line 305|# #|line 306|#
     ) #|  Routing connection for a container component. The `direction` field has |# #|line 308|# #|  no affect on the default message routing system _ it is there for debugging |# #|line 309|# #|  purposes, or for reading by other tools. |# #|line 310|# #|line 311|#
   (defclass Connector ()                                    #|line 312|#
-    ((direction :accessor direction :initarg :direction :initform  nil)  #|  down, across, up, through |# #|line 313|# ⫶ direction (sender :accessor sender :initarg :sender :initform  nil)  #|line 314|# ⫶ sender (receiver :accessor receiver :initarg :receiver :initform  nil)  #|line 315|# ⫶ receiver ) #|line 316|#))
-  (defun fresh-Connector ()
+    (
+    (direction :accessor direction :initarg :direction :initform  nil)  #|  down, across, up, through |# #|line 313|#⫶ direction
+    (sender :accessor sender :initarg :sender :initform  nil)  #|line 314|#⫶ sender
+    (receiver :accessor receiver :initarg :receiver :initform  nil)  #|line 315|#⫶ receiver ) #|line 316|#))
+  (defun fresh-Connector (undefined)
   (make-instance 'Connector undefined))
                                                             #|line 317|# #|  `Sender` is used to “pattern match“ which `Receiver` a message should go to, |# #|line 318|# #|  based on component ID (pointer) and port name. |# #|line 319|# #|line 320|#
   (defclass Sender ()                                       #|line 321|#
-    ((name :accessor name :initarg :name :initform  name)   #|line 322|# ⫶ name (component :accessor component :initarg :component :initform  component)  #|  from |# #|line 323|# ⫶ component (port :accessor port :initarg :port :initform  port)  #|  from's port |# #|line 324|# ⫶ port ) #|line 325|#))
-  (defun fresh-Sender ( name  component  port)
+    (
+    (name :accessor name :initarg :name :initform  name)    #|line 322|#⫶ name
+    (component :accessor component :initarg :component :initform  component)  #|  from |# #|line 323|#⫶ component
+    (port :accessor port :initarg :port :initform  port)  #|  from's port |# #|line 324|#⫶ port ) #|line 325|#))
+  (defun fresh-Sender (undefined)
   (make-instance 'Sender undefined))
                                                             #|line 326|# #|  `Receiver` is a handle to a destination queue, and a `port` name to assign |# #|line 327|# #|  to incoming messages to this queue. |# #|line 328|# #|line 329|#
   (defclass Receiver ()                                     #|line 330|#
-    ((name :accessor name :initarg :name :initform  name)   #|line 331|# ⫶ name (queue :accessor queue :initarg :queue :initform  queue)  #|  queue (input | output) of receiver |# #|line 332|# ⫶ queue (port :accessor port :initarg :port :initform  port)  #|  destination port |# #|line 333|# ⫶ port (component :accessor component :initarg :component :initform  component)  #|  to (for bootstrap debug) |# #|line 334|# ⫶ component ) #|line 335|#))
-  (defun fresh-Receiver ( name  queue  port  component)
+    (
+    (name :accessor name :initarg :name :initform  name)    #|line 331|#⫶ name
+    (queue :accessor queue :initarg :queue :initform  queue)  #|  queue (input | output) of receiver |# #|line 332|#⫶ queue
+    (port :accessor port :initarg :port :initform  port)  #|  destination port |# #|line 333|#⫶ port
+    (component :accessor component :initarg :component :initform  component)  #|  to (for bootstrap debug) |# #|line 334|#⫶ component ) #|line 335|#))
+  (defun fresh-Receiver (undefined)
   (make-instance 'Receiver undefined))
                                                             #|line 336|# #|  Checks if two senders match, by pointer equality and port name matching. |# #|line 337|#
   (defun sender_eq (&optional  s1  s2)
