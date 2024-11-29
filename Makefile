@@ -56,3 +56,6 @@ clean:
 install-js-requires:
 	npm install yargs prompt-sync ohm-js
 
+# python3 -m venv ./rt
+# source rt/bin/activate
+# pip3 install websockets

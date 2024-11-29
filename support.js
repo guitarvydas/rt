@@ -11,4 +11,9 @@ function getlineinc () {
     return `${linenumber}`;
 }
 
+function part (s, i) {
+    let lis = s.split ("⫶");
+    return lis [i];
+}
+
 

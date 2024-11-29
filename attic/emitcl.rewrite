@@ -19,12 +19,9 @@ Defn [ _4 ident Formals StatementBlock line?] =
   ⎦
 
 Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛
-(defclass «ident» ()«line1»⤷«line2»
-  («init»⤶)«line3»))
-(defun fresh-«ident» (⎨part ‛«Formals»’ ‛0’⎬)
-  (make-instance '«ident» ⎨part ‛«Formals»’ ‛1’⎬))
+(defun «ident» (&optional «Formals»)«line1»⤷«line2»
+(list⤷«init»⤶⤶)«line3»)
 ’
-
 Import [ _10 ident line?] = ‛’
 StatementBlock [ line1? lb line2? Statement     line3? rb  line4?] = ‛«line1»«line2»«Statement»«line3»«line4»\n’
 
@@ -83,6 +80,29 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 
 (defun key-mangle (s) s)
 
+(defun dict-lookup (d key-string)
+    (let ((pair (assoc (key-mangle key-string) d :test 'equal)))
+      (if pair
+          (cdr pair)
+        nil)))
+
+(defun dict-is-dict? (d) (listp d))
+
+(defun dict-in? (key-string d)
+  (if (and d (dict-is-dict? d))
+       (let ((pair (assoc (key-mangle key-string) d :test 'equal)))
+         (if pair t nil))
+    nil))
+
+(defun field (obj key) 
+  (let ((pair (assoc key obj :test 'equal)))
+      (if pair (cdr pair) nil)))
+
+(defun (setf field) (v obj key)
+  (let ((pair (assoc key obj :test 'equal)))
+      (if pair
+          (setf (cdr pair) v)
+        (error (format nil "error in setf field, key ~s not found" key)))))
 
 (defun is-pair? (x)
   (and
@@ -156,8 +176,7 @@ Defsynonym_illegal [ lval err _eqv e rec?] = ‛\n«lval» «err» = «e»«rec�
 Defsynonym_legal [id _eqv e rec?] = ‛\n(let ((«id» «e»))⤷\n(declare (ignorable «id»))«rec»⤶)’
 
 
-InitStatement [ _mark ident _33 Exp fluff*] = ‛(«ident» :accessor «ident» :initarg :«ident» :initform «Exp») «fluff» ⫶ «ident» ’
-
+InitStatement [ _mark ident _33 Exp fluff*] = ‛\n(cons "«ident»" «Exp») «fluff»’
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\n(cond ⤷\n(«Exp»⤷«StatementBlock»⤶)«ElifStatement»«ElseStatement»⤶)«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp»⤷«StatementBlock»⤶)’
 ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶)’
@@ -197,10 +216,10 @@ ExpExp_basic [ Primary] =‛«Primary»’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 Primary_plain [p] = ‛«p»’
 
-PrimaryIndexed_lookupident [p _at key] = ‛(gethash «key» «p»)’
-PrimaryIndexed_lookup [p _at key] = ‛(gethash «key» «p»)’
-PrimaryIndexed_fieldident [p _dot key] = ‛(slot-value «key» «p»)’ 
-PrimaryIndexed_field [p _dot key] = ‛(slot-value «p» «key» «p»)’ 
+PrimaryIndexed_lookupident [p _at key] = ‛(dict-lookup «p» «key»)’
+PrimaryIndexed_lookup [p _at key] = ‛(dict-lookup  «p» «key»)’
+PrimaryIndexed_fieldident [p _dot key] = ‛(field «p» "«key»")’ 
+PrimaryIndexed_field [p _dot key] = ‛(field «p» «key»)’ 
 PrimaryIndexed_index [p lb e rb] = ‛(nth «e» «p»)’ 
 PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
 PrimaryIndexed_atom [a] = ‛«a»’
@@ -252,7 +271,7 @@ ActualComma [comment? Actual comma? line?] = ‛«comment»«Actual»«comma»«
 
 number_fract [ num* _160 den+] =‛«num».«den»’
 number_whole [ digit+] =‛«digit»’
-Pair [ string _161 Exp _162?] = ‛\n(setf (gethash «string» ⟪freshdict⟫) ⤷«Exp»⤶)’
+Pair [ string _161 Exp _162?] = ‛\n(setf (dict-lookup ⟪freshdict⟫ «string») ⤷«Exp»⤶)’
 
 andOrIn_and [op] = ‛ and ’
 andOrIn_or [op] = ‛ or ’
