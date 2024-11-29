@@ -67,6 +67,8 @@ emit {
      | "#" xkw<"inkvs"> "(" Exp Comma Kvs ")" -- in
      | "#" xkw<"pair"> "(" Key Comma Exp ")" -- pair
      | "#" xkw<"push"> "(" Exp Comma Exp ")" -- push
+     | "#" xkw<"enqueue"> "(" Exp Comma Exp ")" -- enqueue
+     | "#" xkw<"dequeue"> "(" Exp ")" -- dequeue
      
      | "#" ident "(" StuffInsideParentheses* ")" -- unrecognized
 
@@ -242,7 +244,6 @@ emit {
       | kw<"as">
       | kw<"pair">
       | kw<"push">
-      | kw<"onto">
       | lambda
       | phi
       )

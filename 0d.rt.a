@@ -352,7 +352,7 @@ defn force_tick (parent, eh) {
 }
 
 defn push_message (parent, receiver, inq, m) {
-    inq.put (m)
+    #enqueue (inq, m)
     parent.visit_ordering.put (receiver)
 }
 
@@ -371,11 +371,11 @@ defn step_child (child, msg) {
 }
 
 defn save_message (eh, msg) {
-    eh.saved_messages.put (msg)
+    #enqueue (eh.saved_messages, msg)
 }
 
 defn fetch_saved_message_and_clear (eh) {
-    return eh.saved_messages.get ()
+    return #dequeue (eh.saved_messages)
 }
 
 defn step_children (container, causingMessage) {
@@ -384,7 +384,7 @@ defn step_children (container, causingMessage) {
         ⌈ child = container represents self, skip it⌉
         if (not (is_self (child, container))){
             if (not (child.inq.empty ())){
-                msg ≡ child.inq.get ()
+                msg ≡ #dequeue (child.inq)
 		deftemp began_long_run ⇐ ϕ
 		deftemp continued_long_run ⇐ ϕ
 		deftemp ended_long_run ⇐ ϕ
@@ -406,7 +406,7 @@ defn step_children (container, causingMessage) {
                 container.state ⇐ “active”}
             
             while (not (child.outq.empty ())) {
-                msg ≡ child.outq.get ()
+                msg ≡ #dequeue (child.outq)
                 route(container, child, msg)
                 destroy_message(msg)}}}
 
@@ -462,7 +462,7 @@ defn child_is_ready (eh) {
 }
 
 defn append_routing_descriptor (container, desc) {
-    container.routings.put (desc)
+    #enqueue (container.routings, desc)
 }
 
 defn container_injector (container, message) {

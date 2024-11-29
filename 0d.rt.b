@@ -38,8 +38,7 @@ defn abstracted_register_component (reg, template, ok_to_overwrite) {
         load_error (#strcons (“Component /”, #strcons (template.name, “/ already declared”)))
 	return reg
     } else {
-        templates_alist ≡ reg.templates
-        #push (reg, #pair (“templates”, #push (templates_alist, #pair (name, template))))
+        #push (reg.templates, #pair (name, template))
 	return reg
     }
 }
@@ -47,7 +46,7 @@ defn abstracted_register_component (reg, template, ok_to_overwrite) {
 defn get_component_instance (reg, full_name, owner) {
     template_name ≡ mangle_name (full_name)
     if template_name in reg.templates {
-        template ≡ reg.templates[template_name]
+        template ≡ reg.templates@(template_name)
         if (template = ϕ) {
             load_error (#strcons (“Registry Error (A): Can't find component /”, #strcons (template_name, “/”)))
             return ϕ}
@@ -96,7 +95,6 @@ defn generate_shell_components (reg, container_list) {
     ⌈     {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},⌉
     ⌈     {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []}⌉
     ⌈ ]⌉
-    deftemp regkvs ⇐ reg
     if ϕ != container_list {
         for diagram in container_list {
             ⌈ loop through every component in the diagram and look for names that start with “$“⌉
@@ -106,17 +104,17 @@ defn generate_shell_components (reg, container_list) {
                     name ≡ child_descriptor@“name”
                     cmd ≡ #stringcdr (name).strip ()
                     generated_leaf ≡ Template (name,  ↪︎shell_out_instantiate, cmd)
-                    #push (regkvs, register_component (regkvs, generated_leaf))
+                    register_component (reg, generated_leaf)
                 } elif first_char_is (child_descriptor@“name”, “'”) {
                     name ≡ child_descriptor@“name”
                     s ≡ #stringcdr (name)
                     generated_leaf ≡ Template (name,  ↪︎string_constant_instantiate, s)
-                    #push (regkvs, register_component_allow_overwriting (regkvs, generated_leaf))
+                    register_component_allow_overwriting (reg, generated_leaf)
 		}
 	    }
 	}
     }
-    return regkvs
+    return reg
 }
 
 defn first_char (s) {
@@ -159,6 +157,7 @@ defobj Eh () {
         • connections ⇐ []
         • routings ⇐ #freshQueue ()
         • handler ⇐ ϕ
+        • inject ⇐ ϕ
         • instance_data ⇐ ϕ
         • state ⇐ “idle”
         ⌈ bootstrap debugging⌉
@@ -526,7 +525,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
         all_containers_within_single_file ≡ json2internal (root_project, diagram_source)
         reg ⇐ generate_shell_components (reg, all_containers_within_single_file)
         for container in all_containers_within_single_file {
-            #push (reg, register_component (reg, Template (container@“name” , ⌈ template_data=⌉ container, ⌈ instantiator=⌉ ↪︎container_instantiator)))
+            register_component (reg, Template (container@“name” , ⌈ template_data=⌉ container, ⌈ instantiator=⌉ ↪︎container_instantiator))
 	}
     }
     #print_stdout (reg)
@@ -597,20 +596,20 @@ defn fakepipename_handler (eh, msg) {
 ⌈ future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project⌉
 
 defn initialize_stock_components (reg) {
-    deftemp regkvs ⇐ register_component (reg, Template ( “1then2”, ϕ, ↪︎deracer_instantiate))
-    #push (regkvs, register_component (regkvs, Template ( “?”, ϕ, ↪︎probe_instantiate)))
-    #push (regkvs, register_component (regkvs, Template ( “?A”, ϕ, ↪︎probeA_instantiate)))
-    #push (regkvs, register_component (regkvs, Template ( “?B”, ϕ, ↪︎probeB_instantiate)))
-    #push (regkvs, register_component (regkvs, Template ( “?C”, ϕ, ↪︎probeC_instantiate)))
-    #push (regkvs, register_component (regkvs, Template ( “trash”, ϕ, ↪︎trash_instantiate)))
+    register_component (reg, Template ( “1then2”, ϕ, ↪︎deracer_instantiate))
+    register_component (reg, Template ( “?”, ϕ, ↪︎probe_instantiate))
+    register_component (reg, Template ( “?A”, ϕ, ↪︎probeA_instantiate))
+    register_component (reg, Template ( “?B”, ϕ, ↪︎probeB_instantiate))
+    register_component (reg, Template ( “?C”, ϕ, ↪︎probeC_instantiate))
+    register_component (reg, Template ( “trash”, ϕ, ↪︎trash_instantiate))
 
-    #push (regkvs, register_component (regkvs, Template ( “Low Level Read Text File”, ϕ, ↪︎low_level_read_text_file_instantiate)))
-    #push (regkvs, register_component (regkvs, Template ( “Ensure String Datum”, ϕ, ↪︎ensure_string_datum_instantiate)))
+    register_component (reg, Template ( “Low Level Read Text File”, ϕ, ↪︎low_level_read_text_file_instantiate))
+    register_component (reg, Template ( “Ensure String Datum”, ϕ, ↪︎ensure_string_datum_instantiate))
 
-    #push (regkvs, register_component (regkvs, Template ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate)))
-    #push (regkvs, register_component (regkvs, Template ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate)))
-       ⌈ for fakepipe⌉    #push (regkvs, register_component (regkvs, Template ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate)))
-    return regkvs
+    register_component (reg, Template ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate))
+    register_component (reg, Template ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate))
+       ⌈ for fakepipe⌉
+    register_component (reg, Template ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate))
 }
 
 defn argv () {

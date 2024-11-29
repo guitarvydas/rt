@@ -12,7 +12,7 @@
   )
 (defun monitor_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 10|#
-  (let (( s (funcall (field "srepr" (field "datum"  msg)) )))
+  (let (( s (funcall (field (field  msg "datum") "srepr") )))
     (declare (ignorable  s))                                #|line 11|#
     (let (( i (parse-integer  s)                            #|line 12|#))
       (declare (ignorable  i))

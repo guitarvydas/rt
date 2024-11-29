@@ -24,26 +24,26 @@
   )
 (defun delay_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 22|#
-  (let ((info (field "instance_data"  eh)))
+  (let ((info (field  eh "instance_data")))
     (declare (ignorable info))                              #|line 23|#
     (cond
       ((funcall (quote first_time)   msg )                  #|line 24|#
-        (setf (field "saved_message"  info)  msg)           #|line 25|#
+        (setf (field  info "saved_message")  msg)           #|line 25|#
         (funcall (quote set_active)   eh )
         #|  tell engine to keep running this component with ;ticks'  |# #|line 26|# #|line 27|#
         ))                                                  #|line 28|#
-    (let ((count (field "counter"  info)))
+    (let ((count (field  info "counter")))
       (declare (ignorable count))                           #|line 29|#
       (let (( next (+  count  1)))
         (declare (ignorable  next))                         #|line 30|#
         (cond
-          (( >=  (field "counter"  info)  DELAYDELAY)       #|line 31|#
+          (( >=  (field  info "counter")  DELAYDELAY)       #|line 31|#
             (funcall (quote set_idle)   eh )
             #|  tell engine that we're finally done  |#     #|line 32|#
-            (funcall (quote forward)   eh  "" (field "saved_message"  info)  #|line 33|#)
+            (funcall (quote forward)   eh  "" (field  info "saved_message")  #|line 33|#)
             (setf  next  0)                                 #|line 34|# #|line 35|#
             ))
-        (setf (field "counter"  info)  next)                #|line 36|#))) #|line 37|#
+        (setf (field  info "counter")  next)                #|line 36|#))) #|line 37|#
   )
 
 
