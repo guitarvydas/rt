@@ -46,7 +46,7 @@ defn abstracted_register_component (reg, template, ok_to_overwrite) {
 defn get_component_instance (reg, full_name, owner) {
     template_name ≡ mangle_name (full_name)
     if template_name in reg.templates {
-        template ≡ reg.templates@(template_name)
+        template ≡ reg.templates@template_name
         if (template = ϕ) {
             load_error (#strcons (“Registry Error (A): Can't find component /”, #strcons (template_name, “/”)))
             return ϕ}

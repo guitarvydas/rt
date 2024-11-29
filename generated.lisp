@@ -312,300 +312,302 @@ x)))
               (let ((child_instance (funcall (quote get_component_instance)   reg (dict-lookup   child_desc  "name")  container  #|line 238|#)))
                 (declare (ignorable child_instance))
                 (funcall (field  children "append")   child_instance  #|line 239|#)
-                (setf (nth (dict-lookup   child_desc  "id")  children_by_id)  child_instance)) #|line 240|#
+                (let ((id (dict-lookup   child_desc  "id")))
+                  (declare (ignorable id))                  #|line 240|#
+                  (setf (dict-lookup  children_by_id id)  child_instance) #|line 241|# #|line 242|#)) #|line 243|#
               ))
-        (setf (field  container "children")  children)      #|line 241|#
+        (setf (field  container "children")  children)      #|line 244|#
         (let ((me  container))
-          (declare (ignorable me))                          #|line 242|# #|line 243|#
+          (declare (ignorable me))                          #|line 245|# #|line 246|#
           (let ((connectors  nil))
-            (declare (ignorable connectors))                #|line 244|#
+            (declare (ignorable connectors))                #|line 247|#
             (loop for proto_conn in (dict-lookup   desc  "connections")
               do
                 (progn
-                  proto_conn                                #|line 245|#
+                  proto_conn                                #|line 248|#
                   (let ((connector (funcall (quote Connector) )))
-                    (declare (ignorable connector))         #|line 246|#
+                    (declare (ignorable connector))         #|line 249|#
                     (cond
-                      (( equal   (dict-lookup   proto_conn  "dir")  enumDown) #|line 247|#
-                        #|  JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''}, |# #|line 248|#
-                        (setf (field  connector "direction")  "down") #|line 249|#
-                        (setf (field  connector "sender") (funcall (quote Sender)  (field  me "name")  me (dict-lookup   proto_conn  "source_port")  #|line 250|#))
+                      (( equal   (dict-lookup   proto_conn  "dir")  enumDown) #|line 250|#
+                        #|  JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''}, |# #|line 251|#
+                        (setf (field  connector "direction")  "down") #|line 252|#
+                        (setf (field  connector "sender") (funcall (quote Sender)  (field  me "name")  me (dict-lookup   proto_conn  "source_port")  #|line 253|#))
                         (let ((target_component (nth (dict-lookup   proto_conn (dict-lookup   "target"  "id"))  children_by_id)))
-                          (declare (ignorable target_component)) #|line 251|#
+                          (declare (ignorable target_component)) #|line 254|#
                           (cond
-                            (( equal    target_component  nil) #|line 252|#
-                              (funcall (quote load_error)   (concatenate 'string  "internal error: .Down connection target internal error " (dict-lookup   proto_conn  "target")) ) #|line 253|#
+                            (( equal    target_component  nil) #|line 255|#
+                              (funcall (quote load_error)   (concatenate 'string  "internal error: .Down connection target internal error " (dict-lookup   proto_conn  "target")) ) #|line 256|#
                               )
-                            (t                              #|line 254|#
-                              (setf (field  connector "receiver") (funcall (quote Receiver)  (field  target_component "name") (field  target_component "inq") (dict-lookup   proto_conn  "target_port")  target_component  #|line 255|#))
+                            (t                              #|line 257|#
+                              (setf (field  connector "receiver") (funcall (quote Receiver)  (field  target_component "name") (field  target_component "inq") (dict-lookup   proto_conn  "target_port")  target_component  #|line 258|#))
                               (funcall (field  connectors "append")   connector )
-                              )))                           #|line 256|#
+                              )))                           #|line 259|#
                         )
-                      (( equal   (dict-lookup   proto_conn  "dir")  enumAcross) #|line 257|#
-                        (setf (field  connector "direction")  "across") #|line 258|#
+                      (( equal   (dict-lookup   proto_conn  "dir")  enumAcross) #|line 260|#
+                        (setf (field  connector "direction")  "across") #|line 261|#
                         (let ((source_component (nth (dict-lookup   proto_conn (dict-lookup   "source"  "id"))  children_by_id)))
-                          (declare (ignorable source_component)) #|line 259|#
+                          (declare (ignorable source_component)) #|line 262|#
                           (let ((target_component (nth (dict-lookup   proto_conn (dict-lookup   "target"  "id"))  children_by_id)))
-                            (declare (ignorable target_component)) #|line 260|#
+                            (declare (ignorable target_component)) #|line 263|#
                             (cond
-                              (( equal    source_component  nil) #|line 261|#
-                                (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection source not ok " (dict-lookup   proto_conn  "source")) ) #|line 262|#
+                              (( equal    source_component  nil) #|line 264|#
+                                (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection source not ok " (dict-lookup   proto_conn  "source")) ) #|line 265|#
                                 )
-                              (t                            #|line 263|#
-                                (setf (field  connector "sender") (funcall (quote Sender)  (field  source_component "name")  source_component (dict-lookup   proto_conn  "source_port")  #|line 264|#))
+                              (t                            #|line 266|#
+                                (setf (field  connector "sender") (funcall (quote Sender)  (field  source_component "name")  source_component (dict-lookup   proto_conn  "source_port")  #|line 267|#))
                                 (cond
-                                  (( equal    target_component  nil) #|line 265|#
-                                    (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection target not ok " (field  proto_conn "target")) ) #|line 266|#
+                                  (( equal    target_component  nil) #|line 268|#
+                                    (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection target not ok " (field  proto_conn "target")) ) #|line 269|#
                                     )
-                                  (t                        #|line 267|#
-                                    (setf (field  connector "receiver") (funcall (quote Receiver)  (field  target_component "name") (field  target_component "inq") (dict-lookup   proto_conn  "target_port")  target_component  #|line 268|#))
+                                  (t                        #|line 270|#
+                                    (setf (field  connector "receiver") (funcall (quote Receiver)  (field  target_component "name") (field  target_component "inq") (dict-lookup   proto_conn  "target_port")  target_component  #|line 271|#))
                                     (funcall (field  connectors "append")   connector )
                                     ))
-                                ))))                        #|line 269|#
+                                ))))                        #|line 272|#
                         )
-                      (( equal   (dict-lookup   proto_conn  "dir")  enumUp) #|line 270|#
-                        (setf (field  connector "direction")  "up") #|line 271|#
+                      (( equal   (dict-lookup   proto_conn  "dir")  enumUp) #|line 273|#
+                        (setf (field  connector "direction")  "up") #|line 274|#
                         (let ((source_component (nth (dict-lookup   proto_conn (dict-lookup   "source"  "id"))  children_by_id)))
-                          (declare (ignorable source_component)) #|line 272|#
+                          (declare (ignorable source_component)) #|line 275|#
                           (cond
-                            (( equal    source_component  nil) #|line 273|#
-                              (funcall (quote print)   (concatenate 'string  "internal error: .Up connection source not ok " (dict-lookup   proto_conn  "source")) ) #|line 274|#
+                            (( equal    source_component  nil) #|line 276|#
+                              (funcall (quote print)   (concatenate 'string  "internal error: .Up connection source not ok " (dict-lookup   proto_conn  "source")) ) #|line 277|#
                               )
-                            (t                              #|line 275|#
-                              (setf (field  connector "sender") (funcall (quote Sender)  (field  source_component "name")  source_component (dict-lookup   proto_conn  "source_port")  #|line 276|#))
-                              (setf (field  connector "receiver") (funcall (quote Receiver)  (field  me "name") (field  container "outq") (dict-lookup   proto_conn  "target_port")  me  #|line 277|#))
+                            (t                              #|line 278|#
+                              (setf (field  connector "sender") (funcall (quote Sender)  (field  source_component "name")  source_component (dict-lookup   proto_conn  "source_port")  #|line 279|#))
+                              (setf (field  connector "receiver") (funcall (quote Receiver)  (field  me "name") (field  container "outq") (dict-lookup   proto_conn  "target_port")  me  #|line 280|#))
                               (funcall (field  connectors "append")   connector )
-                              )))                           #|line 278|#
+                              )))                           #|line 281|#
                         )
-                      (( equal   (dict-lookup   proto_conn  "dir")  enumThrough) #|line 279|#
-                        (setf (field  connector "direction")  "through") #|line 280|#
-                        (setf (field  connector "sender") (funcall (quote Sender)  (field  me "name")  me (dict-lookup   proto_conn  "source_port")  #|line 281|#))
-                        (setf (field  connector "receiver") (funcall (quote Receiver)  (field  me "name") (field  container "outq") (dict-lookup   proto_conn  "target_port")  me  #|line 282|#))
+                      (( equal   (dict-lookup   proto_conn  "dir")  enumThrough) #|line 282|#
+                        (setf (field  connector "direction")  "through") #|line 283|#
+                        (setf (field  connector "sender") (funcall (quote Sender)  (field  me "name")  me (dict-lookup   proto_conn  "source_port")  #|line 284|#))
+                        (setf (field  connector "receiver") (funcall (quote Receiver)  (field  me "name") (field  container "outq") (dict-lookup   proto_conn  "target_port")  me  #|line 285|#))
                         (funcall (field  connectors "append")   connector )
-                        )))                                 #|line 283|#
-                  ))                                        #|line 284|#
-            (setf (field  container "connections")  connectors) #|line 285|#
-            (return-from container_instantiator  container) #|line 286|#))))) #|line 287|#
-  ) #|  The default handler for container components. |#    #|line 289|#
+                        )))                                 #|line 286|#
+                  ))                                        #|line 287|#
+            (setf (field  container "connections")  connectors) #|line 288|#
+            (return-from container_instantiator  container) #|line 289|#))))) #|line 290|#
+  ) #|  The default handler for container components. |#    #|line 292|#
 (defun container_handler (&optional  container  message)
-  (declare (ignorable  container  message))                 #|line 290|#
+  (declare (ignorable  container  message))                 #|line 293|#
   (funcall (quote route)   container  #|  from=  |# container  message )
-  #|  references to 'self' are replaced by the container during instantiation |# #|line 291|#
+  #|  references to 'self' are replaced by the container during instantiation |# #|line 294|#
   (loop while (funcall (quote any_child_ready)   container )
     do
-      (progn                                                #|line 292|#
-        (funcall (quote step_children)   container  message ) #|line 293|#
-        ))                                                  #|line 294|#
-    ) #|  Frees the given container and associated data. |# #|line 296|#
+      (progn                                                #|line 295|#
+        (funcall (quote step_children)   container  message ) #|line 296|#
+        ))                                                  #|line 297|#
+    ) #|  Frees the given container and associated data. |# #|line 299|#
   (defun destroy_container (&optional  eh)
-    (declare (ignorable  eh))                               #|line 297|#
-    #| pass |#                                              #|line 298|# #|line 299|#
+    (declare (ignorable  eh))                               #|line 300|#
+    #| pass |#                                              #|line 301|# #|line 302|#
     )
   (defun fifo_is_empty (&optional  fifo)
-    (declare (ignorable  fifo))                             #|line 301|#
-    (return-from fifo_is_empty (funcall (field  fifo "empty") )) #|line 302|# #|line 303|#
-    ) #|  Routing connection for a container component. The `direction` field has |# #|line 305|# #|  no affect on the default message routing system _ it is there for debugging |# #|line 306|# #|  purposes, or for reading by other tools. |# #|line 307|# #|line 308|#
-  (defun Connector (&optional )                             #|line 309|#
+    (declare (ignorable  fifo))                             #|line 304|#
+    (return-from fifo_is_empty (funcall (field  fifo "empty") )) #|line 305|# #|line 306|#
+    ) #|  Routing connection for a container component. The `direction` field has |# #|line 308|# #|  no affect on the default message routing system _ it is there for debugging |# #|line 309|# #|  purposes, or for reading by other tools. |# #|line 310|# #|line 311|#
+  (defun Connector (&optional )                             #|line 312|#
     (list
-      (cons "direction"  nil)  #|  down, across, up, through |# #|line 310|#
-      (cons "sender"  nil)                                  #|line 311|#
-      (cons "receiver"  nil)                                #|line 312|#) #|line 313|#)
-                                                            #|line 314|# #|  `Sender` is used to “pattern match“ which `Receiver` a message should go to, |# #|line 315|# #|  based on component ID (pointer) and port name. |# #|line 316|# #|line 317|#
-  (defun Sender (&optional  name  component  port)          #|line 318|#
+      (cons "direction"  nil)  #|  down, across, up, through |# #|line 313|#
+      (cons "sender"  nil)                                  #|line 314|#
+      (cons "receiver"  nil)                                #|line 315|#) #|line 316|#)
+                                                            #|line 317|# #|  `Sender` is used to “pattern match“ which `Receiver` a message should go to, |# #|line 318|# #|  based on component ID (pointer) and port name. |# #|line 319|# #|line 320|#
+  (defun Sender (&optional  name  component  port)          #|line 321|#
     (list
-      (cons "name"  name)                                   #|line 319|#
-      (cons "component"  component)  #|  from |#            #|line 320|#
-      (cons "port"  port)  #|  from's port |#               #|line 321|#) #|line 322|#)
-                                                            #|line 323|# #|  `Receiver` is a handle to a destination queue, and a `port` name to assign |# #|line 324|# #|  to incoming messages to this queue. |# #|line 325|# #|line 326|#
-  (defun Receiver (&optional  name  queue  port  component) #|line 327|#
+      (cons "name"  name)                                   #|line 322|#
+      (cons "component"  component)  #|  from |#            #|line 323|#
+      (cons "port"  port)  #|  from's port |#               #|line 324|#) #|line 325|#)
+                                                            #|line 326|# #|  `Receiver` is a handle to a destination queue, and a `port` name to assign |# #|line 327|# #|  to incoming messages to this queue. |# #|line 328|# #|line 329|#
+  (defun Receiver (&optional  name  queue  port  component) #|line 330|#
     (list
-      (cons "name"  name)                                   #|line 328|#
-      (cons "queue"  queue)  #|  queue (input | output) of receiver |# #|line 329|#
-      (cons "port"  port)  #|  destination port |#          #|line 330|#
-      (cons "component"  component)  #|  to (for bootstrap debug) |# #|line 331|#) #|line 332|#)
-                                                            #|line 333|# #|  Checks if two senders match, by pointer equality and port name matching. |# #|line 334|#
+      (cons "name"  name)                                   #|line 331|#
+      (cons "queue"  queue)  #|  queue (input | output) of receiver |# #|line 332|#
+      (cons "port"  port)  #|  destination port |#          #|line 333|#
+      (cons "component"  component)  #|  to (for bootstrap debug) |# #|line 334|#) #|line 335|#)
+                                                            #|line 336|# #|  Checks if two senders match, by pointer equality and port name matching. |# #|line 337|#
   (defun sender_eq (&optional  s1  s2)
-    (declare (ignorable  s1  s2))                           #|line 335|#
+    (declare (ignorable  s1  s2))                           #|line 338|#
     (let ((same_components ( equal   (field  s1 "component") (field  s2 "component"))))
-      (declare (ignorable same_components))                 #|line 336|#
+      (declare (ignorable same_components))                 #|line 339|#
       (let ((same_ports ( equal   (field  s1 "port") (field  s2 "port"))))
-        (declare (ignorable same_ports))                    #|line 337|#
-        (return-from sender_eq ( and   same_components  same_ports)) #|line 338|#)) #|line 339|#
-    ) #|  Delivers the given message to the receiver of this connector. |# #|line 341|# #|line 342|#
+        (declare (ignorable same_ports))                    #|line 340|#
+        (return-from sender_eq ( and   same_components  same_ports)) #|line 341|#)) #|line 342|#
+    ) #|  Delivers the given message to the receiver of this connector. |# #|line 344|# #|line 345|#
   (defun deposit (&optional  parent  conn  message)
-    (declare (ignorable  parent  conn  message))            #|line 343|#
-    (let ((new_message (funcall (quote make_message)  (field (field  conn "receiver") "port") (field  message "datum")  #|line 344|#)))
+    (declare (ignorable  parent  conn  message))            #|line 346|#
+    (let ((new_message (funcall (quote make_message)  (field (field  conn "receiver") "port") (field  message "datum")  #|line 347|#)))
       (declare (ignorable new_message))
-      (funcall (quote push_message)   parent (field (field  conn "receiver") "component") (field (field  conn "receiver") "queue")  new_message  #|line 345|#)) #|line 346|#
+      (funcall (quote push_message)   parent (field (field  conn "receiver") "component") (field (field  conn "receiver") "queue")  new_message  #|line 348|#)) #|line 349|#
     )
   (defun force_tick (&optional  parent  eh)
-    (declare (ignorable  parent  eh))                       #|line 348|#
-    (let ((tick_msg (funcall (quote make_message)   "." (funcall (quote new_datum_tick) )  #|line 349|#)))
+    (declare (ignorable  parent  eh))                       #|line 351|#
+    (let ((tick_msg (funcall (quote make_message)   "." (funcall (quote new_datum_tick) )  #|line 352|#)))
       (declare (ignorable tick_msg))
-      (funcall (quote push_message)   parent  eh (field  eh "inq")  tick_msg  #|line 350|#)
-      (return-from force_tick  tick_msg)                    #|line 351|#) #|line 352|#
+      (funcall (quote push_message)   parent  eh (field  eh "inq")  tick_msg  #|line 353|#)
+      (return-from force_tick  tick_msg)                    #|line 354|#) #|line 355|#
     )
   (defun push_message (&optional  parent  receiver  inq  m)
-    (declare (ignorable  parent  receiver  inq  m))         #|line 354|#
-    (enqueue  inq  m)                                       #|line 355|#
-    (funcall (field (field  parent "visit_ordering") "put")   receiver  #|line 356|#) #|line 357|#
+    (declare (ignorable  parent  receiver  inq  m))         #|line 357|#
+    (enqueue  inq  m)                                       #|line 358|#
+    (funcall (field (field  parent "visit_ordering") "put")   receiver  #|line 359|#) #|line 360|#
     )
   (defun is_self (&optional  child  container)
-    (declare (ignorable  child  container))                 #|line 359|#
-    #|  in an earlier version “self“ was denoted as ϕ |#    #|line 360|#
-    (return-from is_self ( equal    child  container))      #|line 361|# #|line 362|#
+    (declare (ignorable  child  container))                 #|line 362|#
+    #|  in an earlier version “self“ was denoted as ϕ |#    #|line 363|#
+    (return-from is_self ( equal    child  container))      #|line 364|# #|line 365|#
     )
   (defun step_child (&optional  child  msg)
-    (declare (ignorable  child  msg))                       #|line 364|#
+    (declare (ignorable  child  msg))                       #|line 367|#
     (let ((before_state (field  child "state")))
-      (declare (ignorable before_state))                    #|line 365|#
-      (funcall (field  child "handler")   child  msg        #|line 366|#)
+      (declare (ignorable before_state))                    #|line 368|#
+      (funcall (field  child "handler")   child  msg        #|line 369|#)
       (let ((after_state (field  child "state")))
-        (declare (ignorable after_state))                   #|line 367|#
-        (return-from step_child (values ( and  ( equal    before_state  "idle") (not (equal   after_state  "idle")))  #|line 368|#( and  (not (equal   before_state  "idle")) (not (equal   after_state  "idle")))  #|line 369|#( and  (not (equal   before_state  "idle")) ( equal    after_state  "idle")))) #|line 370|#)) #|line 371|#
+        (declare (ignorable after_state))                   #|line 370|#
+        (return-from step_child (values ( and  ( equal    before_state  "idle") (not (equal   after_state  "idle")))  #|line 371|#( and  (not (equal   before_state  "idle")) (not (equal   after_state  "idle")))  #|line 372|#( and  (not (equal   before_state  "idle")) ( equal    after_state  "idle")))) #|line 373|#)) #|line 374|#
     )
   (defun save_message (&optional  eh  msg)
-    (declare (ignorable  eh  msg))                          #|line 373|#
-    (enqueue (field  eh "saved_messages")  msg)             #|line 374|# #|line 375|#
+    (declare (ignorable  eh  msg))                          #|line 376|#
+    (enqueue (field  eh "saved_messages")  msg)             #|line 377|# #|line 378|#
     )
   (defun fetch_saved_message_and_clear (&optional  eh)
-    (declare (ignorable  eh))                               #|line 377|#
-    (return-from fetch_saved_message_and_clear (dequeue (field  eh "saved_messages")) #|line 378|#) #|line 379|#
+    (declare (ignorable  eh))                               #|line 380|#
+    (return-from fetch_saved_message_and_clear (dequeue (field  eh "saved_messages")) #|line 381|#) #|line 382|#
     )
   (defun step_children (&optional  container  causingMessage)
-    (declare (ignorable  container  causingMessage))        #|line 381|#
-    (setf (field  container "state")  "idle")               #|line 382|#
+    (declare (ignorable  container  causingMessage))        #|line 384|#
+    (setf (field  container "state")  "idle")               #|line 385|#
     (loop for child in (funcall (quote list)  (field (field  container "visit_ordering") "queue") )
       do
         (progn
-          child                                             #|line 383|#
-          #|  child = container represents self, skip it |# #|line 384|#
+          child                                             #|line 386|#
+          #|  child = container represents self, skip it |# #|line 387|#
           (cond
-            ((not (funcall (quote is_self)   child  container )) #|line 385|#
+            ((not (funcall (quote is_self)   child  container )) #|line 388|#
               (cond
-                ((not (funcall (field (field  child "inq") "empty") )) #|line 386|#
-                  (let ((msg (dequeue (field  child "inq")) #|line 387|#))
+                ((not (funcall (field (field  child "inq") "empty") )) #|line 389|#
+                  (let ((msg (dequeue (field  child "inq")) #|line 390|#))
                     (declare (ignorable msg))
                     (let (( began_long_run  nil))
-                      (declare (ignorable  began_long_run)) #|line 388|#
+                      (declare (ignorable  began_long_run)) #|line 391|#
                       (let (( continued_long_run  nil))
-                        (declare (ignorable  continued_long_run)) #|line 389|#
+                        (declare (ignorable  continued_long_run)) #|line 392|#
                         (let (( ended_long_run  nil))
-                          (declare (ignorable  ended_long_run)) #|line 390|#
-                          (multiple-value-setq ( began_long_run  continued_long_run  ended_long_run) (funcall (quote step_child)   child  msg  #|line 391|#))
+                          (declare (ignorable  ended_long_run)) #|line 393|#
+                          (multiple-value-setq ( began_long_run  continued_long_run  ended_long_run) (funcall (quote step_child)   child  msg  #|line 394|#))
                           (cond
-                            ( began_long_run                #|line 392|#
-                              (funcall (quote save_message)   child  msg  #|line 393|#)
+                            ( began_long_run                #|line 395|#
+                              (funcall (quote save_message)   child  msg  #|line 396|#)
                               )
-                            ( continued_long_run            #|line 394|#
-                              #| pass |#                    #|line 395|# #|line 396|#
+                            ( continued_long_run            #|line 397|#
+                              #| pass |#                    #|line 398|# #|line 399|#
                               ))
-                          (funcall (quote destroy_message)   msg ))))) #|line 397|#
+                          (funcall (quote destroy_message)   msg ))))) #|line 400|#
                   )
-                (t                                          #|line 398|#
+                (t                                          #|line 401|#
                   (cond
-                    ((not (equal  (field  child "state")  "idle")) #|line 399|#
-                      (let ((msg (funcall (quote force_tick)   container  child  #|line 400|#)))
+                    ((not (equal  (field  child "state")  "idle")) #|line 402|#
+                      (let ((msg (funcall (quote force_tick)   container  child  #|line 403|#)))
                         (declare (ignorable msg))
-                        (funcall (field  child "handler")   child  msg  #|line 401|#)
+                        (funcall (field  child "handler")   child  msg  #|line 404|#)
                         (funcall (quote destroy_message)   msg ))
-                      ))                                    #|line 402|#
-                  ))                                        #|line 403|#
+                      ))                                    #|line 405|#
+                  ))                                        #|line 406|#
               (cond
-                (( equal   (field  child "state")  "active") #|line 404|#
-                  #|  if child remains active, then the container must remain active and must propagate “ticks“ to child |# #|line 405|#
-                  (setf (field  container "state")  "active") #|line 406|#
-                  ))                                        #|line 407|#
+                (( equal   (field  child "state")  "active") #|line 407|#
+                  #|  if child remains active, then the container must remain active and must propagate “ticks“ to child |# #|line 408|#
+                  (setf (field  container "state")  "active") #|line 409|#
+                  ))                                        #|line 410|#
               (loop while (not (funcall (field (field  child "outq") "empty") ))
                 do
-                  (progn                                    #|line 408|#
-                    (let ((msg (dequeue (field  child "outq")) #|line 409|#))
+                  (progn                                    #|line 411|#
+                    (let ((msg (dequeue (field  child "outq")) #|line 412|#))
                       (declare (ignorable msg))
-                      (funcall (quote route)   container  child  msg  #|line 410|#)
+                      (funcall (quote route)   container  child  msg  #|line 413|#)
                       (funcall (quote destroy_message)   msg ))
                     ))
-                ))                                          #|line 411|#
-            ))                                              #|line 412|# #|line 413|# #|line 414|#
+                ))                                          #|line 414|#
+            ))                                              #|line 415|# #|line 416|# #|line 417|#
       )
     (defun attempt_tick (&optional  parent  eh)
-      (declare (ignorable  parent  eh))                     #|line 416|#
+      (declare (ignorable  parent  eh))                     #|line 419|#
       (cond
-        ((not (equal  (field  eh "state")  "idle"))         #|line 417|#
-          (funcall (quote force_tick)   parent  eh )        #|line 418|#
-          ))                                                #|line 419|#
+        ((not (equal  (field  eh "state")  "idle"))         #|line 420|#
+          (funcall (quote force_tick)   parent  eh )        #|line 421|#
+          ))                                                #|line 422|#
       )
     (defun is_tick (&optional  msg)
-      (declare (ignorable  msg))                            #|line 421|#
-      (return-from is_tick ( equal    "tick" (funcall (field (field  msg "datum") "kind") ))) #|line 422|# #|line 423|#
-      ) #|  Routes a single message to all matching destinations, according to |# #|line 425|# #|  the container's connection network. |# #|line 426|# #|line 427|#
+      (declare (ignorable  msg))                            #|line 424|#
+      (return-from is_tick ( equal    "tick" (funcall (field (field  msg "datum") "kind") ))) #|line 425|# #|line 426|#
+      ) #|  Routes a single message to all matching destinations, according to |# #|line 428|# #|  the container's connection network. |# #|line 429|# #|line 430|#
     (defun route (&optional  container  from_component  message)
-      (declare (ignorable  container  from_component  message)) #|line 428|#
+      (declare (ignorable  container  from_component  message)) #|line 431|#
       (let (( was_sent  nil))
         (declare (ignorable  was_sent))
-        #|  for checking that output went somewhere (at least during bootstrap) |# #|line 429|#
+        #|  for checking that output went somewhere (at least during bootstrap) |# #|line 432|#
         (let (( fromname  ""))
-          (declare (ignorable  fromname))                   #|line 430|#
+          (declare (ignorable  fromname))                   #|line 433|#
           (cond
-            ((funcall (quote is_tick)   message )           #|line 431|#
+            ((funcall (quote is_tick)   message )           #|line 434|#
               (loop for child in (field  container "children")
                 do
                   (progn
-                    child                                   #|line 432|#
-                    (funcall (quote attempt_tick)   container  child ) #|line 433|#
+                    child                                   #|line 435|#
+                    (funcall (quote attempt_tick)   container  child ) #|line 436|#
                     ))
-              (setf  was_sent  t)                           #|line 434|#
+              (setf  was_sent  t)                           #|line 437|#
               )
-            (t                                              #|line 435|#
+            (t                                              #|line 438|#
               (cond
-                ((not (funcall (quote is_self)   from_component  container )) #|line 436|#
-                  (setf  fromname (field  from_component "name")) #|line 437|#
+                ((not (funcall (quote is_self)   from_component  container )) #|line 439|#
+                  (setf  fromname (field  from_component "name")) #|line 440|#
                   ))
-              (let ((from_sender (funcall (quote Sender)   fromname  from_component (field  message "port")  #|line 438|#)))
-                (declare (ignorable from_sender))           #|line 439|#
+              (let ((from_sender (funcall (quote Sender)   fromname  from_component (field  message "port")  #|line 441|#)))
+                (declare (ignorable from_sender))           #|line 442|#
                 (loop for connector in (field  container "connections")
                   do
                     (progn
-                      connector                             #|line 440|#
+                      connector                             #|line 443|#
                       (cond
-                        ((funcall (quote sender_eq)   from_sender (field  connector "sender") ) #|line 441|#
-                          (funcall (quote deposit)   container  connector  message  #|line 442|#)
+                        ((funcall (quote sender_eq)   from_sender (field  connector "sender") ) #|line 444|#
+                          (funcall (quote deposit)   container  connector  message  #|line 445|#)
                           (setf  was_sent  t)
                           ))
-                      )))                                   #|line 443|#
+                      )))                                   #|line 446|#
               ))
           (cond
-            ((not  was_sent)                                #|line 444|#
-              (funcall (quote print)   "\n\n*** Error: ***"  #|line 445|#)
-              (funcall (quote print)   "***"                #|line 446|#)
-              (funcall (quote print)   (concatenate 'string (field  container "name")  (concatenate 'string  ": message '"  (concatenate 'string (field  message "port")  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))  #|line 447|#)
-              (funcall (quote print)   "***"                #|line 448|#)
-              (uiop:quit)                                   #|line 449|# #|line 450|#
-              ))))                                          #|line 451|#
+            ((not  was_sent)                                #|line 447|#
+              (funcall (quote print)   "\n\n*** Error: ***"  #|line 448|#)
+              (funcall (quote print)   "***"                #|line 449|#)
+              (funcall (quote print)   (concatenate 'string (field  container "name")  (concatenate 'string  ": message '"  (concatenate 'string (field  message "port")  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))  #|line 450|#)
+              (funcall (quote print)   "***"                #|line 451|#)
+              (uiop:quit)                                   #|line 452|# #|line 453|#
+              ))))                                          #|line 454|#
       )
     (defun any_child_ready (&optional  container)
-      (declare (ignorable  container))                      #|line 453|#
+      (declare (ignorable  container))                      #|line 456|#
       (loop for child in (field  container "children")
         do
           (progn
-            child                                           #|line 454|#
+            child                                           #|line 457|#
             (cond
-              ((funcall (quote child_is_ready)   child )    #|line 455|#
+              ((funcall (quote child_is_ready)   child )    #|line 458|#
                 (return-from any_child_ready  t)
-                ))                                          #|line 456|#
+                ))                                          #|line 459|#
             ))
-      (return-from any_child_ready  nil)                    #|line 457|# #|line 458|#
+      (return-from any_child_ready  nil)                    #|line 460|# #|line 461|#
       )
     (defun child_is_ready (&optional  eh)
-      (declare (ignorable  eh))                             #|line 460|#
-      (return-from child_is_ready ( or  ( or  ( or  (not (funcall (field (field  eh "outq") "empty") )) (not (funcall (field (field  eh "inq") "empty") ))) (not (equal  (field  eh "state")  "idle"))) (funcall (quote any_child_ready)   eh ))) #|line 461|# #|line 462|#
+      (declare (ignorable  eh))                             #|line 463|#
+      (return-from child_is_ready ( or  ( or  ( or  (not (funcall (field (field  eh "outq") "empty") )) (not (funcall (field (field  eh "inq") "empty") ))) (not (equal  (field  eh "state")  "idle"))) (funcall (quote any_child_ready)   eh ))) #|line 464|# #|line 465|#
       )
     (defun append_routing_descriptor (&optional  container  desc)
-      (declare (ignorable  container  desc))                #|line 464|#
-      (enqueue (field  container "routings")  desc)         #|line 465|# #|line 466|#
+      (declare (ignorable  container  desc))                #|line 467|#
+      (enqueue (field  container "routings")  desc)         #|line 468|# #|line 469|#
       )
     (defun container_injector (&optional  container  message)
-      (declare (ignorable  container  message))             #|line 468|#
-      (funcall (quote container_handler)   container  message  #|line 469|#) #|line 470|#
+      (declare (ignorable  container  message))             #|line 471|#
+      (funcall (quote container_handler)   container  message  #|line 472|#) #|line 473|#
       )
 
 
@@ -676,7 +678,7 @@ x)))
     (declare (ignorable template_name))
     (cond
       (( dict-in?   template_name (field  reg "templates")) #|line 48|#
-        (let ((template (dict-lookup  (field  reg "templates")  template_name)))
+        (let ((template (dict-lookup (field  reg "templates") template_name)))
           (declare (ignorable template))                    #|line 49|#
           (cond
             (( equal    template  nil)                      #|line 50|#

@@ -237,7 +237,10 @@ defn container_instantiator (reg, owner, container_name, desc) {
     for child_desc in desc@“children” {
         child_instance ≡ get_component_instance (reg, child_desc@“name”, container)
         children.append (child_instance)
-        children_by_id [child_desc@“id”] ⇐ child_instance }
+	id ≡ child_desc@“id”
+        children_by_id@id ⇐ child_instance
+
+    }
     container.children ⇐ children
     me ≡ container
     

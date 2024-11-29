@@ -62,7 +62,7 @@
     (declare (ignorable template_name))
     (cond
       (( dict-in?   template_name (field  reg "templates")) #|line 48|#
-        (let ((template (dict-lookup  (field  reg "templates")  template_name)))
+        (let ((template (dict-lookup (field  reg "templates") template_name)))
           (declare (ignorable template))                    #|line 49|#
           (cond
             (( equal    template  nil)                      #|line 50|#

@@ -216,7 +216,7 @@ ExpExp_basic [ Primary] =‛«Primary»’
 Primary_call [p actuals] = ‛(funcall «p» «actuals»)’
 Primary_plain [p] = ‛«p»’
 
-PrimaryIndexed_lookupident [p _at key] = ‛(dict-lookup «p» "«key»")’
+PrimaryIndexed_lookupident [p _at key] = ‛(dict-lookup «p» «key»)’
 PrimaryIndexed_lookup [p _at key] = ‛(dict-lookup  «p» «key»)’
 PrimaryIndexed_fieldident [p _dot key] = ‛(field «p» "«key»")’ 
 PrimaryIndexed_field [p _dot key] = ‛(field «p» «key»)’ 

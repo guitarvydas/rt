@@ -55,7 +55,7 @@ def abstracted_register_component (reg,template,ok_to_overwrite):#line 35
 def get_component_instance (reg,full_name,owner):           #line 46
     template_name = mangle_name ( full_name)                #line 47
     if  template_name in  reg.templates:                    #line 48
-        template =  reg.templates [( template_name)]        #line 49
+        template =  reg.templates [template_name]           #line 49
         if ( template ==  None):                            #line 50
             load_error ( str( "Registry Error (A): Can;t find component /") +  str( template_name) +  "/"  )#line 51
             return  None                                    #line 52
