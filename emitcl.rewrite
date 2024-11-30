@@ -76,8 +76,12 @@ ExternalPhrase_basename [_octothorpe _basename lp s rp] = ‛«s»’
 
 ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 ‛(load "~/quicklisp/setup.lisp")
-(ql:quickload :cl-json)
-(defun dict-fresh () nil)
+(defun dict-fresh () (make-hash-table :test 'equal))
+(defun dict-in? (name table)
+  (multiple-value-bind (dont-care found)
+     (gethash name table)
+    dont-care ;; quell warnings that dont-care is unused
+    found))
 
 (defun key-mangle (s) s)
 
@@ -126,7 +130,6 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
     
 (defmethod empty ((self Queue))
   (null (contents self)))
-
 ’
 
 ExternalPhrase_print_stdout [_octothorpe _ lp e rp] = ‛(format *standard-output* "~a" «e»)’

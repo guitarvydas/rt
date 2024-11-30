@@ -1,7 +1,12 @@
 
 (load "~/quicklisp/setup.lisp")
 (ql:quickload :cl-json)
-(defun dict-fresh () nil)
+(defun dict-fresh () (make-hash-table :test 'equal))
+(defun dict-in? (name table)
+(multiple-value-bind (dont-care found)
+(gethash name table)
+dont-care ;; quell warnings that dont-care is unused
+found))
 
 (defun key-mangle (s) s)
 
@@ -50,7 +55,6 @@ x)))
 
 (defmethod empty ((self Queue))
 (null (contents self)))
-
                                                             #|line 1|# #|line 2|#
 (defparameter  counter  0)                                  #|line 3|# #|line 4|#
 (defparameter  digits (list                                 #|line 5|#  "₀"  "₁"  "₂"  "₃"  "₄"  "₅"  "₆"  "₇"  "₈"  "₉"  "₁₀"  "₁₁"  "₁₂"  "₁₃"  "₁₄"  "₁₅"  "₁₆"  "₁₇"  "₁₈"  "₁₉"  "₂₀"  "₂₁"  "₂₂"  "₂₃"  "₂₄"  "₂₅"  "₂₆"  "₂₇"  "₂₈"  "₂₉" )) #|line 11|# #|line 12|# #|line 13|#
