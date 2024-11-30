@@ -78,10 +78,14 @@ function getlineinc () {
 }
 
 function part (s, i) {
-    let lis = s.split (",");
-    //return lis [i+0];
-    //return `[[/${i}/ ... /${lis.length}/ ... /${lis[1]}/]]`
-    return `${lis [i]}`
+    let lis = s.split ("⫶");
+    let len = lis.length - 1
+    let r = []
+    let ix = Number (i);
+    for (; ix < len ; ix += 3) {
+	r.push (`${lis [ix]}`);
+    }
+    return `${r.join ('')}`;
 }
 
 

@@ -1,5 +1,6 @@
 defobj Datum () {
       • a ⇐ ϕ
       • b ⇐ ϕ
+      • c ⇐ ϕ
 }
 
