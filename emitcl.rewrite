@@ -21,9 +21,6 @@ Defn [ _4 ident Formals StatementBlock line?] =
 Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛
 (defclass «ident» ()«line1»⤷«line2»
   (⤷⎨part ‛«init»’ ‛0’⎬⤶⤶))«line3»\n
-  
-(defun fresh-«ident» (⎨part ‛«init»’ ‛1’⎬)⤷
-  (make-instance '«ident» ⎨part ‛«init»’ ‛2’⎬)⤶)
 ’
 
 Import [ _10 ident line?] = ‛’
@@ -67,7 +64,7 @@ ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛
 
 ExternalPhrase_freshQueue [_octothorpe _83 _84 _85] =‛ (make-instance 'Queue)’
 ExternalPhrase_freshStack [_octothorpe _83 _84 _85] =‛ nil’
-ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ («ident»)’
+ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ (make-instance '«ident»)’
 ExternalPhrase_car [_octothorpe _83 _84 e _85 ] =‛ (car «e»)’
 ExternalPhrase_cdr [_octothorpe _83 _84 e _85 ] =‛ (cdr «e»)’
 ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ (nthcdr «n» (argv))’
@@ -199,7 +196,7 @@ Primary_plain [p] = ‛«p»’
 
 PrimaryIndexed_lookupident [p _at key] = ‛(gethash «key» «p»)’
 PrimaryIndexed_lookup [p _at key] = ‛(gethash «key» «p»)’
-PrimaryIndexed_fieldident [p _dot key] = ‛(slot-value «key» «p»)’ 
+PrimaryIndexed_fieldident [p _dot key] = ‛(slot-value '«key» «p»)’ 
 PrimaryIndexed_field [p _dot key] = ‛(slot-value «p» «key» «p»)’ 
 PrimaryIndexed_index [p lb e rb] = ‛(nth «e» «p»)’ 
 PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’

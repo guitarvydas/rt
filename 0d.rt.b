@@ -162,8 +162,6 @@ defobj Eh () {
         • state ⇐ “idle”
         ⌈ bootstrap debugging⌉
         • kind ⇐ ϕ ⌈ enum { container, leaf, }⌉
-        • trace ⇐ ⊥ ⌈ set '⊤' if logging is enabled and if this component should be traced, (⊥ means silence, no tracing for this component)⌉
-        • depth ⇐ 0 ⌈ hierarchical depth of component, 0=top, 1=1st child of top, 2=1st child of 1st child of top, etc.⌉
 }
 
 ⌈ Creates a component that acts as a container. It is the same as a `Eh` instance⌉
@@ -312,12 +310,12 @@ defn trash_handler (eh, msg) {
     ⌈ to appease dumped_on_floor checker⌉
     pass
 }
-defobj TwoMessages (first, second) {
-        • first ⇐ first
-        • second ⇐ second
+defobj TwoMessages (firstmsg, secondmsg) {
+        • firstmsg ⇐ firstmsg
+        • secondmsg ⇐ secondmsg
 }
 
-⌈ Deracer_States :: enum { idle, waitingForFirst, waitingForSecond }⌉
+⌈ Deracer_States :: enum { idle, waitingForFirstmsg, waitingForSecondmsg }⌉
 defobj Deracer_Instance_Data (state, buffer) {
         • state ⇐ state
         • buffer ⇐ buffer
@@ -335,9 +333,9 @@ defn deracer_instantiate (reg, owner, name, template_data) {
     return eh
 }
 
-defn send_first_then_second (eh, inst) {
-    forward (eh, “1”, inst.buffer.first)
-    forward (eh, “2”, inst.buffer.second)
+defn send_firstmsg_then_secondmsg (eh, inst) {
+    forward (eh, “1”, inst.buffer.firstmsg)
+    forward (eh, “2”, inst.buffer.secondmsg)
     reclaim_Buffers_from_heap (inst)
 }
 
@@ -345,24 +343,24 @@ defn deracer_handler (eh, msg) {
     deftemp inst ⇐ eh.instance_data
     if inst.state = “idle” {
         if “1” = msg.port{
-            inst.buffer.first ⇐ msg
-            inst.state ⇐ “waitingForSecond”}
+            inst.buffer.firstmsg ⇐ msg
+            inst.state ⇐ “waitingForSecondmsg”}
         elif “2” = msg.port{
-            inst.buffer.second ⇐ msg
-            inst.state ⇐ “waitingForFirst”}
+            inst.buffer.secondmsg ⇐ msg
+            inst.state ⇐ “waitingForFirstmsg”}
         else{
             runtime_error (#strcons (“bad msg.port (case A) for deracer ”, msg.port))}}
-    elif inst.state = “waitingForFirst” {
+    elif inst.state = “waitingForFirstmsg” {
         if “1” = msg.port{
-            inst.buffer.first ⇐ msg
-            send_first_then_second (eh, inst)
+            inst.buffer.firstmsg ⇐ msg
+            send_firstmsg_then_secondmsg (eh, inst)
             inst.state ⇐ “idle”}
         else{
             runtime_error (#strcons (“bad msg.port (case B) for deracer ”, msg.port))}}
-    elif inst.state = “waitingForSecond”{
+    elif inst.state = “waitingForSecondmsg”{
         if “2” = msg.port{
-            inst.buffer.second ⇐ msg
-            send_first_then_second (eh, inst)
+            inst.buffer.secondmsg ⇐ msg
+            send_firstmsg_then_secondmsg (eh, inst)
             inst.state ⇐ “idle”}
         else{
             runtime_error (#strcons (“bad msg.port (case C) for deracer ”, msg.port))}}

@@ -80,25 +80,22 @@ x)))
     (kind :accessor kind :initarg :kind :initform  nil)     #|line 35|#
     (raw :accessor raw :initarg :raw :initform  nil)        #|line 36|#)) #|line 37|#
 
-
-(defun fresh-Datum ( data  clone  reclaim  srepr  kind  raw )
-  (make-instance 'Datum  :data data  :clone clone  :reclaim reclaim  :srepr srepr  :kind kind  :raw raw ))
                                                             #|line 38|#
 (defun new_datum_string (&optional  s)
   (declare (ignorable  s))                                  #|line 39|#
-  (let ((d  (Datum)                                         #|line 40|#))
+  (let ((d  (make-instance 'Datum)                          #|line 40|#))
     (declare (ignorable d))
-    (setf (slot-value data  d)  s)                          #|line 41|#
-    (setf (slot-value clone  d)  #'(lambda (&optional )(funcall (quote clone_datum_string)   d  #|line 42|#)))
-    (setf (slot-value reclaim  d)  #'(lambda (&optional )(funcall (quote reclaim_datum_string)   d  #|line 43|#)))
-    (setf (slot-value srepr  d)  #'(lambda (&optional )(funcall (quote srepr_datum_string)   d  #|line 44|#)))
-    (setf (slot-value raw  d) (coerce (slot-value data  d) 'simple-vector) #|line 45|#)
-    (setf (slot-value kind  d)  #'(lambda (&optional ) "string")) #|line 46|#
+    (setf (slot-value 'data  d)  s)                         #|line 41|#
+    (setf (slot-value 'clone  d)  #'(lambda (&optional )(funcall (quote clone_datum_string)   d  #|line 42|#)))
+    (setf (slot-value 'reclaim  d)  #'(lambda (&optional )(funcall (quote reclaim_datum_string)   d  #|line 43|#)))
+    (setf (slot-value 'srepr  d)  #'(lambda (&optional )(funcall (quote srepr_datum_string)   d  #|line 44|#)))
+    (setf (slot-value 'raw  d) (coerce (slot-value 'data  d) 'simple-vector) #|line 45|#)
+    (setf (slot-value 'kind  d)  #'(lambda (&optional ) "string")) #|line 46|#
     (return-from new_datum_string  d)                       #|line 47|#) #|line 48|#
   )
 (defun clone_datum_string (&optional  d)
   (declare (ignorable  d))                                  #|line 50|#
-  (let ((d (funcall (quote new_datum_string)  (slot-value data  d)  #|line 51|#)))
+  (let ((d (funcall (quote new_datum_string)  (slot-value 'data  d)  #|line 51|#)))
     (declare (ignorable d))
     (return-from clone_datum_string  d)                     #|line 52|#) #|line 53|#
   )
@@ -108,18 +105,18 @@ x)))
   )
 (defun srepr_datum_string (&optional  d)
   (declare (ignorable  d))                                  #|line 59|#
-  (return-from srepr_datum_string (slot-value data  d))     #|line 60|# #|line 61|#
+  (return-from srepr_datum_string (slot-value 'data  d))    #|line 60|# #|line 61|#
   )
 (defun new_datum_bang (&optional )
   (declare (ignorable ))                                    #|line 63|#
   (let ((p (funcall (quote Datum) )))
     (declare (ignorable p))                                 #|line 64|#
-    (setf (slot-value data  p)  t)                          #|line 65|#
-    (setf (slot-value clone  p)  #'(lambda (&optional )(funcall (quote clone_datum_bang)   p  #|line 66|#)))
-    (setf (slot-value reclaim  p)  #'(lambda (&optional )(funcall (quote reclaim_datum_bang)   p  #|line 67|#)))
-    (setf (slot-value srepr  p)  #'(lambda (&optional )(funcall (quote srepr_datum_bang) ))) #|line 68|#
-    (setf (slot-value raw  p)  #'(lambda (&optional )(funcall (quote raw_datum_bang) ))) #|line 69|#
-    (setf (slot-value kind  p)  #'(lambda (&optional ) "bang")) #|line 70|#
+    (setf (slot-value 'data  p)  t)                         #|line 65|#
+    (setf (slot-value 'clone  p)  #'(lambda (&optional )(funcall (quote clone_datum_bang)   p  #|line 66|#)))
+    (setf (slot-value 'reclaim  p)  #'(lambda (&optional )(funcall (quote reclaim_datum_bang)   p  #|line 67|#)))
+    (setf (slot-value 'srepr  p)  #'(lambda (&optional )(funcall (quote srepr_datum_bang) ))) #|line 68|#
+    (setf (slot-value 'raw  p)  #'(lambda (&optional )(funcall (quote raw_datum_bang) ))) #|line 69|#
+    (setf (slot-value 'kind  p)  #'(lambda (&optional ) "bang")) #|line 70|#
     (return-from new_datum_bang  p)                         #|line 71|#) #|line 72|#
   )
 (defun clone_datum_bang (&optional  d)
@@ -142,10 +139,10 @@ x)))
   (declare (ignorable ))                                    #|line 90|#
   (let ((p (funcall (quote new_datum_bang) )))
     (declare (ignorable p))                                 #|line 91|#
-    (setf (slot-value kind  p)  #'(lambda (&optional ) "tick")) #|line 92|#
-    (setf (slot-value clone  p)  #'(lambda (&optional )(funcall (quote new_datum_tick) ))) #|line 93|#
-    (setf (slot-value srepr  p)  #'(lambda (&optional )(funcall (quote srepr_datum_tick) ))) #|line 94|#
-    (setf (slot-value raw  p)  #'(lambda (&optional )(funcall (quote raw_datum_tick) ))) #|line 95|#
+    (setf (slot-value 'kind  p)  #'(lambda (&optional ) "tick")) #|line 92|#
+    (setf (slot-value 'clone  p)  #'(lambda (&optional )(funcall (quote new_datum_tick) ))) #|line 93|#
+    (setf (slot-value 'srepr  p)  #'(lambda (&optional )(funcall (quote srepr_datum_tick) ))) #|line 94|#
+    (setf (slot-value 'raw  p)  #'(lambda (&optional )(funcall (quote raw_datum_tick) ))) #|line 95|#
     (return-from new_datum_tick  p)                         #|line 96|#) #|line 97|#
   )
 (defun srepr_datum_tick (&optional )
@@ -160,24 +157,24 @@ x)))
   (declare (ignorable  b))                                  #|line 107|#
   (let ((p (funcall (quote Datum) )))
     (declare (ignorable p))                                 #|line 108|#
-    (setf (slot-value data  p)  b)                          #|line 109|#
-    (setf (slot-value clone  p)  #'(lambda (&optional )(funcall (quote clone_datum_bytes)   p  #|line 110|#)))
-    (setf (slot-value reclaim  p)  #'(lambda (&optional )(funcall (quote reclaim_datum_bytes)   p  #|line 111|#)))
-    (setf (slot-value srepr  p)  #'(lambda (&optional )(funcall (quote srepr_datum_bytes)   b  #|line 112|#)))
-    (setf (slot-value raw  p)  #'(lambda (&optional )(funcall (quote raw_datum_bytes)   b  #|line 113|#)))
-    (setf (slot-value kind  p)  #'(lambda (&optional ) "bytes")) #|line 114|#
+    (setf (slot-value 'data  p)  b)                         #|line 109|#
+    (setf (slot-value 'clone  p)  #'(lambda (&optional )(funcall (quote clone_datum_bytes)   p  #|line 110|#)))
+    (setf (slot-value 'reclaim  p)  #'(lambda (&optional )(funcall (quote reclaim_datum_bytes)   p  #|line 111|#)))
+    (setf (slot-value 'srepr  p)  #'(lambda (&optional )(funcall (quote srepr_datum_bytes)   b  #|line 112|#)))
+    (setf (slot-value 'raw  p)  #'(lambda (&optional )(funcall (quote raw_datum_bytes)   b  #|line 113|#)))
+    (setf (slot-value 'kind  p)  #'(lambda (&optional ) "bytes")) #|line 114|#
     (return-from new_datum_bytes  p)                        #|line 115|#) #|line 116|#
   )
 (defun clone_datum_bytes (&optional  src)
   (declare (ignorable  src))                                #|line 118|#
   (let ((p (funcall (quote Datum) )))
     (declare (ignorable p))                                 #|line 119|#
-    (setf (slot-value clone  p) (slot-value clone  src))    #|line 120|#
-    (setf (slot-value reclaim  p) (slot-value reclaim  src)) #|line 121|#
-    (setf (slot-value srepr  p) (slot-value srepr  src))    #|line 122|#
-    (setf (slot-value raw  p) (slot-value raw  src))        #|line 123|#
-    (setf (slot-value kind  p) (slot-value kind  src))      #|line 124|#
-    (setf (slot-value data  p) (funcall (slot-value clone  src) )) #|line 125|#
+    (setf (slot-value 'clone  p) (slot-value 'clone  src))  #|line 120|#
+    (setf (slot-value 'reclaim  p) (slot-value 'reclaim  src)) #|line 121|#
+    (setf (slot-value 'srepr  p) (slot-value 'srepr  src))  #|line 122|#
+    (setf (slot-value 'raw  p) (slot-value 'raw  src))      #|line 123|#
+    (setf (slot-value 'kind  p) (slot-value 'kind  src))    #|line 124|#
+    (setf (slot-value 'data  p) (funcall (slot-value 'clone  src) )) #|line 125|#
     (return-from clone_datum_bytes  p)                      #|line 126|#) #|line 127|#
   )
 (defun reclaim_datum_bytes (&optional  src)
@@ -186,11 +183,11 @@ x)))
   )
 (defun srepr_datum_bytes (&optional  d)
   (declare (ignorable  d))                                  #|line 133|#
-  (return-from srepr_datum_bytes (funcall (slot-value decode (slot-value data  d))   "UTF_8"  #|line 134|#)) #|line 135|#
+  (return-from srepr_datum_bytes (funcall (slot-value 'decode (slot-value 'data  d))   "UTF_8"  #|line 134|#)) #|line 135|#
   )
 (defun raw_datum_bytes (&optional  d)
   (declare (ignorable  d))                                  #|line 136|#
-  (return-from raw_datum_bytes (slot-value data  d))        #|line 137|# #|line 138|#
+  (return-from raw_datum_bytes (slot-value 'data  d))       #|line 137|# #|line 138|#
   )
 (defun new_datum_handle (&optional  h)
   (declare (ignorable  h))                                  #|line 140|#
@@ -200,12 +197,12 @@ x)))
   (declare (ignorable  i))                                  #|line 144|#
   (let ((p (funcall (quote Datum) )))
     (declare (ignorable p))                                 #|line 145|#
-    (setf (slot-value data  p)  i)                          #|line 146|#
-    (setf (slot-value clone  p)  #'(lambda (&optional )(funcall (quote clone_int)   i  #|line 147|#)))
-    (setf (slot-value reclaim  p)  #'(lambda (&optional )(funcall (quote reclaim_int)   i  #|line 148|#)))
-    (setf (slot-value srepr  p)  #'(lambda (&optional )(funcall (quote srepr_datum_int)   i  #|line 149|#)))
-    (setf (slot-value raw  p)  #'(lambda (&optional )(funcall (quote raw_datum_int)   i  #|line 150|#)))
-    (setf (slot-value kind  p)  #'(lambda (&optional ) "int")) #|line 151|#
+    (setf (slot-value 'data  p)  i)                         #|line 146|#
+    (setf (slot-value 'clone  p)  #'(lambda (&optional )(funcall (quote clone_int)   i  #|line 147|#)))
+    (setf (slot-value 'reclaim  p)  #'(lambda (&optional )(funcall (quote reclaim_int)   i  #|line 148|#)))
+    (setf (slot-value 'srepr  p)  #'(lambda (&optional )(funcall (quote srepr_datum_int)   i  #|line 149|#)))
+    (setf (slot-value 'raw  p)  #'(lambda (&optional )(funcall (quote raw_datum_int)   i  #|line 150|#)))
+    (setf (slot-value 'kind  p)  #'(lambda (&optional ) "int")) #|line 151|#
     (return-from new_datum_int  p)                          #|line 152|#) #|line 153|#
   )
 (defun clone_int (&optional  i)
@@ -231,9 +228,6 @@ x)))
     (port :accessor port :initarg :port :initform  port)    #|line 177|#
     (datum :accessor datum :initarg :datum :initform  datum)  #|line 178|#)) #|line 179|#
 
-
-(defun fresh-Message ( port  datum )
-  (make-instance 'Message  :port port  :datum datum ))
                                                             #|line 180|#
 (defun clone_port (&optional  s)
   (declare (ignorable  s))                                  #|line 181|#
@@ -243,13 +237,13 @@ x)))
   (declare (ignorable  port  datum))                        #|line 187|#
   (let ((p (funcall (quote clone_string)   port             #|line 188|#)))
     (declare (ignorable p))
-    (let ((m (funcall (quote Message)   p (funcall (slot-value clone  datum) )  #|line 189|#)))
+    (let ((m (funcall (quote Message)   p (funcall (slot-value 'clone  datum) )  #|line 189|#)))
       (declare (ignorable m))
       (return-from make_message  m)                         #|line 190|#)) #|line 191|#
   ) #|  Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations. |# #|line 193|#
 (defun message_clone (&optional  message)
   (declare (ignorable  message))                            #|line 194|#
-  (let ((m (funcall (quote Message)  (funcall (quote clone_port)  (slot-value port  message) ) (funcall (slot-value clone (slot-value datum  message)) )  #|line 195|#)))
+  (let ((m (funcall (quote Message)  (funcall (quote clone_port)  (slot-value 'port  message) ) (funcall (slot-value 'clone (slot-value 'datum  message)) )  #|line 195|#)))
     (declare (ignorable m))
     (return-from message_clone  m)                          #|line 196|#) #|line 197|#
   ) #|  Frees a message. |#                                 #|line 199|#
@@ -273,7 +267,7 @@ x)))
       (return-from format_message  "ϕ")                     #|line 216|#
       )
     (t                                                      #|line 217|#
-      (return-from format_message  (concatenate 'string  "⟪"  (concatenate 'string (slot-value port  m)  (concatenate 'string  "⦂"  (concatenate 'string (funcall (slot-value srepr (slot-value datum  m)) )  "⟫")))) #|line 221|#) #|line 222|#
+      (return-from format_message  (concatenate 'string  "⟪"  (concatenate 'string (slot-value 'port  m)  (concatenate 'string  "⦂"  (concatenate 'string (funcall (slot-value 'srepr (slot-value 'datum  m)) )  "⟫")))) #|line 221|#) #|line 222|#
       ))                                                    #|line 223|#
   )                                                         #|line 225|#
 (defparameter  enumDown  0)
@@ -296,12 +290,12 @@ x)))
               child_desc                                    #|line 237|#
               (let ((child_instance (funcall (quote get_component_instance)   reg (gethash  "name"  child_desc)  container  #|line 238|#)))
                 (declare (ignorable child_instance))
-                (funcall (slot-value append  children)   child_instance  #|line 239|#)
+                (funcall (slot-value 'append  children)   child_instance  #|line 239|#)
                 (let ((id (gethash  "id"  child_desc)))
                   (declare (ignorable id))                  #|line 240|#
                   (setf (gethash id  children_by_id)  child_instance) #|line 241|# #|line 242|#)) #|line 243|#
               ))
-        (setf (slot-value children  container)  children)   #|line 244|#
+        (setf (slot-value 'children  container)  children)  #|line 244|#
         (let ((me  container))
           (declare (ignorable me))                          #|line 245|# #|line 246|#
           (let ((connectors  nil))
@@ -315,8 +309,8 @@ x)))
                     (cond
                       (( equal   (gethash  "dir"  proto_conn)  enumDown) #|line 250|#
                         #|  JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''}, |# #|line 251|#
-                        (setf (slot-value direction  connector)  "down") #|line 252|#
-                        (setf (slot-value sender  connector) (funcall (quote Sender)  (slot-value name  me)  me (gethash  "source_port"  proto_conn)  #|line 253|#))
+                        (setf (slot-value 'direction  connector)  "down") #|line 252|#
+                        (setf (slot-value 'sender  connector) (funcall (quote Sender)  (slot-value 'name  me)  me (gethash  "source_port"  proto_conn)  #|line 253|#))
                         (let ((target_component (nth (gethash (gethash  "id"  "target")  proto_conn)  children_by_id)))
                           (declare (ignorable target_component)) #|line 254|#
                           (cond
@@ -324,12 +318,12 @@ x)))
                               (funcall (quote load_error)   (concatenate 'string  "internal error: .Down connection target internal error " (gethash  "target"  proto_conn)) ) #|line 256|#
                               )
                             (t                              #|line 257|#
-                              (setf (slot-value receiver  connector) (funcall (quote Receiver)  (slot-value name  target_component) (slot-value inq  target_component) (gethash  "target_port"  proto_conn)  target_component  #|line 258|#))
-                              (funcall (slot-value append  connectors)   connector )
+                              (setf (slot-value 'receiver  connector) (funcall (quote Receiver)  (slot-value 'name  target_component) (slot-value 'inq  target_component) (gethash  "target_port"  proto_conn)  target_component  #|line 258|#))
+                              (funcall (slot-value 'append  connectors)   connector )
                               )))                           #|line 259|#
                         )
                       (( equal   (gethash  "dir"  proto_conn)  enumAcross) #|line 260|#
-                        (setf (slot-value direction  connector)  "across") #|line 261|#
+                        (setf (slot-value 'direction  connector)  "across") #|line 261|#
                         (let ((source_component (nth (gethash (gethash  "id"  "source")  proto_conn)  children_by_id)))
                           (declare (ignorable source_component)) #|line 262|#
                           (let ((target_component (nth (gethash (gethash  "id"  "target")  proto_conn)  children_by_id)))
@@ -339,19 +333,19 @@ x)))
                                 (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection source not ok " (gethash  "source"  proto_conn)) ) #|line 265|#
                                 )
                               (t                            #|line 266|#
-                                (setf (slot-value sender  connector) (funcall (quote Sender)  (slot-value name  source_component)  source_component (gethash  "source_port"  proto_conn)  #|line 267|#))
+                                (setf (slot-value 'sender  connector) (funcall (quote Sender)  (slot-value 'name  source_component)  source_component (gethash  "source_port"  proto_conn)  #|line 267|#))
                                 (cond
                                   (( equal    target_component  nil) #|line 268|#
-                                    (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection target not ok " (slot-value target  proto_conn)) ) #|line 269|#
+                                    (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection target not ok " (slot-value 'target  proto_conn)) ) #|line 269|#
                                     )
                                   (t                        #|line 270|#
-                                    (setf (slot-value receiver  connector) (funcall (quote Receiver)  (slot-value name  target_component) (slot-value inq  target_component) (gethash  "target_port"  proto_conn)  target_component  #|line 271|#))
-                                    (funcall (slot-value append  connectors)   connector )
+                                    (setf (slot-value 'receiver  connector) (funcall (quote Receiver)  (slot-value 'name  target_component) (slot-value 'inq  target_component) (gethash  "target_port"  proto_conn)  target_component  #|line 271|#))
+                                    (funcall (slot-value 'append  connectors)   connector )
                                     ))
                                 ))))                        #|line 272|#
                         )
                       (( equal   (gethash  "dir"  proto_conn)  enumUp) #|line 273|#
-                        (setf (slot-value direction  connector)  "up") #|line 274|#
+                        (setf (slot-value 'direction  connector)  "up") #|line 274|#
                         (let ((source_component (nth (gethash (gethash  "id"  "source")  proto_conn)  children_by_id)))
                           (declare (ignorable source_component)) #|line 275|#
                           (cond
@@ -359,19 +353,19 @@ x)))
                               (funcall (quote print)   (concatenate 'string  "internal error: .Up connection source not ok " (gethash  "source"  proto_conn)) ) #|line 277|#
                               )
                             (t                              #|line 278|#
-                              (setf (slot-value sender  connector) (funcall (quote Sender)  (slot-value name  source_component)  source_component (gethash  "source_port"  proto_conn)  #|line 279|#))
-                              (setf (slot-value receiver  connector) (funcall (quote Receiver)  (slot-value name  me) (slot-value outq  container) (gethash  "target_port"  proto_conn)  me  #|line 280|#))
-                              (funcall (slot-value append  connectors)   connector )
+                              (setf (slot-value 'sender  connector) (funcall (quote Sender)  (slot-value 'name  source_component)  source_component (gethash  "source_port"  proto_conn)  #|line 279|#))
+                              (setf (slot-value 'receiver  connector) (funcall (quote Receiver)  (slot-value 'name  me) (slot-value 'outq  container) (gethash  "target_port"  proto_conn)  me  #|line 280|#))
+                              (funcall (slot-value 'append  connectors)   connector )
                               )))                           #|line 281|#
                         )
                       (( equal   (gethash  "dir"  proto_conn)  enumThrough) #|line 282|#
-                        (setf (slot-value direction  connector)  "through") #|line 283|#
-                        (setf (slot-value sender  connector) (funcall (quote Sender)  (slot-value name  me)  me (gethash  "source_port"  proto_conn)  #|line 284|#))
-                        (setf (slot-value receiver  connector) (funcall (quote Receiver)  (slot-value name  me) (slot-value outq  container) (gethash  "target_port"  proto_conn)  me  #|line 285|#))
-                        (funcall (slot-value append  connectors)   connector )
+                        (setf (slot-value 'direction  connector)  "through") #|line 283|#
+                        (setf (slot-value 'sender  connector) (funcall (quote Sender)  (slot-value 'name  me)  me (gethash  "source_port"  proto_conn)  #|line 284|#))
+                        (setf (slot-value 'receiver  connector) (funcall (quote Receiver)  (slot-value 'name  me) (slot-value 'outq  container) (gethash  "target_port"  proto_conn)  me  #|line 285|#))
+                        (funcall (slot-value 'append  connectors)   connector )
                         )))                                 #|line 286|#
                   ))                                        #|line 287|#
-            (setf (slot-value connections  container)  connectors) #|line 288|#
+            (setf (slot-value 'connections  container)  connectors) #|line 288|#
             (return-from container_instantiator  container) #|line 289|#))))) #|line 290|#
   ) #|  The default handler for container components. |#    #|line 292|#
 (defun container_handler (&optional  container  message)
@@ -390,7 +384,7 @@ x)))
     )
   (defun fifo_is_empty (&optional  fifo)
     (declare (ignorable  fifo))                             #|line 304|#
-    (return-from fifo_is_empty (funcall (slot-value empty  fifo) )) #|line 305|# #|line 306|#
+    (return-from fifo_is_empty (funcall (slot-value 'empty  fifo) )) #|line 305|# #|line 306|#
     ) #|  Routing connection for a container component. The `direction` field has |# #|line 308|# #|  no affect on the default message routing system _ it is there for debugging |# #|line 309|# #|  purposes, or for reading by other tools. |# #|line 310|# #|line 311|#
   (defclass Connector ()                                    #|line 312|#
     (
@@ -398,9 +392,6 @@ x)))
       (sender :accessor sender :initarg :sender :initform  nil)  #|line 314|#
       (receiver :accessor receiver :initarg :receiver :initform  nil)  #|line 315|#)) #|line 316|#
 
-
-  (defun fresh-Connector ( direction  sender  receiver )
-    (make-instance 'Connector  :direction direction  :sender sender  :receiver receiver ))
                                                             #|line 317|# #|  `Sender` is used to “pattern match“ which `Receiver` a message should go to, |# #|line 318|# #|  based on component ID (pointer) and port name. |# #|line 319|# #|line 320|#
   (defclass Sender ()                                       #|line 321|#
     (
@@ -408,9 +399,6 @@ x)))
       (component :accessor component :initarg :component :initform  component)  #|  from |# #|line 323|#
       (port :accessor port :initarg :port :initform  port)  #|  from's port |# #|line 324|#)) #|line 325|#
 
-
-  (defun fresh-Sender ( name  component  port )
-    (make-instance 'Sender  :name name  :component component  :port port ))
                                                             #|line 326|# #|  `Receiver` is a handle to a destination queue, and a `port` name to assign |# #|line 327|# #|  to incoming messages to this queue. |# #|line 328|# #|line 329|#
   (defclass Receiver ()                                     #|line 330|#
     (
@@ -419,35 +407,32 @@ x)))
       (port :accessor port :initarg :port :initform  port)  #|  destination port |# #|line 333|#
       (component :accessor component :initarg :component :initform  component)  #|  to (for bootstrap debug) |# #|line 334|#)) #|line 335|#
 
-
-  (defun fresh-Receiver ( name  queue  port  component )
-    (make-instance 'Receiver  :name name  :queue queue  :port port  :component component ))
                                                             #|line 336|# #|  Checks if two senders match, by pointer equality and port name matching. |# #|line 337|#
   (defun sender_eq (&optional  s1  s2)
     (declare (ignorable  s1  s2))                           #|line 338|#
-    (let ((same_components ( equal   (slot-value component  s1) (slot-value component  s2))))
+    (let ((same_components ( equal   (slot-value 'component  s1) (slot-value 'component  s2))))
       (declare (ignorable same_components))                 #|line 339|#
-      (let ((same_ports ( equal   (slot-value port  s1) (slot-value port  s2))))
+      (let ((same_ports ( equal   (slot-value 'port  s1) (slot-value 'port  s2))))
         (declare (ignorable same_ports))                    #|line 340|#
         (return-from sender_eq ( and   same_components  same_ports)) #|line 341|#)) #|line 342|#
     ) #|  Delivers the given message to the receiver of this connector. |# #|line 344|# #|line 345|#
   (defun deposit (&optional  parent  conn  message)
     (declare (ignorable  parent  conn  message))            #|line 346|#
-    (let ((new_message (funcall (quote make_message)  (slot-value port (slot-value receiver  conn)) (slot-value datum  message)  #|line 347|#)))
+    (let ((new_message (funcall (quote make_message)  (slot-value 'port (slot-value 'receiver  conn)) (slot-value 'datum  message)  #|line 347|#)))
       (declare (ignorable new_message))
-      (funcall (quote push_message)   parent (slot-value component (slot-value receiver  conn)) (slot-value queue (slot-value receiver  conn))  new_message  #|line 348|#)) #|line 349|#
+      (funcall (quote push_message)   parent (slot-value 'component (slot-value 'receiver  conn)) (slot-value 'queue (slot-value 'receiver  conn))  new_message  #|line 348|#)) #|line 349|#
     )
   (defun force_tick (&optional  parent  eh)
     (declare (ignorable  parent  eh))                       #|line 351|#
     (let ((tick_msg (funcall (quote make_message)   "." (funcall (quote new_datum_tick) )  #|line 352|#)))
       (declare (ignorable tick_msg))
-      (funcall (quote push_message)   parent  eh (slot-value inq  eh)  tick_msg  #|line 353|#)
+      (funcall (quote push_message)   parent  eh (slot-value 'inq  eh)  tick_msg  #|line 353|#)
       (return-from force_tick  tick_msg)                    #|line 354|#) #|line 355|#
     )
   (defun push_message (&optional  parent  receiver  inq  m)
     (declare (ignorable  parent  receiver  inq  m))         #|line 357|#
     (enqueue  inq  m)                                       #|line 358|#
-    (funcall (slot-value put (slot-value visit_ordering  parent))   receiver  #|line 359|#) #|line 360|#
+    (funcall (slot-value 'put (slot-value 'visit_ordering  parent))   receiver  #|line 359|#) #|line 360|#
     )
   (defun is_self (&optional  child  container)
     (declare (ignorable  child  container))                 #|line 362|#
@@ -456,25 +441,25 @@ x)))
     )
   (defun step_child (&optional  child  msg)
     (declare (ignorable  child  msg))                       #|line 367|#
-    (let ((before_state (slot-value state  child)))
+    (let ((before_state (slot-value 'state  child)))
       (declare (ignorable before_state))                    #|line 368|#
-      (funcall (slot-value handler  child)   child  msg     #|line 369|#)
-      (let ((after_state (slot-value state  child)))
+      (funcall (slot-value 'handler  child)   child  msg    #|line 369|#)
+      (let ((after_state (slot-value 'state  child)))
         (declare (ignorable after_state))                   #|line 370|#
         (return-from step_child (values ( and  ( equal    before_state  "idle") (not (equal   after_state  "idle")))  #|line 371|#( and  (not (equal   before_state  "idle")) (not (equal   after_state  "idle")))  #|line 372|#( and  (not (equal   before_state  "idle")) ( equal    after_state  "idle")))) #|line 373|#)) #|line 374|#
     )
   (defun save_message (&optional  eh  msg)
     (declare (ignorable  eh  msg))                          #|line 376|#
-    (enqueue (slot-value saved_messages  eh)  msg)          #|line 377|# #|line 378|#
+    (enqueue (slot-value 'saved_messages  eh)  msg)         #|line 377|# #|line 378|#
     )
   (defun fetch_saved_message_and_clear (&optional  eh)
     (declare (ignorable  eh))                               #|line 380|#
-    (return-from fetch_saved_message_and_clear (dequeue (slot-value saved_messages  eh)) #|line 381|#) #|line 382|#
+    (return-from fetch_saved_message_and_clear (dequeue (slot-value 'saved_messages  eh)) #|line 381|#) #|line 382|#
     )
   (defun step_children (&optional  container  causingMessage)
     (declare (ignorable  container  causingMessage))        #|line 384|#
-    (setf (slot-value state  container)  "idle")            #|line 385|#
-    (loop for child in (funcall (quote list)  (slot-value queue (slot-value visit_ordering  container)) )
+    (setf (slot-value 'state  container)  "idle")           #|line 385|#
+    (loop for child in (funcall (quote list)  (slot-value 'queue (slot-value 'visit_ordering  container)) )
       do
         (progn
           child                                             #|line 386|#
@@ -482,8 +467,8 @@ x)))
           (cond
             ((not (funcall (quote is_self)   child  container )) #|line 388|#
               (cond
-                ((not (funcall (slot-value empty (slot-value inq  child)) )) #|line 389|#
-                  (let ((msg (dequeue (slot-value inq  child)) #|line 390|#))
+                ((not (funcall (slot-value 'empty (slot-value 'inq  child)) )) #|line 389|#
+                  (let ((msg (dequeue (slot-value 'inq  child)) #|line 390|#))
                     (declare (ignorable msg))
                     (let (( began_long_run  nil))
                       (declare (ignorable  began_long_run)) #|line 391|#
@@ -503,22 +488,22 @@ x)))
                   )
                 (t                                          #|line 401|#
                   (cond
-                    ((not (equal  (slot-value state  child)  "idle")) #|line 402|#
+                    ((not (equal  (slot-value 'state  child)  "idle")) #|line 402|#
                       (let ((msg (funcall (quote force_tick)   container  child  #|line 403|#)))
                         (declare (ignorable msg))
-                        (funcall (slot-value handler  child)   child  msg  #|line 404|#)
+                        (funcall (slot-value 'handler  child)   child  msg  #|line 404|#)
                         (funcall (quote destroy_message)   msg ))
                       ))                                    #|line 405|#
                   ))                                        #|line 406|#
               (cond
-                (( equal   (slot-value state  child)  "active") #|line 407|#
+                (( equal   (slot-value 'state  child)  "active") #|line 407|#
                   #|  if child remains active, then the container must remain active and must propagate “ticks“ to child |# #|line 408|#
-                  (setf (slot-value state  container)  "active") #|line 409|#
+                  (setf (slot-value 'state  container)  "active") #|line 409|#
                   ))                                        #|line 410|#
-              (loop while (not (funcall (slot-value empty (slot-value outq  child)) ))
+              (loop while (not (funcall (slot-value 'empty (slot-value 'outq  child)) ))
                 do
                   (progn                                    #|line 411|#
-                    (let ((msg (dequeue (slot-value outq  child)) #|line 412|#))
+                    (let ((msg (dequeue (slot-value 'outq  child)) #|line 412|#))
                       (declare (ignorable msg))
                       (funcall (quote route)   container  child  msg  #|line 413|#)
                       (funcall (quote destroy_message)   msg ))
@@ -529,13 +514,13 @@ x)))
     (defun attempt_tick (&optional  parent  eh)
       (declare (ignorable  parent  eh))                     #|line 419|#
       (cond
-        ((not (equal  (slot-value state  eh)  "idle"))      #|line 420|#
+        ((not (equal  (slot-value 'state  eh)  "idle"))     #|line 420|#
           (funcall (quote force_tick)   parent  eh )        #|line 421|#
           ))                                                #|line 422|#
       )
     (defun is_tick (&optional  msg)
       (declare (ignorable  msg))                            #|line 424|#
-      (return-from is_tick ( equal    "tick" (funcall (slot-value kind (slot-value datum  msg)) ))) #|line 425|# #|line 426|#
+      (return-from is_tick ( equal    "tick" (funcall (slot-value 'kind (slot-value 'datum  msg)) ))) #|line 425|# #|line 426|#
       ) #|  Routes a single message to all matching destinations, according to |# #|line 428|# #|  the container's connection network. |# #|line 429|# #|line 430|#
     (defun route (&optional  container  from_component  message)
       (declare (ignorable  container  from_component  message)) #|line 431|#
@@ -546,7 +531,7 @@ x)))
           (declare (ignorable  fromname))                   #|line 433|#
           (cond
             ((funcall (quote is_tick)   message )           #|line 434|#
-              (loop for child in (slot-value children  container)
+              (loop for child in (slot-value 'children  container)
                 do
                   (progn
                     child                                   #|line 435|#
@@ -557,16 +542,16 @@ x)))
             (t                                              #|line 438|#
               (cond
                 ((not (funcall (quote is_self)   from_component  container )) #|line 439|#
-                  (setf  fromname (slot-value name  from_component)) #|line 440|#
+                  (setf  fromname (slot-value 'name  from_component)) #|line 440|#
                   ))
-              (let ((from_sender (funcall (quote Sender)   fromname  from_component (slot-value port  message)  #|line 441|#)))
+              (let ((from_sender (funcall (quote Sender)   fromname  from_component (slot-value 'port  message)  #|line 441|#)))
                 (declare (ignorable from_sender))           #|line 442|#
-                (loop for connector in (slot-value connections  container)
+                (loop for connector in (slot-value 'connections  container)
                   do
                     (progn
                       connector                             #|line 443|#
                       (cond
-                        ((funcall (quote sender_eq)   from_sender (slot-value sender  connector) ) #|line 444|#
+                        ((funcall (quote sender_eq)   from_sender (slot-value 'sender  connector) ) #|line 444|#
                           (funcall (quote deposit)   container  connector  message  #|line 445|#)
                           (setf  was_sent  t)
                           ))
@@ -576,14 +561,14 @@ x)))
             ((not  was_sent)                                #|line 447|#
               (funcall (quote print)   "\n\n*** Error: ***"  #|line 448|#)
               (funcall (quote print)   "***"                #|line 449|#)
-              (funcall (quote print)   (concatenate 'string (slot-value name  container)  (concatenate 'string  ": message '"  (concatenate 'string (slot-value port  message)  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))  #|line 450|#)
+              (funcall (quote print)   (concatenate 'string (slot-value 'name  container)  (concatenate 'string  ": message '"  (concatenate 'string (slot-value 'port  message)  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))  #|line 450|#)
               (funcall (quote print)   "***"                #|line 451|#)
               (uiop:quit)                                   #|line 452|# #|line 453|#
               ))))                                          #|line 454|#
       )
     (defun any_child_ready (&optional  container)
       (declare (ignorable  container))                      #|line 456|#
-      (loop for child in (slot-value children  container)
+      (loop for child in (slot-value 'children  container)
         do
           (progn
             child                                           #|line 457|#
@@ -596,11 +581,11 @@ x)))
       )
     (defun child_is_ready (&optional  eh)
       (declare (ignorable  eh))                             #|line 463|#
-      (return-from child_is_ready ( or  ( or  ( or  (not (funcall (slot-value empty (slot-value outq  eh)) )) (not (funcall (slot-value empty (slot-value inq  eh)) ))) (not (equal  (slot-value state  eh)  "idle"))) (funcall (quote any_child_ready)   eh ))) #|line 464|# #|line 465|#
+      (return-from child_is_ready ( or  ( or  ( or  (not (funcall (slot-value 'empty (slot-value 'outq  eh)) )) (not (funcall (slot-value 'empty (slot-value 'inq  eh)) ))) (not (equal  (slot-value 'state  eh)  "idle"))) (funcall (quote any_child_ready)   eh ))) #|line 464|# #|line 465|#
       )
     (defun append_routing_descriptor (&optional  container  desc)
       (declare (ignorable  container  desc))                #|line 467|#
-      (enqueue (slot-value routings  container)  desc)      #|line 468|# #|line 469|#
+      (enqueue (slot-value 'routings  container)  desc)     #|line 468|# #|line 469|#
       )
     (defun container_injector (&optional  container  message)
       (declare (ignorable  container  message))             #|line 471|#
