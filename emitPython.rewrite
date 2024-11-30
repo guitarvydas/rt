@@ -99,8 +99,6 @@ ExternalPhrase_asstr [_octothorpe _ lp e rp] = ‛str («e»)’
 ExternalPhrase_len [_octothorpe _ lp e rp] = ‛len («e»)’
 ExternalPhrase_asbytes [_octothorpe _ lp e rp] = ‛bytearray («e»,“UTF_8”)’
 ExternalPhrase_asint [_octothorpe _ lp e rp] = ‛int («e»)’
-ExternalPhrase_pair [_octothorpe _ lp key _comma e rp] = ‛NIY («key», «e»)’
-ExternalPhrase_push [_octothorpe _ lp v _comma e rp] = ‛«v».insert («e»)’
 ExternalPhrase_enqueue [_octothorpe _ lp obj _comma e rp] = ‛«obj».put («e»)’
 ExternalPhrase_dequeue [_octothorpe _ lp obj rp] = ‛«obj».get ()’
 

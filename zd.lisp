@@ -665,7 +665,7 @@ x)))
         (return-from abstracted_register_component  reg)    #|line 47|#
         )
       (t                                                    #|line 48|#
-        (setf (slot-value 'templates  reg) (cons (cons  name  template) (slot-value 'templates  reg))) #|line 49|#
+        (setf (gethash name (slot-value 'templates  reg))  template) #|line 49|#
         (return-from abstracted_register_component  reg)    #|line 50|# #|line 51|#
         )))                                                 #|line 52|#
   )

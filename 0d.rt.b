@@ -46,7 +46,7 @@ defn abstracted_register_component (reg, template, ok_to_overwrite) {
         load_error (#strcons (“Component /”, #strcons (template.name, “/ already declared”)))
 	return reg
     } else {
-        #push (reg.templates, #pair (name, template))
+        reg.templates@name ⇐ template
 	return reg
     }
 }

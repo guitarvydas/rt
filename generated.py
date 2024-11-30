@@ -464,7 +464,7 @@ def abstracted_register_component (reg,template,ok_to_overwrite):#line 43
         load_error ( str( "Component /") +  str( template.name) +  "/ already declared"  )#line 46
         return  reg                                         #line 47
     else:                                                   #line 48
-        reg.templates.insert (NIY ( name,  template))       #line 49
+        reg.templates [name] =  template                    #line 49
         return  reg                                         #line 50#line 51#line 52#line 53
 
 def get_component_instance (reg,full_name,owner):           #line 54
