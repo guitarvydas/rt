@@ -6,10 +6,12 @@
   )
 (defclass Delay_Info ()                                     #|line 5|#
   (
-  (counter :accessor counter :initarg :counter :initform  0)  #|line 6|#⫶ counter
-  (saved_message :accessor saved_message :initarg :saved_message :initform  nil)  #|line 7|#⫶ saved_message ) #|line 8|#))
-(defun fresh-Delay_Info (undefined)
-(make-instance 'Delay_Info undefined))
+    (counter :accessor counter :initarg :counter :initform  0)  #|line 6|#
+    (saved_message :accessor saved_message :initarg :saved_message :initform  nil)  #|line 7|#)) #|line 8|#
+
+
+(defun fresh-Delay_Info ( counter  saved_message )
+  (make-instance 'Delay_Info  :counter counter  :saved_message saved_message ))
                                                             #|line 9|#
 (defun delay_instantiator (&optional  reg  owner  name  template_data)
   (declare (ignorable  reg  owner  name  template_data))    #|line 10|#
