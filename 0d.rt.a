@@ -173,9 +173,9 @@ defn raw_datum_int (i) {
 ⌈⌉
 ⌈ `port` refers to the name of the incoming or outgoing port of this component.⌉
 ⌈ `datum` is the data attached to this message.⌉
-defobj Message (port, datum) {
-        • port ⇐ port
-        • datum ⇐ datum
+defobj Message () {
+        • port ⇐ ϕ
+        • datum ⇐ ϕ
 }
 
 defn clone_port (s) {
@@ -186,13 +186,17 @@ defn clone_port (s) {
 ⌈ entering the very top of a network.⌉
 defn make_message (port, datum) {
     p ≡ clone_string (port)
-    m ≡ Message (p, datum.clone ())
+    deftemp m ⇐ #fresh (Message)
+    m.port ⇐ p
+    m.datum ⇐ datum.clone ()
     return m
 }
 
 ⌈ Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations.⌉
-defn message_clone (message) {
-    m ≡ Message (clone_port (message.port), message.datum.clone ())
+defn message_clone (msg) {
+    deftemp m ⇐ #fresh (Message)
+    m.port ⇐ clone_port (msg.port)
+    m.datum ⇐ msg.datum.clone ()
     return m
 }
 
@@ -246,7 +250,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
     
     connectors ≡ []
     for proto_conn in desc@“connections” {
-        connector ≡ Connector ()
+        deftemp connector ⇐ #fresh (Connector)
         if proto_conn@“dir” = enumDown {
             ⌈ JSON: {'dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},⌉
             connector.direction ⇐ “down”

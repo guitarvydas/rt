@@ -14,8 +14,8 @@
   (declare (ignorable  reg  owner  name  template_data))    #|line 10|#
   (let ((name_with_id (funcall (quote gensymbol)   "delay"  #|line 11|#)))
     (declare (ignorable name_with_id))
-    (let ((info (funcall (quote Delay_Info) )))
-      (declare (ignorable info))                            #|line 12|#
+    (let ((info  (make-instance 'Delay_Info)                #|line 12|#))
+      (declare (ignorable info))
       (return-from delay_instantiator (funcall (quote make_leaf)   name_with_id  owner  info  #'delay_handler  #|line 13|#)))) #|line 14|#
   )
 (defparameter  DELAYDELAY  50000)                           #|line 16|# #|line 17|#

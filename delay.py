@@ -10,7 +10,7 @@ class Delay_Info:
                                                             #line 9
 def delay_instantiator (reg,owner,name,template_data):      #line 10
     name_with_id = gensymbol ( "delay")                     #line 11
-    info = Delay_Info ()                                    #line 12
+    info =  Delay_Info ()                                   #line 12
     return make_leaf ( name_with_id, owner, info, delay_handler)#line 13#line 14#line 15
 
 DELAYDELAY =  50000                                         #line 16#line 17

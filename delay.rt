@@ -9,7 +9,7 @@ defobj Delay_Info () {
    
 defn delay_instantiator (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“delay”)
-    info ≡ Delay_Info ()
+    info ≡ #fresh (Delay_Info)
     return make_leaf (name_with_id, owner, info, ↪︎delay_handler)
 }
 

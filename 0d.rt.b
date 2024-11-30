@@ -5,10 +5,18 @@ defobj Component_Registry () {
         • templates ⇐ {}
 }
 
-defobj Template (name, template_data, instantiator) {
-        • name ⇐ name
-        • template_data ⇐ template_data
-        • instantiator ⇐ instantiator
+defobj Template () {
+        • name ⇐ ϕ
+        • template_data ⇐ ϕ
+        • instantiator ⇐ ϕ
+}
+
+defn Template (name, template_data, instantiator) {
+     deftemp templ ⇐ #fresh (Template)
+     templ.name ⇐ name
+     templ.template_data ⇐ template_data
+     templ.instantiator ⇐ instantiator
+     return templ
 }
 
 defn read_and_convert_json_file (pathname, filename) {
@@ -26,7 +34,7 @@ defn delete_decls (d) {
 }
 
 defn make_component_registry () {
-    return Component_Registry ()
+    return #fresh (Component_Registry)
 }
 
 defn register_component (reg, template) { return abstracted_register_component (reg, template,  ⊥) }
@@ -34,7 +42,7 @@ defn register_component_allow_overwriting (reg, template) { return abstracted_re
 
 defn abstracted_register_component (reg, template, ok_to_overwrite) {
     name ≡ mangle_name (template.name)
-    if #inkvs (name, reg.templates) and not ok_to_overwrite {
+    if name in reg.templates and not ok_to_overwrite {
         load_error (#strcons (“Component /”, #strcons (template.name, “/ already declared”)))
 	return reg
     } else {
@@ -157,7 +165,7 @@ defobj Eh () {
         • connections ⇐ []
         • routings ⇐ #freshQueue ()
         • handler ⇐ ϕ
-        • inject ⇐ ϕ
+        • finject ⇐ ϕ
         • instance_data ⇐ ϕ
         • state ⇐ “idle”
         ⌈ bootstrap debugging⌉
@@ -167,11 +175,11 @@ defobj Eh () {
 ⌈ Creates a component that acts as a container. It is the same as a `Eh` instance⌉
 ⌈ whose handler function is `container_handler`.⌉
 defn make_container (name, owner) {
-    eh ≡ Eh ()
+    deftemp eh ⇐ #fresh (Eh)
     eh.name ⇐ name
     eh.owner ⇐ owner
     eh.handler ⇐ ↪︎container_handler
-    eh.inject ⇐ ↪︎container_injector
+    eh.finject ⇐ ↪︎container_injector
     eh.state ⇐ “idle”
     eh.kind ⇐ “container”
     return eh
@@ -181,7 +189,7 @@ defn make_container (name, owner) {
 ⌈ that will be passed back to your handler when called.⌉
 
 defn make_leaf (name, owner, instance_data, handler) {
-    eh ≡ Eh ()
+    deftemp eh ⇐ #fresh (Eh)
     eh.name ⇐ #strcons (owner.name, #strcons (“.”, name))
     eh.owner ⇐ owner
     eh.handler ⇐ handler
@@ -211,7 +219,7 @@ defn forward (eh, port, msg) {
 }
 
 defn inject (eh, msg) {
-    eh.inject (eh, msg)
+    eh.finject (eh, msg)
 }
 
 ⌈ Returns a list of all output messages on a container.⌉
@@ -310,15 +318,15 @@ defn trash_handler (eh, msg) {
     ⌈ to appease dumped_on_floor checker⌉
     pass
 }
-defobj TwoMessages (firstmsg, secondmsg) {
-        • firstmsg ⇐ firstmsg
-        • secondmsg ⇐ secondmsg
+defobj TwoMessages () {
+        • firstmsg ⇐ ϕ
+        • secondmsg ⇐ ϕ
 }
 
 ⌈ Deracer_States :: enum { idle, waitingForFirstmsg, waitingForSecondmsg }⌉
-defobj Deracer_Instance_Data (state, buffer) {
-        • state ⇐ state
-        • buffer ⇐ buffer
+defobj Deracer_Instance_Data () {
+        • state ⇐ ϕ
+        • buffer ⇐ ϕ
 }
 
 defn reclaim_Buffers_from_heap (inst) {
@@ -327,8 +335,9 @@ defn reclaim_Buffers_from_heap (inst) {
 
 defn deracer_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“deracer”)
-    inst ≡ Deracer_Instance_Data (“idle”, TwoMessages (ϕ, ϕ))
+    deftemp inst ⇐ #fresh (Deracer_Instance_Data)
     inst.state ⇐ “idle”
+    inst.buffer ⇐ #fresh (TwoMessages)
     eh ≡ make_leaf (name_with_id, owner, inst, ↪︎deracer_handler)
     return eh
 }
@@ -398,7 +407,7 @@ defobj Syncfilewrite_Data () {
 ⌈ temp copy for bootstrap, sends “done“ (error during bootstrap if not wired)⌉
 defn syncfilewrite_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“syncfilewrite”)
-    inst ≡ Syncfilewrite_Data ()
+    inst ≡ #fresh (Syncfilewrite_Data)
     return make_leaf (name_with_id, owner, inst, ↪︎syncfilewrite_handler)
 }
 
@@ -420,12 +429,12 @@ defn syncfilewrite_handler (eh, msg) {
 defobj StringConcat_Instance_Data () {
         • buffer1 ⇐ ϕ
         • buffer2 ⇐ ϕ
-        • count ⇐ 0
+        • scount ⇐ 0
 }
 
 defn stringconcat_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“stringconcat”)
-    instp ≡ StringConcat_Instance_Data ()
+    instp ≡ #fresh (StringConcat_Instance_Data)
     return make_leaf (name_with_id, owner, instp, ↪︎stringconcat_handler)
 }
 
@@ -433,11 +442,11 @@ defn stringconcat_handler (eh, msg) {
     deftemp inst ⇐ eh.instance_data
     if “1” = msg.port{
         inst.buffer1 ⇐ clone_string (msg.datum.srepr ())
-        inst.count ⇐ inst.count + 1
+        inst.scount ⇐ inst.scount + 1
         maybe_stringconcat (eh, inst, msg)}
     elif “2” = msg.port{
         inst.buffer2 ⇐ clone_string (msg.datum.srepr ())
-        inst.count ⇐ inst.count + 1
+        inst.scount ⇐ inst.scount + 1
         maybe_stringconcat (eh, inst, msg)}
     else{
         runtime_error (#strcons (“bad msg.port for stringconcat: ”, msg.port))
@@ -447,7 +456,7 @@ defn stringconcat_handler (eh, msg) {
 defn maybe_stringconcat (eh, inst, msg) {
     if (0 = #len (inst.buffer1)) and (0 = #len (inst.buffer2)){
         runtime_error (“something is wrong in stringconcat, both strings are 0 length”)}
-    if inst.count >= 2{
+    if inst.scount >= 2{
         deftemp concatenated_string ⇐ “”
         if 0 = #len (inst.buffer1){
             concatenated_string ⇐ inst.buffer2}
@@ -458,7 +467,7 @@ defn maybe_stringconcat (eh, inst, msg) {
         send_string (eh, “”, concatenated_string, msg)
         inst.buffer1 ⇐ ϕ
         inst.buffer2 ⇐ ϕ
-        inst.count ⇐ 0}
+        inst.scount ⇐ 0}
 }
 
 ⌈⌉

@@ -148,9 +148,9 @@ def raw_datum_int (i):                                      #line 168
 # `port` refers to the name of the incoming or outgoing port of this component.#line 174
 # `datum` is the data attached to this message.             #line 175
 class Message:
-    def __init__ (self,port,datum):                         #line 176
-        self.port =  port                                   #line 177
-        self.datum =  datum                                 #line 178#line 179
+    def __init__ (self,):                                   #line 176
+        self.port =  None                                   #line 177
+        self.datum =  None                                  #line 178#line 179
                                                             #line 180
 def clone_port (s):                                         #line 181
     return clone_string ( s)                                #line 182#line 183#line 184
@@ -159,244 +159,248 @@ def clone_port (s):                                         #line 181
 # entering the very top of a network.                       #line 186
 def make_message (port,datum):                              #line 187
     p = clone_string ( port)                                #line 188
-    m = Message ( p, datum.clone ())                        #line 189
-    return  m                                               #line 190#line 191#line 192
+    m =  Message ()                                         #line 189
+    m.port =  p                                             #line 190
+    m.datum =  datum.clone ()                               #line 191
+    return  m                                               #line 192#line 193#line 194
 
-# Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations.#line 193
-def message_clone (message):                                #line 194
-    m = Message (clone_port ( message.port), message.datum.clone ())#line 195
-    return  m                                               #line 196#line 197#line 198
+# Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations.#line 195
+def message_clone (msg):                                    #line 196
+    m =  Message ()                                         #line 197
+    m.port = clone_port ( msg.port)                         #line 198
+    m.datum =  msg.datum.clone ()                           #line 199
+    return  m                                               #line 200#line 201#line 202
 
-# Frees a message.                                          #line 199
-def destroy_message (msg):                                  #line 200
-    # during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages#line 201
-    pass                                                    #line 202#line 203#line 204
-
-def destroy_datum (msg):                                    #line 205
+# Frees a message.                                          #line 203
+def destroy_message (msg):                                  #line 204
+    # during debug, dont destroy any message, since we want to trace messages, thus, we need to persist ancestor messages#line 205
     pass                                                    #line 206#line 207#line 208
 
-def destroy_port (msg):                                     #line 209
+def destroy_datum (msg):                                    #line 209
     pass                                                    #line 210#line 211#line 212
 
-#                                                           #line 213
-def format_message (m):                                     #line 214
-    if  m ==  None:                                         #line 215
-        return  "ϕ"                                         #line 216
-    else:                                                   #line 217
-        return  str( "⟪") +  str( m.port) +  str( "⦂") +  str( m.datum.srepr ()) +  "⟫"    #line 221#line 222#line 223#line 224
-                                                            #line 225
-enumDown =  0                                               #line 226
-enumAcross =  1                                             #line 227
-enumUp =  2                                                 #line 228
-enumThrough =  3                                            #line 229#line 230
-def container_instantiator (reg,owner,container_name,desc): #line 231
-    global enumDown, enumUp, enumAcross, enumThrough        #line 232
-    container = make_container ( container_name, owner)     #line 233
-    children = []                                           #line 234
+def destroy_port (msg):                                     #line 213
+    pass                                                    #line 214#line 215#line 216
+
+#                                                           #line 217
+def format_message (m):                                     #line 218
+    if  m ==  None:                                         #line 219
+        return  "ϕ"                                         #line 220
+    else:                                                   #line 221
+        return  str( "⟪") +  str( m.port) +  str( "⦂") +  str( m.datum.srepr ()) +  "⟫"    #line 225#line 226#line 227#line 228
+                                                            #line 229
+enumDown =  0                                               #line 230
+enumAcross =  1                                             #line 231
+enumUp =  2                                                 #line 232
+enumThrough =  3                                            #line 233#line 234
+def container_instantiator (reg,owner,container_name,desc): #line 235
+    global enumDown, enumUp, enumAcross, enumThrough        #line 236
+    container = make_container ( container_name, owner)     #line 237
+    children = []                                           #line 238
     children_by_id = {}
-    # not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here#line 235
-    # collect children                                      #line 236
-    for child_desc in  desc [ "children"]:                  #line 237
-        child_instance = get_component_instance ( reg, child_desc [ "name"], container)#line 238
-        children.append ( child_instance)                   #line 239
-        id =  child_desc [ "id"]                            #line 240
-        children_by_id [id] =  child_instance               #line 241#line 242#line 243
-    container.children =  children                          #line 244
-    me =  container                                         #line 245#line 246
-    connectors = []                                         #line 247
-    for proto_conn in  desc [ "connections"]:               #line 248
-        connector = Connector ()                            #line 249
-        if  proto_conn [ "dir"] ==  enumDown:               #line 250
-            # JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},#line 251
-            connector.direction =  "down"                   #line 252
-            connector.sender = Sender ( me.name, me, proto_conn [ "source_port"])#line 253
-            target_component =  children_by_id [ proto_conn [ "target" [ "id"]]]#line 254
-            if ( target_component ==  None):                #line 255
-                load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn [ "target"] )#line 256
-            else:                                           #line 257
-                connector.receiver = Receiver ( target_component.name, target_component.inq, proto_conn [ "target_port"], target_component)#line 258
-                connectors.append ( connector)              #line 259
-        elif  proto_conn [ "dir"] ==  enumAcross:           #line 260
-            connector.direction =  "across"                 #line 261
-            source_component =  children_by_id [ proto_conn [ "source" [ "id"]]]#line 262
-            target_component =  children_by_id [ proto_conn [ "target" [ "id"]]]#line 263
-            if  source_component ==  None:                  #line 264
-                load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn [ "source"] )#line 265
-            else:                                           #line 266
-                connector.sender = Sender ( source_component.name, source_component, proto_conn [ "source_port"])#line 267
-                if  target_component ==  None:              #line 268
-                    load_error ( str( "internal error: .Across connection target not ok ") +  proto_conn.target )#line 269
-                else:                                       #line 270
-                    connector.receiver = Receiver ( target_component.name, target_component.inq, proto_conn [ "target_port"], target_component)#line 271
-                    connectors.append ( connector)          #line 272
-        elif  proto_conn [ "dir"] ==  enumUp:               #line 273
-            connector.direction =  "up"                     #line 274
-            source_component =  children_by_id [ proto_conn [ "source" [ "id"]]]#line 275
-            if  source_component ==  None:                  #line 276
-                print ( str( "internal error: .Up connection source not ok ") +  proto_conn [ "source"] )#line 277
-            else:                                           #line 278
-                connector.sender = Sender ( source_component.name, source_component, proto_conn [ "source_port"])#line 279
-                connector.receiver = Receiver ( me.name, container.outq, proto_conn [ "target_port"], me)#line 280
-                connectors.append ( connector)              #line 281
-        elif  proto_conn [ "dir"] ==  enumThrough:          #line 282
-            connector.direction =  "through"                #line 283
-            connector.sender = Sender ( me.name, me, proto_conn [ "source_port"])#line 284
-            connector.receiver = Receiver ( me.name, container.outq, proto_conn [ "target_port"], me)#line 285
-            connectors.append ( connector)                  #line 286#line 287
-    container.connections =  connectors                     #line 288
-    return  container                                       #line 289#line 290#line 291
+    # not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here#line 239
+    # collect children                                      #line 240
+    for child_desc in  desc [ "children"]:                  #line 241
+        child_instance = get_component_instance ( reg, child_desc [ "name"], container)#line 242
+        children.append ( child_instance)                   #line 243
+        id =  child_desc [ "id"]                            #line 244
+        children_by_id [id] =  child_instance               #line 245#line 246#line 247
+    container.children =  children                          #line 248
+    me =  container                                         #line 249#line 250
+    connectors = []                                         #line 251
+    for proto_conn in  desc [ "connections"]:               #line 252
+        connector =  Connector ()                           #line 253
+        if  proto_conn [ "dir"] ==  enumDown:               #line 254
+            # JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},#line 255
+            connector.direction =  "down"                   #line 256
+            connector.sender = Sender ( me.name, me, proto_conn [ "source_port"])#line 257
+            target_component =  children_by_id [ proto_conn [ "target" [ "id"]]]#line 258
+            if ( target_component ==  None):                #line 259
+                load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn [ "target"] )#line 260
+            else:                                           #line 261
+                connector.receiver = Receiver ( target_component.name, target_component.inq, proto_conn [ "target_port"], target_component)#line 262
+                connectors.append ( connector)              #line 263
+        elif  proto_conn [ "dir"] ==  enumAcross:           #line 264
+            connector.direction =  "across"                 #line 265
+            source_component =  children_by_id [ proto_conn [ "source" [ "id"]]]#line 266
+            target_component =  children_by_id [ proto_conn [ "target" [ "id"]]]#line 267
+            if  source_component ==  None:                  #line 268
+                load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn [ "source"] )#line 269
+            else:                                           #line 270
+                connector.sender = Sender ( source_component.name, source_component, proto_conn [ "source_port"])#line 271
+                if  target_component ==  None:              #line 272
+                    load_error ( str( "internal error: .Across connection target not ok ") +  proto_conn.target )#line 273
+                else:                                       #line 274
+                    connector.receiver = Receiver ( target_component.name, target_component.inq, proto_conn [ "target_port"], target_component)#line 275
+                    connectors.append ( connector)          #line 276
+        elif  proto_conn [ "dir"] ==  enumUp:               #line 277
+            connector.direction =  "up"                     #line 278
+            source_component =  children_by_id [ proto_conn [ "source" [ "id"]]]#line 279
+            if  source_component ==  None:                  #line 280
+                print ( str( "internal error: .Up connection source not ok ") +  proto_conn [ "source"] )#line 281
+            else:                                           #line 282
+                connector.sender = Sender ( source_component.name, source_component, proto_conn [ "source_port"])#line 283
+                connector.receiver = Receiver ( me.name, container.outq, proto_conn [ "target_port"], me)#line 284
+                connectors.append ( connector)              #line 285
+        elif  proto_conn [ "dir"] ==  enumThrough:          #line 286
+            connector.direction =  "through"                #line 287
+            connector.sender = Sender ( me.name, me, proto_conn [ "source_port"])#line 288
+            connector.receiver = Receiver ( me.name, container.outq, proto_conn [ "target_port"], me)#line 289
+            connectors.append ( connector)                  #line 290#line 291
+    container.connections =  connectors                     #line 292
+    return  container                                       #line 293#line 294#line 295
 
-# The default handler for container components.             #line 292
-def container_handler (container,message):                  #line 293
+# The default handler for container components.             #line 296
+def container_handler (container,message):                  #line 297
     route ( container, container, message)
-    # references to 'self' are replaced by the container during instantiation#line 294
-    while any_child_ready ( container):                     #line 295
-        step_children ( container, message)                 #line 296#line 297#line 298
+    # references to 'self' are replaced by the container during instantiation#line 298
+    while any_child_ready ( container):                     #line 299
+        step_children ( container, message)                 #line 300#line 301#line 302
 
-# Frees the given container and associated data.            #line 299
-def destroy_container (eh):                                 #line 300
-    pass                                                    #line 301#line 302#line 303
+# Frees the given container and associated data.            #line 303
+def destroy_container (eh):                                 #line 304
+    pass                                                    #line 305#line 306#line 307
 
-def fifo_is_empty (fifo):                                   #line 304
-    return  fifo.empty ()                                   #line 305#line 306#line 307
+def fifo_is_empty (fifo):                                   #line 308
+    return  fifo.empty ()                                   #line 309#line 310#line 311
 
-# Routing connection for a container component. The `direction` field has#line 308
-# no affect on the default message routing system _ it is there for debugging#line 309
-# purposes, or for reading by other tools.                  #line 310#line 311
+# Routing connection for a container component. The `direction` field has#line 312
+# no affect on the default message routing system _ it is there for debugging#line 313
+# purposes, or for reading by other tools.                  #line 314#line 315
 class Connector:
-    def __init__ (self,):                                   #line 312
-        self.direction =  None # down, across, up, through  #line 313
-        self.sender =  None                                 #line 314
-        self.receiver =  None                               #line 315#line 316
-                                                            #line 317
-# `Sender` is used to “pattern match“ which `Receiver` a message should go to,#line 318
-# based on component ID (pointer) and port name.            #line 319#line 320
+    def __init__ (self,):                                   #line 316
+        self.direction =  None # down, across, up, through  #line 317
+        self.sender =  None                                 #line 318
+        self.receiver =  None                               #line 319#line 320
+                                                            #line 321
+# `Sender` is used to “pattern match“ which `Receiver` a message should go to,#line 322
+# based on component ID (pointer) and port name.            #line 323#line 324
 class Sender:
-    def __init__ (self,name,component,port):                #line 321
-        self.name =  name                                   #line 322
-        self.component =  component # from                  #line 323
-        self.port =  port # from's port                     #line 324#line 325
-                                                            #line 326
-# `Receiver` is a handle to a destination queue, and a `port` name to assign#line 327
-# to incoming messages to this queue.                       #line 328#line 329
+    def __init__ (self,name,component,port):                #line 325
+        self.name =  name                                   #line 326
+        self.component =  component # from                  #line 327
+        self.port =  port # from's port                     #line 328#line 329
+                                                            #line 330
+# `Receiver` is a handle to a destination queue, and a `port` name to assign#line 331
+# to incoming messages to this queue.                       #line 332#line 333
 class Receiver:
-    def __init__ (self,name,queue,port,component):          #line 330
-        self.name =  name                                   #line 331
-        self.queue =  queue # queue (input | output) of receiver#line 332
-        self.port =  port # destination port                #line 333
-        self.component =  component # to (for bootstrap debug)#line 334#line 335
-                                                            #line 336
-# Checks if two senders match, by pointer equality and port name matching.#line 337
-def sender_eq (s1,s2):                                      #line 338
-    same_components = ( s1.component ==  s2.component)      #line 339
-    same_ports = ( s1.port ==  s2.port)                     #line 340
-    return  same_components and  same_ports                 #line 341#line 342#line 343
+    def __init__ (self,name,queue,port,component):          #line 334
+        self.name =  name                                   #line 335
+        self.queue =  queue # queue (input | output) of receiver#line 336
+        self.port =  port # destination port                #line 337
+        self.component =  component # to (for bootstrap debug)#line 338#line 339
+                                                            #line 340
+# Checks if two senders match, by pointer equality and port name matching.#line 341
+def sender_eq (s1,s2):                                      #line 342
+    same_components = ( s1.component ==  s2.component)      #line 343
+    same_ports = ( s1.port ==  s2.port)                     #line 344
+    return  same_components and  same_ports                 #line 345#line 346#line 347
 
-# Delivers the given message to the receiver of this connector.#line 344#line 345
-def deposit (parent,conn,message):                          #line 346
-    new_message = make_message ( conn.receiver.port, message.datum)#line 347
-    push_message ( parent, conn.receiver.component, conn.receiver.queue, new_message)#line 348#line 349#line 350
+# Delivers the given message to the receiver of this connector.#line 348#line 349
+def deposit (parent,conn,message):                          #line 350
+    new_message = make_message ( conn.receiver.port, message.datum)#line 351
+    push_message ( parent, conn.receiver.component, conn.receiver.queue, new_message)#line 352#line 353#line 354
 
-def force_tick (parent,eh):                                 #line 351
-    tick_msg = make_message ( ".",new_datum_tick ())        #line 352
-    push_message ( parent, eh, eh.inq, tick_msg)            #line 353
-    return  tick_msg                                        #line 354#line 355#line 356
+def force_tick (parent,eh):                                 #line 355
+    tick_msg = make_message ( ".",new_datum_tick ())        #line 356
+    push_message ( parent, eh, eh.inq, tick_msg)            #line 357
+    return  tick_msg                                        #line 358#line 359#line 360
 
-def push_message (parent,receiver,inq,m):                   #line 357
-    inq.put ( m)                                            #line 358
-    parent.visit_ordering.put ( receiver)                   #line 359#line 360#line 361
+def push_message (parent,receiver,inq,m):                   #line 361
+    inq.put ( m)                                            #line 362
+    parent.visit_ordering.put ( receiver)                   #line 363#line 364#line 365
 
-def is_self (child,container):                              #line 362
-    # in an earlier version “self“ was denoted as ϕ         #line 363
-    return  child ==  container                             #line 364#line 365#line 366
+def is_self (child,container):                              #line 366
+    # in an earlier version “self“ was denoted as ϕ         #line 367
+    return  child ==  container                             #line 368#line 369#line 370
 
-def step_child (child,msg):                                 #line 367
-    before_state =  child.state                             #line 368
-    child.handler ( child, msg)                             #line 369
-    after_state =  child.state                              #line 370
-    return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"]#line 373#line 374#line 375
+def step_child (child,msg):                                 #line 371
+    before_state =  child.state                             #line 372
+    child.handler ( child, msg)                             #line 373
+    after_state =  child.state                              #line 374
+    return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"]#line 377#line 378#line 379
 
-def save_message (eh,msg):                                  #line 376
-    eh.saved_messages.put ( msg)                            #line 377#line 378#line 379
+def save_message (eh,msg):                                  #line 380
+    eh.saved_messages.put ( msg)                            #line 381#line 382#line 383
 
-def fetch_saved_message_and_clear (eh):                     #line 380
-    return  eh.saved_messages.get ()                        #line 381#line 382#line 383
+def fetch_saved_message_and_clear (eh):                     #line 384
+    return  eh.saved_messages.get ()                        #line 385#line 386#line 387
 
-def step_children (container,causingMessage):               #line 384
-    container.state =  "idle"                               #line 385
-    for child in list ( container.visit_ordering.queue):    #line 386
-        # child = container represents self, skip it        #line 387
-        if (not (is_self ( child, container))):             #line 388
-            if (not ( child.inq.empty ())):                 #line 389
-                msg =  child.inq.get ()                     #line 390
-                began_long_run =  None                      #line 391
-                continued_long_run =  None                  #line 392
-                ended_long_run =  None                      #line 393
-                [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)#line 394
-                if  began_long_run:                         #line 395
-                    save_message ( child, msg)              #line 396
-                elif  continued_long_run:                   #line 397
-                    pass                                    #line 398#line 399
-                destroy_message ( msg)                      #line 400
-            else:                                           #line 401
-                if  child.state!= "idle":                   #line 402
-                    msg = force_tick ( container, child)    #line 403
-                    child.handler ( child, msg)             #line 404
-                    destroy_message ( msg)                  #line 405#line 406
-            if  child.state ==  "active":                   #line 407
-                # if child remains active, then the container must remain active and must propagate “ticks“ to child#line 408
-                container.state =  "active"                 #line 409#line 410
-            while (not ( child.outq.empty ())):             #line 411
-                msg =  child.outq.get ()                    #line 412
-                route ( container, child, msg)              #line 413
-                destroy_message ( msg)                      #line 414#line 415#line 416#line 417#line 418
+def step_children (container,causingMessage):               #line 388
+    container.state =  "idle"                               #line 389
+    for child in list ( container.visit_ordering.queue):    #line 390
+        # child = container represents self, skip it        #line 391
+        if (not (is_self ( child, container))):             #line 392
+            if (not ( child.inq.empty ())):                 #line 393
+                msg =  child.inq.get ()                     #line 394
+                began_long_run =  None                      #line 395
+                continued_long_run =  None                  #line 396
+                ended_long_run =  None                      #line 397
+                [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)#line 398
+                if  began_long_run:                         #line 399
+                    save_message ( child, msg)              #line 400
+                elif  continued_long_run:                   #line 401
+                    pass                                    #line 402#line 403
+                destroy_message ( msg)                      #line 404
+            else:                                           #line 405
+                if  child.state!= "idle":                   #line 406
+                    msg = force_tick ( container, child)    #line 407
+                    child.handler ( child, msg)             #line 408
+                    destroy_message ( msg)                  #line 409#line 410
+            if  child.state ==  "active":                   #line 411
+                # if child remains active, then the container must remain active and must propagate “ticks“ to child#line 412
+                container.state =  "active"                 #line 413#line 414
+            while (not ( child.outq.empty ())):             #line 415
+                msg =  child.outq.get ()                    #line 416
+                route ( container, child, msg)              #line 417
+                destroy_message ( msg)                      #line 418#line 419#line 420#line 421#line 422
 
-def attempt_tick (parent,eh):                               #line 419
-    if  eh.state!= "idle":                                  #line 420
-        force_tick ( parent, eh)                            #line 421#line 422#line 423
+def attempt_tick (parent,eh):                               #line 423
+    if  eh.state!= "idle":                                  #line 424
+        force_tick ( parent, eh)                            #line 425#line 426#line 427
 
-def is_tick (msg):                                          #line 424
-    return  "tick" ==  msg.datum.kind ()                    #line 425#line 426#line 427
+def is_tick (msg):                                          #line 428
+    return  "tick" ==  msg.datum.kind ()                    #line 429#line 430#line 431
 
-# Routes a single message to all matching destinations, according to#line 428
-# the container's connection network.                       #line 429#line 430
-def route (container,from_component,message):               #line 431
+# Routes a single message to all matching destinations, according to#line 432
+# the container's connection network.                       #line 433#line 434
+def route (container,from_component,message):               #line 435
     was_sent =  False
-    # for checking that output went somewhere (at least during bootstrap)#line 432
-    fromname =  ""                                          #line 433
-    if is_tick ( message):                                  #line 434
-        for child in  container.children:                   #line 435
-            attempt_tick ( container, child)                #line 436
-        was_sent =  True                                    #line 437
-    else:                                                   #line 438
-        if (not (is_self ( from_component, container))):    #line 439
-            fromname =  from_component.name                 #line 440
-        from_sender = Sender ( fromname, from_component, message.port)#line 441#line 442
-        for connector in  container.connections:            #line 443
-            if sender_eq ( from_sender, connector.sender):  #line 444
-                deposit ( container, connector, message)    #line 445
-                was_sent =  True                            #line 446
-    if not ( was_sent):                                     #line 447
-        print ( "\n\n*** Error: ***")                       #line 448
-        print ( "***")                                      #line 449
-        print ( str( container.name) +  str( ": message '") +  str( message.port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     )#line 450
-        print ( "***")                                      #line 451
-        exit ()                                             #line 452#line 453#line 454#line 455
+    # for checking that output went somewhere (at least during bootstrap)#line 436
+    fromname =  ""                                          #line 437
+    if is_tick ( message):                                  #line 438
+        for child in  container.children:                   #line 439
+            attempt_tick ( container, child)                #line 440
+        was_sent =  True                                    #line 441
+    else:                                                   #line 442
+        if (not (is_self ( from_component, container))):    #line 443
+            fromname =  from_component.name                 #line 444
+        from_sender = Sender ( fromname, from_component, message.port)#line 445#line 446
+        for connector in  container.connections:            #line 447
+            if sender_eq ( from_sender, connector.sender):  #line 448
+                deposit ( container, connector, message)    #line 449
+                was_sent =  True                            #line 450
+    if not ( was_sent):                                     #line 451
+        print ( "\n\n*** Error: ***")                       #line 452
+        print ( "***")                                      #line 453
+        print ( str( container.name) +  str( ": message '") +  str( message.port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     )#line 454
+        print ( "***")                                      #line 455
+        exit ()                                             #line 456#line 457#line 458#line 459
 
-def any_child_ready (container):                            #line 456
-    for child in  container.children:                       #line 457
-        if child_is_ready ( child):                         #line 458
-            return  True                                    #line 459
-    return  False                                           #line 460#line 461#line 462
+def any_child_ready (container):                            #line 460
+    for child in  container.children:                       #line 461
+        if child_is_ready ( child):                         #line 462
+            return  True                                    #line 463
+    return  False                                           #line 464#line 465#line 466
 
-def child_is_ready (eh):                                    #line 463
-    return (not ( eh.outq.empty ())) or (not ( eh.inq.empty ())) or ( eh.state!= "idle") or (any_child_ready ( eh))#line 464#line 465#line 466
+def child_is_ready (eh):                                    #line 467
+    return (not ( eh.outq.empty ())) or (not ( eh.inq.empty ())) or ( eh.state!= "idle") or (any_child_ready ( eh))#line 468#line 469#line 470
 
-def append_routing_descriptor (container,desc):             #line 467
-    container.routings.put ( desc)                          #line 468#line 469#line 470
+def append_routing_descriptor (container,desc):             #line 471
+    container.routings.put ( desc)                          #line 472#line 473#line 474
 
-def container_injector (container,message):                 #line 471
-    container_handler ( container, message)                 #line 472#line 473#line 474
+def container_injector (container,message):                 #line 475
+    container_handler ( container, message)                 #line 476#line 477#line 478
 
 
 

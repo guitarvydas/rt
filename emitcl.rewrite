@@ -141,7 +141,6 @@ ExternalPhrase_asstr [_octothorpe _ lp e rp] = ‛(format nil "~a" «e»)’
 ExternalPhrase_len [_octothorpe _ lp e rp] = ‛(length «e»)’
 ExternalPhrase_asbytes [_octothorpe _ lp e rp] = ‛(coerce «e» 'simple-vector)’
 ExternalPhrase_asint [_octothorpe _ lp e rp] = ‛(parse-integer «e»)’
-ExternalPhrase_in [_octothorpe _ lp e _comma kvs rp] = ‛(dict-in? «e» «kvs»)’
 ExternalPhrase_pair [_octothorpe _ lp key _comma e rp] = ‛(cons «key» «e»)’
 ExternalPhrase_push [_octothorpe _ lp place _comma e rp] = ‛(setf «place» (cons «e» «place»))’
 ExternalPhrase_enqueue [_octothorpe _ lp obj _comma e rp] = ‛(enqueue «obj» «e»)’
