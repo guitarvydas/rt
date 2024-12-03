@@ -128,17 +128,17 @@ return exit_rule ("main");
 },
 object_multiple : function (lb,nameValuePair,_commas,nvps,rb,) {
 enter_rule ("object_multiple");
-    set_return (`(obj (list ${nameValuePair.rwr ()} ${nvps.rwr ().join ('')}))`);
+    set_return (`(dict ${nameValuePair.rwr ()} ${nvps.rwr ().join ('')})`);
 return exit_rule ("object_multiple");
 },
 object_single : function (lb,nvp,rb,) {
 enter_rule ("object_single");
-    set_return (`(obj (list ${nvp.rwr ()}))`);
+    set_return (`(obj ${nvp.rwr ()})`);
 return exit_rule ("object_single");
 },
 object_empty : function (lb,ws,rb,) {
 enter_rule ("object_empty");
-    set_return (`(obj nil)`);
+    set_return (`(obj)`);
 return exit_rule ("object_empty");
 },
 nameValuePair : function (ws1,str,ws2,_colon,ws3,val,) {
@@ -148,17 +148,17 @@ return exit_rule ("nameValuePair");
 },
 array_multiple : function (lb,ws,val,_commas,vals,rb,) {
 enter_rule ("array_multiple");
-    set_return (`(jarray (list ${val.rwr ()} ${vals.rwr ().join ('')}))`);
+    set_return (`(jarray ${val.rwr ()} ${vals.rwr ().join ('')})`);
 return exit_rule ("array_multiple");
 },
 array_single : function (lb,ws,val,rb,) {
 enter_rule ("array_single");
-    set_return (`(jarray (list ${val.rwr ()}))`);
+    set_return (`(jarray ${val.rwr ()})`);
 return exit_rule ("array_single");
 },
 array_empty : function (lb,ws,rb,) {
 enter_rule ("array_empty");
-    set_return (`(jarray nil)`);
+    set_return (`(jarray)`);
 return exit_rule ("array_empty");
 },
 value : function (ws1,val,ws2,) {

@@ -1,5 +1,31 @@
+(defun dict (lis)
+  ;; make a dict, given a list of pairs
+  (let ((ht (make-hash-table :test 'equal)))
+    (mapc #'(lambda (pair)
+	      (let ((name (car pair))
+                    (v (deep-expand (cdr pair))))
+		(setf (gethash name ht) v)))
+          lis)
+    ht))
 
-(jarray 
+(defun jarray (lis)
+  ;; convert a JSON array into a lisp list (straight-forward, almost nothing to do)
+  (mapcar #'deep-expand lis))
+
+
+(defun deep-expand (x)
+  (cond
+   ((null x) nil)
+   ((listp x) (cond
+               ((eq 'dict (car x)) (dict (cdr x)))
+               ((eq 'jarray (car x)) (jarray (cdr x)))
+               (t (error "unknown list in deep-expand"))))
+   (t x)))
+
+;;;;;;;;;;;
+
+(defun test ()
+(let ((test-json '(jarray 
   (dict 
     ("file" . "scanner.drawio") 
     ("name" . "main")
@@ -286,4 +312,5 @@
 	    (dict 
 	      ("name" . "") 
 	      ("id" . 0)))
-	  ("target_port" . ""))))))
+	  ("target_port" . ""))))))))
+  (deep-expand test-json)))

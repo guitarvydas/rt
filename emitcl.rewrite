@@ -72,6 +72,7 @@ ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ (nth «n» (argv))’
 ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ (char «e» 0)’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ (subseq «e» 1)’
 ExternalPhrase_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» «e2»)’
+ExternalPhrase_append [_octothorpe _append lp e1 _comma e2 rp] =‛ (append «e1» «e2»)’
 ExternalPhrase_basename [_octothorpe _basename lp s rp] = ‛«s»’
 
 ExternalPhrase_preamble [_octothorpe _preamble lb rp] =

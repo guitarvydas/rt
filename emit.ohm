@@ -51,6 +51,7 @@ emit {
      | "#" xkw<"stringcar"> "(" Exp ")" -- stringcar
      | "#" xkw<"stringcdr"> "(" Exp ")" -- stringcdr
      | "#" xkw<"strcons"> "(" Exp Comma Exp ")" -- strcons
+     | "#" xkw<"append"> "(" Exp Comma Exp ")" -- append
      | "#" xkw<"basename"> "(" Exp ")" -- basename
      | "#" xkw<"preamble"> "(" ")" -- preamble
      | "#" xkw<"print_stdout"> "(" Exp ")" -- print_stdout

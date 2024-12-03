@@ -240,7 +240,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
     ⌈ collect children⌉
     for child_desc in desc@“children” {
         child_instance ≡ get_component_instance (reg, child_desc@“name”, container)
-        children.append (child_instance)
+        #append (children, child_instance)
 	id ≡ child_desc@“id”
         children_by_id@id ⇐ child_instance
 
@@ -260,7 +260,9 @@ defn container_instantiator (reg, owner, container_name, desc) {
                 load_error (#strcons (“internal error: .Down connection target internal error ”, proto_conn@“target”))}
             else{
                 connector.receiver ⇐ Receiver (target_component.name, target_component.inq, proto_conn@“target_port”, target_component)
-                connectors.append (connector) }}
+                #append (connectors, connector)
+	    }
+	}
         elif proto_conn@“dir” = enumAcross {
             connector.direction ⇐ “across”
             source_component ≡ children_by_id [proto_conn@“source”@“id”]
@@ -273,7 +275,7 @@ defn container_instantiator (reg, owner, container_name, desc) {
                     load_error (#strcons (“internal error: .Across connection target not ok ”, proto_conn.target)) }
                 else {
                     connector.receiver ⇐ Receiver (target_component.name, target_component.inq, proto_conn@“target_port”, target_component)
-                    connectors.append (connector)}}}
+                    #append (connectors, connector)}}}
         elif proto_conn@“dir” = enumUp {
             connector.direction ⇐ “up”
             source_component ≡ children_by_id [proto_conn@“source”@“id”]
@@ -282,12 +284,12 @@ defn container_instantiator (reg, owner, container_name, desc) {
             else {
                 connector.sender ⇐ Sender (source_component.name, source_component, proto_conn@“source_port”)
                 connector.receiver ⇐ Receiver (me.name, container.outq, proto_conn@“target_port”, me)
-                connectors.append (connector) }}
+                #append (connectors, connector) }}
         elif proto_conn@“dir” = enumThrough {
             connector.direction ⇐ “through”
             connector.sender ⇐ Sender (me.name, me, proto_conn@“source_port”)
             connector.receiver ⇐ Receiver (me.name, container.outq, proto_conn@“target_port”, me)
-            connectors.append (connector) }}
+            #append (connectors, connector) }}
             
     container.connections ⇐ connectors
     return container

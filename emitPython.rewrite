@@ -75,6 +75,7 @@ ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ sys.argv[«n»] ’
 ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’
 ExternalPhrase_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ str(«e1») + «e2» ’
+ExternalPhrase_append [_octothorpe _ lp e1 _comma e2 rp] =‛ «e1».append («e2») ’
 ExternalPhrase_basename [_octothorpe _basename lp s rp] = ‛ os.path.basename («s»)’
 ExternalPhrase_preamble [_octothorpe _preamble lb rp] = ‛
 import sys

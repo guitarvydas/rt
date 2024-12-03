@@ -16,6 +16,7 @@ cat zd.py count.py decode.py reverser.py delay.py monitor.py >generated.py
 # echo '*** Python not generated ***' >generated.py
 
 ${D2J} rt2cl.drawio
+./json-parser/json2cl.bash scanner.drawio.json
 ./gen-cl.bash 0d.rt.a generated.a.lisp
 ./gen-cl.bash 0d.rt.b generated.b.lisp
 cat generated.a.lisp generated.b.lisp >zd.lisp

@@ -2,15 +2,15 @@
 
 main [item+] = ‛«item»’
 
-object_multiple [lb nameValuePair _commas+ nvps+ rb] = ‛(obj (list «nameValuePair» «nvps»))’
-object_single [lb nvp rb] = ‛(obj (list «nvp»))’
-object_empty [lb ws rb] = ‛(obj nil)’
+object_multiple [lb nameValuePair _commas+ nvps+ rb] = ‛(dict «nameValuePair» «nvps»)’
+object_single [lb nvp rb] = ‛(obj «nvp»)’
+object_empty [lb ws rb] = ‛(obj)’
 
 nameValuePair [ws1 str ws2 _colon ws3 val] = ‛(«str» . «val»)’
 
-array_multiple [lb ws val _commas+ vals+ rb] = ‛(jarray (list «val» «vals»))’
-array_single [lb ws val rb] = ‛(jarray (list «val»))’
-array_empty [lb ws rb] = ‛(jarray nil)’
+array_multiple [lb ws val _commas+ vals+ rb] = ‛(jarray «val» «vals»)’
+array_single [lb ws val rb] = ‛(jarray «val»)’
+array_empty [lb ws rb] = ‛(jarray)’
 
 value [ws1 val ws2] = ‛«val»’
 
