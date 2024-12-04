@@ -67,6 +67,7 @@ emit {
      | "#" xkw<"dequeue"> "(" Exp ")" -- dequeue
      | "#" xkw<"empty"> "(" Exp ")" -- empty
      | "#" xkw<"queue2list"> "(" Exp ")" -- queue2list
+     | "#" xkw<"negate"> "(" Exp ")" -- negate
      
      | "#" ident "(" StuffInsideParentheses* ")" -- unrecognized
 
@@ -163,8 +164,6 @@ emit {
       | string -- string
       | number -- number
       | ident -- ident
-      | "+" Atom -- pos
-      | "-" Atom -- neg
 
 
 

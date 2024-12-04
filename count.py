@@ -8,7 +8,7 @@ def count_handler (eh,msg):                                 #line 4
         count_counter =  count_counter+ count_direction     #line 7
         send_int ( eh, "", count_counter, msg)              #line 8
     elif  msg.port ==  "rev":                               #line 9
-        count_direction =  count_direction* - 1             #line 10#line 11#line 12#line 13
+        count_direction = - count_direction                 #line 10#line 11#line 12#line 13
 
 def count_instantiator (reg,owner,name,template_data):      #line 14
     name_with_id = gensymbol ( "Count")                     #line 15

@@ -10,7 +10,7 @@
       (funcall (quote send_int)   eh  ""  count_counter  msg  #|line 8|#)
       )
     (( equal   (slot-value  msg 'port)  "rev")              #|line 9|#
-      (setf  count_direction (*  count_direction  - 1))     #|line 10|# #|line 11|#
+      (setf  count_direction (-  count_direction)           #|line 10|#) #|line 11|#
       ))                                                    #|line 12|#
   )
 (defun count_instantiator (&optional  reg  owner  name  template_data)

@@ -179,6 +179,7 @@ ExternalPhrase_enqueue [_octothorpe _ lp obj _comma e rp] = ‛(enqueue «obj» 
 ExternalPhrase_dequeue [_octothorpe _ lp obj rp] = ‛(dequeue «obj»)’
 ExternalPhrase_empty [_octothorpe _ lp q rp] = ‛(empty? «q»)’
 ExternalPhrase_queue2list [_octothorpe _ lp q rp] = ‛(queue2list «q»)’
+ExternalPhrase_negate [_octothorpe _ lp x rp] = ‛(- «x»)’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 
@@ -251,8 +252,6 @@ Atom_dict [ _78 line1? PairComma+ line2? _79] =
 ⎦
 
 Atom_lambda [ _80 Formals? _81 Exp] = ‛ #'(lambda (&optional «Formals»)⤷«Exp»⤶)’
-Atom_pos [ _86 Primary ] =‛ +«Primary»’
-Atom_neg [ _87 Primary ] =‛ -«Primary»’
 Atom_phi [ phi] =‛ nil’
 Atom_true [ _88] =‛ t’
 Atom_false [ _89] =‛ nil’

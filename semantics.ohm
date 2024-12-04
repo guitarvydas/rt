@@ -120,9 +120,6 @@ semantics {
       | string -- string
       | number -- number
       | ident -- ident
-      | "+" Primary -- pos
-      | "-" Primary -- neg
-
 
 
     PrimaryComma = Primary Comma?

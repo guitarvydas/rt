@@ -7,7 +7,7 @@ defn count_handler (eh, msg) {
         count_counter ⇐ count_counter + count_direction
         send_int (eh, “”, count_counter, msg)
     } elif msg.port = “rev” {
-        count_direction ⇐ count_direction * -1
+        count_direction ⇐ #negate (count_direction)
     }
 }
 
