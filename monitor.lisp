@@ -2,7 +2,7 @@
 
 (defun monitor_install (&optional  reg)
   (declare (ignorable  reg))                                #|line 1|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "@"  nil  #'monitor_instantiator )  #|line 2|#) #|line 3|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "@"  nil  #'monitor_instantiator )  #|line 2|#) #|line 3|#
   )
 (defun monitor_instantiator (&optional  reg  owner  name  template_data)
   (declare (ignorable  reg  owner  name  template_data))    #|line 5|#

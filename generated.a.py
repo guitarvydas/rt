@@ -197,14 +197,14 @@ def create_down_connector (container,proto_conn,connectors,children_by_id):#line
     # JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},#line 236
     connector =  Connector ()                               #line 237
     connector.direction =  "down"                           #line 238
-    connector.sender = create_Sender ( container.name, container, proto_conn [ "source_port"])#line 239
+    connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])#line 239
     target_proto =  proto_conn [ "target"]                  #line 240
     id_proto =  target_proto [ "id"]                        #line 241
     target_component =  children_by_id [id_proto]           #line 242
     if ( target_component ==  None):                        #line 243
         load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn [ "target"] )#line 244
     else:                                                   #line 245
-        connector.receiver = create_Receiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)#line 246#line 247
+        connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)#line 246#line 247
     return  connector                                       #line 248#line 249#line 250
 
 def create_across_connector (container,proto_conn,connectors,children_by_id):#line 251
@@ -215,11 +215,11 @@ def create_across_connector (container,proto_conn,connectors,children_by_id):#li
     if  source_component ==  None:                          #line 256
         load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn [ "source"] )#line 257
     else:                                                   #line 258
-        connector.sender = create_Sender ( source_component.name, source_component, proto_conn [ "source_port"])#line 259
+        connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])#line 259
         if  target_component ==  None:                      #line 260
             load_error ( str( "internal error: .Across connection target not ok ") +  proto_conn.target )#line 261
         else:                                               #line 262
-            connector.receiver = create_Receiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)#line 263#line 264#line 265
+            connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)#line 263#line 264#line 265
     return  connector                                       #line 266#line 267#line 268
 
 def create_up_connector (container,proto_conn,connectors,children_by_id):#line 269
@@ -229,15 +229,15 @@ def create_up_connector (container,proto_conn,connectors,children_by_id):#line 2
     if  source_component ==  None:                          #line 273
         print ( str( "internal error: .Up connection source not ok ") +  proto_conn [ "source"] )#line 274
     else:                                                   #line 275
-        connector.sender = create_Sender ( source_component.name, source_component, proto_conn [ "source_port"])#line 276
-        connector.receiver = create_Receiver ( container.name, container, proto_conn [ "target_port"], container.outq)#line 277#line 278
+        connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])#line 276
+        connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)#line 277#line 278
     return  connector                                       #line 279#line 280#line 281
 
 def create_through_connector (container,proto_conn,connectors,children_by_id):#line 282
     connector =  Connector ()                               #line 283
     connector.direction =  "through"                        #line 284
-    connector.sender = create_Sender ( container.name, container, proto_conn [ "source_port"])#line 285
-    connector.receiver = create_Receiver ( container.name, container, proto_conn [ "target_port"], container.outq)#line 286
+    connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])#line 285
+    connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)#line 286
     return  connector                                       #line 287#line 288#line 289
                                                             #line 290
 def container_instantiator (reg,owner,container_name,desc): #line 291
@@ -304,14 +304,14 @@ class Receiver:
         self.port =  None                                   #line 362
         self.component =  None                              #line 363#line 364
                                                             #line 365
-def create_Sender (name,component,port):                    #line 366
+def mkSender (name,component,port):                         #line 366
     s =  Sender ()                                          #line 367
     s.name =  name                                          #line 368
     s.component =  component                                #line 369
     s.port =  port                                          #line 370
     return  s                                               #line 371#line 372#line 373
 
-def create_Receiver (name,component,port,q):                #line 374
+def mkReceiver (name,component,port,q):                     #line 374
     r =  Receiver ()                                        #line 375
     r.name =  name                                          #line 376
     r.component =  component                                #line 377
@@ -401,7 +401,7 @@ def route (container,from_component,message):               #line 472
     else:                                                   #line 479
         if (not (is_self ( from_component, container))):    #line 480
             fromname =  from_component.name                 #line 481
-        from_sender = create_Sender ( fromname, from_component, message.port)#line 482#line 483
+        from_sender = mkSender ( fromname, from_component, message.port)#line 482#line 483
         for connector in  container.connections:            #line 484
             if sender_eq ( from_sender, connector.sender):  #line 485
                 deposit ( container, connector, message)    #line 486

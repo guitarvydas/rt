@@ -1,7 +1,7 @@
 
 
 def monitor_install (reg):                                  #line 1
-    register_component ( reg,Template ( "@", None, monitor_instantiator))#line 2#line 3#line 4
+    register_component ( reg,mkTemplate ( "@", None, monitor_instantiator))#line 2#line 3#line 4
 
 def monitor_instantiator (reg,owner,name,template_data):    #line 5
     name_with_id = gensymbol ( "@")                         #line 6

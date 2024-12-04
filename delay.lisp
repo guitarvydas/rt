@@ -2,7 +2,7 @@
 
 (defun delay_install (&optional  reg)
   (declare (ignorable  reg))                                #|line 1|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Delay"  nil  #'delay_instantiator )  #|line 2|#) #|line 3|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Delay"  nil  #'delay_instantiator )  #|line 2|#) #|line 3|#
   )
 (defclass Delay_Info ()                                     #|line 5|#
   (

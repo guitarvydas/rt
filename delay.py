@@ -1,7 +1,7 @@
 
 
 def delay_install (reg):                                    #line 1
-    register_component ( reg,Template ( "Delay", None, delay_instantiator))#line 2#line 3#line 4
+    register_component ( reg,mkTemplate ( "Delay", None, delay_instantiator))#line 2#line 3#line 4
 
 class Delay_Info:
     def __init__ (self,):                                   #line 5

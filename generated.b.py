@@ -10,7 +10,7 @@ class Template:
         self.template_data =  None                          #line 10
         self.instantiator =  None                           #line 11#line 12
                                                             #line 13
-def Template (name,template_data,instantiator):             #line 14
+def mkTemplate (name,template_data,instantiator):           #line 14
     templ =  Template ()                                    #line 15
     templ.name =  name                                      #line 16
     templ.template_data =  template_data                    #line 17
@@ -108,12 +108,12 @@ def generate_shell_components (reg,container_list):         #line 94
                 if first_char_is ( child_descriptor [ "name"], "$"):#line 104
                     name =  child_descriptor [ "name"]      #line 105
                     cmd =   name[1:] .strip ()              #line 106
-                    generated_leaf = Template ( name, shell_out_instantiate, cmd)#line 107
+                    generated_leaf = mkTemplate ( name, shell_out_instantiate, cmd)#line 107
                     register_component ( reg, generated_leaf)#line 108
                 elif first_char_is ( child_descriptor [ "name"], "'"):#line 109
                     name =  child_descriptor [ "name"]      #line 110
                     s =   name[1:]                          #line 111
-                    generated_leaf = Template ( name, string_constant_instantiate, s)#line 112
+                    generated_leaf = mkTemplate ( name, string_constant_instantiate, s)#line 112
                     register_component_allow_overwriting ( reg, generated_leaf)#line 113#line 114#line 115#line 116#line 117
     return  reg                                             #line 118#line 119#line 120
 
@@ -483,7 +483,7 @@ def initialize_component_palette (root_project,root_0D,diagram_source_files):#li
         all_containers_within_single_file = json2internal ( root_project, diagram_source)#line 524
         reg = generate_shell_components ( reg, all_containers_within_single_file)#line 525
         for container in  all_containers_within_single_file:#line 526
-            register_component ( reg,Template ( container [ "name"], container, container_instantiator))#line 527#line 528#line 529
+            register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))#line 527#line 528#line 529
     print ( reg)                                            #line 530
     reg = initialize_stock_components ( reg)                #line 531
     return  reg                                             #line 532#line 533#line 534
@@ -538,18 +538,18 @@ def fakepipename_handler (eh,msg):                          #line 587
 # all of the the built_in leaves are listed here            #line 594
 # future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 595#line 596
 def initialize_stock_components (reg):                      #line 597
-    register_component ( reg,Template ( "1then2", None, deracer_instantiate))#line 598
-    register_component ( reg,Template ( "?", None, probe_instantiate))#line 599
-    register_component ( reg,Template ( "?A", None, probeA_instantiate))#line 600
-    register_component ( reg,Template ( "?B", None, probeB_instantiate))#line 601
-    register_component ( reg,Template ( "?C", None, probeC_instantiate))#line 602
-    register_component ( reg,Template ( "trash", None, trash_instantiate))#line 603#line 604
-    register_component ( reg,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 605
-    register_component ( reg,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 606#line 607
-    register_component ( reg,Template ( "syncfilewrite", None, syncfilewrite_instantiate))#line 608
-    register_component ( reg,Template ( "stringconcat", None, stringconcat_instantiate))#line 609
+    register_component ( reg,mkTemplate ( "1then2", None, deracer_instantiate))#line 598
+    register_component ( reg,mkTemplate ( "?", None, probe_instantiate))#line 599
+    register_component ( reg,mkTemplate ( "?A", None, probeA_instantiate))#line 600
+    register_component ( reg,mkTemplate ( "?B", None, probeB_instantiate))#line 601
+    register_component ( reg,mkTemplate ( "?C", None, probeC_instantiate))#line 602
+    register_component ( reg,mkTemplate ( "trash", None, trash_instantiate))#line 603#line 604
+    register_component ( reg,mkTemplate ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 605
+    register_component ( reg,mkTemplate ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 606#line 607
+    register_component ( reg,mkTemplate ( "syncfilewrite", None, syncfilewrite_instantiate))#line 608
+    register_component ( reg,mkTemplate ( "stringconcat", None, stringconcat_instantiate))#line 609
     # for fakepipe                                          #line 610
-    register_component ( reg,Template ( "fakepipename", None, fakepipename_instantiate))#line 611#line 612#line 613
+    register_component ( reg,mkTemplate ( "fakepipename", None, fakepipename_instantiate))#line 611#line 612#line 613
 
 def argv ():                                                #line 614
     sys.argv                                                #line 615#line 616#line 617

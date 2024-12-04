@@ -11,7 +11,7 @@ defobj Template () {
         • instantiator ⇐ ϕ
 }
 
-defn Template (name, template_data, instantiator) {
+defn mkTemplate (name, template_data, instantiator) {
      deftemp templ ⇐ #fresh (Template)
      templ.name ⇐ name
      templ.template_data ⇐ template_data
@@ -104,12 +104,12 @@ defn generate_shell_components (reg, container_list) {
                 if first_char_is (child_descriptor@“name”, “$”) {
                     name ≡ child_descriptor@“name”
                     cmd ≡ #stringcdr (name).strip ()
-                    generated_leaf ≡ Template (name,  ↪︎shell_out_instantiate, cmd)
+                    generated_leaf ≡ mkTemplate (name,  ↪︎shell_out_instantiate, cmd)
                     register_component (reg, generated_leaf)
                 } elif first_char_is (child_descriptor@“name”, “'”) {
                     name ≡ child_descriptor@“name”
                     s ≡ #stringcdr (name)
-                    generated_leaf ≡ Template (name,  ↪︎string_constant_instantiate, s)
+                    generated_leaf ≡ mkTemplate (name,  ↪︎string_constant_instantiate, s)
                     register_component_allow_overwriting (reg, generated_leaf)
 		}
 	    }
@@ -524,7 +524,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
         all_containers_within_single_file ≡ json2internal (root_project, diagram_source)
         reg ⇐ generate_shell_components (reg, all_containers_within_single_file)
         for container in all_containers_within_single_file {
-            register_component (reg, Template (container@“name” , ⌈ template_data=⌉ container, ⌈ instantiator=⌉ ↪︎container_instantiator))
+            register_component (reg, mkTemplate (container@“name” , ⌈ template_data=⌉ container, ⌈ instantiator=⌉ ↪︎container_instantiator))
 	}
     }
     #print_stdout (reg)
@@ -595,20 +595,20 @@ defn fakepipename_handler (eh, msg) {
 ⌈ future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project⌉
 
 defn initialize_stock_components (reg) {
-    register_component (reg, Template ( “1then2”, ϕ, ↪︎deracer_instantiate))
-    register_component (reg, Template ( “?”, ϕ, ↪︎probe_instantiate))
-    register_component (reg, Template ( “?A”, ϕ, ↪︎probeA_instantiate))
-    register_component (reg, Template ( “?B”, ϕ, ↪︎probeB_instantiate))
-    register_component (reg, Template ( “?C”, ϕ, ↪︎probeC_instantiate))
-    register_component (reg, Template ( “trash”, ϕ, ↪︎trash_instantiate))
+    register_component (reg, mkTemplate ( “1then2”, ϕ, ↪︎deracer_instantiate))
+    register_component (reg, mkTemplate ( “?”, ϕ, ↪︎probe_instantiate))
+    register_component (reg, mkTemplate ( “?A”, ϕ, ↪︎probeA_instantiate))
+    register_component (reg, mkTemplate ( “?B”, ϕ, ↪︎probeB_instantiate))
+    register_component (reg, mkTemplate ( “?C”, ϕ, ↪︎probeC_instantiate))
+    register_component (reg, mkTemplate ( “trash”, ϕ, ↪︎trash_instantiate))
 
-    register_component (reg, Template ( “Low Level Read Text File”, ϕ, ↪︎low_level_read_text_file_instantiate))
-    register_component (reg, Template ( “Ensure String Datum”, ϕ, ↪︎ensure_string_datum_instantiate))
+    register_component (reg, mkTemplate ( “Low Level Read Text File”, ϕ, ↪︎low_level_read_text_file_instantiate))
+    register_component (reg, mkTemplate ( “Ensure String Datum”, ϕ, ↪︎ensure_string_datum_instantiate))
 
-    register_component (reg, Template ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate))
-    register_component (reg, Template ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate))
+    register_component (reg, mkTemplate ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate))
+    register_component (reg, mkTemplate ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate))
        ⌈ for fakepipe⌉
-    register_component (reg, Template ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate))
+    register_component (reg, mkTemplate ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate))
 }
 
 defn argv () {

@@ -319,7 +319,7 @@ x)))
   (let (( connector  (make-instance 'Connector)             #|line 237|#))
     (declare (ignorable  connector))
     (setf (slot-value  connector 'direction)  "down")       #|line 238|#
-    (setf (slot-value  connector 'sender) (funcall (quote create_Sender)  (slot-value  container 'name)  container (gethash  "source_port"  proto_conn)  #|line 239|#))
+    (setf (slot-value  connector 'sender) (funcall (quote mkSender)  (slot-value  container 'name)  container (gethash  "source_port"  proto_conn)  #|line 239|#))
     (let ((target_proto (gethash  "target"  proto_conn)))
       (declare (ignorable target_proto))                    #|line 240|#
       (let ((id_proto (gethash  "id"  target_proto)))
@@ -331,7 +331,7 @@ x)))
               (funcall (quote load_error)   (concatenate 'string  "internal error: .Down connection target internal error " (gethash  "target"  proto_conn)) ) #|line 244|#
               )
             (t                                              #|line 245|#
-              (setf (slot-value  connector 'receiver) (funcall (quote create_Receiver)  (slot-value  target_component 'name)  target_component (gethash  "target_port"  proto_conn) (slot-value  target_component 'inq)  #|line 246|#)) #|line 247|#
+              (setf (slot-value  connector 'receiver) (funcall (quote mkReceiver)  (slot-value  target_component 'name)  target_component (gethash  "target_port"  proto_conn) (slot-value  target_component 'inq)  #|line 246|#)) #|line 247|#
               ))
           (return-from create_down_connector  connector)    #|line 248|#)))) #|line 249|#
   )
@@ -349,13 +349,13 @@ x)))
             (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection source not ok " (gethash  "source"  proto_conn))  #|line 257|#)
             )
           (t                                                #|line 258|#
-            (setf (slot-value  connector 'sender) (funcall (quote create_Sender)  (slot-value  source_component 'name)  source_component (gethash  "source_port"  proto_conn)  #|line 259|#))
+            (setf (slot-value  connector 'sender) (funcall (quote mkSender)  (slot-value  source_component 'name)  source_component (gethash  "source_port"  proto_conn)  #|line 259|#))
             (cond
               (( equal    target_component  nil)            #|line 260|#
                 (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection target not ok " (slot-value  proto_conn 'target))  #|line 261|#)
                 )
               (t                                            #|line 262|#
-                (setf (slot-value  connector 'receiver) (funcall (quote create_Receiver)  (slot-value  target_component 'name)  target_component (gethash  "target_port"  proto_conn) (slot-value  target_component 'inq)  #|line 263|#)) #|line 264|#
+                (setf (slot-value  connector 'receiver) (funcall (quote mkReceiver)  (slot-value  target_component 'name)  target_component (gethash  "target_port"  proto_conn) (slot-value  target_component 'inq)  #|line 263|#)) #|line 264|#
                 ))                                          #|line 265|#
             ))
         (return-from create_across_connector  connector)    #|line 266|#))) #|line 267|#
@@ -372,8 +372,8 @@ x)))
           (funcall (quote print)   (concatenate 'string  "internal error: .Up connection source not ok " (gethash  "source"  proto_conn)) ) #|line 274|#
           )
         (t                                                  #|line 275|#
-          (setf (slot-value  connector 'sender) (funcall (quote create_Sender)  (slot-value  source_component 'name)  source_component (gethash  "source_port"  proto_conn)  #|line 276|#))
-          (setf (slot-value  connector 'receiver) (funcall (quote create_Receiver)  (slot-value  container 'name)  container (gethash  "target_port"  proto_conn) (slot-value  container 'outq)  #|line 277|#)) #|line 278|#
+          (setf (slot-value  connector 'sender) (funcall (quote mkSender)  (slot-value  source_component 'name)  source_component (gethash  "source_port"  proto_conn)  #|line 276|#))
+          (setf (slot-value  connector 'receiver) (funcall (quote mkReceiver)  (slot-value  container 'name)  container (gethash  "target_port"  proto_conn) (slot-value  container 'outq)  #|line 277|#)) #|line 278|#
           ))
       (return-from create_up_connector  connector)          #|line 279|#)) #|line 280|#
   )
@@ -382,8 +382,8 @@ x)))
   (let (( connector  (make-instance 'Connector)             #|line 283|#))
     (declare (ignorable  connector))
     (setf (slot-value  connector 'direction)  "through")    #|line 284|#
-    (setf (slot-value  connector 'sender) (funcall (quote create_Sender)  (slot-value  container 'name)  container (gethash  "source_port"  proto_conn)  #|line 285|#))
-    (setf (slot-value  connector 'receiver) (funcall (quote create_Receiver)  (slot-value  container 'name)  container (gethash  "target_port"  proto_conn) (slot-value  container 'outq)  #|line 286|#))
+    (setf (slot-value  connector 'sender) (funcall (quote mkSender)  (slot-value  container 'name)  container (gethash  "source_port"  proto_conn)  #|line 285|#))
+    (setf (slot-value  connector 'receiver) (funcall (quote mkReceiver)  (slot-value  container 'name)  container (gethash  "target_port"  proto_conn) (slot-value  container 'outq)  #|line 286|#))
     (return-from create_through_connector  connector)       #|line 287|#) #|line 288|#
   )                                                         #|line 290|#
 (defun container_instantiator (&optional  reg  owner  container_name  desc)
@@ -469,16 +469,16 @@ x)))
     (component :accessor component :initarg :component :initform  nil)  #|line 363|#)) #|line 364|#
 
                                                             #|line 365|#
-(defun create_Sender (&optional  name  component  port)
+(defun mkSender (&optional  name  component  port)
   (declare (ignorable  name  component  port))              #|line 366|#
   (let (( s  (make-instance 'Sender)                        #|line 367|#))
     (declare (ignorable  s))
     (setf (slot-value  s 'name)  name)                      #|line 368|#
     (setf (slot-value  s 'component)  component)            #|line 369|#
     (setf (slot-value  s 'port)  port)                      #|line 370|#
-    (return-from create_Sender  s)                          #|line 371|#) #|line 372|#
+    (return-from mkSender  s)                               #|line 371|#) #|line 372|#
   )
-(defun create_Receiver (&optional  name  component  port  q)
+(defun mkReceiver (&optional  name  component  port  q)
   (declare (ignorable  name  component  port  q))           #|line 374|#
   (let (( r  (make-instance 'Receiver)                      #|line 375|#))
     (declare (ignorable  r))
@@ -487,7 +487,7 @@ x)))
     (setf (slot-value  r 'port)  port)                      #|line 378|#
     #|  We need a way to determine which queue to target. "Down" and "Across" go to inq, "Up" and "Through" go to outq. |# #|line 379|#
     (setf (slot-value  r 'queue)  q)                        #|line 380|#
-    (return-from create_Receiver  r)                        #|line 381|#) #|line 382|#
+    (return-from mkReceiver  r)                             #|line 381|#) #|line 382|#
   ) #|  Checks if two senders match, by pointer equality and port name matching. |# #|line 384|#
 (defun sender_eq (&optional  s1  s2)
   (declare (ignorable  s1  s2))                             #|line 385|#
@@ -620,7 +620,7 @@ x)))
             ((not (funcall (quote is_self)   from_component  container )) #|line 480|#
               (setf  fromname (slot-value  from_component 'name)) #|line 481|#
               ))
-          (let ((from_sender (funcall (quote create_Sender)   fromname  from_component (slot-value  message 'port)  #|line 482|#)))
+          (let ((from_sender (funcall (quote mkSender)   fromname  from_component (slot-value  message 'port)  #|line 482|#)))
             (declare (ignorable from_sender))               #|line 483|#
             (loop for connector in (slot-value  container 'connections)
               do
@@ -686,14 +686,14 @@ x)))
     (instantiator :accessor instantiator :initarg :instantiator :initform  nil)  #|line 11|#)) #|line 12|#
 
                                                             #|line 13|#
-(defun Template (&optional  name  template_data  instantiator)
+(defun mkTemplate (&optional  name  template_data  instantiator)
   (declare (ignorable  name  template_data  instantiator))  #|line 14|#
   (let (( templ  (make-instance 'Template)                  #|line 15|#))
     (declare (ignorable  templ))
     (setf (slot-value  templ 'name)  name)                  #|line 16|#
     (setf (slot-value  templ 'template_data)  template_data) #|line 17|#
     (setf (slot-value  templ 'instantiator)  instantiator)  #|line 18|#
-    (return-from Template  templ)                           #|line 19|#) #|line 20|#
+    (return-from mkTemplate  templ)                         #|line 19|#) #|line 20|#
   )
 (defun read_and_convert_json_file (&optional  pathname  filename)
   (declare (ignorable  pathname  filename))                 #|line 22|#
@@ -823,7 +823,7 @@ x)))
                         (declare (ignorable name))          #|line 105|#
                         (let ((cmd (funcall (slot-value  (subseq  name 1) 'strip) )))
                           (declare (ignorable cmd))         #|line 106|#
-                          (let ((generated_leaf (funcall (quote Template)   name  #'shell_out_instantiate  cmd  #|line 107|#)))
+                          (let ((generated_leaf (funcall (quote mkTemplate)   name  #'shell_out_instantiate  cmd  #|line 107|#)))
                             (declare (ignorable generated_leaf))
                             (funcall (quote register_component)   reg  generated_leaf  #|line 108|#))))
                       )
@@ -832,7 +832,7 @@ x)))
                         (declare (ignorable name))          #|line 110|#
                         (let ((s  (subseq  name 1)          #|line 111|#))
                           (declare (ignorable s))
-                          (let ((generated_leaf (funcall (quote Template)   name  #'string_constant_instantiate  s  #|line 112|#)))
+                          (let ((generated_leaf (funcall (quote mkTemplate)   name  #'string_constant_instantiate  s  #|line 112|#)))
                             (declare (ignorable generated_leaf))
                             (funcall (quote register_component_allow_overwriting)   reg  generated_leaf  #|line 113|#)))) #|line 114|#
                       ))                                    #|line 115|#
@@ -1318,7 +1318,7 @@ x)))
               do
                 (progn
                   container                                 #|line 526|#
-                  (funcall (quote register_component)   reg (funcall (quote Template)  (gethash  "name"  container)  #|  template_data= |# container  #|  instantiator= |# #'container_instantiator )  #|line 527|#) #|line 528|#
+                  (funcall (quote register_component)   reg (funcall (quote mkTemplate)  (gethash  "name"  container)  #|  template_data= |# container  #|  instantiator= |# #'container_instantiator )  #|line 527|#) #|line 528|#
                   )))                                       #|line 529|#
           ))
     (format *standard-output* "~a"  reg)                    #|line 530|#
@@ -1385,18 +1385,18 @@ x)))
   )                                                         #|line 593|# #|  all of the the built_in leaves are listed here |# #|line 594|# #|  future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project |# #|line 595|# #|line 596|#
 (defun initialize_stock_components (&optional  reg)
   (declare (ignorable  reg))                                #|line 597|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "1then2"  nil  #'deracer_instantiate )  #|line 598|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "?"  nil  #'probe_instantiate )  #|line 599|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "?A"  nil  #'probeA_instantiate )  #|line 600|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "?B"  nil  #'probeB_instantiate )  #|line 601|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "?C"  nil  #'probeC_instantiate )  #|line 602|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "trash"  nil  #'trash_instantiate )  #|line 603|#) #|line 604|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Low Level Read Text File"  nil  #'low_level_read_text_file_instantiate )  #|line 605|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Ensure String Datum"  nil  #'ensure_string_datum_instantiate )  #|line 606|#) #|line 607|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "syncfilewrite"  nil  #'syncfilewrite_instantiate )  #|line 608|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "stringconcat"  nil  #'stringconcat_instantiate )  #|line 609|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "1then2"  nil  #'deracer_instantiate )  #|line 598|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?"  nil  #'probe_instantiate )  #|line 599|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?A"  nil  #'probeA_instantiate )  #|line 600|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?B"  nil  #'probeB_instantiate )  #|line 601|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?C"  nil  #'probeC_instantiate )  #|line 602|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "trash"  nil  #'trash_instantiate )  #|line 603|#) #|line 604|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Low Level Read Text File"  nil  #'low_level_read_text_file_instantiate )  #|line 605|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Ensure String Datum"  nil  #'ensure_string_datum_instantiate )  #|line 606|#) #|line 607|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "syncfilewrite"  nil  #'syncfilewrite_instantiate )  #|line 608|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "stringconcat"  nil  #'stringconcat_instantiate )  #|line 609|#)
   #|  for fakepipe |#                                       #|line 610|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "fakepipename"  nil  #'fakepipename_instantiate )  #|line 611|#) #|line 612|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "fakepipename"  nil  #'fakepipename_instantiate )  #|line 611|#) #|line 612|#
   )
 (defun argv (&optional )
   (declare (ignorable ))                                    #|line 614|#
@@ -1517,7 +1517,7 @@ x)))
   )
 (defun count_install (&optional  reg)
   (declare (ignorable  reg))                                #|line 19|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Count"  nil  #'count_instantiator )  #|line 20|#) #|line 21|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Count"  nil  #'count_instantiator )  #|line 20|#) #|line 21|#
   )
 
 
@@ -1528,7 +1528,7 @@ x)))
 
 (defun decode_install (&optional  reg)
   (declare (ignorable  reg))                                #|line 1|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Decode"  nil  #'decode_instantiator )  #|line 2|#) #|line 3|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Decode"  nil  #'decode_instantiator )  #|line 2|#) #|line 3|#
   )
 (defparameter  decode_digits (list   "0"  "1"  "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9" )) #|line 5|#
 (defun decode_handler (&optional  eh  msg)
@@ -1556,7 +1556,7 @@ x)))
 
 (defun reverser_install (&optional  reg)
   (declare (ignorable  reg))                                #|line 1|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Reverser"  nil  #'reverser_instantiator )  #|line 2|#) #|line 3|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Reverser"  nil  #'reverser_instantiator )  #|line 2|#) #|line 3|#
   )
 (defparameter  reverser_state  "J")                         #|line 5|# #|line 6|#
 (defun reverser_handler (&optional  eh  msg)
@@ -1598,7 +1598,7 @@ x)))
 
 (defun delay_install (&optional  reg)
   (declare (ignorable  reg))                                #|line 1|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Delay"  nil  #'delay_instantiator )  #|line 2|#) #|line 3|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Delay"  nil  #'delay_instantiator )  #|line 2|#) #|line 3|#
   )
 (defclass Delay_Info ()                                     #|line 5|#
   (
@@ -1651,7 +1651,7 @@ x)))
 
 (defun monitor_install (&optional  reg)
   (declare (ignorable  reg))                                #|line 1|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "@"  nil  #'monitor_instantiator )  #|line 2|#) #|line 3|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "@"  nil  #'monitor_instantiator )  #|line 2|#) #|line 3|#
   )
 (defun monitor_instantiator (&optional  reg  owner  name  template_data)
   (declare (ignorable  reg  owner  name  template_data))    #|line 5|#

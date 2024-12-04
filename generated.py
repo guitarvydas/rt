@@ -197,14 +197,14 @@ def create_down_connector (container,proto_conn,connectors,children_by_id):#line
     # JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''},#line 236
     connector =  Connector ()                               #line 237
     connector.direction =  "down"                           #line 238
-    connector.sender = create_Sender ( container.name, container, proto_conn [ "source_port"])#line 239
+    connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])#line 239
     target_proto =  proto_conn [ "target"]                  #line 240
     id_proto =  target_proto [ "id"]                        #line 241
     target_component =  children_by_id [id_proto]           #line 242
     if ( target_component ==  None):                        #line 243
         load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn [ "target"] )#line 244
     else:                                                   #line 245
-        connector.receiver = create_Receiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)#line 246#line 247
+        connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)#line 246#line 247
     return  connector                                       #line 248#line 249#line 250
 
 def create_across_connector (container,proto_conn,connectors,children_by_id):#line 251
@@ -215,11 +215,11 @@ def create_across_connector (container,proto_conn,connectors,children_by_id):#li
     if  source_component ==  None:                          #line 256
         load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn [ "source"] )#line 257
     else:                                                   #line 258
-        connector.sender = create_Sender ( source_component.name, source_component, proto_conn [ "source_port"])#line 259
+        connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])#line 259
         if  target_component ==  None:                      #line 260
             load_error ( str( "internal error: .Across connection target not ok ") +  proto_conn.target )#line 261
         else:                                               #line 262
-            connector.receiver = create_Receiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)#line 263#line 264#line 265
+            connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)#line 263#line 264#line 265
     return  connector                                       #line 266#line 267#line 268
 
 def create_up_connector (container,proto_conn,connectors,children_by_id):#line 269
@@ -229,15 +229,15 @@ def create_up_connector (container,proto_conn,connectors,children_by_id):#line 2
     if  source_component ==  None:                          #line 273
         print ( str( "internal error: .Up connection source not ok ") +  proto_conn [ "source"] )#line 274
     else:                                                   #line 275
-        connector.sender = create_Sender ( source_component.name, source_component, proto_conn [ "source_port"])#line 276
-        connector.receiver = create_Receiver ( container.name, container, proto_conn [ "target_port"], container.outq)#line 277#line 278
+        connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])#line 276
+        connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)#line 277#line 278
     return  connector                                       #line 279#line 280#line 281
 
 def create_through_connector (container,proto_conn,connectors,children_by_id):#line 282
     connector =  Connector ()                               #line 283
     connector.direction =  "through"                        #line 284
-    connector.sender = create_Sender ( container.name, container, proto_conn [ "source_port"])#line 285
-    connector.receiver = create_Receiver ( container.name, container, proto_conn [ "target_port"], container.outq)#line 286
+    connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])#line 285
+    connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)#line 286
     return  connector                                       #line 287#line 288#line 289
                                                             #line 290
 def container_instantiator (reg,owner,container_name,desc): #line 291
@@ -304,14 +304,14 @@ class Receiver:
         self.port =  None                                   #line 362
         self.component =  None                              #line 363#line 364
                                                             #line 365
-def create_Sender (name,component,port):                    #line 366
+def mkSender (name,component,port):                         #line 366
     s =  Sender ()                                          #line 367
     s.name =  name                                          #line 368
     s.component =  component                                #line 369
     s.port =  port                                          #line 370
     return  s                                               #line 371#line 372#line 373
 
-def create_Receiver (name,component,port,q):                #line 374
+def mkReceiver (name,component,port,q):                     #line 374
     r =  Receiver ()                                        #line 375
     r.name =  name                                          #line 376
     r.component =  component                                #line 377
@@ -401,7 +401,7 @@ def route (container,from_component,message):               #line 472
     else:                                                   #line 479
         if (not (is_self ( from_component, container))):    #line 480
             fromname =  from_component.name                 #line 481
-        from_sender = create_Sender ( fromname, from_component, message.port)#line 482#line 483
+        from_sender = mkSender ( fromname, from_component, message.port)#line 482#line 483
         for connector in  container.connections:            #line 484
             if sender_eq ( from_sender, connector.sender):  #line 485
                 deposit ( container, connector, message)    #line 486
@@ -444,7 +444,7 @@ class Template:
         self.template_data =  None                          #line 10
         self.instantiator =  None                           #line 11#line 12
                                                             #line 13
-def Template (name,template_data,instantiator):             #line 14
+def mkTemplate (name,template_data,instantiator):           #line 14
     templ =  Template ()                                    #line 15
     templ.name =  name                                      #line 16
     templ.template_data =  template_data                    #line 17
@@ -542,12 +542,12 @@ def generate_shell_components (reg,container_list):         #line 94
                 if first_char_is ( child_descriptor [ "name"], "$"):#line 104
                     name =  child_descriptor [ "name"]      #line 105
                     cmd =   name[1:] .strip ()              #line 106
-                    generated_leaf = Template ( name, shell_out_instantiate, cmd)#line 107
+                    generated_leaf = mkTemplate ( name, shell_out_instantiate, cmd)#line 107
                     register_component ( reg, generated_leaf)#line 108
                 elif first_char_is ( child_descriptor [ "name"], "'"):#line 109
                     name =  child_descriptor [ "name"]      #line 110
                     s =   name[1:]                          #line 111
-                    generated_leaf = Template ( name, string_constant_instantiate, s)#line 112
+                    generated_leaf = mkTemplate ( name, string_constant_instantiate, s)#line 112
                     register_component_allow_overwriting ( reg, generated_leaf)#line 113#line 114#line 115#line 116#line 117
     return  reg                                             #line 118#line 119#line 120
 
@@ -917,7 +917,7 @@ def initialize_component_palette (root_project,root_0D,diagram_source_files):#li
         all_containers_within_single_file = json2internal ( root_project, diagram_source)#line 524
         reg = generate_shell_components ( reg, all_containers_within_single_file)#line 525
         for container in  all_containers_within_single_file:#line 526
-            register_component ( reg,Template ( container [ "name"], container, container_instantiator))#line 527#line 528#line 529
+            register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))#line 527#line 528#line 529
     print ( reg)                                            #line 530
     reg = initialize_stock_components ( reg)                #line 531
     return  reg                                             #line 532#line 533#line 534
@@ -972,18 +972,18 @@ def fakepipename_handler (eh,msg):                          #line 587
 # all of the the built_in leaves are listed here            #line 594
 # future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 595#line 596
 def initialize_stock_components (reg):                      #line 597
-    register_component ( reg,Template ( "1then2", None, deracer_instantiate))#line 598
-    register_component ( reg,Template ( "?", None, probe_instantiate))#line 599
-    register_component ( reg,Template ( "?A", None, probeA_instantiate))#line 600
-    register_component ( reg,Template ( "?B", None, probeB_instantiate))#line 601
-    register_component ( reg,Template ( "?C", None, probeC_instantiate))#line 602
-    register_component ( reg,Template ( "trash", None, trash_instantiate))#line 603#line 604
-    register_component ( reg,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 605
-    register_component ( reg,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 606#line 607
-    register_component ( reg,Template ( "syncfilewrite", None, syncfilewrite_instantiate))#line 608
-    register_component ( reg,Template ( "stringconcat", None, stringconcat_instantiate))#line 609
+    register_component ( reg,mkTemplate ( "1then2", None, deracer_instantiate))#line 598
+    register_component ( reg,mkTemplate ( "?", None, probe_instantiate))#line 599
+    register_component ( reg,mkTemplate ( "?A", None, probeA_instantiate))#line 600
+    register_component ( reg,mkTemplate ( "?B", None, probeB_instantiate))#line 601
+    register_component ( reg,mkTemplate ( "?C", None, probeC_instantiate))#line 602
+    register_component ( reg,mkTemplate ( "trash", None, trash_instantiate))#line 603#line 604
+    register_component ( reg,mkTemplate ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 605
+    register_component ( reg,mkTemplate ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 606#line 607
+    register_component ( reg,mkTemplate ( "syncfilewrite", None, syncfilewrite_instantiate))#line 608
+    register_component ( reg,mkTemplate ( "stringconcat", None, stringconcat_instantiate))#line 609
     # for fakepipe                                          #line 610
-    register_component ( reg,Template ( "fakepipename", None, fakepipename_instantiate))#line 611#line 612#line 613
+    register_component ( reg,mkTemplate ( "fakepipename", None, fakepipename_instantiate))#line 611#line 612#line 613
 
 def argv ():                                                #line 614
     sys.argv                                                #line 615#line 616#line 617
@@ -1060,7 +1060,7 @@ def count_instantiator (reg,owner,name,template_data):      #line 14
     return make_leaf ( name_with_id, owner, None, count_handler)#line 16#line 17#line 18
 
 def count_install (reg):                                    #line 19
-    register_component ( reg,Template ( "Count", None, count_instantiator))#line 20#line 21#line 22
+    register_component ( reg,mkTemplate ( "Count", None, count_instantiator))#line 20#line 21#line 22
 
 
 
@@ -1069,7 +1069,7 @@ def count_install (reg):                                    #line 19
 
 
 def decode_install (reg):                                   #line 1
-    register_component ( reg,Template ( "Decode", None, decode_instantiator))#line 2#line 3#line 4
+    register_component ( reg,mkTemplate ( "Decode", None, decode_instantiator))#line 2#line 3#line 4
 
 decode_digits = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]#line 5
 def decode_handler (eh,msg):                                #line 6
@@ -1090,7 +1090,7 @@ def decode_instantiator (reg,owner,name,template_data):     #line 15
 
 
 def reverser_install (reg):                                 #line 1
-    register_component ( reg,Template ( "Reverser", None, reverser_instantiator))#line 2#line 3#line 4
+    register_component ( reg,mkTemplate ( "Reverser", None, reverser_instantiator))#line 2#line 3#line 4
 
 reverser_state =  "J"                                       #line 5#line 6
 def reverser_handler (eh,msg):                              #line 7
@@ -1119,7 +1119,7 @@ def reverser_instantiator (reg,owner,name,template_data):   #line 26
 
 
 def delay_install (reg):                                    #line 1
-    register_component ( reg,Template ( "Delay", None, delay_instantiator))#line 2#line 3#line 4
+    register_component ( reg,mkTemplate ( "Delay", None, delay_instantiator))#line 2#line 3#line 4
 
 class Delay_Info:
     def __init__ (self,):                                   #line 5
@@ -1157,7 +1157,7 @@ def delay_handler (eh,msg):                                 #line 22
 
 
 def monitor_install (reg):                                  #line 1
-    register_component ( reg,Template ( "@", None, monitor_instantiator))#line 2#line 3#line 4
+    register_component ( reg,mkTemplate ( "@", None, monitor_instantiator))#line 2#line 3#line 4
 
 def monitor_instantiator (reg,owner,name,template_data):    #line 5
     name_with_id = gensymbol ( "@")                         #line 6

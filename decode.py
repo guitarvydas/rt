@@ -1,7 +1,7 @@
 
 
 def decode_install (reg):                                   #line 1
-    register_component ( reg,Template ( "Decode", None, decode_instantiator))#line 2#line 3#line 4
+    register_component ( reg,mkTemplate ( "Decode", None, decode_instantiator))#line 2#line 3#line 4
 
 decode_digits = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]#line 5
 def decode_handler (eh,msg):                                #line 6

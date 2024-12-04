@@ -2,7 +2,7 @@
 
 (defun reverser_install (&optional  reg)
   (declare (ignorable  reg))                                #|line 1|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Reverser"  nil  #'reverser_instantiator )  #|line 2|#) #|line 3|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Reverser"  nil  #'reverser_instantiator )  #|line 2|#) #|line 3|#
   )
 (defparameter  reverser_state  "J")                         #|line 5|# #|line 6|#
 (defun reverser_handler (&optional  eh  msg)

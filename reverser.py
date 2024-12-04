@@ -1,7 +1,7 @@
 
 
 def reverser_install (reg):                                 #line 1
-    register_component ( reg,Template ( "Reverser", None, reverser_instantiator))#line 2#line 3#line 4
+    register_component ( reg,mkTemplate ( "Reverser", None, reverser_instantiator))#line 2#line 3#line 4
 
 reverser_state =  "J"                                       #line 5#line 6
 def reverser_handler (eh,msg):                              #line 7

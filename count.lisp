@@ -21,7 +21,7 @@
   )
 (defun count_install (&optional  reg)
   (declare (ignorable  reg))                                #|line 19|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Count"  nil  #'count_instantiator )  #|line 20|#) #|line 21|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Count"  nil  #'count_instantiator )  #|line 20|#) #|line 21|#
   )
 
 

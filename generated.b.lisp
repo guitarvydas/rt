@@ -12,14 +12,14 @@
     (instantiator :accessor instantiator :initarg :instantiator :initform  nil)  #|line 11|#)) #|line 12|#
 
                                                             #|line 13|#
-(defun Template (&optional  name  template_data  instantiator)
+(defun mkTemplate (&optional  name  template_data  instantiator)
   (declare (ignorable  name  template_data  instantiator))  #|line 14|#
   (let (( templ  (make-instance 'Template)                  #|line 15|#))
     (declare (ignorable  templ))
     (setf (slot-value  templ 'name)  name)                  #|line 16|#
     (setf (slot-value  templ 'template_data)  template_data) #|line 17|#
     (setf (slot-value  templ 'instantiator)  instantiator)  #|line 18|#
-    (return-from Template  templ)                           #|line 19|#) #|line 20|#
+    (return-from mkTemplate  templ)                         #|line 19|#) #|line 20|#
   )
 (defun read_and_convert_json_file (&optional  pathname  filename)
   (declare (ignorable  pathname  filename))                 #|line 22|#
@@ -149,7 +149,7 @@
                         (declare (ignorable name))          #|line 105|#
                         (let ((cmd (funcall (slot-value  (subseq  name 1) 'strip) )))
                           (declare (ignorable cmd))         #|line 106|#
-                          (let ((generated_leaf (funcall (quote Template)   name  #'shell_out_instantiate  cmd  #|line 107|#)))
+                          (let ((generated_leaf (funcall (quote mkTemplate)   name  #'shell_out_instantiate  cmd  #|line 107|#)))
                             (declare (ignorable generated_leaf))
                             (funcall (quote register_component)   reg  generated_leaf  #|line 108|#))))
                       )
@@ -158,7 +158,7 @@
                         (declare (ignorable name))          #|line 110|#
                         (let ((s  (subseq  name 1)          #|line 111|#))
                           (declare (ignorable s))
-                          (let ((generated_leaf (funcall (quote Template)   name  #'string_constant_instantiate  s  #|line 112|#)))
+                          (let ((generated_leaf (funcall (quote mkTemplate)   name  #'string_constant_instantiate  s  #|line 112|#)))
                             (declare (ignorable generated_leaf))
                             (funcall (quote register_component_allow_overwriting)   reg  generated_leaf  #|line 113|#)))) #|line 114|#
                       ))                                    #|line 115|#
@@ -644,7 +644,7 @@
               do
                 (progn
                   container                                 #|line 526|#
-                  (funcall (quote register_component)   reg (funcall (quote Template)  (gethash  "name"  container)  #|  template_data= |# container  #|  instantiator= |# #'container_instantiator )  #|line 527|#) #|line 528|#
+                  (funcall (quote register_component)   reg (funcall (quote mkTemplate)  (gethash  "name"  container)  #|  template_data= |# container  #|  instantiator= |# #'container_instantiator )  #|line 527|#) #|line 528|#
                   )))                                       #|line 529|#
           ))
     (format *standard-output* "~a"  reg)                    #|line 530|#
@@ -711,18 +711,18 @@
   )                                                         #|line 593|# #|  all of the the built_in leaves are listed here |# #|line 594|# #|  future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project |# #|line 595|# #|line 596|#
 (defun initialize_stock_components (&optional  reg)
   (declare (ignorable  reg))                                #|line 597|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "1then2"  nil  #'deracer_instantiate )  #|line 598|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "?"  nil  #'probe_instantiate )  #|line 599|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "?A"  nil  #'probeA_instantiate )  #|line 600|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "?B"  nil  #'probeB_instantiate )  #|line 601|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "?C"  nil  #'probeC_instantiate )  #|line 602|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "trash"  nil  #'trash_instantiate )  #|line 603|#) #|line 604|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Low Level Read Text File"  nil  #'low_level_read_text_file_instantiate )  #|line 605|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "Ensure String Datum"  nil  #'ensure_string_datum_instantiate )  #|line 606|#) #|line 607|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "syncfilewrite"  nil  #'syncfilewrite_instantiate )  #|line 608|#)
-  (funcall (quote register_component)   reg (funcall (quote Template)   "stringconcat"  nil  #'stringconcat_instantiate )  #|line 609|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "1then2"  nil  #'deracer_instantiate )  #|line 598|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?"  nil  #'probe_instantiate )  #|line 599|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?A"  nil  #'probeA_instantiate )  #|line 600|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?B"  nil  #'probeB_instantiate )  #|line 601|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?C"  nil  #'probeC_instantiate )  #|line 602|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "trash"  nil  #'trash_instantiate )  #|line 603|#) #|line 604|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Low Level Read Text File"  nil  #'low_level_read_text_file_instantiate )  #|line 605|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Ensure String Datum"  nil  #'ensure_string_datum_instantiate )  #|line 606|#) #|line 607|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "syncfilewrite"  nil  #'syncfilewrite_instantiate )  #|line 608|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "stringconcat"  nil  #'stringconcat_instantiate )  #|line 609|#)
   #|  for fakepipe |#                                       #|line 610|#
-  (funcall (quote register_component)   reg (funcall (quote Template)   "fakepipename"  nil  #'fakepipename_instantiate )  #|line 611|#) #|line 612|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "fakepipename"  nil  #'fakepipename_instantiate )  #|line 611|#) #|line 612|#
   )
 (defun argv (&optional )
   (declare (ignorable ))                                    #|line 614|#

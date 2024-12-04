@@ -15,7 +15,7 @@ def count_instantiator (reg,owner,name,template_data):      #line 14
     return make_leaf ( name_with_id, owner, None, count_handler)#line 16#line 17#line 18
 
 def count_install (reg):                                    #line 19
-    register_component ( reg,Template ( "Count", None, count_instantiator))#line 20#line 21#line 22
+    register_component ( reg,mkTemplate ( "Count", None, count_instantiator))#line 20#line 21#line 22
 
 
 

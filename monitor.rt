@@ -1,5 +1,5 @@
 defn monitor_install (reg) {
-    register_component (reg, Template (“@”, ϕ, ↪︎monitor_instantiator))
+    register_component (reg, mkTemplate (“@”, ϕ, ↪︎monitor_instantiator))
 }
 
 defn monitor_instantiator (reg, owner, name, template_data) {      
