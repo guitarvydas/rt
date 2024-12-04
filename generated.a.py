@@ -53,7 +53,7 @@ def srepr_datum_string (d):                                 #line 59
     return  d.data                                          #line 60#line 61#line 62
 
 def new_datum_bang ():                                      #line 63
-    p = Datum ()                                            #line 64
+    p =  Datum ()                                           #line 64
     p.data =  True                                          #line 65
     p.clone =  lambda : clone_datum_bang ( p)               #line 66
     p.reclaim =  lambda : reclaim_datum_bang ( p)           #line 67
@@ -89,7 +89,7 @@ def raw_datum_tick ():                                      #line 103
     return []                                               #line 104#line 105#line 106
 
 def new_datum_bytes (b):                                    #line 107
-    p = Datum ()                                            #line 108
+    p =  Datum ()                                           #line 108
     p.data =  b                                             #line 109
     p.clone =  lambda : clone_datum_bytes ( p)              #line 110
     p.reclaim =  lambda : reclaim_datum_bytes ( p)          #line 111
@@ -99,7 +99,7 @@ def new_datum_bytes (b):                                    #line 107
     return  p                                               #line 115#line 116#line 117
 
 def clone_datum_bytes (src):                                #line 118
-    p = Datum ()                                            #line 119
+    p =  Datum ()                                           #line 119
     p.clone =  src.clone                                    #line 120
     p.reclaim =  src.reclaim                                #line 121
     p.srepr =  src.srepr                                    #line 122
@@ -121,7 +121,7 @@ def new_datum_handle (h):                                   #line 140
     return new_datum_int ( h)                               #line 141#line 142#line 143
 
 def new_datum_int (i):                                      #line 144
-    p = Datum ()                                            #line 145
+    p =  Datum ()                                           #line 145
     p.data =  i                                             #line 146
     p.clone =  lambda : clone_int ( i)                      #line 147
     p.reclaim =  lambda : reclaim_int ( i)                  #line 148

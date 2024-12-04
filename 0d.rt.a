@@ -61,7 +61,7 @@ defn srepr_datum_string (d) {
 }
 
 defn new_datum_bang () {
-    p ≡ Datum ()
+    p ≡ #fresh (Datum)
     p.data ⇐ ⊤
     p.clone ⇐ λ: clone_datum_bang (p)
     p.reclaim ⇐ λ: reclaim_datum_bang (p)
@@ -105,7 +105,7 @@ defn raw_datum_tick () {
 }
 
 defn new_datum_bytes (b) {
-    p ≡ Datum ()
+    p ≡ #fresh (Datum)
     p.data ⇐ b
     p.clone ⇐ λ: clone_datum_bytes (p)
     p.reclaim ⇐ λ: reclaim_datum_bytes (p)
@@ -116,7 +116,7 @@ defn new_datum_bytes (b) {
 }
 
 defn clone_datum_bytes (src) {
-    p ≡ Datum ()
+    p ≡ #fresh (Datum)
     p.clone ⇐ src.clone
     p.reclaim ⇐ src.reclaim
     p.srepr ⇐ src.srepr
@@ -142,7 +142,7 @@ defn new_datum_handle (h) {
 }
 
 defn new_datum_int (i) {
-    p ≡ Datum ()
+    p ≡ #fresh (Datum)
     p.data ⇐ i
     p.clone ⇐ λ: clone_int (i)
     p.reclaim ⇐ λ: reclaim_int (i)

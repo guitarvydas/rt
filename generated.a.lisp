@@ -144,8 +144,8 @@ x)))
   )
 (defun new_datum_bang (&optional )
   (declare (ignorable ))                                    #|line 63|#
-  (let ((p (funcall (quote Datum) )))
-    (declare (ignorable p))                                 #|line 64|#
+  (let ((p  (make-instance 'Datum)                          #|line 64|#))
+    (declare (ignorable p))
     (setf (slot-value  p 'data)  t)                         #|line 65|#
     (setf (slot-value  p 'clone)  #'(lambda (&optional )(funcall (quote clone_datum_bang)   p  #|line 66|#)))
     (setf (slot-value  p 'reclaim)  #'(lambda (&optional )(funcall (quote reclaim_datum_bang)   p  #|line 67|#)))
@@ -190,8 +190,8 @@ x)))
   )
 (defun new_datum_bytes (&optional  b)
   (declare (ignorable  b))                                  #|line 107|#
-  (let ((p (funcall (quote Datum) )))
-    (declare (ignorable p))                                 #|line 108|#
+  (let ((p  (make-instance 'Datum)                          #|line 108|#))
+    (declare (ignorable p))
     (setf (slot-value  p 'data)  b)                         #|line 109|#
     (setf (slot-value  p 'clone)  #'(lambda (&optional )(funcall (quote clone_datum_bytes)   p  #|line 110|#)))
     (setf (slot-value  p 'reclaim)  #'(lambda (&optional )(funcall (quote reclaim_datum_bytes)   p  #|line 111|#)))
@@ -202,8 +202,8 @@ x)))
   )
 (defun clone_datum_bytes (&optional  src)
   (declare (ignorable  src))                                #|line 118|#
-  (let ((p (funcall (quote Datum) )))
-    (declare (ignorable p))                                 #|line 119|#
+  (let ((p  (make-instance 'Datum)                          #|line 119|#))
+    (declare (ignorable p))
     (setf (slot-value  p 'clone) (slot-value  src 'clone))  #|line 120|#
     (setf (slot-value  p 'reclaim) (slot-value  src 'reclaim)) #|line 121|#
     (setf (slot-value  p 'srepr) (slot-value  src 'srepr))  #|line 122|#
@@ -230,8 +230,8 @@ x)))
   )
 (defun new_datum_int (&optional  i)
   (declare (ignorable  i))                                  #|line 144|#
-  (let ((p (funcall (quote Datum) )))
-    (declare (ignorable p))                                 #|line 145|#
+  (let ((p  (make-instance 'Datum)                          #|line 145|#))
+    (declare (ignorable p))
     (setf (slot-value  p 'data)  i)                         #|line 146|#
     (setf (slot-value  p 'clone)  #'(lambda (&optional )(funcall (quote clone_int)   i  #|line 147|#)))
     (setf (slot-value  p 'reclaim)  #'(lambda (&optional )(funcall (quote reclaim_int)   i  #|line 148|#)))
