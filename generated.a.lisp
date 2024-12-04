@@ -581,7 +581,7 @@ x)))
                 #|  if child remains active, then the container must remain active and must propagate “ticks“ to child |# #|line 455|#
                 (setf (slot-value  container 'state)  "active") #|line 456|#
                 ))                                          #|line 457|#
-            (loop while (not (funcall (slot-value (slot-value  child 'outq) 'empty) ))
+            (loop while (not (empty? (slot-value  child 'outq)))
               do
                 (progn                                      #|line 458|#
                   (let ((msg (dequeue (slot-value  child 'outq)) #|line 459|#))

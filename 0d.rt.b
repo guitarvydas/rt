@@ -265,7 +265,7 @@ defn print_specific_output_to_stderr (eh, port) {
 }
 
 defn put_output (eh, msg) {
-    eh.outq.put (msg)
+    #enqueue (eh.outq, msg)
 }
 
 defvar root_project ⇐ “”
