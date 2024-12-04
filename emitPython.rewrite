@@ -68,8 +68,6 @@ ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛ sys.argv’
 ExternalPhrase_freshQueue [_octothorpe _ lp rp] = ‛ queue.Queue ()’
 ExternalPhrase_freshStack [_octothorpe _ lp rp] = ‛ queue.LifoQueue ()’
 ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ «ident» ()’
-ExternalPhrase_car [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
-ExternalPhrase_cdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’
 ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ sys.argv[«n»:] ’
 ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ sys.argv[«n»] ’
 ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
@@ -102,6 +100,7 @@ ExternalPhrase_asbytes [_octothorpe _ lp e rp] = ‛bytearray («e»,“UTF_8”
 ExternalPhrase_asint [_octothorpe _ lp e rp] = ‛int («e»)’
 ExternalPhrase_enqueue [_octothorpe _ lp obj _comma e rp] = ‛«obj».put («e»)’
 ExternalPhrase_dequeue [_octothorpe _ lp obj rp] = ‛«obj».get ()’
+ExternalPhrase_empty [_octothorpe _ lp q rp] = ‛«q».empty ()’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 

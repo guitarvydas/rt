@@ -67,17 +67,10 @@ defn get_component_instance (reg, full_name, owner) {
             else{
                 instance_name ⇐ template_name}
             instance ≡ template.instantiator (reg, owner, instance_name, template.template_data)
-            instance.depth ⇐ calculate_depth (instance)
             return instance }}
     else {
             load_error (#strcons (“Registry Error (B): Can't find component /”, #strcons (template_name, “/”)))
             return ϕ}
-}
-defn calculate_depth (eh) {
-    if eh.owner = ϕ {
-        return 0}
-    else {
-        return 1 + calculate_depth (eh.owner)}
 }
 
 defn dump_registry (reg) {

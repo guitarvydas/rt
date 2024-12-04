@@ -44,8 +44,6 @@ emit {
      | "#" xkw<"freshQueue"> "(" ")" -- freshQueue
      | "#" xkw<"freshStack"> "(" ")" -- freshStack
      | "#" xkw<"fresh"> "(" ident ")" -- fresh
-     | "#" xkw<"car"> "(" Exp ")" -- car
-     | "#" xkw<"cdr"> "(" Exp ")" -- cdr
      | "#" xkw<"nthargv"> "(" Exp ")" -- nthargv
      | "#" xkw<"nthargvcdr"> "(" Exp ")" -- nthargvcdr
      | "#" xkw<"stringcar"> "(" Exp ")" -- stringcar
@@ -67,6 +65,7 @@ emit {
      | "#" xkw<"asint"> "(" Exp ")" -- asint
      | "#" xkw<"enqueue"> "(" Exp Comma Exp ")" -- enqueue
      | "#" xkw<"dequeue"> "(" Exp ")" -- dequeue
+     | "#" xkw<"empty"> "(" Exp ")" -- empty
      
      | "#" ident "(" StuffInsideParentheses* ")" -- unrecognized
 

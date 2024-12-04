@@ -55,7 +55,7 @@ ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 o
 ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
   ;; read json from a named file and convert it into internal form (a list of Container alists)
   (with-open-file (f (format nil "~a/~a.lisp" «pathname» «fname») :direction :input)⤷
-    (read f))⤶
+    (deep-expand (read f)))⤶
 ’
 
 ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛
@@ -65,24 +65,51 @@ ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛
 ExternalPhrase_freshQueue [_octothorpe _83 _84 _85] =‛ (make-instance 'Queue)’
 ExternalPhrase_freshStack [_octothorpe _83 _84 _85] =‛ nil’
 ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ (make-instance '«ident»)’
-ExternalPhrase_car [_octothorpe _83 _84 e _85 ] =‛ (car «e»)’
-ExternalPhrase_cdr [_octothorpe _83 _84 e _85 ] =‛ (cdr «e»)’
 ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ (nthcdr «n» (argv))’
 ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ (nth «n» (argv))’
 ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ (char «e» 0)’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ (subseq «e» 1)’
 ExternalPhrase_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» «e2»)’
-ExternalPhrase_append [_octothorpe _append lp e1 _comma e2 rp] =‛ (append «e1» «e2»)’
+ExternalPhrase_append [_octothorpe _append lp lis _comma e2 rp] =‛ (setf «lis» (append «lis» (list «e2»)))’
 ExternalPhrase_basename [_octothorpe _basename lp s rp] = ‛«s»’
 
 ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 ‛(load "~/quicklisp/setup.lisp")
+(proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+
+(defun dict (lis)
+  ;; make a dict, given a list of pairs
+  (let ((ht (make-hash-table :test 'equal)))
+    (mapc #'(lambda (pair)
+	      (let ((name (car pair))
+                    (v (deep-expand (cdr pair))))
+		(setf (gethash name ht) v)))
+          lis)
+    ht))
+
+(defun jarray (lis)
+  ;; convert a JSON array into a lisp list (straight-forward, almost nothing to do)
+  (mapcar #'deep-expand lis))
+
+
+(defun deep-expand (x)
+  (cond
+   ((null x) nil)
+   ((listp x) (cond
+               ((eq 'dict (car x)) (dict (cdr x)))
+               ((eq 'jarray (car x)) (jarray (cdr x)))
+               (t (error "unknown list in deep-expand"))))
+   (t x)))
+
+
 (defun dict-fresh () (make-hash-table :test 'equal))
+
 (defun dict-in? (name table)
-  (multiple-value-bind (dont-care found)
-     (gethash name table)
-    dont-care ;; quell warnings that dont-care is unused
-    found))
+  (when (and table name)
+    (multiple-value-bind (dont-care found)
+       (gethash name table)
+      dont-care ;; quell warnings that dont-care is unused
+      found)))
 
 (defun key-mangle (s) s)
 
@@ -129,7 +156,7 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 (defmethod dequeue ((self Queue))
   (pop (contents self)))
     
-(defmethod empty ((self Queue))
+(defmethod empty? ((self Queue))
   (null (contents self)))
 ’
 
@@ -140,13 +167,14 @@ ExternalPhrase_split_string_for_shell [_octothorpe _ lp s rp] = ‛(split-sequen
 ExternalPhrase_substitute [_octothorpe _ lp new_item _comma1 old_item _comma2 s rp] = ‛(substitute «new_item» «old_item» «s»)’
 
 ExternalPhrase_run_command [_octothorpe _ lp cmd _comma1 args _comma2 ret _comma3 rc _comma4 out _comma5 errout rp] = ‛(multiple-value-setq («out» «errout» «rc») (uiop::run-program (concatenate 'string «cmd» " " «args») :output :string :error :string))’
-ExternalPhrase_abort [_octothorpe _ lp rp] = ‛(uiop:quit)’
+ExternalPhrase_abort [_octothorpe _ lp rp] = ‛(break)’
 ExternalPhrase_asstr [_octothorpe _ lp e rp] = ‛(format nil "~a" «e»)’
 ExternalPhrase_len [_octothorpe _ lp e rp] = ‛(length «e»)’
 ExternalPhrase_asbytes [_octothorpe _ lp e rp] = ‛(coerce «e» 'simple-vector)’
 ExternalPhrase_asint [_octothorpe _ lp e rp] = ‛(parse-integer «e»)’
 ExternalPhrase_enqueue [_octothorpe _ lp obj _comma e rp] = ‛(enqueue «obj» «e»)’
 ExternalPhrase_dequeue [_octothorpe _ lp obj rp] = ‛(dequeue «obj»)’
+ExternalPhrase_empty [_octothorpe _ lp q rp] = ‛(empty? «q»)’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 
@@ -160,7 +188,7 @@ IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\n
 ElifStatement [ _37 Exp StatementBlock] = ‛\n(«Exp»⤷«StatementBlock»⤶)’
 ElseStatement [ _39 StatementBlock] = ‛\n(t⤷«StatementBlock»⤶)’
 ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\n(loop for «ident» in «Exp»⤷\ndo⤷\n(progn⤷\n«ident»«StatementBlock»))⤶⤶⤶«rec»’
-WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo⤷\n(progn⤷«StatementBlock»⤶)⤶)«rec»’
+WhileStatement [ _45 Exp StatementBlock rec?] = ‛\n(loop while «Exp»⤷\ndo⤷\n(progn⤷«StatementBlock»⤶)⤶)⤶«rec»’
 
 Assignment_multiple [ lb Lvals+ rb _assign Exp rec?] =‛\n(multiple-value-setq («Lvals») ⤷«Exp»⤶)«rec»’
 
@@ -197,8 +225,8 @@ Primary_plain [p] = ‛«p»’
 
 PrimaryIndexed_lookupident [p _at key] = ‛(gethash «key» «p»)’
 PrimaryIndexed_lookup [p _at key] = ‛(gethash «key» «p»)’
-PrimaryIndexed_fieldident [p _dot key] = ‛(slot-value '«key» «p»)’ 
-PrimaryIndexed_field [p _dot key] = ‛(slot-value «p» «key» «p»)’ 
+PrimaryIndexed_fieldident [p _dot key] = ‛(slot-value «p» '«key»)’ 
+PrimaryIndexed_field [p _dot key] = ‛(slot-value «p» «key»)’ 
 PrimaryIndexed_index [p lb e rb] = ‛(nth «e» «p»)’ 
 PrimaryIndexed_nthslice [p lb ds+ _colon rb] = ‛(nthcdr «ds» «p»)’
 PrimaryIndexed_atom [a] = ‛«a»’
@@ -209,7 +237,7 @@ Atom_external [x] = ‛«x»’
 Atom_callident [id actuals] = ‛(funcall (quote «id») «actuals»)’
 
 Atom_emptylistconst [ _72 _73] =‛ nil’
-Atom_emptydict [ _76 _77] =‛ nil’
+Atom_emptydict [ _76 _77] =‛ (dict-fresh)’
 Atom_paren [ _70 Exp _71] =‛«Exp»’
 Atom_listconst [lb line1? PrimaryComma+ line2? rb] =‛(list «line1» «PrimaryComma»)«line2»’
 
