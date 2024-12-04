@@ -42,7 +42,7 @@ defn register_component_allow_overwriting (reg, template) { return abstracted_re
 
 defn abstracted_register_component (reg, template, ok_to_overwrite) {
     name ≡ mangle_name (template.name)
-    if name in reg.templates and not ok_to_overwrite {
+    if reg != ϕ and name in reg.templates and not ok_to_overwrite {
         load_error (#strcons (“Component /”, #strcons (template.name, “/ already declared”)))
 	return reg
     } else {
@@ -527,8 +527,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
             register_component (reg, mkTemplate (container@“name” , ⌈ template_data=⌉ container, ⌈ instantiator=⌉ ↪︎container_instantiator))
 	}
     }
-    #print_stdout (reg)
-    reg ⇐ initialize_stock_components (reg)
+    initialize_stock_components (reg)
     return reg
 }
 

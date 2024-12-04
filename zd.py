@@ -6,7 +6,7 @@ import subprocess
 import shlex
 import os
 import json
-import queue
+from collections import deque
                                                             #line 1#line 2
 counter =  0                                                #line 3#line 4
 digits = [ "₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀", "₂₁", "₂₂", "₂₃", "₂₄", "₂₅", "₂₆", "₂₇", "₂₈", "₂₉"]#line 11#line 12#line 13
@@ -337,8 +337,8 @@ def force_tick (parent,eh):                                 #line 398
     return  tick_msg                                        #line 401#line 402#line 403
 
 def push_message (parent,receiver,inq,m):                   #line 404
-    inq.put ( m)                                            #line 405
-    parent.visit_ordering.put ( receiver)                   #line 406#line 407#line 408
+    inq.append ( m)                                         #line 405
+    parent.visit_ordering.append ( receiver)                #line 406#line 407#line 408
 
 def is_self (child,container):                              #line 409
     # in an earlier version “self“ was denoted as ϕ         #line 410
@@ -355,8 +355,8 @@ def step_children (container,causingMessage):               #line 423
     for child in  list ( container.visit_ordering):         #line 425
         # child = container represents self, skip it        #line 426
         if (not (is_self ( child, container))):             #line 427
-            if (not ( child.inq.empty ())):                 #line 428
-                msg =  child.inq.get ()                     #line 429
+            if (not ((0==len( child.inq)))):                #line 428
+                msg =  child.inq.popleft ()                 #line 429
                 began_long_run =  None                      #line 430
                 continued_long_run =  None                  #line 431
                 ended_long_run =  None                      #line 432
@@ -376,8 +376,8 @@ def step_children (container,causingMessage):               #line 423
             if  child.state ==  "active":                   #line 448
                 # if child remains active, then the container must remain active and must propagate “ticks“ to child#line 449
                 container.state =  "active"                 #line 450#line 451
-            while (not ( child.outq.empty ())):             #line 452
-                msg =  child.outq.get ()                    #line 453
+            while (not ((0==len( child.outq)))):            #line 452
+                msg =  child.outq.popleft ()                #line 453
                 route ( container, child, msg)              #line 454
                 destroy_message ( msg)                      #line 455#line 456#line 457#line 458#line 459
 
@@ -420,10 +420,10 @@ def any_child_ready (container):                            #line 497
     return  False                                           #line 501#line 502#line 503
 
 def child_is_ready (eh):                                    #line 504
-    return (not ( eh.outq.empty ())) or (not ( eh.inq.empty ())) or ( eh.state!= "idle") or (any_child_ready ( eh))#line 505#line 506#line 507
+    return (not ((0==len( eh.outq)))) or (not ((0==len( eh.inq)))) or ( eh.state!= "idle") or (any_child_ready ( eh))#line 505#line 506#line 507
 
 def append_routing_descriptor (container,desc):             #line 508
-    container.routings.put ( desc)                          #line 509#line 510#line 511
+    container.routings.append ( desc)                       #line 509#line 510#line 511
 
 def container_injector (container,message):                 #line 512
     container_handler ( container, message)                 #line 513#line 514#line 515
@@ -486,7 +486,7 @@ def register_component_allow_overwriting (reg,template):
 
 def abstracted_register_component (reg,template,ok_to_overwrite):#line 43
     name = mangle_name ( template.name)                     #line 44
-    if  name in  reg.templates and not  ok_to_overwrite:    #line 45
+    if  reg!= None and  name in  reg.templates and not  ok_to_overwrite:#line 45
         load_error ( str( "Component /") +  str( template.name) +  "/ already declared"  )#line 46
         return  reg                                         #line 47
     else:                                                   #line 48
@@ -577,13 +577,13 @@ def first_char_is (s,c):                                    #line 125
 class Eh:
     def __init__ (self,):                                   #line 150
         self.name =  ""                                     #line 151
-        self.inq =  queue.Queue ()                          #line 152
-        self.outq =  queue.Queue ()                         #line 153
+        self.inq =  deque ([])                              #line 152
+        self.outq =  deque ([])                             #line 153
         self.owner =  None                                  #line 154
         self.children = []                                  #line 155
-        self.visit_ordering =  queue.Queue ()               #line 156
+        self.visit_ordering =  deque ([])                   #line 156
         self.connections = []                               #line 157
-        self.routings =  queue.Queue ()                     #line 158
+        self.routings =  deque ([])                         #line 158
         self.handler =  None                                #line 159
         self.finject =  None                                #line 160
         self.instance_data =  None                          #line 161
@@ -673,7 +673,7 @@ def print_specific_output_to_stderr (eh,port):              #line 259
     print ( datum.srepr (), file=sys.stderr)                #line 263#line 264#line 265
 
 def put_output (eh,msg):                                    #line 266
-    eh.outq.put ( msg)                                      #line 267#line 268#line 269
+    eh.outq.append ( msg)                                   #line 267#line 268#line 269
 
 root_project =  ""                                          #line 270
 root_0D =  ""                                               #line 271#line 272
@@ -918,126 +918,125 @@ def initialize_component_palette (root_project,root_0D,diagram_source_files):#li
         reg = generate_shell_components ( reg, all_containers_within_single_file)#line 525
         for container in  all_containers_within_single_file:#line 526
             register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))#line 527#line 528#line 529
-    print ( reg)                                            #line 530
-    reg = initialize_stock_components ( reg)                #line 531
-    return  reg                                             #line 532#line 533#line 534
+    initialize_stock_components ( reg)                      #line 530
+    return  reg                                             #line 531#line 532#line 533
 
-def print_error_maybe (main_container):                     #line 535
-    error_port =  "✗"                                       #line 536
-    err = fetch_first_output ( main_container, error_port)  #line 537
-    if ( err!= None) and ( 0 < len (trimws ( err.srepr ()))):#line 538
-        print ( "___ !!! ERRORS !!! ___")                   #line 539
-        print_specific_output ( main_container, error_port) #line 540#line 541#line 542
+def print_error_maybe (main_container):                     #line 534
+    error_port =  "✗"                                       #line 535
+    err = fetch_first_output ( main_container, error_port)  #line 536
+    if ( err!= None) and ( 0 < len (trimws ( err.srepr ()))):#line 537
+        print ( "___ !!! ERRORS !!! ___")                   #line 538
+        print_specific_output ( main_container, error_port) #line 539#line 540#line 541
 
-# debugging helpers                                         #line 543#line 544
-def nl ():                                                  #line 545
-    print ( "")                                             #line 546#line 547#line 548
+# debugging helpers                                         #line 542#line 543
+def nl ():                                                  #line 544
+    print ( "")                                             #line 545#line 546#line 547
 
-def dump_outputs (main_container):                          #line 549
-    nl ()                                                   #line 550
-    print ( "___ Outputs ___")                              #line 551
-    print_output_list ( main_container)                     #line 552#line 553#line 554
+def dump_outputs (main_container):                          #line 548
+    nl ()                                                   #line 549
+    print ( "___ Outputs ___")                              #line 550
+    print_output_list ( main_container)                     #line 551#line 552#line 553
 
-def trimws (s):                                             #line 555
-    # remove whitespace from front and back of string       #line 556
-    return  s.strip ()                                      #line 557#line 558#line 559
+def trimws (s):                                             #line 554
+    # remove whitespace from front and back of string       #line 555
+    return  s.strip ()                                      #line 556#line 557#line 558
 
-def clone_string (s):                                       #line 560
-    return  s                                               #line 561#line 562#line 563
+def clone_string (s):                                       #line 559
+    return  s                                               #line 560#line 561#line 562
 
-load_errors =  False                                        #line 564
-runtime_errors =  False                                     #line 565#line 566
-def load_error (s):                                         #line 567
-    global load_errors                                      #line 568
-    print ( s)                                              #line 569
-    print ()                                                #line 570
-    load_errors =  True                                     #line 571#line 572#line 573
+load_errors =  False                                        #line 563
+runtime_errors =  False                                     #line 564#line 565
+def load_error (s):                                         #line 566
+    global load_errors                                      #line 567
+    print ( s)                                              #line 568
+    print ()                                                #line 569
+    load_errors =  True                                     #line 570#line 571#line 572
 
-def runtime_error (s):                                      #line 574
-    global runtime_errors                                   #line 575
-    print ( s)                                              #line 576
-    runtime_errors =  True                                  #line 577#line 578#line 579
+def runtime_error (s):                                      #line 573
+    global runtime_errors                                   #line 574
+    print ( s)                                              #line 575
+    runtime_errors =  True                                  #line 576#line 577#line 578
 
-def fakepipename_instantiate (reg,owner,name,template_data):#line 580
-    instance_name = gensymbol ( "fakepipe")                 #line 581
-    return make_leaf ( instance_name, owner, None, fakepipename_handler)#line 582#line 583#line 584
+def fakepipename_instantiate (reg,owner,name,template_data):#line 579
+    instance_name = gensymbol ( "fakepipe")                 #line 580
+    return make_leaf ( instance_name, owner, None, fakepipename_handler)#line 581#line 582#line 583
 
-rand =  0                                                   #line 585#line 586
-def fakepipename_handler (eh,msg):                          #line 587
-    global rand                                             #line 588
+rand =  0                                                   #line 584#line 585
+def fakepipename_handler (eh,msg):                          #line 586
+    global rand                                             #line 587
     rand =  rand+ 1
-    # not very random, but good enough _ 'rand' must be unique within a single run#line 589
-    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)#line 590#line 591#line 592
-                                                            #line 593
-# all of the the built_in leaves are listed here            #line 594
-# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 595#line 596
-def initialize_stock_components (reg):                      #line 597
-    register_component ( reg,mkTemplate ( "1then2", None, deracer_instantiate))#line 598
-    register_component ( reg,mkTemplate ( "?", None, probe_instantiate))#line 599
-    register_component ( reg,mkTemplate ( "?A", None, probeA_instantiate))#line 600
-    register_component ( reg,mkTemplate ( "?B", None, probeB_instantiate))#line 601
-    register_component ( reg,mkTemplate ( "?C", None, probeC_instantiate))#line 602
-    register_component ( reg,mkTemplate ( "trash", None, trash_instantiate))#line 603#line 604
-    register_component ( reg,mkTemplate ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 605
-    register_component ( reg,mkTemplate ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 606#line 607
-    register_component ( reg,mkTemplate ( "syncfilewrite", None, syncfilewrite_instantiate))#line 608
-    register_component ( reg,mkTemplate ( "stringconcat", None, stringconcat_instantiate))#line 609
-    # for fakepipe                                          #line 610
-    register_component ( reg,mkTemplate ( "fakepipename", None, fakepipename_instantiate))#line 611#line 612#line 613
+    # not very random, but good enough _ 'rand' must be unique within a single run#line 588
+    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)#line 589#line 590#line 591
+                                                            #line 592
+# all of the the built_in leaves are listed here            #line 593
+# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 594#line 595
+def initialize_stock_components (reg):                      #line 596
+    register_component ( reg,mkTemplate ( "1then2", None, deracer_instantiate))#line 597
+    register_component ( reg,mkTemplate ( "?", None, probe_instantiate))#line 598
+    register_component ( reg,mkTemplate ( "?A", None, probeA_instantiate))#line 599
+    register_component ( reg,mkTemplate ( "?B", None, probeB_instantiate))#line 600
+    register_component ( reg,mkTemplate ( "?C", None, probeC_instantiate))#line 601
+    register_component ( reg,mkTemplate ( "trash", None, trash_instantiate))#line 602#line 603
+    register_component ( reg,mkTemplate ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 604
+    register_component ( reg,mkTemplate ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 605#line 606
+    register_component ( reg,mkTemplate ( "syncfilewrite", None, syncfilewrite_instantiate))#line 607
+    register_component ( reg,mkTemplate ( "stringconcat", None, stringconcat_instantiate))#line 608
+    # for fakepipe                                          #line 609
+    register_component ( reg,mkTemplate ( "fakepipename", None, fakepipename_instantiate))#line 610#line 611#line 612
 
-def argv ():                                                #line 614
-    sys.argv                                                #line 615#line 616#line 617
+def argv ():                                                #line 613
+    sys.argv                                                #line 614#line 615#line 616
 
-def initialize ():                                          #line 618
-    root_of_project =  sys.argv[ 1]                         #line 619
-    root_of_0D =  sys.argv[ 2]                              #line 620
-    arg =  sys.argv[ 3]                                     #line 621
-    main_container_name =  sys.argv[ 4]                     #line 622
-    diagram_names =  sys.argv[ 5:]                          #line 623
-    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)#line 624
-    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 625#line 626#line 627
+def initialize ():                                          #line 617
+    root_of_project =  sys.argv[ 1]                         #line 618
+    root_of_0D =  sys.argv[ 2]                              #line 619
+    arg =  sys.argv[ 3]                                     #line 620
+    main_container_name =  sys.argv[ 4]                     #line 621
+    diagram_names =  sys.argv[ 5:]                          #line 622
+    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)#line 623
+    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 624#line 625#line 626
 
 def start (palette,env):
-    start_helper ( palette, env, False)                     #line 628
+    start_helper ( palette, env, False)                     #line 627
 
 def start_show_all (palette,env):
-    start_helper ( palette, env, True)                      #line 629
+    start_helper ( palette, env, True)                      #line 628
 
-def start_helper (palette,env,show_all_outputs):            #line 630
-    root_of_project =  env [ 0]                             #line 631
-    root_of_0D =  env [ 1]                                  #line 632
-    main_container_name =  env [ 2]                         #line 633
-    diagram_names =  env [ 3]                               #line 634
-    arg =  env [ 4]                                         #line 635
-    set_environment ( root_of_project, root_of_0D)          #line 636
-    # get entrypoint container                              #line 637
-    main_container = get_component_instance ( palette, main_container_name, None)#line 638
-    if  None ==  main_container:                            #line 639
-        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 643#line 644
-    if not  load_errors:                                    #line 645
-        arg = new_datum_string ( arg)                       #line 646
-        msg = make_message ( "", arg)                       #line 647
-        inject ( main_container, msg)                       #line 648
-        if  show_all_outputs:                               #line 649
-            dump_outputs ( main_container)                  #line 650
-        else:                                               #line 651
-            print_error_maybe ( main_container)             #line 652
-            outp = fetch_first_output ( main_container, "") #line 653
-            if  None ==  outp:                              #line 654
-                print ( "(no outputs)")                     #line 655
-            else:                                           #line 656
-                print_specific_output ( main_container, "") #line 657#line 658#line 659
-        if  show_all_outputs:                               #line 660
-            print ( "--- done ---")                         #line 661#line 662#line 663#line 664#line 665
-                                                            #line 666#line 667
-# utility functions                                         #line 668
-def send_int (eh,port,i,causing_message):                   #line 669
-    datum = new_datum_int ( i)                              #line 670
-    send ( eh, port, datum, causing_message)                #line 671#line 672#line 673
+def start_helper (palette,env,show_all_outputs):            #line 629
+    root_of_project =  env [ 0]                             #line 630
+    root_of_0D =  env [ 1]                                  #line 631
+    main_container_name =  env [ 2]                         #line 632
+    diagram_names =  env [ 3]                               #line 633
+    arg =  env [ 4]                                         #line 634
+    set_environment ( root_of_project, root_of_0D)          #line 635
+    # get entrypoint container                              #line 636
+    main_container = get_component_instance ( palette, main_container_name, None)#line 637
+    if  None ==  main_container:                            #line 638
+        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 642#line 643
+    if not  load_errors:                                    #line 644
+        arg = new_datum_string ( arg)                       #line 645
+        msg = make_message ( "", arg)                       #line 646
+        inject ( main_container, msg)                       #line 647
+        if  show_all_outputs:                               #line 648
+            dump_outputs ( main_container)                  #line 649
+        else:                                               #line 650
+            print_error_maybe ( main_container)             #line 651
+            outp = fetch_first_output ( main_container, "") #line 652
+            if  None ==  outp:                              #line 653
+                print ( "(no outputs)")                     #line 654
+            else:                                           #line 655
+                print_specific_output ( main_container, "") #line 656#line 657#line 658
+        if  show_all_outputs:                               #line 659
+            print ( "--- done ---")                         #line 660#line 661#line 662#line 663#line 664
+                                                            #line 665#line 666
+# utility functions                                         #line 667
+def send_int (eh,port,i,causing_message):                   #line 668
+    datum = new_datum_int ( i)                              #line 669
+    send ( eh, port, datum, causing_message)                #line 670#line 671#line 672
 
-def send_bang (eh,port,causing_message):                    #line 674
-    datum = new_datum_bang ()                               #line 675
-    send ( eh, port, datum, causing_message)                #line 676#line 677#line 678
+def send_bang (eh,port,causing_message):                    #line 673
+    datum = new_datum_bang ()                               #line 674
+    send ( eh, port, datum, causing_message)                #line 675#line 676#line 677
 
 
 

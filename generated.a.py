@@ -6,7 +6,7 @@ import subprocess
 import shlex
 import os
 import json
-import queue
+from collections import deque
                                                             #line 1#line 2
 counter =  0                                                #line 3#line 4
 digits = [ "₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀", "₂₁", "₂₂", "₂₃", "₂₄", "₂₅", "₂₆", "₂₇", "₂₈", "₂₉"]#line 11#line 12#line 13
@@ -337,8 +337,8 @@ def force_tick (parent,eh):                                 #line 398
     return  tick_msg                                        #line 401#line 402#line 403
 
 def push_message (parent,receiver,inq,m):                   #line 404
-    inq.put ( m)                                            #line 405
-    parent.visit_ordering.put ( receiver)                   #line 406#line 407#line 408
+    inq.append ( m)                                         #line 405
+    parent.visit_ordering.append ( receiver)                #line 406#line 407#line 408
 
 def is_self (child,container):                              #line 409
     # in an earlier version “self“ was denoted as ϕ         #line 410
@@ -355,8 +355,8 @@ def step_children (container,causingMessage):               #line 423
     for child in  list ( container.visit_ordering):         #line 425
         # child = container represents self, skip it        #line 426
         if (not (is_self ( child, container))):             #line 427
-            if (not ( child.inq.empty ())):                 #line 428
-                msg =  child.inq.get ()                     #line 429
+            if (not ((0==len( child.inq)))):                #line 428
+                msg =  child.inq.popleft ()                 #line 429
                 began_long_run =  None                      #line 430
                 continued_long_run =  None                  #line 431
                 ended_long_run =  None                      #line 432
@@ -376,8 +376,8 @@ def step_children (container,causingMessage):               #line 423
             if  child.state ==  "active":                   #line 448
                 # if child remains active, then the container must remain active and must propagate “ticks“ to child#line 449
                 container.state =  "active"                 #line 450#line 451
-            while (not ( child.outq.empty ())):             #line 452
-                msg =  child.outq.get ()                    #line 453
+            while (not ((0==len( child.outq)))):            #line 452
+                msg =  child.outq.popleft ()                #line 453
                 route ( container, child, msg)              #line 454
                 destroy_message ( msg)                      #line 455#line 456#line 457#line 458#line 459
 
@@ -420,10 +420,10 @@ def any_child_ready (container):                            #line 497
     return  False                                           #line 501#line 502#line 503
 
 def child_is_ready (eh):                                    #line 504
-    return (not ( eh.outq.empty ())) or (not ( eh.inq.empty ())) or ( eh.state!= "idle") or (any_child_ready ( eh))#line 505#line 506#line 507
+    return (not ((0==len( eh.outq)))) or (not ((0==len( eh.inq)))) or ( eh.state!= "idle") or (any_child_ready ( eh))#line 505#line 506#line 507
 
 def append_routing_descriptor (container,desc):             #line 508
-    container.routings.put ( desc)                          #line 509#line 510#line 511
+    container.routings.append ( desc)                       #line 509#line 510#line 511
 
 def container_injector (container,message):                 #line 512
     container_handler ( container, message)                 #line 513#line 514#line 515
