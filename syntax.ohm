@@ -109,8 +109,6 @@ syntax {
       | "[" line? PrimaryComma+ line? "]" -- listconst
       | "{" line? PairComma+ line? "}" -- dict
       | lambda LambdaFormals? ":" Exp -- lambda
-      | "+" Primary -- pos
-      | "-" Primary -- neg
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
@@ -120,6 +118,8 @@ syntax {
       | string -- string
       | number -- number
       | ident -- ident
+      | "+" Primary -- pos
+      | "-" Primary -- neg
 
 
 

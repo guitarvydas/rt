@@ -350,87 +350,83 @@ def step_child (child,msg):                                 #line 414
     after_state =  child.state                              #line 417
     return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"]#line 420#line 421#line 422
 
-def save_message (eh,msg):                                  #line 423
-    eh.saved_messages.put ( msg)                            #line 424#line 425#line 426
+def step_children (container,causingMessage):               #line 423
+    container.state =  "idle"                               #line 424
+    for child in  list ( container.visit_ordering):         #line 425
+        # child = container represents self, skip it        #line 426
+        if (not (is_self ( child, container))):             #line 427
+            if (not ( child.inq.empty ())):                 #line 428
+                msg =  child.inq.get ()                     #line 429
+                began_long_run =  None                      #line 430
+                continued_long_run =  None                  #line 431
+                ended_long_run =  None                      #line 432
+                [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)#line 433
+                if  began_long_run:                         #line 434
+                    pass                                    #line 435
+                elif  continued_long_run:                   #line 436
+                    pass                                    #line 437
+                elif  ended_long_run:                       #line 438
+                    pass                                    #line 439#line 440
+                destroy_message ( msg)                      #line 441
+            else:                                           #line 442
+                if  child.state!= "idle":                   #line 443
+                    msg = force_tick ( container, child)    #line 444
+                    child.handler ( child, msg)             #line 445
+                    destroy_message ( msg)                  #line 446#line 447
+            if  child.state ==  "active":                   #line 448
+                # if child remains active, then the container must remain active and must propagate “ticks“ to child#line 449
+                container.state =  "active"                 #line 450#line 451
+            while (not ( child.outq.empty ())):             #line 452
+                msg =  child.outq.get ()                    #line 453
+                route ( container, child, msg)              #line 454
+                destroy_message ( msg)                      #line 455#line 456#line 457#line 458#line 459
 
-def fetch_saved_message_and_clear (eh):                     #line 427
-    return  eh.saved_messages.get ()                        #line 428#line 429#line 430
+def attempt_tick (parent,eh):                               #line 460
+    if  eh.state!= "idle":                                  #line 461
+        force_tick ( parent, eh)                            #line 462#line 463#line 464
 
-def step_children (container,causingMessage):               #line 431
-    container.state =  "idle"                               #line 432
-    for child in  list ( container.visit_ordering):         #line 433
-        # child = container represents self, skip it        #line 434
-        if (not (is_self ( child, container))):             #line 435
-            if (not ( child.inq.empty ())):                 #line 436
-                msg =  child.inq.get ()                     #line 437
-                began_long_run =  None                      #line 438
-                continued_long_run =  None                  #line 439
-                ended_long_run =  None                      #line 440
-                [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)#line 441
-                if  began_long_run:                         #line 442
-                    save_message ( child, msg)              #line 443
-                elif  continued_long_run:                   #line 444
-                    pass                                    #line 445#line 446
-                destroy_message ( msg)                      #line 447
-            else:                                           #line 448
-                if  child.state!= "idle":                   #line 449
-                    msg = force_tick ( container, child)    #line 450
-                    child.handler ( child, msg)             #line 451
-                    destroy_message ( msg)                  #line 452#line 453
-            if  child.state ==  "active":                   #line 454
-                # if child remains active, then the container must remain active and must propagate “ticks“ to child#line 455
-                container.state =  "active"                 #line 456#line 457
-            while (not ( child.outq.empty ())):             #line 458
-                msg =  child.outq.get ()                    #line 459
-                route ( container, child, msg)              #line 460
-                destroy_message ( msg)                      #line 461#line 462#line 463#line 464#line 465
+def is_tick (msg):                                          #line 465
+    return  "tick" ==  msg.datum.kind ()                    #line 466#line 467#line 468
 
-def attempt_tick (parent,eh):                               #line 466
-    if  eh.state!= "idle":                                  #line 467
-        force_tick ( parent, eh)                            #line 468#line 469#line 470
-
-def is_tick (msg):                                          #line 471
-    return  "tick" ==  msg.datum.kind ()                    #line 472#line 473#line 474
-
-# Routes a single message to all matching destinations, according to#line 475
-# the container's connection network.                       #line 476#line 477
-def route (container,from_component,message):               #line 478
+# Routes a single message to all matching destinations, according to#line 469
+# the container's connection network.                       #line 470#line 471
+def route (container,from_component,message):               #line 472
     was_sent =  False
-    # for checking that output went somewhere (at least during bootstrap)#line 479
-    fromname =  ""                                          #line 480
-    if is_tick ( message):                                  #line 481
-        for child in  container.children:                   #line 482
-            attempt_tick ( container, child)                #line 483
-        was_sent =  True                                    #line 484
-    else:                                                   #line 485
-        if (not (is_self ( from_component, container))):    #line 486
-            fromname =  from_component.name                 #line 487
-        from_sender = create_Sender ( fromname, from_component, message.port)#line 488#line 489
-        for connector in  container.connections:            #line 490
-            if sender_eq ( from_sender, connector.sender):  #line 491
-                deposit ( container, connector, message)    #line 492
-                was_sent =  True                            #line 493
-    if not ( was_sent):                                     #line 494
-        print ( "\n\n*** Error: ***")                       #line 495
-        print ( "***")                                      #line 496
-        print ( str( container.name) +  str( ": message '") +  str( message.port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     )#line 497
-        print ( "***")                                      #line 498
-        exit ()                                             #line 499#line 500#line 501#line 502
+    # for checking that output went somewhere (at least during bootstrap)#line 473
+    fromname =  ""                                          #line 474
+    if is_tick ( message):                                  #line 475
+        for child in  container.children:                   #line 476
+            attempt_tick ( container, child)                #line 477
+        was_sent =  True                                    #line 478
+    else:                                                   #line 479
+        if (not (is_self ( from_component, container))):    #line 480
+            fromname =  from_component.name                 #line 481
+        from_sender = create_Sender ( fromname, from_component, message.port)#line 482#line 483
+        for connector in  container.connections:            #line 484
+            if sender_eq ( from_sender, connector.sender):  #line 485
+                deposit ( container, connector, message)    #line 486
+                was_sent =  True                            #line 487
+    if not ( was_sent):                                     #line 488
+        print ( "\n\n*** Error: ***")                       #line 489
+        print ( "***")                                      #line 490
+        print ( str( container.name) +  str( ": message '") +  str( message.port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     )#line 491
+        print ( "***")                                      #line 492
+        exit ()                                             #line 493#line 494#line 495#line 496
 
-def any_child_ready (container):                            #line 503
-    for child in  container.children:                       #line 504
-        if child_is_ready ( child):                         #line 505
-            return  True                                    #line 506
-    return  False                                           #line 507#line 508#line 509
+def any_child_ready (container):                            #line 497
+    for child in  container.children:                       #line 498
+        if child_is_ready ( child):                         #line 499
+            return  True                                    #line 500
+    return  False                                           #line 501#line 502#line 503
 
-def child_is_ready (eh):                                    #line 510
-    return (not ( eh.outq.empty ())) or (not ( eh.inq.empty ())) or ( eh.state!= "idle") or (any_child_ready ( eh))#line 511#line 512#line 513
+def child_is_ready (eh):                                    #line 504
+    return (not ( eh.outq.empty ())) or (not ( eh.inq.empty ())) or ( eh.state!= "idle") or (any_child_ready ( eh))#line 505#line 506#line 507
 
-def append_routing_descriptor (container,desc):             #line 514
-    container.routings.put ( desc)                          #line 515#line 516#line 517
+def append_routing_descriptor (container,desc):             #line 508
+    container.routings.put ( desc)                          #line 509#line 510#line 511
 
-def container_injector (container,message):                 #line 518
-    container_handler ( container, message)                 #line 519#line 520#line 521
+def container_injector (container,message):                 #line 512
+    container_handler ( container, message)                 #line 513#line 514#line 515
 
 
 
@@ -584,199 +580,198 @@ class Eh:
         self.inq =  queue.Queue ()                          #line 152
         self.outq =  queue.Queue ()                         #line 153
         self.owner =  None                                  #line 154
-        self.saved_messages =  queue.LifoQueue () # stack of saved message(s)#line 155
-        self.children = []                                  #line 156
-        self.visit_ordering =  queue.Queue ()               #line 157
-        self.connections = []                               #line 158
-        self.routings =  queue.Queue ()                     #line 159
-        self.handler =  None                                #line 160
-        self.finject =  None                                #line 161
-        self.instance_data =  None                          #line 162
-        self.state =  "idle"                                #line 163# bootstrap debugging#line 164
-        self.kind =  None # enum { container, leaf, }       #line 165#line 166
-                                                            #line 167
-# Creates a component that acts as a container. It is the same as a `Eh` instance#line 168
-# whose handler function is `container_handler`.            #line 169
-def make_container (name,owner):                            #line 170
-    eh =  Eh ()                                             #line 171
-    eh.name =  name                                         #line 172
-    eh.owner =  owner                                       #line 173
-    eh.handler =  container_handler                         #line 174
-    eh.finject =  container_injector                        #line 175
-    eh.state =  "idle"                                      #line 176
-    eh.kind =  "container"                                  #line 177
-    return  eh                                              #line 178#line 179#line 180
+        self.children = []                                  #line 155
+        self.visit_ordering =  queue.Queue ()               #line 156
+        self.connections = []                               #line 157
+        self.routings =  queue.Queue ()                     #line 158
+        self.handler =  None                                #line 159
+        self.finject =  None                                #line 160
+        self.instance_data =  None                          #line 161
+        self.state =  "idle"                                #line 162# bootstrap debugging#line 163
+        self.kind =  None # enum { container, leaf, }       #line 164#line 165
+                                                            #line 166
+# Creates a component that acts as a container. It is the same as a `Eh` instance#line 167
+# whose handler function is `container_handler`.            #line 168
+def make_container (name,owner):                            #line 169
+    eh =  Eh ()                                             #line 170
+    eh.name =  name                                         #line 171
+    eh.owner =  owner                                       #line 172
+    eh.handler =  container_handler                         #line 173
+    eh.finject =  container_injector                        #line 174
+    eh.state =  "idle"                                      #line 175
+    eh.kind =  "container"                                  #line 176
+    return  eh                                              #line 177#line 178#line 179
 
-# Creates a new leaf component out of a handler function, and a data parameter#line 181
-# that will be passed back to your handler when called.     #line 182#line 183
-def make_leaf (name,owner,instance_data,handler):           #line 184
-    eh =  Eh ()                                             #line 185
-    eh.name =  str( owner.name) +  str( ".") +  name        #line 186
-    eh.owner =  owner                                       #line 187
-    eh.handler =  handler                                   #line 188
-    eh.instance_data =  instance_data                       #line 189
-    eh.state =  "idle"                                      #line 190
-    eh.kind =  "leaf"                                       #line 191
-    return  eh                                              #line 192#line 193#line 194
+# Creates a new leaf component out of a handler function, and a data parameter#line 180
+# that will be passed back to your handler when called.     #line 181#line 182
+def make_leaf (name,owner,instance_data,handler):           #line 183
+    eh =  Eh ()                                             #line 184
+    eh.name =  str( owner.name) +  str( ".") +  name        #line 185
+    eh.owner =  owner                                       #line 186
+    eh.handler =  handler                                   #line 187
+    eh.instance_data =  instance_data                       #line 188
+    eh.state =  "idle"                                      #line 189
+    eh.kind =  "leaf"                                       #line 190
+    return  eh                                              #line 191#line 192#line 193
 
-# Sends a message on the given `port` with `data`, placing it on the output#line 195
-# of the given component.                                   #line 196#line 197
-def send (eh,port,datum,causingMessage):                    #line 198
-    msg = make_message ( port, datum)                       #line 199
-    put_output ( eh, msg)                                   #line 200#line 201#line 202
+# Sends a message on the given `port` with `data`, placing it on the output#line 194
+# of the given component.                                   #line 195#line 196
+def send (eh,port,datum,causingMessage):                    #line 197
+    msg = make_message ( port, datum)                       #line 198
+    put_output ( eh, msg)                                   #line 199#line 200#line 201
 
-def send_string (eh,port,s,causingMessage):                 #line 203
-    datum = new_datum_string ( s)                           #line 204
-    msg = make_message ( port, datum)                       #line 205
-    put_output ( eh, msg)                                   #line 206#line 207#line 208
+def send_string (eh,port,s,causingMessage):                 #line 202
+    datum = new_datum_string ( s)                           #line 203
+    msg = make_message ( port, datum)                       #line 204
+    put_output ( eh, msg)                                   #line 205#line 206#line 207
 
-def forward (eh,port,msg):                                  #line 209
-    fwdmsg = make_message ( port, msg.datum)                #line 210
-    put_output ( eh, msg)                                   #line 211#line 212#line 213
+def forward (eh,port,msg):                                  #line 208
+    fwdmsg = make_message ( port, msg.datum)                #line 209
+    put_output ( eh, msg)                                   #line 210#line 211#line 212
 
-def inject (eh,msg):                                        #line 214
-    eh.finject ( eh, msg)                                   #line 215#line 216#line 217
+def inject (eh,msg):                                        #line 213
+    eh.finject ( eh, msg)                                   #line 214#line 215#line 216
 
-# Returns a list of all output messages on a container.     #line 218
-# For testing / debugging purposes.                         #line 219#line 220
-def output_list (eh):                                       #line 221
-    return  eh.outq                                         #line 222#line 223#line 224
+# Returns a list of all output messages on a container.     #line 217
+# For testing / debugging purposes.                         #line 218#line 219
+def output_list (eh):                                       #line 220
+    return  eh.outq                                         #line 221#line 222#line 223
 
-# Utility for printing an array of messages.                #line 225
-def print_output_list (eh):                                 #line 226
-    for m in  list ( eh.outq):                              #line 227
-        print (format_message ( m))                         #line 228#line 229#line 230
+# Utility for printing an array of messages.                #line 224
+def print_output_list (eh):                                 #line 225
+    for m in  list ( eh.outq):                              #line 226
+        print (format_message ( m))                         #line 227#line 228#line 229
 
-def spaces (n):                                             #line 231
-    s =  ""                                                 #line 232
-    for i in range( n):                                     #line 233
-        s =  s+ " "                                         #line 234
-    return  s                                               #line 235#line 236#line 237
+def spaces (n):                                             #line 230
+    s =  ""                                                 #line 231
+    for i in range( n):                                     #line 232
+        s =  s+ " "                                         #line 233
+    return  s                                               #line 234#line 235#line 236
 
-def set_active (eh):                                        #line 238
-    eh.state =  "active"                                    #line 239#line 240#line 241
+def set_active (eh):                                        #line 237
+    eh.state =  "active"                                    #line 238#line 239#line 240
 
-def set_idle (eh):                                          #line 242
-    eh.state =  "idle"                                      #line 243#line 244#line 245
+def set_idle (eh):                                          #line 241
+    eh.state =  "idle"                                      #line 242#line 243#line 244
 
-# Utility for printing a specific output message.           #line 246#line 247
-def fetch_first_output (eh,port):                           #line 248
-    for msg in  list ( eh.outq):                            #line 249
-        if ( msg.port ==  port):                            #line 250
-            return  msg.datum                               #line 251
-    return  None                                            #line 252#line 253#line 254
+# Utility for printing a specific output message.           #line 245#line 246
+def fetch_first_output (eh,port):                           #line 247
+    for msg in  list ( eh.outq):                            #line 248
+        if ( msg.port ==  port):                            #line 249
+            return  msg.datum                               #line 250
+    return  None                                            #line 251#line 252#line 253
 
-def print_specific_output (eh,port):                        #line 255
-    # port ∷ “”                                             #line 256
-    datum = fetch_first_output ( eh, port)                  #line 257
-    print ( datum.srepr ())                                 #line 258#line 259
+def print_specific_output (eh,port):                        #line 254
+    # port ∷ “”                                             #line 255
+    datum = fetch_first_output ( eh, port)                  #line 256
+    print ( datum.srepr ())                                 #line 257#line 258
 
-def print_specific_output_to_stderr (eh,port):              #line 260
-    # port ∷ “”                                             #line 261
-    datum = fetch_first_output ( eh, port)                  #line 262
-    # I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in...#line 263
-    print ( datum.srepr (), file=sys.stderr)                #line 264#line 265#line 266
+def print_specific_output_to_stderr (eh,port):              #line 259
+    # port ∷ “”                                             #line 260
+    datum = fetch_first_output ( eh, port)                  #line 261
+    # I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in...#line 262
+    print ( datum.srepr (), file=sys.stderr)                #line 263#line 264#line 265
 
-def put_output (eh,msg):                                    #line 267
-    eh.outq.put ( msg)                                      #line 268#line 269#line 270
+def put_output (eh,msg):                                    #line 266
+    eh.outq.put ( msg)                                      #line 267#line 268#line 269
 
-root_project =  ""                                          #line 271
-root_0D =  ""                                               #line 272#line 273
-def set_environment (rproject,r0D):                         #line 274
-    global root_project                                     #line 275
-    global root_0D                                          #line 276
-    root_project =  rproject                                #line 277
-    root_0D =  r0D                                          #line 278#line 279#line 280
+root_project =  ""                                          #line 270
+root_0D =  ""                                               #line 271#line 272
+def set_environment (rproject,r0D):                         #line 273
+    global root_project                                     #line 274
+    global root_0D                                          #line 275
+    root_project =  rproject                                #line 276
+    root_0D =  r0D                                          #line 277#line 278#line 279
 
-def probe_instantiate (reg,owner,name,template_data):       #line 281
-    name_with_id = gensymbol ( "?")                         #line 282
-    return make_leaf ( name_with_id, owner, None, probe_handler)#line 283#line 284
+def probe_instantiate (reg,owner,name,template_data):       #line 280
+    name_with_id = gensymbol ( "?")                         #line 281
+    return make_leaf ( name_with_id, owner, None, probe_handler)#line 282#line 283
 
-def probeA_instantiate (reg,owner,name,template_data):      #line 285
-    name_with_id = gensymbol ( "?A")                        #line 286
-    return make_leaf ( name_with_id, owner, None, probe_handler)#line 287#line 288#line 289
+def probeA_instantiate (reg,owner,name,template_data):      #line 284
+    name_with_id = gensymbol ( "?A")                        #line 285
+    return make_leaf ( name_with_id, owner, None, probe_handler)#line 286#line 287#line 288
 
-def probeB_instantiate (reg,owner,name,template_data):      #line 290
-    name_with_id = gensymbol ( "?B")                        #line 291
-    return make_leaf ( name_with_id, owner, None, probe_handler)#line 292#line 293#line 294
+def probeB_instantiate (reg,owner,name,template_data):      #line 289
+    name_with_id = gensymbol ( "?B")                        #line 290
+    return make_leaf ( name_with_id, owner, None, probe_handler)#line 291#line 292#line 293
 
-def probeC_instantiate (reg,owner,name,template_data):      #line 295
-    name_with_id = gensymbol ( "?C")                        #line 296
-    return make_leaf ( name_with_id, owner, None, probe_handler)#line 297#line 298#line 299
+def probeC_instantiate (reg,owner,name,template_data):      #line 294
+    name_with_id = gensymbol ( "?C")                        #line 295
+    return make_leaf ( name_with_id, owner, None, probe_handler)#line 296#line 297#line 298
 
-def probe_handler (eh,msg):                                 #line 300
-    s =  msg.datum.srepr ()                                 #line 301
-    print ( str( "... probe ") +  str( eh.name) +  str( ": ") +  s   , file=sys.stderr)#line 302#line 303#line 304
+def probe_handler (eh,msg):                                 #line 299
+    s =  msg.datum.srepr ()                                 #line 300
+    print ( str( "... probe ") +  str( eh.name) +  str( ": ") +  s   , file=sys.stderr)#line 301#line 302#line 303
 
-def trash_instantiate (reg,owner,name,template_data):       #line 305
-    name_with_id = gensymbol ( "trash")                     #line 306
-    return make_leaf ( name_with_id, owner, None, trash_handler)#line 307#line 308#line 309
+def trash_instantiate (reg,owner,name,template_data):       #line 304
+    name_with_id = gensymbol ( "trash")                     #line 305
+    return make_leaf ( name_with_id, owner, None, trash_handler)#line 306#line 307#line 308
 
-def trash_handler (eh,msg):                                 #line 310
-    # to appease dumped_on_floor checker                    #line 311
-    pass                                                    #line 312#line 313
+def trash_handler (eh,msg):                                 #line 309
+    # to appease dumped_on_floor checker                    #line 310
+    pass                                                    #line 311#line 312
 
 class TwoMessages:
-    def __init__ (self,):                                   #line 314
-        self.firstmsg =  None                               #line 315
-        self.secondmsg =  None                              #line 316#line 317
-                                                            #line 318
-# Deracer_States :: enum { idle, waitingForFirstmsg, waitingForSecondmsg }#line 319
+    def __init__ (self,):                                   #line 313
+        self.firstmsg =  None                               #line 314
+        self.secondmsg =  None                              #line 315#line 316
+                                                            #line 317
+# Deracer_States :: enum { idle, waitingForFirstmsg, waitingForSecondmsg }#line 318
 class Deracer_Instance_Data:
-    def __init__ (self,):                                   #line 320
-        self.state =  None                                  #line 321
-        self.buffer =  None                                 #line 322#line 323
-                                                            #line 324
-def reclaim_Buffers_from_heap (inst):                       #line 325
-    pass                                                    #line 326#line 327#line 328
+    def __init__ (self,):                                   #line 319
+        self.state =  None                                  #line 320
+        self.buffer =  None                                 #line 321#line 322
+                                                            #line 323
+def reclaim_Buffers_from_heap (inst):                       #line 324
+    pass                                                    #line 325#line 326#line 327
 
-def deracer_instantiate (reg,owner,name,template_data):     #line 329
-    name_with_id = gensymbol ( "deracer")                   #line 330
-    inst =  Deracer_Instance_Data ()                        #line 331
-    inst.state =  "idle"                                    #line 332
-    inst.buffer =  TwoMessages ()                           #line 333
-    eh = make_leaf ( name_with_id, owner, inst, deracer_handler)#line 334
-    return  eh                                              #line 335#line 336#line 337
+def deracer_instantiate (reg,owner,name,template_data):     #line 328
+    name_with_id = gensymbol ( "deracer")                   #line 329
+    inst =  Deracer_Instance_Data ()                        #line 330
+    inst.state =  "idle"                                    #line 331
+    inst.buffer =  TwoMessages ()                           #line 332
+    eh = make_leaf ( name_with_id, owner, inst, deracer_handler)#line 333
+    return  eh                                              #line 334#line 335#line 336
 
-def send_firstmsg_then_secondmsg (eh,inst):                 #line 338
-    forward ( eh, "1", inst.buffer.firstmsg)                #line 339
-    forward ( eh, "2", inst.buffer.secondmsg)               #line 340
-    reclaim_Buffers_from_heap ( inst)                       #line 341#line 342#line 343
+def send_firstmsg_then_secondmsg (eh,inst):                 #line 337
+    forward ( eh, "1", inst.buffer.firstmsg)                #line 338
+    forward ( eh, "2", inst.buffer.secondmsg)               #line 339
+    reclaim_Buffers_from_heap ( inst)                       #line 340#line 341#line 342
 
-def deracer_handler (eh,msg):                               #line 344
-    inst =  eh.instance_data                                #line 345
-    if  inst.state ==  "idle":                              #line 346
-        if  "1" ==  msg.port:                               #line 347
-            inst.buffer.firstmsg =  msg                     #line 348
-            inst.state =  "waitingForSecondmsg"             #line 349
-        elif  "2" ==  msg.port:                             #line 350
-            inst.buffer.secondmsg =  msg                    #line 351
-            inst.state =  "waitingForFirstmsg"              #line 352
-        else:                                               #line 353
-            runtime_error ( str( "bad msg.port (case A) for deracer ") +  msg.port )#line 354
-    elif  inst.state ==  "waitingForFirstmsg":              #line 355
-        if  "1" ==  msg.port:                               #line 356
-            inst.buffer.firstmsg =  msg                     #line 357
-            send_firstmsg_then_secondmsg ( eh, inst)        #line 358
-            inst.state =  "idle"                            #line 359
-        else:                                               #line 360
-            runtime_error ( str( "bad msg.port (case B) for deracer ") +  msg.port )#line 361
-    elif  inst.state ==  "waitingForSecondmsg":             #line 362
-        if  "2" ==  msg.port:                               #line 363
-            inst.buffer.secondmsg =  msg                    #line 364
-            send_firstmsg_then_secondmsg ( eh, inst)        #line 365
-            inst.state =  "idle"                            #line 366
-        else:                                               #line 367
-            runtime_error ( str( "bad msg.port (case C) for deracer ") +  msg.port )#line 368
-    else:                                                   #line 369
-        runtime_error ( "bad state for deracer {eh.state}") #line 370#line 371#line 372
+def deracer_handler (eh,msg):                               #line 343
+    inst =  eh.instance_data                                #line 344
+    if  inst.state ==  "idle":                              #line 345
+        if  "1" ==  msg.port:                               #line 346
+            inst.buffer.firstmsg =  msg                     #line 347
+            inst.state =  "waitingForSecondmsg"             #line 348
+        elif  "2" ==  msg.port:                             #line 349
+            inst.buffer.secondmsg =  msg                    #line 350
+            inst.state =  "waitingForFirstmsg"              #line 351
+        else:                                               #line 352
+            runtime_error ( str( "bad msg.port (case A) for deracer ") +  msg.port )#line 353
+    elif  inst.state ==  "waitingForFirstmsg":              #line 354
+        if  "1" ==  msg.port:                               #line 355
+            inst.buffer.firstmsg =  msg                     #line 356
+            send_firstmsg_then_secondmsg ( eh, inst)        #line 357
+            inst.state =  "idle"                            #line 358
+        else:                                               #line 359
+            runtime_error ( str( "bad msg.port (case B) for deracer ") +  msg.port )#line 360
+    elif  inst.state ==  "waitingForSecondmsg":             #line 361
+        if  "2" ==  msg.port:                               #line 362
+            inst.buffer.secondmsg =  msg                    #line 363
+            send_firstmsg_then_secondmsg ( eh, inst)        #line 364
+            inst.state =  "idle"                            #line 365
+        else:                                               #line 366
+            runtime_error ( str( "bad msg.port (case C) for deracer ") +  msg.port )#line 367
+    else:                                                   #line 368
+        runtime_error ( "bad state for deracer {eh.state}") #line 369#line 370#line 371
 
-def low_level_read_text_file_instantiate (reg,owner,name,template_data):#line 373
-    name_with_id = gensymbol ( "Low Level Read Text File")  #line 374
-    return make_leaf ( name_with_id, owner, None, low_level_read_text_file_handler)#line 375#line 376#line 377
+def low_level_read_text_file_instantiate (reg,owner,name,template_data):#line 372
+    name_with_id = gensymbol ( "Low Level Read Text File")  #line 373
+    return make_leaf ( name_with_id, owner, None, low_level_read_text_file_handler)#line 374#line 375#line 376
 
-def low_level_read_text_file_handler (eh,msg):              #line 378
-    fname =  msg.datum.srepr ()                             #line 379
+def low_level_read_text_file_handler (eh,msg):              #line 377
+    fname =  msg.datum.srepr ()                             #line 378
 
     try:
         f = open (fname)
@@ -791,258 +786,258 @@ def low_level_read_text_file_handler (eh,msg):              #line 378
         f.close ()
     else:
         send_string (eh, "✗", f"open error on file '{fname}'", msg)
-                                                            #line 380#line 381#line 382
+                                                            #line 379#line 380#line 381
 
-def ensure_string_datum_instantiate (reg,owner,name,template_data):#line 383
-    name_with_id = gensymbol ( "Ensure String Datum")       #line 384
-    return make_leaf ( name_with_id, owner, None, ensure_string_datum_handler)#line 385#line 386#line 387
+def ensure_string_datum_instantiate (reg,owner,name,template_data):#line 382
+    name_with_id = gensymbol ( "Ensure String Datum")       #line 383
+    return make_leaf ( name_with_id, owner, None, ensure_string_datum_handler)#line 384#line 385#line 386
 
-def ensure_string_datum_handler (eh,msg):                   #line 388
-    if  "string" ==  msg.datum.kind ():                     #line 389
-        forward ( eh, "", msg)                              #line 390
-    else:                                                   #line 391
-        emsg =  str( "*** ensure: type error (expected a string datum) but got ") +  msg.datum #line 392
-        send_string ( eh, "✗", emsg, msg)                   #line 393#line 394#line 395
+def ensure_string_datum_handler (eh,msg):                   #line 387
+    if  "string" ==  msg.datum.kind ():                     #line 388
+        forward ( eh, "", msg)                              #line 389
+    else:                                                   #line 390
+        emsg =  str( "*** ensure: type error (expected a string datum) but got ") +  msg.datum #line 391
+        send_string ( eh, "✗", emsg, msg)                   #line 392#line 393#line 394
 
 class Syncfilewrite_Data:
-    def __init__ (self,):                                   #line 396
-        self.filename =  ""                                 #line 397#line 398
-                                                            #line 399
-# temp copy for bootstrap, sends “done“ (error during bootstrap if not wired)#line 400
-def syncfilewrite_instantiate (reg,owner,name,template_data):#line 401
-    name_with_id = gensymbol ( "syncfilewrite")             #line 402
-    inst =  Syncfilewrite_Data ()                           #line 403
-    return make_leaf ( name_with_id, owner, inst, syncfilewrite_handler)#line 404#line 405#line 406
+    def __init__ (self,):                                   #line 395
+        self.filename =  ""                                 #line 396#line 397
+                                                            #line 398
+# temp copy for bootstrap, sends “done“ (error during bootstrap if not wired)#line 399
+def syncfilewrite_instantiate (reg,owner,name,template_data):#line 400
+    name_with_id = gensymbol ( "syncfilewrite")             #line 401
+    inst =  Syncfilewrite_Data ()                           #line 402
+    return make_leaf ( name_with_id, owner, inst, syncfilewrite_handler)#line 403#line 404#line 405
 
-def syncfilewrite_handler (eh,msg):                         #line 407
-    inst =  eh.instance_data                                #line 408
-    if  "filename" ==  msg.port:                            #line 409
-        inst.filename =  msg.datum.srepr ()                 #line 410
-    elif  "input" ==  msg.port:                             #line 411
-        contents =  msg.datum.srepr ()                      #line 412
-        f = open ( inst.filename, "w")                      #line 413
-        if  f!= None:                                       #line 414
-            f.write ( msg.datum.srepr ())                   #line 415
-            f.close ()                                      #line 416
-            send ( eh, "done",new_datum_bang (), msg)       #line 417
-        else:                                               #line 418
-            send_string ( eh, "✗", str( "open error on file ") +  inst.filename , msg)#line 419#line 420#line 421
+def syncfilewrite_handler (eh,msg):                         #line 406
+    inst =  eh.instance_data                                #line 407
+    if  "filename" ==  msg.port:                            #line 408
+        inst.filename =  msg.datum.srepr ()                 #line 409
+    elif  "input" ==  msg.port:                             #line 410
+        contents =  msg.datum.srepr ()                      #line 411
+        f = open ( inst.filename, "w")                      #line 412
+        if  f!= None:                                       #line 413
+            f.write ( msg.datum.srepr ())                   #line 414
+            f.close ()                                      #line 415
+            send ( eh, "done",new_datum_bang (), msg)       #line 416
+        else:                                               #line 417
+            send_string ( eh, "✗", str( "open error on file ") +  inst.filename , msg)#line 418#line 419#line 420
 
 class StringConcat_Instance_Data:
-    def __init__ (self,):                                   #line 422
-        self.buffer1 =  None                                #line 423
-        self.buffer2 =  None                                #line 424
-        self.scount =  0                                    #line 425#line 426
-                                                            #line 427
-def stringconcat_instantiate (reg,owner,name,template_data):#line 428
-    name_with_id = gensymbol ( "stringconcat")              #line 429
-    instp =  StringConcat_Instance_Data ()                  #line 430
-    return make_leaf ( name_with_id, owner, instp, stringconcat_handler)#line 431#line 432#line 433
+    def __init__ (self,):                                   #line 421
+        self.buffer1 =  None                                #line 422
+        self.buffer2 =  None                                #line 423
+        self.scount =  0                                    #line 424#line 425
+                                                            #line 426
+def stringconcat_instantiate (reg,owner,name,template_data):#line 427
+    name_with_id = gensymbol ( "stringconcat")              #line 428
+    instp =  StringConcat_Instance_Data ()                  #line 429
+    return make_leaf ( name_with_id, owner, instp, stringconcat_handler)#line 430#line 431#line 432
 
-def stringconcat_handler (eh,msg):                          #line 434
-    inst =  eh.instance_data                                #line 435
-    if  "1" ==  msg.port:                                   #line 436
-        inst.buffer1 = clone_string ( msg.datum.srepr ())   #line 437
-        inst.scount =  inst.scount+ 1                       #line 438
-        maybe_stringconcat ( eh, inst, msg)                 #line 439
-    elif  "2" ==  msg.port:                                 #line 440
-        inst.buffer2 = clone_string ( msg.datum.srepr ())   #line 441
-        inst.scount =  inst.scount+ 1                       #line 442
-        maybe_stringconcat ( eh, inst, msg)                 #line 443
-    else:                                                   #line 444
-        runtime_error ( str( "bad msg.port for stringconcat: ") +  msg.port )#line 445#line 446#line 447#line 448
+def stringconcat_handler (eh,msg):                          #line 433
+    inst =  eh.instance_data                                #line 434
+    if  "1" ==  msg.port:                                   #line 435
+        inst.buffer1 = clone_string ( msg.datum.srepr ())   #line 436
+        inst.scount =  inst.scount+ 1                       #line 437
+        maybe_stringconcat ( eh, inst, msg)                 #line 438
+    elif  "2" ==  msg.port:                                 #line 439
+        inst.buffer2 = clone_string ( msg.datum.srepr ())   #line 440
+        inst.scount =  inst.scount+ 1                       #line 441
+        maybe_stringconcat ( eh, inst, msg)                 #line 442
+    else:                                                   #line 443
+        runtime_error ( str( "bad msg.port for stringconcat: ") +  msg.port )#line 444#line 445#line 446#line 447
 
-def maybe_stringconcat (eh,inst,msg):                       #line 449
-    if ( 0 == len ( inst.buffer1)) and ( 0 == len ( inst.buffer2)):#line 450
-        runtime_error ( "something is wrong in stringconcat, both strings are 0 length")#line 451
-    if  inst.scount >=  2:                                  #line 452
-        concatenated_string =  ""                           #line 453
-        if  0 == len ( inst.buffer1):                       #line 454
-            concatenated_string =  inst.buffer2             #line 455
-        elif  0 == len ( inst.buffer2):                     #line 456
-            concatenated_string =  inst.buffer1             #line 457
-        else:                                               #line 458
-            concatenated_string =  inst.buffer1+ inst.buffer2#line 459
-        send_string ( eh, "", concatenated_string, msg)     #line 460
-        inst.buffer1 =  None                                #line 461
-        inst.buffer2 =  None                                #line 462
-        inst.scount =  0                                    #line 463#line 464#line 465
+def maybe_stringconcat (eh,inst,msg):                       #line 448
+    if ( 0 == len ( inst.buffer1)) and ( 0 == len ( inst.buffer2)):#line 449
+        runtime_error ( "something is wrong in stringconcat, both strings are 0 length")#line 450
+    if  inst.scount >=  2:                                  #line 451
+        concatenated_string =  ""                           #line 452
+        if  0 == len ( inst.buffer1):                       #line 453
+            concatenated_string =  inst.buffer2             #line 454
+        elif  0 == len ( inst.buffer2):                     #line 455
+            concatenated_string =  inst.buffer1             #line 456
+        else:                                               #line 457
+            concatenated_string =  inst.buffer1+ inst.buffer2#line 458
+        send_string ( eh, "", concatenated_string, msg)     #line 459
+        inst.buffer1 =  None                                #line 460
+        inst.buffer2 =  None                                #line 461
+        inst.scount =  0                                    #line 462#line 463#line 464
 
-#                                                           #line 466#line 467
-# this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here#line 468
-def shell_out_instantiate (reg,owner,name,template_data):   #line 469
-    name_with_id = gensymbol ( "shell_out")                 #line 470
-    cmd = shlex.split ( template_data)                      #line 471
-    return make_leaf ( name_with_id, owner, cmd, shell_out_handler)#line 472#line 473#line 474
+#                                                           #line 465#line 466
+# this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here#line 467
+def shell_out_instantiate (reg,owner,name,template_data):   #line 468
+    name_with_id = gensymbol ( "shell_out")                 #line 469
+    cmd = shlex.split ( template_data)                      #line 470
+    return make_leaf ( name_with_id, owner, cmd, shell_out_handler)#line 471#line 472#line 473
 
-def shell_out_handler (eh,msg):                             #line 475
-    cmd =  eh.instance_data                                 #line 476
-    s =  msg.datum.srepr ()                                 #line 477
-    ret =  None                                             #line 478
-    rc =  None                                              #line 479
-    stdout =  None                                          #line 480
-    stderr =  None                                          #line 481
+def shell_out_handler (eh,msg):                             #line 474
+    cmd =  eh.instance_data                                 #line 475
+    s =  msg.datum.srepr ()                                 #line 476
+    ret =  None                                             #line 477
+    rc =  None                                              #line 478
+    stdout =  None                                          #line 479
+    stderr =  None                                          #line 480
     ret = subprocess.run ( cmd,   s, "UTF_8")
     rc = ret.returncode
     stdout = ret.stdout
-    stderr = ret.stderr                                     #line 482
-    if  rc!= 0:                                             #line 483
-        send_string ( eh, "✗", stderr, msg)                 #line 484
-    else:                                                   #line 485
-        send_string ( eh, "", stdout, msg)                  #line 486#line 487#line 488#line 489
+    stderr = ret.stderr                                     #line 481
+    if  rc!= 0:                                             #line 482
+        send_string ( eh, "✗", stderr, msg)                 #line 483
+    else:                                                   #line 484
+        send_string ( eh, "", stdout, msg)                  #line 485#line 486#line 487#line 488
 
-def string_constant_instantiate (reg,owner,name,template_data):#line 490
-    global root_project                                     #line 491
-    global root_0D                                          #line 492
-    name_with_id = gensymbol ( "strconst")                  #line 493
-    s =  template_data                                      #line 494
-    if  root_project!= "":                                  #line 495
-        s = re.sub ( "_00_",  root_project,  s)             #line 496#line 497
-    if  root_0D!= "":                                       #line 498
-        s = re.sub ( "_0D_",  root_0D,  s)                  #line 499#line 500
-    return make_leaf ( name_with_id, owner, s, string_constant_handler)#line 501#line 502#line 503
+def string_constant_instantiate (reg,owner,name,template_data):#line 489
+    global root_project                                     #line 490
+    global root_0D                                          #line 491
+    name_with_id = gensymbol ( "strconst")                  #line 492
+    s =  template_data                                      #line 493
+    if  root_project!= "":                                  #line 494
+        s = re.sub ( "_00_",  root_project,  s)             #line 495#line 496
+    if  root_0D!= "":                                       #line 497
+        s = re.sub ( "_0D_",  root_0D,  s)                  #line 498#line 499
+    return make_leaf ( name_with_id, owner, s, string_constant_handler)#line 500#line 501#line 502
 
-def string_constant_handler (eh,msg):                       #line 504
-    s =  eh.instance_data                                   #line 505
-    send_string ( eh, "", s, msg)                           #line 506#line 507#line 508
+def string_constant_handler (eh,msg):                       #line 503
+    s =  eh.instance_data                                   #line 504
+    send_string ( eh, "", s, msg)                           #line 505#line 506#line 507
 
-def string_make_persistent (s):                             #line 509
-    # this is here for non_GC languages like Odin, it is a no_op for GC languages like Python#line 510
-    return  s                                               #line 511#line 512#line 513
+def string_make_persistent (s):                             #line 508
+    # this is here for non_GC languages like Odin, it is a no_op for GC languages like Python#line 509
+    return  s                                               #line 510#line 511#line 512
 
-def string_clone (s):                                       #line 514
-    return  s                                               #line 515#line 516#line 517
+def string_clone (s):                                       #line 513
+    return  s                                               #line 514#line 515#line 516
 
-# usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ...#line 518
-# where ${_00_} is the root directory for the project       #line 519
-# where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python)#line 520#line 521
-def initialize_component_palette (root_project,root_0D,diagram_source_files):#line 522
-    reg = make_component_registry ()                        #line 523
-    for diagram_source in  diagram_source_files:            #line 524
-        all_containers_within_single_file = json2internal ( root_project, diagram_source)#line 525
-        reg = generate_shell_components ( reg, all_containers_within_single_file)#line 526
-        for container in  all_containers_within_single_file:#line 527
-            register_component ( reg,Template ( container [ "name"], container, container_instantiator))#line 528#line 529#line 530
-    print ( reg)                                            #line 531
-    reg = initialize_stock_components ( reg)                #line 532
-    return  reg                                             #line 533#line 534#line 535
+# usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ...#line 517
+# where ${_00_} is the root directory for the project       #line 518
+# where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python)#line 519#line 520
+def initialize_component_palette (root_project,root_0D,diagram_source_files):#line 521
+    reg = make_component_registry ()                        #line 522
+    for diagram_source in  diagram_source_files:            #line 523
+        all_containers_within_single_file = json2internal ( root_project, diagram_source)#line 524
+        reg = generate_shell_components ( reg, all_containers_within_single_file)#line 525
+        for container in  all_containers_within_single_file:#line 526
+            register_component ( reg,Template ( container [ "name"], container, container_instantiator))#line 527#line 528#line 529
+    print ( reg)                                            #line 530
+    reg = initialize_stock_components ( reg)                #line 531
+    return  reg                                             #line 532#line 533#line 534
 
-def print_error_maybe (main_container):                     #line 536
-    error_port =  "✗"                                       #line 537
-    err = fetch_first_output ( main_container, error_port)  #line 538
-    if ( err!= None) and ( 0 < len (trimws ( err.srepr ()))):#line 539
-        print ( "___ !!! ERRORS !!! ___")                   #line 540
-        print_specific_output ( main_container, error_port) #line 541#line 542#line 543
+def print_error_maybe (main_container):                     #line 535
+    error_port =  "✗"                                       #line 536
+    err = fetch_first_output ( main_container, error_port)  #line 537
+    if ( err!= None) and ( 0 < len (trimws ( err.srepr ()))):#line 538
+        print ( "___ !!! ERRORS !!! ___")                   #line 539
+        print_specific_output ( main_container, error_port) #line 540#line 541#line 542
 
-# debugging helpers                                         #line 544#line 545
-def nl ():                                                  #line 546
-    print ( "")                                             #line 547#line 548#line 549
+# debugging helpers                                         #line 543#line 544
+def nl ():                                                  #line 545
+    print ( "")                                             #line 546#line 547#line 548
 
-def dump_outputs (main_container):                          #line 550
-    nl ()                                                   #line 551
-    print ( "___ Outputs ___")                              #line 552
-    print_output_list ( main_container)                     #line 553#line 554#line 555
+def dump_outputs (main_container):                          #line 549
+    nl ()                                                   #line 550
+    print ( "___ Outputs ___")                              #line 551
+    print_output_list ( main_container)                     #line 552#line 553#line 554
 
-def trimws (s):                                             #line 556
-    # remove whitespace from front and back of string       #line 557
-    return  s.strip ()                                      #line 558#line 559#line 560
+def trimws (s):                                             #line 555
+    # remove whitespace from front and back of string       #line 556
+    return  s.strip ()                                      #line 557#line 558#line 559
 
-def clone_string (s):                                       #line 561
-    return  s                                               #line 562#line 563#line 564
+def clone_string (s):                                       #line 560
+    return  s                                               #line 561#line 562#line 563
 
-load_errors =  False                                        #line 565
-runtime_errors =  False                                     #line 566#line 567
-def load_error (s):                                         #line 568
-    global load_errors                                      #line 569
-    print ( s)                                              #line 570
-    print ()                                                #line 571
-    load_errors =  True                                     #line 572#line 573#line 574
+load_errors =  False                                        #line 564
+runtime_errors =  False                                     #line 565#line 566
+def load_error (s):                                         #line 567
+    global load_errors                                      #line 568
+    print ( s)                                              #line 569
+    print ()                                                #line 570
+    load_errors =  True                                     #line 571#line 572#line 573
 
-def runtime_error (s):                                      #line 575
-    global runtime_errors                                   #line 576
-    print ( s)                                              #line 577
-    runtime_errors =  True                                  #line 578#line 579#line 580
+def runtime_error (s):                                      #line 574
+    global runtime_errors                                   #line 575
+    print ( s)                                              #line 576
+    runtime_errors =  True                                  #line 577#line 578#line 579
 
-def fakepipename_instantiate (reg,owner,name,template_data):#line 581
-    instance_name = gensymbol ( "fakepipe")                 #line 582
-    return make_leaf ( instance_name, owner, None, fakepipename_handler)#line 583#line 584#line 585
+def fakepipename_instantiate (reg,owner,name,template_data):#line 580
+    instance_name = gensymbol ( "fakepipe")                 #line 581
+    return make_leaf ( instance_name, owner, None, fakepipename_handler)#line 582#line 583#line 584
 
-rand =  0                                                   #line 586#line 587
-def fakepipename_handler (eh,msg):                          #line 588
-    global rand                                             #line 589
+rand =  0                                                   #line 585#line 586
+def fakepipename_handler (eh,msg):                          #line 587
+    global rand                                             #line 588
     rand =  rand+ 1
-    # not very random, but good enough _ 'rand' must be unique within a single run#line 590
-    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)#line 591#line 592#line 593
-                                                            #line 594
-# all of the the built_in leaves are listed here            #line 595
-# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 596#line 597
-def initialize_stock_components (reg):                      #line 598
-    register_component ( reg,Template ( "1then2", None, deracer_instantiate))#line 599
-    register_component ( reg,Template ( "?", None, probe_instantiate))#line 600
-    register_component ( reg,Template ( "?A", None, probeA_instantiate))#line 601
-    register_component ( reg,Template ( "?B", None, probeB_instantiate))#line 602
-    register_component ( reg,Template ( "?C", None, probeC_instantiate))#line 603
-    register_component ( reg,Template ( "trash", None, trash_instantiate))#line 604#line 605
-    register_component ( reg,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 606
-    register_component ( reg,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 607#line 608
-    register_component ( reg,Template ( "syncfilewrite", None, syncfilewrite_instantiate))#line 609
-    register_component ( reg,Template ( "stringconcat", None, stringconcat_instantiate))#line 610
-    # for fakepipe                                          #line 611
-    register_component ( reg,Template ( "fakepipename", None, fakepipename_instantiate))#line 612#line 613#line 614
+    # not very random, but good enough _ 'rand' must be unique within a single run#line 589
+    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)#line 590#line 591#line 592
+                                                            #line 593
+# all of the the built_in leaves are listed here            #line 594
+# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 595#line 596
+def initialize_stock_components (reg):                      #line 597
+    register_component ( reg,Template ( "1then2", None, deracer_instantiate))#line 598
+    register_component ( reg,Template ( "?", None, probe_instantiate))#line 599
+    register_component ( reg,Template ( "?A", None, probeA_instantiate))#line 600
+    register_component ( reg,Template ( "?B", None, probeB_instantiate))#line 601
+    register_component ( reg,Template ( "?C", None, probeC_instantiate))#line 602
+    register_component ( reg,Template ( "trash", None, trash_instantiate))#line 603#line 604
+    register_component ( reg,Template ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 605
+    register_component ( reg,Template ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 606#line 607
+    register_component ( reg,Template ( "syncfilewrite", None, syncfilewrite_instantiate))#line 608
+    register_component ( reg,Template ( "stringconcat", None, stringconcat_instantiate))#line 609
+    # for fakepipe                                          #line 610
+    register_component ( reg,Template ( "fakepipename", None, fakepipename_instantiate))#line 611#line 612#line 613
 
-def argv ():                                                #line 615
-    sys.argv                                                #line 616#line 617#line 618
+def argv ():                                                #line 614
+    sys.argv                                                #line 615#line 616#line 617
 
-def initialize ():                                          #line 619
-    root_of_project =  sys.argv[ 1]                         #line 620
-    root_of_0D =  sys.argv[ 2]                              #line 621
-    arg =  sys.argv[ 3]                                     #line 622
-    main_container_name =  sys.argv[ 4]                     #line 623
-    diagram_names =  sys.argv[ 5:]                          #line 624
-    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)#line 625
-    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 626#line 627#line 628
+def initialize ():                                          #line 618
+    root_of_project =  sys.argv[ 1]                         #line 619
+    root_of_0D =  sys.argv[ 2]                              #line 620
+    arg =  sys.argv[ 3]                                     #line 621
+    main_container_name =  sys.argv[ 4]                     #line 622
+    diagram_names =  sys.argv[ 5:]                          #line 623
+    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)#line 624
+    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 625#line 626#line 627
 
 def start (palette,env):
-    start_helper ( palette, env, False)                     #line 629
+    start_helper ( palette, env, False)                     #line 628
 
 def start_show_all (palette,env):
-    start_helper ( palette, env, True)                      #line 630
+    start_helper ( palette, env, True)                      #line 629
 
-def start_helper (palette,env,show_all_outputs):            #line 631
-    root_of_project =  env [ 0]                             #line 632
-    root_of_0D =  env [ 1]                                  #line 633
-    main_container_name =  env [ 2]                         #line 634
-    diagram_names =  env [ 3]                               #line 635
-    arg =  env [ 4]                                         #line 636
-    set_environment ( root_of_project, root_of_0D)          #line 637
-    # get entrypoint container                              #line 638
-    main_container = get_component_instance ( palette, main_container_name, None)#line 639
-    if  None ==  main_container:                            #line 640
-        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 644#line 645
-    if not  load_errors:                                    #line 646
-        arg = new_datum_string ( arg)                       #line 647
-        msg = make_message ( "", arg)                       #line 648
-        inject ( main_container, msg)                       #line 649
-        if  show_all_outputs:                               #line 650
-            dump_outputs ( main_container)                  #line 651
-        else:                                               #line 652
-            print_error_maybe ( main_container)             #line 653
-            outp = fetch_first_output ( main_container, "") #line 654
-            if  None ==  outp:                              #line 655
-                print ( "(no outputs)")                     #line 656
-            else:                                           #line 657
-                print_specific_output ( main_container, "") #line 658#line 659#line 660
-        if  show_all_outputs:                               #line 661
-            print ( "--- done ---")                         #line 662#line 663#line 664#line 665#line 666
-                                                            #line 667#line 668
-# utility functions                                         #line 669
-def send_int (eh,port,i,causing_message):                   #line 670
-    datum = new_datum_int ( i)                              #line 671
-    send ( eh, port, datum, causing_message)                #line 672#line 673#line 674
+def start_helper (palette,env,show_all_outputs):            #line 630
+    root_of_project =  env [ 0]                             #line 631
+    root_of_0D =  env [ 1]                                  #line 632
+    main_container_name =  env [ 2]                         #line 633
+    diagram_names =  env [ 3]                               #line 634
+    arg =  env [ 4]                                         #line 635
+    set_environment ( root_of_project, root_of_0D)          #line 636
+    # get entrypoint container                              #line 637
+    main_container = get_component_instance ( palette, main_container_name, None)#line 638
+    if  None ==  main_container:                            #line 639
+        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 643#line 644
+    if not  load_errors:                                    #line 645
+        arg = new_datum_string ( arg)                       #line 646
+        msg = make_message ( "", arg)                       #line 647
+        inject ( main_container, msg)                       #line 648
+        if  show_all_outputs:                               #line 649
+            dump_outputs ( main_container)                  #line 650
+        else:                                               #line 651
+            print_error_maybe ( main_container)             #line 652
+            outp = fetch_first_output ( main_container, "") #line 653
+            if  None ==  outp:                              #line 654
+                print ( "(no outputs)")                     #line 655
+            else:                                           #line 656
+                print_specific_output ( main_container, "") #line 657#line 658#line 659
+        if  show_all_outputs:                               #line 660
+            print ( "--- done ---")                         #line 661#line 662#line 663#line 664#line 665
+                                                            #line 666#line 667
+# utility functions                                         #line 668
+def send_int (eh,port,i,causing_message):                   #line 669
+    datum = new_datum_int ( i)                              #line 670
+    send ( eh, port, datum, causing_message)                #line 671#line 672#line 673
 
-def send_bang (eh,port,causing_message):                    #line 675
-    datum = new_datum_bang ()                               #line 676
-    send ( eh, port, datum, causing_message)                #line 677#line 678#line 679
+def send_bang (eh,port,causing_message):                    #line 674
+    datum = new_datum_bang ()                               #line 675
+    send ( eh, port, datum, causing_message)                #line 676#line 677#line 678
 
 
 

@@ -13,7 +13,7 @@ def delay_instantiator (reg,owner,name,template_data):      #line 10
     info =  Delay_Info ()                                   #line 12
     return make_leaf ( name_with_id, owner, info, delay_handler)#line 13#line 14#line 15
 
-DELAYDELAY =  50000                                         #line 16#line 17
+DELAYDELAY =  5000                                          #line 16#line 17
 def first_time (m):                                         #line 18
     return not is_tick ( m)                                 #line 19#line 20#line 21
 

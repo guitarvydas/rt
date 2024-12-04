@@ -529,148 +529,143 @@ x)))
       (declare (ignorable after_state))                     #|line 417|#
       (return-from step_child (values ( and  ( equal    before_state  "idle") (not (equal   after_state  "idle")))  #|line 418|#( and  (not (equal   before_state  "idle")) (not (equal   after_state  "idle")))  #|line 419|#( and  (not (equal   before_state  "idle")) ( equal    after_state  "idle")))) #|line 420|#)) #|line 421|#
   )
-(defun save_message (&optional  eh  msg)
-  (declare (ignorable  eh  msg))                            #|line 423|#
-  (enqueue (slot-value  eh 'saved_messages)  msg)           #|line 424|# #|line 425|#
-  )
-(defun fetch_saved_message_and_clear (&optional  eh)
-  (declare (ignorable  eh))                                 #|line 427|#
-  (return-from fetch_saved_message_and_clear (dequeue (slot-value  eh 'saved_messages)) #|line 428|#) #|line 429|#
-  )
 (defun step_children (&optional  container  causingMessage)
-  (declare (ignorable  container  causingMessage))          #|line 431|#
-  (setf (slot-value  container 'state)  "idle")             #|line 432|#
+  (declare (ignorable  container  causingMessage))          #|line 423|#
+  (setf (slot-value  container 'state)  "idle")             #|line 424|#
   (loop for child in (queue2list (slot-value  container 'visit_ordering))
     do
       (progn
-        child                                               #|line 433|#
-        #|  child = container represents self, skip it |#   #|line 434|#
+        child                                               #|line 425|#
+        #|  child = container represents self, skip it |#   #|line 426|#
         (cond
-          ((not (funcall (quote is_self)   child  container )) #|line 435|#
+          ((not (funcall (quote is_self)   child  container )) #|line 427|#
             (cond
-              ((not (empty? (slot-value  child 'inq)))      #|line 436|#
-                (let ((msg (dequeue (slot-value  child 'inq)) #|line 437|#))
+              ((not (empty? (slot-value  child 'inq)))      #|line 428|#
+                (let ((msg (dequeue (slot-value  child 'inq)) #|line 429|#))
                   (declare (ignorable msg))
                   (let (( began_long_run  nil))
-                    (declare (ignorable  began_long_run))   #|line 438|#
+                    (declare (ignorable  began_long_run))   #|line 430|#
                     (let (( continued_long_run  nil))
-                      (declare (ignorable  continued_long_run)) #|line 439|#
+                      (declare (ignorable  continued_long_run)) #|line 431|#
                       (let (( ended_long_run  nil))
-                        (declare (ignorable  ended_long_run)) #|line 440|#
-                        (multiple-value-setq ( began_long_run  continued_long_run  ended_long_run) (funcall (quote step_child)   child  msg  #|line 441|#))
+                        (declare (ignorable  ended_long_run)) #|line 432|#
+                        (multiple-value-setq ( began_long_run  continued_long_run  ended_long_run) (funcall (quote step_child)   child  msg  #|line 433|#))
                         (cond
-                          ( began_long_run                  #|line 442|#
-                            (funcall (quote save_message)   child  msg  #|line 443|#)
+                          ( began_long_run                  #|line 434|#
+                            #| pass |#                      #|line 435|#
                             )
-                          ( continued_long_run              #|line 444|#
-                            #| pass |#                      #|line 445|# #|line 446|#
+                          ( continued_long_run              #|line 436|#
+                            #| pass |#                      #|line 437|#
+                            )
+                          ( ended_long_run                  #|line 438|#
+                            #| pass |#                      #|line 439|# #|line 440|#
                             ))
-                        (funcall (quote destroy_message)   msg ))))) #|line 447|#
+                        (funcall (quote destroy_message)   msg ))))) #|line 441|#
                 )
-              (t                                            #|line 448|#
+              (t                                            #|line 442|#
                 (cond
-                  ((not (equal  (slot-value  child 'state)  "idle")) #|line 449|#
-                    (let ((msg (funcall (quote force_tick)   container  child  #|line 450|#)))
+                  ((not (equal  (slot-value  child 'state)  "idle")) #|line 443|#
+                    (let ((msg (funcall (quote force_tick)   container  child  #|line 444|#)))
                       (declare (ignorable msg))
-                      (funcall (slot-value  child 'handler)   child  msg  #|line 451|#)
+                      (funcall (slot-value  child 'handler)   child  msg  #|line 445|#)
                       (funcall (quote destroy_message)   msg ))
-                    ))                                      #|line 452|#
-                ))                                          #|line 453|#
+                    ))                                      #|line 446|#
+                ))                                          #|line 447|#
             (cond
-              (( equal   (slot-value  child 'state)  "active") #|line 454|#
-                #|  if child remains active, then the container must remain active and must propagate “ticks“ to child |# #|line 455|#
-                (setf (slot-value  container 'state)  "active") #|line 456|#
-                ))                                          #|line 457|#
+              (( equal   (slot-value  child 'state)  "active") #|line 448|#
+                #|  if child remains active, then the container must remain active and must propagate “ticks“ to child |# #|line 449|#
+                (setf (slot-value  container 'state)  "active") #|line 450|#
+                ))                                          #|line 451|#
             (loop while (not (empty? (slot-value  child 'outq)))
               do
-                (progn                                      #|line 458|#
-                  (let ((msg (dequeue (slot-value  child 'outq)) #|line 459|#))
+                (progn                                      #|line 452|#
+                  (let ((msg (dequeue (slot-value  child 'outq)) #|line 453|#))
                     (declare (ignorable msg))
-                    (funcall (quote route)   container  child  msg  #|line 460|#)
+                    (funcall (quote route)   container  child  msg  #|line 454|#)
                     (funcall (quote destroy_message)   msg ))
                   ))
-            ))                                              #|line 461|#
-        ))                                                  #|line 462|# #|line 463|# #|line 464|#
+            ))                                              #|line 455|#
+        ))                                                  #|line 456|# #|line 457|# #|line 458|#
   )
 (defun attempt_tick (&optional  parent  eh)
-  (declare (ignorable  parent  eh))                         #|line 466|#
+  (declare (ignorable  parent  eh))                         #|line 460|#
   (cond
-    ((not (equal  (slot-value  eh 'state)  "idle"))         #|line 467|#
-      (funcall (quote force_tick)   parent  eh )            #|line 468|#
-      ))                                                    #|line 469|#
+    ((not (equal  (slot-value  eh 'state)  "idle"))         #|line 461|#
+      (funcall (quote force_tick)   parent  eh )            #|line 462|#
+      ))                                                    #|line 463|#
   )
 (defun is_tick (&optional  msg)
-  (declare (ignorable  msg))                                #|line 471|#
-  (return-from is_tick ( equal    "tick" (funcall (slot-value (slot-value  msg 'datum) 'kind) ))) #|line 472|# #|line 473|#
-  ) #|  Routes a single message to all matching destinations, according to |# #|line 475|# #|  the container's connection network. |# #|line 476|# #|line 477|#
+  (declare (ignorable  msg))                                #|line 465|#
+  (return-from is_tick ( equal    "tick" (funcall (slot-value (slot-value  msg 'datum) 'kind) ))) #|line 466|# #|line 467|#
+  ) #|  Routes a single message to all matching destinations, according to |# #|line 469|# #|  the container's connection network. |# #|line 470|# #|line 471|#
 (defun route (&optional  container  from_component  message)
-  (declare (ignorable  container  from_component  message)) #|line 478|#
+  (declare (ignorable  container  from_component  message)) #|line 472|#
   (let (( was_sent  nil))
     (declare (ignorable  was_sent))
-    #|  for checking that output went somewhere (at least during bootstrap) |# #|line 479|#
+    #|  for checking that output went somewhere (at least during bootstrap) |# #|line 473|#
     (let (( fromname  ""))
-      (declare (ignorable  fromname))                       #|line 480|#
+      (declare (ignorable  fromname))                       #|line 474|#
       (cond
-        ((funcall (quote is_tick)   message )               #|line 481|#
+        ((funcall (quote is_tick)   message )               #|line 475|#
           (loop for child in (slot-value  container 'children)
             do
               (progn
-                child                                       #|line 482|#
-                (funcall (quote attempt_tick)   container  child ) #|line 483|#
+                child                                       #|line 476|#
+                (funcall (quote attempt_tick)   container  child ) #|line 477|#
                 ))
-          (setf  was_sent  t)                               #|line 484|#
+          (setf  was_sent  t)                               #|line 478|#
           )
-        (t                                                  #|line 485|#
+        (t                                                  #|line 479|#
           (cond
-            ((not (funcall (quote is_self)   from_component  container )) #|line 486|#
-              (setf  fromname (slot-value  from_component 'name)) #|line 487|#
+            ((not (funcall (quote is_self)   from_component  container )) #|line 480|#
+              (setf  fromname (slot-value  from_component 'name)) #|line 481|#
               ))
-          (let ((from_sender (funcall (quote create_Sender)   fromname  from_component (slot-value  message 'port)  #|line 488|#)))
-            (declare (ignorable from_sender))               #|line 489|#
+          (let ((from_sender (funcall (quote create_Sender)   fromname  from_component (slot-value  message 'port)  #|line 482|#)))
+            (declare (ignorable from_sender))               #|line 483|#
             (loop for connector in (slot-value  container 'connections)
               do
                 (progn
-                  connector                                 #|line 490|#
+                  connector                                 #|line 484|#
                   (cond
-                    ((funcall (quote sender_eq)   from_sender (slot-value  connector 'sender) ) #|line 491|#
-                      (funcall (quote deposit)   container  connector  message  #|line 492|#)
+                    ((funcall (quote sender_eq)   from_sender (slot-value  connector 'sender) ) #|line 485|#
+                      (funcall (quote deposit)   container  connector  message  #|line 486|#)
                       (setf  was_sent  t)
                       ))
-                  )))                                       #|line 493|#
+                  )))                                       #|line 487|#
           ))
       (cond
-        ((not  was_sent)                                    #|line 494|#
-          (funcall (quote print)   "\n\n*** Error: ***"     #|line 495|#)
-          (funcall (quote print)   "***"                    #|line 496|#)
-          (funcall (quote print)   (concatenate 'string (slot-value  container 'name)  (concatenate 'string  ": message '"  (concatenate 'string (slot-value  message 'port)  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))  #|line 497|#)
-          (funcall (quote print)   "***"                    #|line 498|#)
-          (break)                                           #|line 499|# #|line 500|#
-          ))))                                              #|line 501|#
+        ((not  was_sent)                                    #|line 488|#
+          (funcall (quote print)   "\n\n*** Error: ***"     #|line 489|#)
+          (funcall (quote print)   "***"                    #|line 490|#)
+          (funcall (quote print)   (concatenate 'string (slot-value  container 'name)  (concatenate 'string  ": message '"  (concatenate 'string (slot-value  message 'port)  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))  #|line 491|#)
+          (funcall (quote print)   "***"                    #|line 492|#)
+          (break)                                           #|line 493|# #|line 494|#
+          ))))                                              #|line 495|#
   )
 (defun any_child_ready (&optional  container)
-  (declare (ignorable  container))                          #|line 503|#
+  (declare (ignorable  container))                          #|line 497|#
   (loop for child in (slot-value  container 'children)
     do
       (progn
-        child                                               #|line 504|#
+        child                                               #|line 498|#
         (cond
-          ((funcall (quote child_is_ready)   child )        #|line 505|#
+          ((funcall (quote child_is_ready)   child )        #|line 499|#
             (return-from any_child_ready  t)
-            ))                                              #|line 506|#
+            ))                                              #|line 500|#
         ))
-  (return-from any_child_ready  nil)                        #|line 507|# #|line 508|#
+  (return-from any_child_ready  nil)                        #|line 501|# #|line 502|#
   )
 (defun child_is_ready (&optional  eh)
-  (declare (ignorable  eh))                                 #|line 510|#
-  (return-from child_is_ready ( or  ( or  ( or  (not (empty? (slot-value  eh 'outq))) (not (empty? (slot-value  eh 'inq)))) (not (equal  (slot-value  eh 'state)  "idle"))) (funcall (quote any_child_ready)   eh ))) #|line 511|# #|line 512|#
+  (declare (ignorable  eh))                                 #|line 504|#
+  (return-from child_is_ready ( or  ( or  ( or  (not (empty? (slot-value  eh 'outq))) (not (empty? (slot-value  eh 'inq)))) (not (equal  (slot-value  eh 'state)  "idle"))) (funcall (quote any_child_ready)   eh ))) #|line 505|# #|line 506|#
   )
 (defun append_routing_descriptor (&optional  container  desc)
-  (declare (ignorable  container  desc))                    #|line 514|#
-  (enqueue (slot-value  container 'routings)  desc)         #|line 515|# #|line 516|#
+  (declare (ignorable  container  desc))                    #|line 508|#
+  (enqueue (slot-value  container 'routings)  desc)         #|line 509|# #|line 510|#
   )
 (defun container_injector (&optional  container  message)
-  (declare (ignorable  container  message))                 #|line 518|#
-  (funcall (quote container_handler)   container  message   #|line 519|#) #|line 520|#
+  (declare (ignorable  container  message))                 #|line 512|#
+  (funcall (quote container_handler)   container  message   #|line 513|#) #|line 514|#
   )
 
 

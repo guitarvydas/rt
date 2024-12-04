@@ -13,7 +13,7 @@ defn delay_instantiator (reg, owner, name, template_data) {
     return make_leaf (name_with_id, owner, info, ↪︎delay_handler)
 }
 
-defvar DELAYDELAY ⇐ 50000
+defvar DELAYDELAY ⇐ 5000
 
 defn first_time (m) {
     return not is_tick (m)

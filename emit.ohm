@@ -154,8 +154,6 @@ emit {
       | "[" line? PrimaryComma+ line? "]" -- listconst
       | "{" line? PairComma+ line? "}" -- dict
       | lambda LambdaFormals? ":" Exp -- lambda
-      | "+" Atom -- pos
-      | "-" Atom -- neg
       | phi -- phi
       | "⊤" -- true
       | "⊥" -- false
@@ -165,6 +163,8 @@ emit {
       | string -- string
       | number -- number
       | ident -- ident
+      | "+" Atom -- pos
+      | "-" Atom -- neg
 
 
 

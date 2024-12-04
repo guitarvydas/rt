@@ -350,87 +350,83 @@ def step_child (child,msg):                                 #line 414
     after_state =  child.state                              #line 417
     return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"]#line 420#line 421#line 422
 
-def save_message (eh,msg):                                  #line 423
-    eh.saved_messages.put ( msg)                            #line 424#line 425#line 426
+def step_children (container,causingMessage):               #line 423
+    container.state =  "idle"                               #line 424
+    for child in  list ( container.visit_ordering):         #line 425
+        # child = container represents self, skip it        #line 426
+        if (not (is_self ( child, container))):             #line 427
+            if (not ( child.inq.empty ())):                 #line 428
+                msg =  child.inq.get ()                     #line 429
+                began_long_run =  None                      #line 430
+                continued_long_run =  None                  #line 431
+                ended_long_run =  None                      #line 432
+                [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)#line 433
+                if  began_long_run:                         #line 434
+                    pass                                    #line 435
+                elif  continued_long_run:                   #line 436
+                    pass                                    #line 437
+                elif  ended_long_run:                       #line 438
+                    pass                                    #line 439#line 440
+                destroy_message ( msg)                      #line 441
+            else:                                           #line 442
+                if  child.state!= "idle":                   #line 443
+                    msg = force_tick ( container, child)    #line 444
+                    child.handler ( child, msg)             #line 445
+                    destroy_message ( msg)                  #line 446#line 447
+            if  child.state ==  "active":                   #line 448
+                # if child remains active, then the container must remain active and must propagate “ticks“ to child#line 449
+                container.state =  "active"                 #line 450#line 451
+            while (not ( child.outq.empty ())):             #line 452
+                msg =  child.outq.get ()                    #line 453
+                route ( container, child, msg)              #line 454
+                destroy_message ( msg)                      #line 455#line 456#line 457#line 458#line 459
 
-def fetch_saved_message_and_clear (eh):                     #line 427
-    return  eh.saved_messages.get ()                        #line 428#line 429#line 430
+def attempt_tick (parent,eh):                               #line 460
+    if  eh.state!= "idle":                                  #line 461
+        force_tick ( parent, eh)                            #line 462#line 463#line 464
 
-def step_children (container,causingMessage):               #line 431
-    container.state =  "idle"                               #line 432
-    for child in  list ( container.visit_ordering):         #line 433
-        # child = container represents self, skip it        #line 434
-        if (not (is_self ( child, container))):             #line 435
-            if (not ( child.inq.empty ())):                 #line 436
-                msg =  child.inq.get ()                     #line 437
-                began_long_run =  None                      #line 438
-                continued_long_run =  None                  #line 439
-                ended_long_run =  None                      #line 440
-                [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)#line 441
-                if  began_long_run:                         #line 442
-                    save_message ( child, msg)              #line 443
-                elif  continued_long_run:                   #line 444
-                    pass                                    #line 445#line 446
-                destroy_message ( msg)                      #line 447
-            else:                                           #line 448
-                if  child.state!= "idle":                   #line 449
-                    msg = force_tick ( container, child)    #line 450
-                    child.handler ( child, msg)             #line 451
-                    destroy_message ( msg)                  #line 452#line 453
-            if  child.state ==  "active":                   #line 454
-                # if child remains active, then the container must remain active and must propagate “ticks“ to child#line 455
-                container.state =  "active"                 #line 456#line 457
-            while (not ( child.outq.empty ())):             #line 458
-                msg =  child.outq.get ()                    #line 459
-                route ( container, child, msg)              #line 460
-                destroy_message ( msg)                      #line 461#line 462#line 463#line 464#line 465
+def is_tick (msg):                                          #line 465
+    return  "tick" ==  msg.datum.kind ()                    #line 466#line 467#line 468
 
-def attempt_tick (parent,eh):                               #line 466
-    if  eh.state!= "idle":                                  #line 467
-        force_tick ( parent, eh)                            #line 468#line 469#line 470
-
-def is_tick (msg):                                          #line 471
-    return  "tick" ==  msg.datum.kind ()                    #line 472#line 473#line 474
-
-# Routes a single message to all matching destinations, according to#line 475
-# the container's connection network.                       #line 476#line 477
-def route (container,from_component,message):               #line 478
+# Routes a single message to all matching destinations, according to#line 469
+# the container's connection network.                       #line 470#line 471
+def route (container,from_component,message):               #line 472
     was_sent =  False
-    # for checking that output went somewhere (at least during bootstrap)#line 479
-    fromname =  ""                                          #line 480
-    if is_tick ( message):                                  #line 481
-        for child in  container.children:                   #line 482
-            attempt_tick ( container, child)                #line 483
-        was_sent =  True                                    #line 484
-    else:                                                   #line 485
-        if (not (is_self ( from_component, container))):    #line 486
-            fromname =  from_component.name                 #line 487
-        from_sender = create_Sender ( fromname, from_component, message.port)#line 488#line 489
-        for connector in  container.connections:            #line 490
-            if sender_eq ( from_sender, connector.sender):  #line 491
-                deposit ( container, connector, message)    #line 492
-                was_sent =  True                            #line 493
-    if not ( was_sent):                                     #line 494
-        print ( "\n\n*** Error: ***")                       #line 495
-        print ( "***")                                      #line 496
-        print ( str( container.name) +  str( ": message '") +  str( message.port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     )#line 497
-        print ( "***")                                      #line 498
-        exit ()                                             #line 499#line 500#line 501#line 502
+    # for checking that output went somewhere (at least during bootstrap)#line 473
+    fromname =  ""                                          #line 474
+    if is_tick ( message):                                  #line 475
+        for child in  container.children:                   #line 476
+            attempt_tick ( container, child)                #line 477
+        was_sent =  True                                    #line 478
+    else:                                                   #line 479
+        if (not (is_self ( from_component, container))):    #line 480
+            fromname =  from_component.name                 #line 481
+        from_sender = create_Sender ( fromname, from_component, message.port)#line 482#line 483
+        for connector in  container.connections:            #line 484
+            if sender_eq ( from_sender, connector.sender):  #line 485
+                deposit ( container, connector, message)    #line 486
+                was_sent =  True                            #line 487
+    if not ( was_sent):                                     #line 488
+        print ( "\n\n*** Error: ***")                       #line 489
+        print ( "***")                                      #line 490
+        print ( str( container.name) +  str( ": message '") +  str( message.port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     )#line 491
+        print ( "***")                                      #line 492
+        exit ()                                             #line 493#line 494#line 495#line 496
 
-def any_child_ready (container):                            #line 503
-    for child in  container.children:                       #line 504
-        if child_is_ready ( child):                         #line 505
-            return  True                                    #line 506
-    return  False                                           #line 507#line 508#line 509
+def any_child_ready (container):                            #line 497
+    for child in  container.children:                       #line 498
+        if child_is_ready ( child):                         #line 499
+            return  True                                    #line 500
+    return  False                                           #line 501#line 502#line 503
 
-def child_is_ready (eh):                                    #line 510
-    return (not ( eh.outq.empty ())) or (not ( eh.inq.empty ())) or ( eh.state!= "idle") or (any_child_ready ( eh))#line 511#line 512#line 513
+def child_is_ready (eh):                                    #line 504
+    return (not ( eh.outq.empty ())) or (not ( eh.inq.empty ())) or ( eh.state!= "idle") or (any_child_ready ( eh))#line 505#line 506#line 507
 
-def append_routing_descriptor (container,desc):             #line 514
-    container.routings.put ( desc)                          #line 515#line 516#line 517
+def append_routing_descriptor (container,desc):             #line 508
+    container.routings.put ( desc)                          #line 509#line 510#line 511
 
-def container_injector (container,message):                 #line 518
-    container_handler ( container, message)                 #line 519#line 520#line 521
+def container_injector (container,message):                 #line 512
+    container_handler ( container, message)                 #line 513#line 514#line 515
 
 
 

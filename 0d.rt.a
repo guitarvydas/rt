@@ -420,14 +420,6 @@ defn step_child (child, msg) {
             before_state != “idle” and after_state = “idle”]
 }
 
-defn save_message (eh, msg) {
-    #enqueue (eh.saved_messages, msg)
-}
-
-defn fetch_saved_message_and_clear (eh) {
-    return #dequeue (eh.saved_messages)
-}
-
 defn step_children (container, causingMessage) {
     container.state ⇐ “idle”
     for child in #queue2list (container.visit_ordering) {
@@ -440,8 +432,10 @@ defn step_children (container, causingMessage) {
 		deftemp ended_long_run ⇐ ϕ
                 [began_long_run, continued_long_run, ended_long_run] ⇐ step_child (child, msg)
                 if began_long_run {
-                    save_message (child, msg)
+                    pass
                 } elif continued_long_run {
+                    pass 
+                } elif ended_long_run {
                     pass 
                 }
                 destroy_message(msg)}

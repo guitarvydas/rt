@@ -152,7 +152,6 @@ defobj Eh () {
         • inq ⇐ #freshQueue ()
         • outq ⇐ #freshQueue ()
         • owner ⇐ ϕ
-        • saved_messages ⇐ #freshStack () ⌈ stack of saved message(s)⌉
         • children ⇐ []
         • visit_ordering ⇐ # freshQueue ()
         • connections ⇐ []

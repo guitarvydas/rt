@@ -1,14 +1,14 @@
 
 
 count_counter =  0                                          #line 1
-direction =  1                                              #line 2#line 3
+count_direction =  1                                        #line 2#line 3
 def count_handler (eh,msg):                                 #line 4
-    global count_counter, direction                         #line 5
+    global count_counter, count_direction                   #line 5
     if  msg.port ==  "adv":                                 #line 6
-        count_counter =  count_counter+ direction           #line 7
+        count_counter =  count_counter+ count_direction     #line 7
         send_int ( eh, "", count_counter, msg)              #line 8
     elif  msg.port ==  "rev":                               #line 9
-        direction =  direction* - 1                         #line 10#line 11#line 12#line 13
+        count_direction =  count_direction* - 1             #line 10#line 11#line 12#line 13
 
 def count_instantiator (reg,owner,name,template_data):      #line 14
     name_with_id = gensymbol ( "Count")                     #line 15

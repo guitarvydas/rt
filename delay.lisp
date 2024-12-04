@@ -18,7 +18,7 @@
       (declare (ignorable info))
       (return-from delay_instantiator (funcall (quote make_leaf)   name_with_id  owner  info  #'delay_handler  #|line 13|#)))) #|line 14|#
   )
-(defparameter  DELAYDELAY  50000)                           #|line 16|# #|line 17|#
+(defparameter  DELAYDELAY  5000)                            #|line 16|# #|line 17|#
 (defun first_time (&optional  m)
   (declare (ignorable  m))                                  #|line 18|#
   (return-from first_time (not (funcall (quote is_tick)   m  #|line 19|#))) #|line 20|#

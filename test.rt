@@ -1,6 +1,4 @@
-defobj Datum () {
-      • a ⇐ ϕ
-      • b ⇐ ϕ
-      • c ⇐ ϕ
+defn f () {
+        x ⇐ x * (-1)
 }
 

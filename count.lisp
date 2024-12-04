@@ -1,16 +1,16 @@
 
 
 (defparameter  count_counter  0)                            #|line 1|#
-(defparameter  direction  1)                                #|line 2|# #|line 3|#
+(defparameter  count_direction  1)                          #|line 2|# #|line 3|#
 (defun count_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 4|# #|line 5|#
   (cond
     (( equal   (slot-value  msg 'port)  "adv")              #|line 6|#
-      (setf  count_counter (+  count_counter  direction))   #|line 7|#
+      (setf  count_counter (+  count_counter  count_direction)) #|line 7|#
       (funcall (quote send_int)   eh  ""  count_counter  msg  #|line 8|#)
       )
     (( equal   (slot-value  msg 'port)  "rev")              #|line 9|#
-      (setf  direction (*  direction  - 1))                 #|line 10|# #|line 11|#
+      (setf  count_direction (*  count_direction  - 1))     #|line 10|# #|line 11|#
       ))                                                    #|line 12|#
   )
 (defun count_instantiator (&optional  reg  owner  name  template_data)
