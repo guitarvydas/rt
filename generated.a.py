@@ -358,7 +358,7 @@ def fetch_saved_message_and_clear (eh):                     #line 427
 
 def step_children (container,causingMessage):               #line 431
     container.state =  "idle"                               #line 432
-    for child in list ( container.visit_ordering.queue):    #line 433
+    for child in  list ( container.visit_ordering):         #line 433
         # child = container represents self, skip it        #line 434
         if (not (is_self ( child, container))):             #line 435
             if (not ( child.inq.empty ())):                 #line 436

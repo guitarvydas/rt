@@ -358,7 +358,7 @@ def fetch_saved_message_and_clear (eh):                     #line 427
 
 def step_children (container,causingMessage):               #line 431
     container.state =  "idle"                               #line 432
-    for child in list ( container.visit_ordering.queue):    #line 433
+    for child in  list ( container.visit_ordering):         #line 433
         # child = container represents self, skip it        #line 434
         if (not (is_self ( child, container))):             #line 435
             if (not ( child.inq.empty ())):                 #line 436
@@ -644,7 +644,7 @@ def output_list (eh):                                       #line 221
 
 # Utility for printing an array of messages.                #line 225
 def print_output_list (eh):                                 #line 226
-    for m in list ( eh.outq.queue):                         #line 227
+    for m in  list ( eh.outq):                              #line 227
         print (format_message ( m))                         #line 228#line 229#line 230
 
 def spaces (n):                                             #line 231
@@ -661,7 +661,7 @@ def set_idle (eh):                                          #line 242
 
 # Utility for printing a specific output message.           #line 246#line 247
 def fetch_first_output (eh,port):                           #line 248
-    for msg in list ( eh.outq.queue):                       #line 249
+    for msg in  list ( eh.outq):                            #line 249
         if ( msg.port ==  port):                            #line 250
             return  msg.datum                               #line 251
     return  None                                            #line 252#line 253#line 254

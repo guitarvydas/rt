@@ -247,7 +247,7 @@
   ) #|  Utility for printing an array of messages. |#       #|line 225|#
 (defun print_output_list (&optional  eh)
   (declare (ignorable  eh))                                 #|line 226|#
-  (loop for m in (funcall (quote list)  (slot-value (slot-value  eh 'outq) 'queue) )
+  (loop for m in (queue2list (slot-value  eh 'outq))
     do
       (progn
         m                                                   #|line 227|#
@@ -276,7 +276,7 @@
   ) #|  Utility for printing a specific output message. |#  #|line 246|# #|line 247|#
 (defun fetch_first_output (&optional  eh  port)
   (declare (ignorable  eh  port))                           #|line 248|#
-  (loop for msg in (funcall (quote list)  (slot-value (slot-value  eh 'outq) 'queue) )
+  (loop for msg in (queue2list (slot-value  eh 'outq))
     do
       (progn
         msg                                                 #|line 249|#

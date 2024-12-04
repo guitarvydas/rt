@@ -83,6 +83,9 @@ x)))
 
 (defmethod empty? ((self Queue))
 (null (contents self)))
+
+(defmethod queue2list ((self Queue))
+(contents self))
                                                             #|line 1|# #|line 2|#
 (defparameter  counter  0)                                  #|line 3|# #|line 4|#
 (defparameter  digits (list                                 #|line 5|#  "₀"  "₁"  "₂"  "₃"  "₄"  "₅"  "₆"  "₇"  "₈"  "₉"  "₁₀"  "₁₁"  "₁₂"  "₁₃"  "₁₄"  "₁₅"  "₁₆"  "₁₇"  "₁₈"  "₁₉"  "₂₀"  "₂₁"  "₂₂"  "₂₃"  "₂₄"  "₂₅"  "₂₆"  "₂₇"  "₂₈"  "₂₉" )) #|line 11|# #|line 12|# #|line 13|#
@@ -537,7 +540,7 @@ x)))
 (defun step_children (&optional  container  causingMessage)
   (declare (ignorable  container  causingMessage))          #|line 431|#
   (setf (slot-value  container 'state)  "idle")             #|line 432|#
-  (loop for child in (funcall (quote list)  (slot-value (slot-value  container 'visit_ordering) 'queue) )
+  (loop for child in (queue2list (slot-value  container 'visit_ordering))
     do
       (progn
         child                                               #|line 433|#

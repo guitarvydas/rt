@@ -224,7 +224,7 @@ defn output_list (eh) {
 
 ⌈ Utility for printing an array of messages.⌉
 defn print_output_list (eh) {
-    for m in list (eh.outq.queue) {
+    for m in #queue2list (eh.outq) {
         #print_stdout (format_message (m))}
 }
 
@@ -246,7 +246,7 @@ defn set_idle (eh) {
 ⌈ Utility for printing a specific output message.⌉
 
 defn fetch_first_output (eh, port) {
-    for msg in list (eh.outq.queue) {
+    for msg in #queue2list (eh.outq) {
         if (msg.port = port){
             return msg.datum}}
     return ϕ

@@ -158,6 +158,9 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
     
 (defmethod empty? ((self Queue))
   (null (contents self)))
+
+(defmethod queue2list ((self Queue))
+  (contents self))
 ’
 
 ExternalPhrase_print_stdout [_octothorpe _ lp e rp] = ‛(format *standard-output* "~a" «e»)’
@@ -175,6 +178,7 @@ ExternalPhrase_asint [_octothorpe _ lp e rp] = ‛(parse-integer «e»)’
 ExternalPhrase_enqueue [_octothorpe _ lp obj _comma e rp] = ‛(enqueue «obj» «e»)’
 ExternalPhrase_dequeue [_octothorpe _ lp obj rp] = ‛(dequeue «obj»)’
 ExternalPhrase_empty [_octothorpe _ lp q rp] = ‛(empty? «q»)’
+ExternalPhrase_queue2list [_octothorpe _ lp q rp] = ‛(queue2list «q»)’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 

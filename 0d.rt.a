@@ -430,7 +430,7 @@ defn fetch_saved_message_and_clear (eh) {
 
 defn step_children (container, causingMessage) {
     container.state ⇐ “idle”
-    for child in list (container.visit_ordering.queue) {
+    for child in #queue2list (container.visit_ordering) {
         ⌈ child = container represents self, skip it⌉
         if (not (is_self (child, container))){
             if (not (#empty (child.inq))){
