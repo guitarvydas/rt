@@ -1,3 +1,8 @@
+import os
+import json
+import sys
+
+
 counter = 0
 
 def gensym (s):
@@ -659,11 +664,12 @@ def route (container, from_component, message):
                 was_sent = True
     if not (was_sent): 
         print ("\n\n*** Error: ***")
-        dump_possible_connections (container)
-        print_routing_trace (container)
-        print ("***")
+        # uncomment these lines for verbose error message
+        # dump_possible_connections (container)
+        # print_routing_trace (container)
+        # print ("***")
         print (f"{container.name}: message '{message.port}' from {fromname} dropped on floor...")
-        print ("***")
+        # print ("***")
         exit ()
 
 def dump_possible_connections (container):      
@@ -709,9 +715,6 @@ def log_connection (container, connector, message):
 def container_injector (container, message):
     log_inject (receiver=container, port=message.port, msg=message)
     container_handler (container, message)
-import os
-import json
-import sys
 
 class Component_Registry:
     def __init__ (self):
@@ -836,11 +839,11 @@ def run_command (eh, cmd, s):
     ret = subprocess.run (cmd, capture_output=True, input=s, encoding='utf-8')
     if  not (ret.returncode == 0):
         if ret.stderr != None:
-            return ["", ret.stderr]
+            return [False, "", ret.stderr]
         else:
-            return ["", f"error in shell_out {ret.returncode}"]
+            return [False, "", f"error in shell_out {ret.returncode}"]
     else:
-        return [ret.stdout, None]
+        return [True, ret.stdout, ret.stderr]
     
 # Data for an asyncronous component - effectively, a function with input
 # and output queues of messages.
@@ -939,8 +942,13 @@ def output_list (eh):
 
 # Utility for printing an array of messages.
 def print_output_list (eh):
+    print (f"print_output_list {eh.outq.queue}", file=sys.stderr)
     for m in list (eh.outq.queue):
+        print (f'print_output_list 2 {m} {format_message (m)}', file=sys.stderr)
         print (format_message (m))
+    sys.stdout.flush ()
+    print (f'print_output_list 3 {sys.stdout} {sys.stderr}', file=sys.stderr)
+    print (f'print_output_list 42', file=sys.stdout)
 
 def spaces (n):
     s = ""
@@ -1213,11 +1221,14 @@ def shell_out_instantiate (reg, owner, name, template_data):
 def shell_out_handler (eh, msg):
     cmd = eh.instance_data
     s = msg.datum.srepr ()
-    [stdout, stderr] = run_command (eh, cmd, s)
-    if stderr != None:
-        send_string (eh, "✗", stderr, msg)
-    else:
+    [success, stdout, stderr] = run_command (eh, cmd, s)
+    if success:
         send_string (eh, "", stdout, msg)
+        if stderr != None and len (stderr) != 0:
+            # output to stderr when success, is debug output, send it to port "👀"
+            send_string (eh, "👀", stderr, msg)
+    else:
+        send_string (eh, "✗", stderr, msg)
 
 ####
 
@@ -1277,9 +1288,10 @@ def print_error_maybe (main_container):
     error_port = "✗"
     err = fetch_first_output (main_container, error_port)
     if (err != None) and (0 < len (trimws (err.srepr ()))):
-        print ("--- !!! ERRORS !!! ---")
-        print_specific_output (main_container, error_port, False)
-
+        # print ("--- !!! ERRORS !!! ---", file=sys.stderr)
+        print ("", file=sys.stderr)
+        print_specific_output (main_container, error_port, stderr=True)
+        sys.exit (1)
 
 # debugging helpers
 
@@ -1348,58 +1360,6 @@ def fakepipename_handler (eh, msg):
     rand += 1 # not very random, but good enough - 'rand' must be unique within a single run
     send_string (eh, "", f"/tmp/fakepipe{rand}", msg)
 
-class OhmJS_Instance_Data:
-    def __init__ (self):
-        self.pathname_0D_ = None
-        self.grammar_name = None
-        self.grammar_filename = None
-        self.semantics_filename = None
-        self.s = None
-
-def ohmjs_instantiate (reg, owner, name, template_data):
-    instance_name = gensym ("OhmJS")
-    inst = OhmJS_Instance_Data () # all fields have zero value before any messages are received
-    return make_leaf (instance_name, owner, inst, ohmjs_handle)
-
-def ohmjs_maybe (eh, inst, causingMsg):
-    if None != inst.pathname_0D_ and None != inst.grammar_name and None != inst.grammar_filename and None != inst.semantics_filename and None != inst.s:
-        cmd = [f"{inst.pathname_0D_}/std/ohmjs.js", f"{inst.grammar_name}", f"{inst.grammar_filename}", f"{inst.semantics_filename}"]
-        [captured_output, err] = run_command (eh, cmd, inst.s)
-
-        if err == None:
-            err = ""
-        errstring = trimws (err)
-        if len (errstring) == 0:
-            send_string (eh, "", trimws (captured_output), causingMsg)
-        else:
-            send_string (eh, "✗", errstring, causingMsg)
-        inst.pathname_0D_ = None
-        inst.grammar_name = None
-        inst.grammar_filename = None
-        inst.semantics_filename = None
-        inst.s = None
-
-def ohmjs_handle (eh, msg):
-    inst = eh.instance_data
-    if msg.port == "0D path":
-        inst.pathname_0D_ = clone_string (msg.datum.srepr ())
-        ohmjs_maybe (eh, inst, msg)
-    elif msg.port == "grammar name":
-        inst.grammar_name = clone_string (msg.datum.srepr ())
-        ohmjs_maybe (eh, inst, msg)
-    elif msg.port == "grammar":
-        inst.grammar_filename = clone_string (msg.datum.srepr ())
-        ohmjs_maybe (eh, inst, msg)
-    elif msg.port == "semantics":
-        inst.semantics_filename = clone_string (msg.datum.srepr ())
-        ohmjs_maybe (eh, inst, msg)
-    elif msg.port == "input":
-        inst.s = clone_string (msg.datum.srepr ())
-        ohmjs_maybe (eh, inst, msg)
-    else:
-        emsg = f"!!! ERROR: OhmJS got an illegal message port {msg.port}"
-        send_string (eh, "✗", emsg, msg)
-
 
 
 # all of the the built-in leaves are listed here
@@ -1420,11 +1380,6 @@ def initialize_stock_components (reg):
     register_component (reg, Template ( name = "stringconcat", instantiator = stringconcat_instantiate))
     # for fakepipe
     register_component (reg, Template ( name = "fakepipename", instantiator = fakepipename_instantiate))
-    # for transpiler (ohmjs)
-    register_component (reg, Template ( name = "OhmJS", instantiator = ohmjs_instantiate))
-    # register_component (reg, string_constant ("RWR"))
-    # register_component (reg, string_constant ("0d/python/std/rwr.ohm"))
-    # register_component (reg, string_constant ("0d/python/std/rwr.sem.js"))
 
 def initialize ():
     arg_array = parse_command_line_args ()

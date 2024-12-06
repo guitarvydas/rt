@@ -1,5 +1,5 @@
-defn test () {
-    for child_desc in desc@children {
-        f (x)
-    }
+defn f () {
+        x ⇐ #negate (x)
 }
+
+

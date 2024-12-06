@@ -1,26 +1,32 @@
 #	'ensure that formatted text option in draw.io is disabled everywhere'
 
 #SRC=test.rt
-SRC=0d.rt
+#SRC=count.rt
+#SRC=decode.rt
+SRC=reverser.rt
+#SRC=test.err.rt
+#SRC=0d.rt
 
-D2J=./das2json/mac/das2json-x86_64
+D2J=./das2json/mac/das2json
 
-all: generated-2py
+all:
+	python3 choreographer.py
 
-generated-2py: rt2py.drawio py0d.py *.ohm *.rewrite ${SRC}
-	${D2J} rt2py.drawio
-	python3 main.py . 0D/python ${SRC} main rt2py.drawio.json >generated-py0d.py
-	cat generated-py0d.py
-	python3 generated-py0d.py
+
 
 ## house-keeping
 
 clean:
 	rm -rf *.json
+	rm -rf junk*
+	rm -rf temp.*
 	rm -rf *~
 	rm -rf __pycache__
-	rm -f generated-py0d.py
+	rm -f generated-*
 
 install-js-requires:
 	npm install yargs prompt-sync ohm-js
 
+# python3 -m venv ./rt
+# source rt/bin/activate
+# pip3 install websockets

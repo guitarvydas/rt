@@ -1,5 +1,6 @@
 % rewrite internalize {
   text [c+] = ‛«c»’
+  char_nl [s] = ‛⎩⎨getlineinc⎬⎭\n’
   char_string [lq cs* rq] = ‛“⎨encodews ‛«cs»’⎬”’
   char_comment [lb cs* rb] = ‛⌈⎨encodews ‛«cs»’⎬⌉’
   char_word [lb cs+ rb] = ‛❲⎨encodews ‛«cs»’⎬❳’
@@ -17,7 +18,7 @@
 
   id [firstc morecs*] = ‛«firstc»«morecs»’
   dq [c] = ‛«c»’
-  nl [c] = ‛«c»’
+  nl [c] = ‛’
 }
 
 

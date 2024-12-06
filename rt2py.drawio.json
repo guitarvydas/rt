@@ -4,16 +4,24 @@
         "name": "main",
         "children": [
             {
-                "name": "Exhale Python",
-                "id": 3
-            },
-            {
                 "name": "Inhale",
                 "id": 6
             },
             {
                 "name": "RT to Python",
                 "id": 11
+            },
+            {
+                "name": "Exhale Python",
+                "id": 16
+            },
+            {
+                "name": "Semantics Check",
+                "id": 20
+            },
+            {
+                "name": "Syntax Check",
+                "id": 23
             }
         ],
         "connections": [
@@ -33,8 +41,254 @@
             {
                 "dir": 1,
                 "source": {
+                    "name": "RT to Python",
+                    "id": 11
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Exhale Python",
+                    "id": 16
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Syntax Check",
+                    "id": 23
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Semantics Check",
+                    "id": 20
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
                     "name": "Inhale",
                     "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Syntax Check",
+                    "id": 23
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Semantics Check",
+                    "id": 20
+                },
+                "source_port": "",
+                "target": {
+                    "name": "RT to Python",
+                    "id": 11
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Exhale Python",
+                    "id": 16
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Exhale Python",
+                    "id": 16
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "RT to Python",
+                    "id": 11
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Inhale",
+                    "id": 6
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Semantics Check",
+                    "id": 20
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Syntax Check",
+                    "id": 23
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            }
+        ]
+    },
+    {
+        "file": "rt2py.drawio",
+        "name": "main with probes",
+        "children": [
+            {
+                "name": "?A",
+                "id": 3
+            },
+            {
+                "name": "Inhale",
+                "id": 6
+            },
+            {
+                "name": "trash",
+                "id": 10
+            },
+            {
+                "name": "RT to Python",
+                "id": 11
+            },
+            {
+                "name": "Exhale Python",
+                "id": 16
+            },
+            {
+                "name": "'junk.syntax.txt",
+                "id": 21
+            },
+            {
+                "name": "Syntax Check",
+                "id": 23
+            },
+            {
+                "name": "Semantics Check",
+                "id": 27
+            },
+            {
+                "name": "syncfilewrite",
+                "id": 34
+            },
+            {
+                "name": "syncfilewrite",
+                "id": 36
+            },
+            {
+                "name": "'junk.inhaled.txt",
+                "id": 41
+            },
+            {
+                "name": "?B",
+                "id": 45
+            },
+            {
+                "name": "trash",
+                "id": 47
+            },
+            {
+                "name": "?C",
+                "id": 50
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'junk.inhaled.txt",
+                    "id": 41
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'junk.syntax.txt",
+                    "id": 21
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Inhale",
+                    "id": 6
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'junk.inhaled.txt",
+                    "id": 41
+                },
+                "source_port": "",
+                "target": {
+                    "name": "syncfilewrite",
+                    "id": 36
+                },
+                "target_port": "filename"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Semantics Check",
+                    "id": 27
                 },
                 "source_port": "",
                 "target": {
@@ -51,8 +305,190 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "Exhale Python",
+                    "name": "?C",
+                    "id": 50
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Semantics Check",
+                    "id": 27
+                },
+                "source_port": "",
+                "target": {
+                    "name": "?B",
+                    "id": 45
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Syntax Check",
+                    "id": 23
+                },
+                "source_port": "",
+                "target": {
+                    "name": "?A",
                     "id": 3
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Inhale",
+                    "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Syntax Check",
+                    "id": 23
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Inhale",
+                    "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "syncfilewrite",
+                    "id": 36
+                },
+                "target_port": "input"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Syntax Check",
+                    "id": 23
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Semantics Check",
+                    "id": 27
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "RT to Python",
+                    "id": 11
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Exhale Python",
+                    "id": 16
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'junk.syntax.txt",
+                    "id": 21
+                },
+                "source_port": "",
+                "target": {
+                    "name": "syncfilewrite",
+                    "id": 34
+                },
+                "target_port": "filename"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "syncfilewrite",
+                    "id": 34
+                },
+                "source_port": "done",
+                "target": {
+                    "name": "trash",
+                    "id": 10
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Syntax Check",
+                    "id": 23
+                },
+                "source_port": "",
+                "target": {
+                    "name": "syncfilewrite",
+                    "id": 34
+                },
+                "target_port": "input"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "syncfilewrite",
+                    "id": 36
+                },
+                "source_port": "done",
+                "target": {
+                    "name": "trash",
+                    "id": 47
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Semantics Check",
+                    "id": 27
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Syntax Check",
+                    "id": 23
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Exhale Python",
+                    "id": 16
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Exhale Python",
+                    "id": 16
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
                 },
                 "target_port": ""
             },
@@ -74,32 +510,6 @@
                 "source": {
                     "name": "Inhale",
                     "id": 6
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Exhale Python",
-                    "id": 3
-                },
-                "source_port": "",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Exhale Python",
-                    "id": 3
                 },
                 "source_port": "\u2717",
                 "target": {
@@ -115,24 +525,12 @@
         "name": "Inhale",
         "children": [
             {
-                "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                 "id": 5
-            },
-            {
-                "name": "?",
-                "id": 10
             },
             {
                 "name": "Read Text File",
                 "id": 11
-            },
-            {
-                "name": "?",
-                "id": 16
-            },
-            {
-                "name": "?",
-                "id": 17
             }
         ],
         "connections": [
@@ -150,19 +548,6 @@
                 "target_port": ""
             },
             {
-                "dir": 0,
-                "source": {
-                    "name": "",
-                    "id": 0
-                },
-                "source_port": "",
-                "target": {
-                    "name": "?",
-                    "id": 16
-                },
-                "target_port": ""
-            },
-            {
                 "dir": 1,
                 "source": {
                     "name": "Read Text File",
@@ -170,41 +555,15 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "?",
-                    "id": 17
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "Read Text File",
-                    "id": 11
-                },
-                "source_port": "",
-                "target": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                     "id": 5
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
-                    "id": 5
-                },
-                "source_port": "",
-                "target": {
-                    "name": "?",
-                    "id": 10
                 },
                 "target_port": ""
             },
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                     "id": 5
                 },
                 "source_port": "\u2717",
@@ -217,7 +576,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs internalize.ohm internalize.rewrite -",
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                     "id": 5
                 },
                 "source_port": "",
@@ -226,6 +585,159 @@
                     "id": 0
                 },
                 "target_port": ""
+            }
+        ]
+    },
+    {
+        "file": "rt2py.drawio",
+        "name": "Syntax Check",
+        "children": [
+            {
+                "name": "$ ./ndsl syntax.ohm syntax.rewrite",
+                "id": 5
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "$ ./ndsl syntax.ohm syntax.rewrite",
+                    "id": 5
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ ./ndsl syntax.ohm syntax.rewrite",
+                    "id": 5
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ ./ndsl syntax.ohm syntax.rewrite",
+                    "id": 5
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            }
+        ]
+    },
+    {
+        "file": "rt2py.drawio",
+        "name": "Semantics Check",
+        "children": [
+            {
+                "name": "$ ./ndsl semantics.ohm semantics.rewrite",
+                "id": 5
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "$ ./ndsl semantics.ohm semantics.rewrite",
+                    "id": 5
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ ./ndsl semantics.ohm semantics.rewrite",
+                    "id": 5
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ ./ndsl semantics.ohm semantics.rewrite",
+                    "id": 5
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            }
+        ]
+    },
+    {
+        "file": "rt2py.drawio",
+        "name": "RT to Python",
+        "children": [
+            {
+                "name": "$ ./ndsl emit.ohm emitPython.rewrite",
+                "id": 5
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "$ ./ndsl emit.ohm emitPython.rewrite",
+                    "id": 5
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ ./ndsl emit.ohm emitPython.rewrite",
+                    "id": 5
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ ./ndsl emit.ohm emitPython.rewrite",
+                    "id": 5
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
             }
         ]
     },
@@ -285,7 +797,7 @@
         "name": "Decode For Python",
         "children": [
             {
-                "name": "$ node t2t.mjs pydecode.ohm pydecode.rewrite -",
+                "name": "$ ./ndsl pydecode.ohm pydecode.rewrite",
                 "id": 5
             }
         ],
@@ -298,7 +810,7 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "$ node t2t.mjs pydecode.ohm pydecode.rewrite -",
+                    "name": "$ ./ndsl pydecode.ohm pydecode.rewrite",
                     "id": 5
                 },
                 "target_port": ""
@@ -306,7 +818,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs pydecode.ohm pydecode.rewrite -",
+                    "name": "$ ./ndsl pydecode.ohm pydecode.rewrite",
                     "id": 5
                 },
                 "source_port": "",
@@ -319,7 +831,7 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ node t2t.mjs pydecode.ohm pydecode.rewrite -",
+                    "name": "$ ./ndsl pydecode.ohm pydecode.rewrite",
                     "id": 5
                 },
                 "source_port": "\u2717",
@@ -328,74 +840,6 @@
                     "id": 0
                 },
                 "target_port": "\u2717"
-            }
-        ]
-    },
-    {
-        "file": "rt2py.drawio",
-        "name": "RT to Python",
-        "children": [
-            {
-                "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
-                "id": 5
-            },
-            {
-                "name": "?A",
-                "id": 10
-            }
-        ],
-        "connections": [
-            {
-                "dir": 0,
-                "source": {
-                    "name": "",
-                    "id": 0
-                },
-                "source_port": "",
-                "target": {
-                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
-                    "id": 5
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
-                    "id": 5
-                },
-                "source_port": "",
-                "target": {
-                    "name": "?A",
-                    "id": 10
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
-                    "id": 5
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "$ node t2t.mjs rt.ohm rt2py.rewrite -",
-                    "id": 5
-                },
-                "source_port": "",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": ""
             }
         ]
     },

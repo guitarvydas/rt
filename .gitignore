@@ -7,4 +7,4 @@ package*.json
 junk*
 *.bkp
 _.py
-__pychache__/
+__pycache__/
