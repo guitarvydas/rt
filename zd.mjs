@@ -880,7 +880,6 @@ function low_level_read_text_file_handler (eh,msg) {/* line 377 */
     } else {
       send_string (eh, "✗", `read error on file '${fname}'`, msg);
     }
-    }
                               /* line 379 *//* line 380 *//* line 381 */
 }
 

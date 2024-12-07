@@ -8,41 +8,44 @@ const execSync = require('child_process').execSync;
 let  counter =  0;            /* line 3 *//* line 4 */
 let  digits = [ "₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀", "₂₁", "₂₂", "₂₃", "₂₄", "₂₅", "₂₆", "₂₇", "₂₈", "₂₉"];/* line 11 *//* line 12 *//* line 13 */
 function gensymbol (s) {      /* line 14 *//* line 15 */
-    name_with_id =  `${ s}${subscripted_digit ( counter)}` /* line 16 */
-    let  counter =  counter+ 1;/* line 17 */
+    let name_with_id =  `${ s}${subscripted_digit ( counter)}` /* line 16 */;
+    counter =  counter+ 1;    /* line 17 */
     return  name_with_id;     /* line 18 *//* line 19 *//* line 20 */
 }
 
 function subscripted_digit (n) {/* line 21 *//* line 22 */
-    if (( n >=  0 and  n <=  29)) {/* line 23 */
+    if (((( n >=  0) && ( n <=  29)))) {/* line 23 */
       return  digits [ n];    /* line 24 */}
     else {                    /* line 25 */
       return  `${ "₊"}${ n}`  /* line 26 */;/* line 27 */}/* line 28 *//* line 29 */
 }
 
-class Datum:
-  def __init__ (self,):       /* line 30 */
+class Datum {
+  constructor () {            /* line 30 */
+
     this.data =  null;        /* line 31 */
     this.clone =  null;       /* line 32 */
     this.reclaim =  null;     /* line 33 */
     this.srepr =  null;       /* line 34 */
     this.kind =  null;        /* line 35 */
     this.raw =  null;         /* line 36 *//* line 37 */
+  }
+}
                               /* line 38 */
 function new_datum_string (s) {/* line 39 */
-    d =  new Datum ();        /* line 40 */
-    let  d.data =  s;         /* line 41 */
-    let  d.clone =  function  {return clone_datum_string ( d)/* line 42 */;};
-    let  d.reclaim =  function  {return reclaim_datum_string ( d)/* line 43 */;};
-    let  d.srepr =  function  {return srepr_datum_string ( d)/* line 44 */;};
-    let  d.raw = new TextEncoder().encode( d.data)/* line 45 */;
-    let  d.kind =  function  {return  "string";};/* line 46 */
+    let d =  new Datum ();    /* line 40 */;
+    d.data =  s;              /* line 41 */
+    d.clone =  function () {return clone_datum_string ( d)/* line 42 */;};
+    d.reclaim =  function () {return reclaim_datum_string ( d)/* line 43 */;};
+    d.srepr =  function () {return srepr_datum_string ( d)/* line 44 */;};
+    d.raw = new TextEncoder().encode( d.data)/* line 45 */;
+    d.kind =  function () {return  "string";};/* line 46 */
     return  d;                /* line 47 *//* line 48 *//* line 49 */
 }
 
 function clone_datum_string (d) {/* line 50 */
-    d = new_datum_string ( d.data)/* line 51 */
-    return  d;                /* line 52 *//* line 53 *//* line 54 */
+    let newd = new_datum_string ( d.data)/* line 51 */;
+    return  newd;             /* line 52 *//* line 53 *//* line 54 */
 }
 
 function reclaim_datum_string (src) {/* line 55 *//* line 56 *//* line 57 *//* line 58 */
@@ -53,13 +56,13 @@ function srepr_datum_string (d) {/* line 59 */
 }
 
 function new_datum_bang () {  /* line 63 */
-    p =  new Datum ();        /* line 64 */
-    let  p.data =  true;      /* line 65 */
-    let  p.clone =  function  {return clone_datum_bang ( p)/* line 66 */;};
-    let  p.reclaim =  function  {return reclaim_datum_bang ( p)/* line 67 */;};
-    let  p.srepr =  function  {return srepr_datum_bang ();};/* line 68 */
-    let  p.raw =  function  {return raw_datum_bang ();};/* line 69 */
-    let  p.kind =  function  {return  "bang";};/* line 70 */
+    let p =  new Datum ();    /* line 64 */;
+    p.data =  true;           /* line 65 */
+    p.clone =  function () {return clone_datum_bang ( p)/* line 66 */;};
+    p.reclaim =  function () {return reclaim_datum_bang ( p)/* line 67 */;};
+    p.srepr =  function () {return srepr_datum_bang ();};/* line 68 */
+    p.raw =  function () {return raw_datum_bang ();};/* line 69 */
+    p.kind =  function () {return  "bang";};/* line 70 */
     return  p;                /* line 71 *//* line 72 *//* line 73 */
 }
 
@@ -79,11 +82,11 @@ function raw_datum_bang () {  /* line 86 */
 }
 
 function new_datum_tick () {  /* line 90 */
-    p = new_datum_bang ()     /* line 91 */
-    let  p.kind =  function  {return  "tick";};/* line 92 */
-    let  p.clone =  function  {return new_datum_tick ();};/* line 93 */
-    let  p.srepr =  function  {return srepr_datum_tick ();};/* line 94 */
-    let  p.raw =  function  {return raw_datum_tick ();};/* line 95 */
+    let p = new_datum_bang ();/* line 91 */
+    p.kind =  function () {return  "tick";};/* line 92 */
+    p.clone =  function () {return new_datum_tick ();};/* line 93 */
+    p.srepr =  function () {return srepr_datum_tick ();};/* line 94 */
+    p.raw =  function () {return raw_datum_tick ();};/* line 95 */
     return  p;                /* line 96 *//* line 97 *//* line 98 */
 }
 
@@ -96,24 +99,24 @@ function raw_datum_tick () {  /* line 103 */
 }
 
 function new_datum_bytes (b) {/* line 107 */
-    p =  new Datum ();        /* line 108 */
-    let  p.data =  b;         /* line 109 */
-    let  p.clone =  function  {return clone_datum_bytes ( p)/* line 110 */;};
-    let  p.reclaim =  function  {return reclaim_datum_bytes ( p)/* line 111 */;};
-    let  p.srepr =  function  {return srepr_datum_bytes ( b)/* line 112 */;};
-    let  p.raw =  function  {return raw_datum_bytes ( b)/* line 113 */;};
-    let  p.kind =  function  {return  "bytes";};/* line 114 */
+    let p =  new Datum ();    /* line 108 */;
+    p.data =  b;              /* line 109 */
+    p.clone =  function () {return clone_datum_bytes ( p)/* line 110 */;};
+    p.reclaim =  function () {return reclaim_datum_bytes ( p)/* line 111 */;};
+    p.srepr =  function () {return srepr_datum_bytes ( b)/* line 112 */;};
+    p.raw =  function () {return raw_datum_bytes ( b)/* line 113 */;};
+    p.kind =  function () {return  "bytes";};/* line 114 */
     return  p;                /* line 115 *//* line 116 *//* line 117 */
 }
 
 function clone_datum_bytes (src) {/* line 118 */
-    p =  new Datum ();        /* line 119 */
-    let  p.clone =  src.clone;/* line 120 */
-    let  p.reclaim =  src.reclaim;/* line 121 */
-    let  p.srepr =  src.srepr;/* line 122 */
-    let  p.raw =  src.raw;    /* line 123 */
-    let  p.kind =  src.kind;  /* line 124 */
-    let  p.data =  src.clone ();/* line 125 */
+    let p =  new Datum ();    /* line 119 */;
+    p.clone =  src.clone;     /* line 120 */
+    p.reclaim =  src.reclaim; /* line 121 */
+    p.srepr =  src.srepr;     /* line 122 */
+    p.raw =  src.raw;         /* line 123 */
+    p.kind =  src.kind;       /* line 124 */
+    p.data =  src.clone ();   /* line 125 */
     return  p;                /* line 126 *//* line 127 *//* line 128 */
 }
 
@@ -133,18 +136,18 @@ function new_datum_handle (h) {/* line 140 */
 }
 
 function new_datum_int (i) {  /* line 144 */
-    p =  new Datum ();        /* line 145 */
-    let  p.data =  i;         /* line 146 */
-    let  p.clone =  function  {return clone_int ( i)/* line 147 */;};
-    let  p.reclaim =  function  {return reclaim_int ( i)/* line 148 */;};
-    let  p.srepr =  function  {return srepr_datum_int ( i)/* line 149 */;};
-    let  p.raw =  function  {return raw_datum_int ( i)/* line 150 */;};
-    let  p.kind =  function  {return  "int";};/* line 151 */
+    let p =  new Datum ();    /* line 145 */;
+    p.data =  i;              /* line 146 */
+    p.clone =  function () {return clone_int ( i)/* line 147 */;};
+    p.reclaim =  function () {return reclaim_int ( i)/* line 148 */;};
+    p.srepr =  function () {return srepr_datum_int ( i)/* line 149 */;};
+    p.raw =  function () {return raw_datum_int ( i)/* line 150 */;};
+    p.kind =  function () {return  "int";};/* line 151 */
     return  p;                /* line 152 *//* line 153 *//* line 154 */
 }
 
 function clone_int (i) {      /* line 155 */
-    p = new_datum_int ( i)    /* line 156 */
+    let p = new_datum_int ( i)/* line 156 */;
     return  p;                /* line 157 *//* line 158 *//* line 159 */
 }
 
@@ -163,10 +166,13 @@ function raw_datum_int (i) {  /* line 168 */
 /*  */                        /* line 173 */
 /*  `port` refers to the name of the incoming or outgoing port of this component. *//* line 174 */
 /*  `datum` is the data attached to this message. *//* line 175 */
-class Message:
-  def __init__ (self,):       /* line 176 */
+class Message {
+  constructor () {            /* line 176 */
+
     this.port =  null;        /* line 177 */
     this.datum =  null;       /* line 178 *//* line 179 */
+  }
+}
                               /* line 180 */
 function clone_port (s) {     /* line 181 */
     return clone_string ( s)  /* line 182 */;/* line 183 *//* line 184 */
@@ -175,18 +181,18 @@ function clone_port (s) {     /* line 181 */
 /*  Utility for making a `Message`. Used to safely “seed“ messages *//* line 185 */
 /*  entering the very top of a network. *//* line 186 */
 function make_message (port,datum) {/* line 187 */
-    p = clone_string ( port)  /* line 188 */
-    m =  new Message ();      /* line 189 */
-    let  m.port =  p;         /* line 190 */
-    let  m.datum =  datum.clone ();/* line 191 */
+    let p = clone_string ( port)/* line 188 */;
+    let  m =  new Message (); /* line 189 */;
+    m.port =  p;              /* line 190 */
+    m.datum =  datum.clone ();/* line 191 */
     return  m;                /* line 192 *//* line 193 *//* line 194 */
 }
 
 /*  Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations. *//* line 195 */
 function message_clone (msg) {/* line 196 */
-    m =  new Message ();      /* line 197 */
-    let  m.port = clone_port ( msg.port)/* line 198 */;
-    let  m.datum =  msg.datum.clone ();/* line 199 */
+    let  m =  new Message (); /* line 197 */;
+    m.port = clone_port ( msg.port)/* line 198 */;
+    m.datum =  msg.datum.clone ();/* line 199 */
     return  m;                /* line 200 *//* line 201 *//* line 202 */
 }
 
@@ -215,70 +221,70 @@ const  enumUp =  2            /* line 232 */;
 const  enumThrough =  3       /* line 233 */;/* line 234 */
 function create_down_connector (container,proto_conn,connectors,children_by_id) {/* line 235 */
     /*  JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''}, *//* line 236 */
-    connector =  new Connector ();/* line 237 */
-    let  connector.direction =  "down";/* line 238 */
-    let  connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])/* line 239 */;
-    target_proto =  proto_conn [ "target"]/* line 240 */
-    id_proto =  target_proto [ "id"]/* line 241 */
-    target_component =  children_by_id [id_proto]/* line 242 */
+    let  connector =  new Connector ();/* line 237 */;
+    connector.direction =  "down";/* line 238 */
+    connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])/* line 239 */;
+    let target_proto =  proto_conn [ "target"];/* line 240 */
+    let id_proto =  target_proto [ "id"];/* line 241 */
+    let target_component =  children_by_id [id_proto];/* line 242 */
     if (( target_component ==  null)) {/* line 243 */
       load_error ( `${ "internal error: .Down connection target internal error "}${ proto_conn [ "target"]}` )/* line 244 */}
     else {                    /* line 245 */
-      let  connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 246 */;/* line 247 */}
+      connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 246 */;/* line 247 */}
     return  connector;        /* line 248 *//* line 249 *//* line 250 */
 }
 
 function create_across_connector (container,proto_conn,connectors,children_by_id) {/* line 251 */
-    connector =  new Connector ();/* line 252 */
-    let  connector.direction =  "across";/* line 253 */
-    source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])]/* line 254 */
-    target_component =  children_by_id [(( proto_conn [ "target"]) [ "id"])]/* line 255 */
+    let  connector =  new Connector ();/* line 252 */;
+    connector.direction =  "across";/* line 253 */
+    let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 254 */
+    let target_component =  children_by_id [(( proto_conn [ "target"]) [ "id"])];/* line 255 */
     if ( source_component ==  null) {/* line 256 */
       load_error ( `${ "internal error: .Across connection source not ok "}${ proto_conn [ "source"]}` )/* line 257 */}
     else {                    /* line 258 */
-      let  connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 259 */;
+      connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 259 */;
       if ( target_component ==  null) {/* line 260 */
         load_error ( `${ "internal error: .Across connection target not ok "}${ proto_conn.target}` )/* line 261 */}
       else {                  /* line 262 */
-        let  connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 263 */;/* line 264 */}/* line 265 */}
+        connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 263 */;/* line 264 */}/* line 265 */}
     return  connector;        /* line 266 *//* line 267 *//* line 268 */
 }
 
 function create_up_connector (container,proto_conn,connectors,children_by_id) {/* line 269 */
-    connector =  new Connector ();/* line 270 */
-    let  connector.direction =  "up";/* line 271 */
-    source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])]/* line 272 */
+    let  connector =  new Connector ();/* line 270 */;
+    connector.direction =  "up";/* line 271 */
+    let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 272 */
     if ( source_component ==  null) {/* line 273 */
       print ( `${ "internal error: .Up connection source not ok "}${ proto_conn [ "source"]}` )/* line 274 */}
     else {                    /* line 275 */
-      let  connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 276 */;
-      let  connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 277 */;/* line 278 */}
+      connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 276 */;
+      connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 277 */;/* line 278 */}
     return  connector;        /* line 279 *//* line 280 *//* line 281 */
 }
 
 function create_through_connector (container,proto_conn,connectors,children_by_id) {/* line 282 */
-    connector =  new Connector ();/* line 283 */
-    let  connector.direction =  "through";/* line 284 */
-    let  connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])/* line 285 */;
-    let  connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 286 */;
+    let  connector =  new Connector ();/* line 283 */;
+    connector.direction =  "through";/* line 284 */
+    connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])/* line 285 */;
+    connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 286 */;
     return  connector;        /* line 287 *//* line 288 *//* line 289 */
 }
                               /* line 290 */
 function container_instantiator (reg,owner,container_name,desc) {/* line 291 *//* line 292 */
-    container = make_container ( container_name, owner)/* line 293 */
-    children = []             /* line 294 */
-    children_by_id = {}
+    let container = make_container ( container_name, owner)/* line 293 */;
+    let children = [];        /* line 294 */
+    let children_by_id = {};
     /*  not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here *//* line 295 */
     /*  collect children */   /* line 296 */
     for (child_desc in  desc [ "children"]) {/* line 297 */
-      child_instance = get_component_instance ( reg, child_desc [ "name"], container)/* line 298 */
+      let child_instance = get_component_instance ( reg, child_desc [ "name"], container)/* line 298 */;
       children.push ( child_instance) /* line 299 */
-      id =  child_desc [ "id"]/* line 300 */
-      let  children_by_id [id] =  child_instance;/* line 301 *//* line 302 *//* line 303 */}
-    let  container.children =  children;/* line 304 *//* line 305 */
-    connectors = []           /* line 306 */
+      let id =  child_desc [ "id"];/* line 300 */
+      children_by_id [id] =  child_instance;/* line 301 *//* line 302 *//* line 303 */}
+    container.children =  children;/* line 304 *//* line 305 */
+    let connectors = [];      /* line 306 */
     for (proto_conn in  desc [ "connections"]) {/* line 307 */
-      connector =  new Connector ();/* line 308 */
+      let  connector =  new Connector ();/* line 308 */;
       if ( proto_conn [ "dir"] ==  enumDown) {/* line 309 */
         connectors.push (create_down_connector ( container, proto_conn, connectors, children_by_id)) /* line 310 */}
       else if ( proto_conn [ "dir"] ==  enumAcross) {/* line 311 */
@@ -287,7 +293,7 @@ function container_instantiator (reg,owner,container_name,desc) {/* line 291 *//
         connectors.push (create_up_connector ( container, proto_conn, connectors, children_by_id)) /* line 314 */}
       else if ( proto_conn [ "dir"] ==  enumThrough) {/* line 315 */
         connectors.push (create_through_connector ( container, proto_conn, connectors, children_by_id)) /* line 316 *//* line 317 */}/* line 318 */}
-    let  container.connections =  connectors;/* line 319 */
+    container.connections =  connectors;/* line 319 */
     return  container;        /* line 320 *//* line 321 *//* line 322 */
 }
 
@@ -306,62 +312,71 @@ function destroy_container (eh) {/* line 331 *//* line 332 *//* line 333 *//* li
 /*  Routing connection for a container component. The `direction` field has *//* line 335 */
 /*  no affect on the default message routing system _ it is there for debugging *//* line 336 */
 /*  purposes, or for reading by other tools. *//* line 337 *//* line 338 */
-class Connector:
-  def __init__ (self,):       /* line 339 */
+class Connector {
+  constructor () {            /* line 339 */
+
     this.direction =  null;/*  down, across, up, through *//* line 340 */
     this.sender =  null;      /* line 341 */
     this.receiver =  null;    /* line 342 *//* line 343 */
+  }
+}
                               /* line 344 */
 /*  `Sender` is used to “pattern match“ which `Receiver` a message should go to, *//* line 345 */
 /*  based on component ID (pointer) and port name. *//* line 346 *//* line 347 */
-class Sender:
-  def __init__ (self,):       /* line 348 */
+class Sender {
+  constructor () {            /* line 348 */
+
     this.name =  null;        /* line 349 */
     this.component =  null;   /* line 350 */
     this.port =  null;        /* line 351 *//* line 352 */
+  }
+}
                               /* line 353 *//* line 354 *//* line 355 */
 /*  `Receiver` is a handle to a destination queue, and a `port` name to assign *//* line 356 */
 /*  to incoming messages to this queue. *//* line 357 *//* line 358 */
-class Receiver:
-  def __init__ (self,):       /* line 359 */
+class Receiver {
+  constructor () {            /* line 359 */
+
     this.name =  null;        /* line 360 */
     this.queue =  null;       /* line 361 */
     this.port =  null;        /* line 362 */
     this.component =  null;   /* line 363 *//* line 364 */
+  }
+}
                               /* line 365 */
 function mkSender (name,component,port) {/* line 366 */
-    s =  new Sender ();       /* line 367 */
-    let  s.name =  name;      /* line 368 */
-    let  s.component =  component;/* line 369 */
-    let  s.port =  port;      /* line 370 */
+    let  s =  new Sender ();  /* line 367 */;
+    s.name =  name;           /* line 368 */
+    s.component =  component; /* line 369 */
+    s.port =  port;           /* line 370 */
     return  s;                /* line 371 *//* line 372 *//* line 373 */
 }
 
 function mkReceiver (name,component,port,q) {/* line 374 */
-    r =  new Receiver ();     /* line 375 */
-    let  r.name =  name;      /* line 376 */
-    let  r.component =  component;/* line 377 */
-    let  r.port =  port;      /* line 378 */
+    let  r =  new Receiver ();/* line 375 */;
+    r.name =  name;           /* line 376 */
+    r.component =  component; /* line 377 */
+    r.port =  port;           /* line 378 */
     /*  We need a way to determine which queue to target. "Down" and "Across" go to inq, "Up" and "Through" go to outq. *//* line 379 */
-    let  r.queue =  q;        /* line 380 */
+    r.queue =  q;             /* line 380 */
     return  r;                /* line 381 *//* line 382 *//* line 383 */
 }
 
 /*  Checks if two senders match, by pointer equality and port name matching. *//* line 384 */
 function sender_eq (s1,s2) {  /* line 385 */
-    same_components = ( s1.component ==  s2.component)/* line 386 */
-    same_ports = ( s1.port ==  s2.port)/* line 387 */
-    return  same_components and  same_ports;/* line 388 *//* line 389 *//* line 390 */
+    let same_components = ( s1.component ==  s2.component);/* line 386 */
+    let same_ports = ( s1.port ==  s2.port);/* line 387 */
+    return (( same_components) && ( same_ports));/* line 388 *//* line 389 *//* line 390 */
 }
 
 /*  Delivers the given message to the receiver of this connector. *//* line 391 *//* line 392 */
 function deposit (parent,conn,message) {/* line 393 */
-    new_message = make_message ( conn.receiver.port, message.datum)/* line 394 */
+    let new_message = make_message ( conn.receiver.port, message.datum)/* line 394 */;
     push_message ( parent, conn.receiver.component, conn.receiver.queue, new_message)/* line 395 *//* line 396 *//* line 397 */
 }
 
 function force_tick (parent,eh) {/* line 398 */
-    tick_msg = make_message ( ".",new_datum_tick ())/* line 399 */
+    let tick_msg = make_message ( ".",new_datum_tick ())/* line 399 */;
     push_message ( parent, eh, eh.inq, tick_msg)/* line 400 */
     return  tick_msg;         /* line 401 *//* line 402 *//* line 403 */
 }
@@ -377,37 +392,37 @@ function is_self (child,container) {/* line 409 */
 }
 
 function step_child (child,msg) {/* line 414 */
-    before_state =  child.state/* line 415 */
+    let before_state =  child.state;/* line 415 */
     child.handler ( child, msg)/* line 416 */
-    after_state =  child.state/* line 417 */
-    return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"];/* line 420 *//* line 421 *//* line 422 */
+    let after_state =  child.state;/* line 417 */
+    return [(( before_state ==  "idle") && ( after_state!= "idle")),(( before_state!= "idle") && ( after_state!= "idle")),(( before_state!= "idle") && ( after_state ==  "idle"))];/* line 420 *//* line 421 *//* line 422 */
 }
 
 function step_children (container,causingMessage) {/* line 423 */
-    let  container.state =  "idle";/* line 424 */
+    container.state =  "idle";/* line 424 */
     for (child in   container.visit_ordering) {/* line 425 */
       /*  child = container represents self, skip it *//* line 426 */
-      if ((not (is_self ( child, container)))) {/* line 427 */
-        if ((not ((0=== child.inq.length)))) {/* line 428 */
-          msg =  child.inq.shift ()/* line 429 */
-          began_long_run =  null/* line 430 */
-          continued_long_run =  null/* line 431 */
-          ended_long_run =  null/* line 432 */
-          let [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)/* line 433 */;
+      if (((! (is_self ( child, container))))) {/* line 427 */
+        if (((! ((0=== child.inq.length))))) {/* line 428 */
+          let msg =  child.inq.shift ()/* line 429 */;
+          let  began_long_run =  null;/* line 430 */
+          let  continued_long_run =  null;/* line 431 */
+          let  ended_long_run =  null;/* line 432 */
+          [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)/* line 433 */;
           if ( began_long_run) {/* line 434 *//* line 435 */}
           else if ( continued_long_run) {/* line 436 *//* line 437 */}
           else if ( ended_long_run) {/* line 438 *//* line 439 *//* line 440 */}
           destroy_message ( msg)/* line 441 */}
         else {                /* line 442 */
           if ( child.state!= "idle") {/* line 443 */
-            msg = force_tick ( container, child)/* line 444 */
+            let msg = force_tick ( container, child)/* line 444 */;
             child.handler ( child, msg)/* line 445 */
             destroy_message ( msg)}/* line 446 */}/* line 447 */
         if ( child.state ==  "active") {/* line 448 */
           /*  if child remains active, then the container must remain active and must propagate “ticks“ to child *//* line 449 */
-          let  container.state =  "active";/* line 450 */}/* line 451 */
-        while ((not ((0=== child.outq.length)))) {/* line 452 */
-          msg =  child.outq.shift ()/* line 453 */
+          container.state =  "active";/* line 450 */}/* line 451 */
+        while (((! ((0=== child.outq.length))))) {/* line 452 */
+          let msg =  child.outq.shift ()/* line 453 */;
           route ( container, child, msg)/* line 454 */
           destroy_message ( msg)}}/* line 455 */}/* line 456 *//* line 457 *//* line 458 *//* line 459 */
 }
@@ -424,22 +439,22 @@ function is_tick (msg) {      /* line 465 */
 /*  Routes a single message to all matching destinations, according to *//* line 469 */
 /*  the container's connection network. *//* line 470 *//* line 471 */
 function route (container,from_component,message) {/* line 472 */
-    was_sent =  false
+    let  was_sent =  false;
     /*  for checking that output went somewhere (at least during bootstrap) *//* line 473 */
-    fromname =  ""            /* line 474 */
+    let  fromname =  "";      /* line 474 */
     if (is_tick ( message)) { /* line 475 */
       for (child in  container.children) {/* line 476 */
         attempt_tick ( container, child)/* line 477 */}
-      let  was_sent =  true;  /* line 478 */}
+      was_sent =  true;       /* line 478 */}
     else {                    /* line 479 */
-      if ((not (is_self ( from_component, container)))) {/* line 480 */
-        let  fromname =  from_component.name;/* line 481 */}
-      from_sender = mkSender ( fromname, from_component, message.port)/* line 482 *//* line 483 */
+      if (((! (is_self ( from_component, container))))) {/* line 480 */
+        fromname =  from_component.name;/* line 481 */}
+      let from_sender = mkSender ( fromname, from_component, message.port)/* line 482 */;/* line 483 */
       for (connector in  container.connections) {/* line 484 */
         if (sender_eq ( from_sender, connector.sender)) {/* line 485 */
           deposit ( container, connector, message)/* line 486 */
-          let  was_sent =  true;}}/* line 487 */}
-    if (not ( was_sent)) {    /* line 488 */
+          was_sent =  true;}} /* line 487 */}
+    if ((! ( was_sent))) {    /* line 488 */
       print ( "\n\n*** Error: ***")/* line 489 */
       print ( "***")          /* line 490 */
       print ( `${ container.name}${ `${ ": message '"}${ `${ message.port}${ `${ "' from "}${ `${ fromname}${ " dropped on floor..."}` }` }` }` }` )/* line 491 */
@@ -455,7 +470,7 @@ function any_child_ready (container) {/* line 497 */
 }
 
 function child_is_ready (eh) {/* line 504 */
-    return (not ((0=== eh.outq.length))) or (not ((0=== eh.inq.length))) or ( eh.state!= "idle") or (any_child_ready ( eh));/* line 505 *//* line 506 *//* line 507 */
+    return ((((((((! ((0=== eh.outq.length))))) || (((! ((0=== eh.inq.length))))))) || (( eh.state!= "idle")))) || ((any_child_ready ( eh))));/* line 505 *//* line 506 *//* line 507 */
 }
 
 function append_routing_descriptor (container,desc) {/* line 508 */

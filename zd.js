@@ -8,41 +8,44 @@ const execSync = require('child_process').execSync;
 let  counter =  0;            /* line 3 *//* line 4 */
 let  digits = [ "₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀", "₂₁", "₂₂", "₂₃", "₂₄", "₂₅", "₂₆", "₂₇", "₂₈", "₂₉"];/* line 11 *//* line 12 *//* line 13 */
 function gensymbol (s) {      /* line 14 *//* line 15 */
-    name_with_id =  `${ s}${subscripted_digit ( counter)}` /* line 16 */
-    let  counter =  counter+ 1;/* line 17 */
+    let name_with_id =  `${ s}${subscripted_digit ( counter)}` /* line 16 */;
+    counter =  counter+ 1;    /* line 17 */
     return  name_with_id;     /* line 18 *//* line 19 *//* line 20 */
 }
 
 function subscripted_digit (n) {/* line 21 *//* line 22 */
-    if (( n >=  0 and  n <=  29)) {/* line 23 */
+    if (((( n >=  0) && ( n <=  29)))) {/* line 23 */
       return  digits [ n];    /* line 24 */}
     else {                    /* line 25 */
       return  `${ "₊"}${ n}`  /* line 26 */;/* line 27 */}/* line 28 *//* line 29 */
 }
 
-class Datum:
-  def __init__ (self,):       /* line 30 */
+class Datum {
+  constructor () {            /* line 30 */
+
     this.data =  null;        /* line 31 */
     this.clone =  null;       /* line 32 */
     this.reclaim =  null;     /* line 33 */
     this.srepr =  null;       /* line 34 */
     this.kind =  null;        /* line 35 */
     this.raw =  null;         /* line 36 *//* line 37 */
+  }
+}
                               /* line 38 */
 function new_datum_string (s) {/* line 39 */
-    d =  new Datum ();        /* line 40 */
-    let  d.data =  s;         /* line 41 */
-    let  d.clone =  function  {return clone_datum_string ( d)/* line 42 */;};
-    let  d.reclaim =  function  {return reclaim_datum_string ( d)/* line 43 */;};
-    let  d.srepr =  function  {return srepr_datum_string ( d)/* line 44 */;};
-    let  d.raw = new TextEncoder().encode( d.data)/* line 45 */;
-    let  d.kind =  function  {return  "string";};/* line 46 */
+    let d =  new Datum ();    /* line 40 */;
+    d.data =  s;              /* line 41 */
+    d.clone =  function () {return clone_datum_string ( d)/* line 42 */;};
+    d.reclaim =  function () {return reclaim_datum_string ( d)/* line 43 */;};
+    d.srepr =  function () {return srepr_datum_string ( d)/* line 44 */;};
+    d.raw = new TextEncoder().encode( d.data)/* line 45 */;
+    d.kind =  function () {return  "string";};/* line 46 */
     return  d;                /* line 47 *//* line 48 *//* line 49 */
 }
 
 function clone_datum_string (d) {/* line 50 */
-    d = new_datum_string ( d.data)/* line 51 */
-    return  d;                /* line 52 *//* line 53 *//* line 54 */
+    let newd = new_datum_string ( d.data)/* line 51 */;
+    return  newd;             /* line 52 *//* line 53 *//* line 54 */
 }
 
 function reclaim_datum_string (src) {/* line 55 *//* line 56 *//* line 57 *//* line 58 */
@@ -53,13 +56,13 @@ function srepr_datum_string (d) {/* line 59 */
 }
 
 function new_datum_bang () {  /* line 63 */
-    p =  new Datum ();        /* line 64 */
-    let  p.data =  true;      /* line 65 */
-    let  p.clone =  function  {return clone_datum_bang ( p)/* line 66 */;};
-    let  p.reclaim =  function  {return reclaim_datum_bang ( p)/* line 67 */;};
-    let  p.srepr =  function  {return srepr_datum_bang ();};/* line 68 */
-    let  p.raw =  function  {return raw_datum_bang ();};/* line 69 */
-    let  p.kind =  function  {return  "bang";};/* line 70 */
+    let p =  new Datum ();    /* line 64 */;
+    p.data =  true;           /* line 65 */
+    p.clone =  function () {return clone_datum_bang ( p)/* line 66 */;};
+    p.reclaim =  function () {return reclaim_datum_bang ( p)/* line 67 */;};
+    p.srepr =  function () {return srepr_datum_bang ();};/* line 68 */
+    p.raw =  function () {return raw_datum_bang ();};/* line 69 */
+    p.kind =  function () {return  "bang";};/* line 70 */
     return  p;                /* line 71 *//* line 72 *//* line 73 */
 }
 
@@ -79,11 +82,11 @@ function raw_datum_bang () {  /* line 86 */
 }
 
 function new_datum_tick () {  /* line 90 */
-    p = new_datum_bang ()     /* line 91 */
-    let  p.kind =  function  {return  "tick";};/* line 92 */
-    let  p.clone =  function  {return new_datum_tick ();};/* line 93 */
-    let  p.srepr =  function  {return srepr_datum_tick ();};/* line 94 */
-    let  p.raw =  function  {return raw_datum_tick ();};/* line 95 */
+    let p = new_datum_bang ();/* line 91 */
+    p.kind =  function () {return  "tick";};/* line 92 */
+    p.clone =  function () {return new_datum_tick ();};/* line 93 */
+    p.srepr =  function () {return srepr_datum_tick ();};/* line 94 */
+    p.raw =  function () {return raw_datum_tick ();};/* line 95 */
     return  p;                /* line 96 *//* line 97 *//* line 98 */
 }
 
@@ -96,24 +99,24 @@ function raw_datum_tick () {  /* line 103 */
 }
 
 function new_datum_bytes (b) {/* line 107 */
-    p =  new Datum ();        /* line 108 */
-    let  p.data =  b;         /* line 109 */
-    let  p.clone =  function  {return clone_datum_bytes ( p)/* line 110 */;};
-    let  p.reclaim =  function  {return reclaim_datum_bytes ( p)/* line 111 */;};
-    let  p.srepr =  function  {return srepr_datum_bytes ( b)/* line 112 */;};
-    let  p.raw =  function  {return raw_datum_bytes ( b)/* line 113 */;};
-    let  p.kind =  function  {return  "bytes";};/* line 114 */
+    let p =  new Datum ();    /* line 108 */;
+    p.data =  b;              /* line 109 */
+    p.clone =  function () {return clone_datum_bytes ( p)/* line 110 */;};
+    p.reclaim =  function () {return reclaim_datum_bytes ( p)/* line 111 */;};
+    p.srepr =  function () {return srepr_datum_bytes ( b)/* line 112 */;};
+    p.raw =  function () {return raw_datum_bytes ( b)/* line 113 */;};
+    p.kind =  function () {return  "bytes";};/* line 114 */
     return  p;                /* line 115 *//* line 116 *//* line 117 */
 }
 
 function clone_datum_bytes (src) {/* line 118 */
-    p =  new Datum ();        /* line 119 */
-    let  p.clone =  src.clone;/* line 120 */
-    let  p.reclaim =  src.reclaim;/* line 121 */
-    let  p.srepr =  src.srepr;/* line 122 */
-    let  p.raw =  src.raw;    /* line 123 */
-    let  p.kind =  src.kind;  /* line 124 */
-    let  p.data =  src.clone ();/* line 125 */
+    let p =  new Datum ();    /* line 119 */;
+    p.clone =  src.clone;     /* line 120 */
+    p.reclaim =  src.reclaim; /* line 121 */
+    p.srepr =  src.srepr;     /* line 122 */
+    p.raw =  src.raw;         /* line 123 */
+    p.kind =  src.kind;       /* line 124 */
+    p.data =  src.clone ();   /* line 125 */
     return  p;                /* line 126 *//* line 127 *//* line 128 */
 }
 
@@ -133,18 +136,18 @@ function new_datum_handle (h) {/* line 140 */
 }
 
 function new_datum_int (i) {  /* line 144 */
-    p =  new Datum ();        /* line 145 */
-    let  p.data =  i;         /* line 146 */
-    let  p.clone =  function  {return clone_int ( i)/* line 147 */;};
-    let  p.reclaim =  function  {return reclaim_int ( i)/* line 148 */;};
-    let  p.srepr =  function  {return srepr_datum_int ( i)/* line 149 */;};
-    let  p.raw =  function  {return raw_datum_int ( i)/* line 150 */;};
-    let  p.kind =  function  {return  "int";};/* line 151 */
+    let p =  new Datum ();    /* line 145 */;
+    p.data =  i;              /* line 146 */
+    p.clone =  function () {return clone_int ( i)/* line 147 */;};
+    p.reclaim =  function () {return reclaim_int ( i)/* line 148 */;};
+    p.srepr =  function () {return srepr_datum_int ( i)/* line 149 */;};
+    p.raw =  function () {return raw_datum_int ( i)/* line 150 */;};
+    p.kind =  function () {return  "int";};/* line 151 */
     return  p;                /* line 152 *//* line 153 *//* line 154 */
 }
 
 function clone_int (i) {      /* line 155 */
-    p = new_datum_int ( i)    /* line 156 */
+    let p = new_datum_int ( i)/* line 156 */;
     return  p;                /* line 157 *//* line 158 *//* line 159 */
 }
 
@@ -163,10 +166,13 @@ function raw_datum_int (i) {  /* line 168 */
 /*  */                        /* line 173 */
 /*  `port` refers to the name of the incoming or outgoing port of this component. *//* line 174 */
 /*  `datum` is the data attached to this message. *//* line 175 */
-class Message:
-  def __init__ (self,):       /* line 176 */
+class Message {
+  constructor () {            /* line 176 */
+
     this.port =  null;        /* line 177 */
     this.datum =  null;       /* line 178 *//* line 179 */
+  }
+}
                               /* line 180 */
 function clone_port (s) {     /* line 181 */
     return clone_string ( s)  /* line 182 */;/* line 183 *//* line 184 */
@@ -175,18 +181,18 @@ function clone_port (s) {     /* line 181 */
 /*  Utility for making a `Message`. Used to safely “seed“ messages *//* line 185 */
 /*  entering the very top of a network. *//* line 186 */
 function make_message (port,datum) {/* line 187 */
-    p = clone_string ( port)  /* line 188 */
-    m =  new Message ();      /* line 189 */
-    let  m.port =  p;         /* line 190 */
-    let  m.datum =  datum.clone ();/* line 191 */
+    let p = clone_string ( port)/* line 188 */;
+    let  m =  new Message (); /* line 189 */;
+    m.port =  p;              /* line 190 */
+    m.datum =  datum.clone ();/* line 191 */
     return  m;                /* line 192 *//* line 193 *//* line 194 */
 }
 
 /*  Clones a message. Primarily used internally for “fanning out“ a message to multiple destinations. *//* line 195 */
 function message_clone (msg) {/* line 196 */
-    m =  new Message ();      /* line 197 */
-    let  m.port = clone_port ( msg.port)/* line 198 */;
-    let  m.datum =  msg.datum.clone ();/* line 199 */
+    let  m =  new Message (); /* line 197 */;
+    m.port = clone_port ( msg.port)/* line 198 */;
+    m.datum =  msg.datum.clone ();/* line 199 */
     return  m;                /* line 200 *//* line 201 *//* line 202 */
 }
 
@@ -215,70 +221,70 @@ const  enumUp =  2            /* line 232 */;
 const  enumThrough =  3       /* line 233 */;/* line 234 */
 function create_down_connector (container,proto_conn,connectors,children_by_id) {/* line 235 */
     /*  JSON: {;dir': 0, 'source': {'name': '', 'id': 0}, 'source_port': '', 'target': {'name': 'Echo', 'id': 12}, 'target_port': ''}, *//* line 236 */
-    connector =  new Connector ();/* line 237 */
-    let  connector.direction =  "down";/* line 238 */
-    let  connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])/* line 239 */;
-    target_proto =  proto_conn [ "target"]/* line 240 */
-    id_proto =  target_proto [ "id"]/* line 241 */
-    target_component =  children_by_id [id_proto]/* line 242 */
+    let  connector =  new Connector ();/* line 237 */;
+    connector.direction =  "down";/* line 238 */
+    connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])/* line 239 */;
+    let target_proto =  proto_conn [ "target"];/* line 240 */
+    let id_proto =  target_proto [ "id"];/* line 241 */
+    let target_component =  children_by_id [id_proto];/* line 242 */
     if (( target_component ==  null)) {/* line 243 */
       load_error ( `${ "internal error: .Down connection target internal error "}${ proto_conn [ "target"]}` )/* line 244 */}
     else {                    /* line 245 */
-      let  connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 246 */;/* line 247 */}
+      connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 246 */;/* line 247 */}
     return  connector;        /* line 248 *//* line 249 *//* line 250 */
 }
 
 function create_across_connector (container,proto_conn,connectors,children_by_id) {/* line 251 */
-    connector =  new Connector ();/* line 252 */
-    let  connector.direction =  "across";/* line 253 */
-    source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])]/* line 254 */
-    target_component =  children_by_id [(( proto_conn [ "target"]) [ "id"])]/* line 255 */
+    let  connector =  new Connector ();/* line 252 */;
+    connector.direction =  "across";/* line 253 */
+    let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 254 */
+    let target_component =  children_by_id [(( proto_conn [ "target"]) [ "id"])];/* line 255 */
     if ( source_component ==  null) {/* line 256 */
       load_error ( `${ "internal error: .Across connection source not ok "}${ proto_conn [ "source"]}` )/* line 257 */}
     else {                    /* line 258 */
-      let  connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 259 */;
+      connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 259 */;
       if ( target_component ==  null) {/* line 260 */
         load_error ( `${ "internal error: .Across connection target not ok "}${ proto_conn.target}` )/* line 261 */}
       else {                  /* line 262 */
-        let  connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 263 */;/* line 264 */}/* line 265 */}
+        connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 263 */;/* line 264 */}/* line 265 */}
     return  connector;        /* line 266 *//* line 267 *//* line 268 */
 }
 
 function create_up_connector (container,proto_conn,connectors,children_by_id) {/* line 269 */
-    connector =  new Connector ();/* line 270 */
-    let  connector.direction =  "up";/* line 271 */
-    source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])]/* line 272 */
+    let  connector =  new Connector ();/* line 270 */;
+    connector.direction =  "up";/* line 271 */
+    let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 272 */
     if ( source_component ==  null) {/* line 273 */
       print ( `${ "internal error: .Up connection source not ok "}${ proto_conn [ "source"]}` )/* line 274 */}
     else {                    /* line 275 */
-      let  connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 276 */;
-      let  connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 277 */;/* line 278 */}
+      connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 276 */;
+      connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 277 */;/* line 278 */}
     return  connector;        /* line 279 *//* line 280 *//* line 281 */
 }
 
 function create_through_connector (container,proto_conn,connectors,children_by_id) {/* line 282 */
-    connector =  new Connector ();/* line 283 */
-    let  connector.direction =  "through";/* line 284 */
-    let  connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])/* line 285 */;
-    let  connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 286 */;
+    let  connector =  new Connector ();/* line 283 */;
+    connector.direction =  "through";/* line 284 */
+    connector.sender = mkSender ( container.name, container, proto_conn [ "source_port"])/* line 285 */;
+    connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 286 */;
     return  connector;        /* line 287 *//* line 288 *//* line 289 */
 }
                               /* line 290 */
 function container_instantiator (reg,owner,container_name,desc) {/* line 291 *//* line 292 */
-    container = make_container ( container_name, owner)/* line 293 */
-    children = []             /* line 294 */
-    children_by_id = {}
+    let container = make_container ( container_name, owner)/* line 293 */;
+    let children = [];        /* line 294 */
+    let children_by_id = {};
     /*  not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here *//* line 295 */
     /*  collect children */   /* line 296 */
     for (child_desc in  desc [ "children"]) {/* line 297 */
-      child_instance = get_component_instance ( reg, child_desc [ "name"], container)/* line 298 */
+      let child_instance = get_component_instance ( reg, child_desc [ "name"], container)/* line 298 */;
       children.push ( child_instance) /* line 299 */
-      id =  child_desc [ "id"]/* line 300 */
-      let  children_by_id [id] =  child_instance;/* line 301 *//* line 302 *//* line 303 */}
-    let  container.children =  children;/* line 304 *//* line 305 */
-    connectors = []           /* line 306 */
+      let id =  child_desc [ "id"];/* line 300 */
+      children_by_id [id] =  child_instance;/* line 301 *//* line 302 *//* line 303 */}
+    container.children =  children;/* line 304 *//* line 305 */
+    let connectors = [];      /* line 306 */
     for (proto_conn in  desc [ "connections"]) {/* line 307 */
-      connector =  new Connector ();/* line 308 */
+      let  connector =  new Connector ();/* line 308 */;
       if ( proto_conn [ "dir"] ==  enumDown) {/* line 309 */
         connectors.push (create_down_connector ( container, proto_conn, connectors, children_by_id)) /* line 310 */}
       else if ( proto_conn [ "dir"] ==  enumAcross) {/* line 311 */
@@ -287,7 +293,7 @@ function container_instantiator (reg,owner,container_name,desc) {/* line 291 *//
         connectors.push (create_up_connector ( container, proto_conn, connectors, children_by_id)) /* line 314 */}
       else if ( proto_conn [ "dir"] ==  enumThrough) {/* line 315 */
         connectors.push (create_through_connector ( container, proto_conn, connectors, children_by_id)) /* line 316 *//* line 317 */}/* line 318 */}
-    let  container.connections =  connectors;/* line 319 */
+    container.connections =  connectors;/* line 319 */
     return  container;        /* line 320 *//* line 321 *//* line 322 */
 }
 
@@ -306,62 +312,71 @@ function destroy_container (eh) {/* line 331 *//* line 332 *//* line 333 *//* li
 /*  Routing connection for a container component. The `direction` field has *//* line 335 */
 /*  no affect on the default message routing system _ it is there for debugging *//* line 336 */
 /*  purposes, or for reading by other tools. *//* line 337 *//* line 338 */
-class Connector:
-  def __init__ (self,):       /* line 339 */
+class Connector {
+  constructor () {            /* line 339 */
+
     this.direction =  null;/*  down, across, up, through *//* line 340 */
     this.sender =  null;      /* line 341 */
     this.receiver =  null;    /* line 342 *//* line 343 */
+  }
+}
                               /* line 344 */
 /*  `Sender` is used to “pattern match“ which `Receiver` a message should go to, *//* line 345 */
 /*  based on component ID (pointer) and port name. *//* line 346 *//* line 347 */
-class Sender:
-  def __init__ (self,):       /* line 348 */
+class Sender {
+  constructor () {            /* line 348 */
+
     this.name =  null;        /* line 349 */
     this.component =  null;   /* line 350 */
     this.port =  null;        /* line 351 *//* line 352 */
+  }
+}
                               /* line 353 *//* line 354 *//* line 355 */
 /*  `Receiver` is a handle to a destination queue, and a `port` name to assign *//* line 356 */
 /*  to incoming messages to this queue. *//* line 357 *//* line 358 */
-class Receiver:
-  def __init__ (self,):       /* line 359 */
+class Receiver {
+  constructor () {            /* line 359 */
+
     this.name =  null;        /* line 360 */
     this.queue =  null;       /* line 361 */
     this.port =  null;        /* line 362 */
     this.component =  null;   /* line 363 *//* line 364 */
+  }
+}
                               /* line 365 */
 function mkSender (name,component,port) {/* line 366 */
-    s =  new Sender ();       /* line 367 */
-    let  s.name =  name;      /* line 368 */
-    let  s.component =  component;/* line 369 */
-    let  s.port =  port;      /* line 370 */
+    let  s =  new Sender ();  /* line 367 */;
+    s.name =  name;           /* line 368 */
+    s.component =  component; /* line 369 */
+    s.port =  port;           /* line 370 */
     return  s;                /* line 371 *//* line 372 *//* line 373 */
 }
 
 function mkReceiver (name,component,port,q) {/* line 374 */
-    r =  new Receiver ();     /* line 375 */
-    let  r.name =  name;      /* line 376 */
-    let  r.component =  component;/* line 377 */
-    let  r.port =  port;      /* line 378 */
+    let  r =  new Receiver ();/* line 375 */;
+    r.name =  name;           /* line 376 */
+    r.component =  component; /* line 377 */
+    r.port =  port;           /* line 378 */
     /*  We need a way to determine which queue to target. "Down" and "Across" go to inq, "Up" and "Through" go to outq. *//* line 379 */
-    let  r.queue =  q;        /* line 380 */
+    r.queue =  q;             /* line 380 */
     return  r;                /* line 381 *//* line 382 *//* line 383 */
 }
 
 /*  Checks if two senders match, by pointer equality and port name matching. *//* line 384 */
 function sender_eq (s1,s2) {  /* line 385 */
-    same_components = ( s1.component ==  s2.component)/* line 386 */
-    same_ports = ( s1.port ==  s2.port)/* line 387 */
-    return  same_components and  same_ports;/* line 388 *//* line 389 *//* line 390 */
+    let same_components = ( s1.component ==  s2.component);/* line 386 */
+    let same_ports = ( s1.port ==  s2.port);/* line 387 */
+    return (( same_components) && ( same_ports));/* line 388 *//* line 389 *//* line 390 */
 }
 
 /*  Delivers the given message to the receiver of this connector. *//* line 391 *//* line 392 */
 function deposit (parent,conn,message) {/* line 393 */
-    new_message = make_message ( conn.receiver.port, message.datum)/* line 394 */
+    let new_message = make_message ( conn.receiver.port, message.datum)/* line 394 */;
     push_message ( parent, conn.receiver.component, conn.receiver.queue, new_message)/* line 395 *//* line 396 *//* line 397 */
 }
 
 function force_tick (parent,eh) {/* line 398 */
-    tick_msg = make_message ( ".",new_datum_tick ())/* line 399 */
+    let tick_msg = make_message ( ".",new_datum_tick ())/* line 399 */;
     push_message ( parent, eh, eh.inq, tick_msg)/* line 400 */
     return  tick_msg;         /* line 401 *//* line 402 *//* line 403 */
 }
@@ -377,37 +392,37 @@ function is_self (child,container) {/* line 409 */
 }
 
 function step_child (child,msg) {/* line 414 */
-    before_state =  child.state/* line 415 */
+    let before_state =  child.state;/* line 415 */
     child.handler ( child, msg)/* line 416 */
-    after_state =  child.state/* line 417 */
-    return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"];/* line 420 *//* line 421 *//* line 422 */
+    let after_state =  child.state;/* line 417 */
+    return [(( before_state ==  "idle") && ( after_state!= "idle")),(( before_state!= "idle") && ( after_state!= "idle")),(( before_state!= "idle") && ( after_state ==  "idle"))];/* line 420 *//* line 421 *//* line 422 */
 }
 
 function step_children (container,causingMessage) {/* line 423 */
-    let  container.state =  "idle";/* line 424 */
+    container.state =  "idle";/* line 424 */
     for (child in   container.visit_ordering) {/* line 425 */
       /*  child = container represents self, skip it *//* line 426 */
-      if ((not (is_self ( child, container)))) {/* line 427 */
-        if ((not ((0=== child.inq.length)))) {/* line 428 */
-          msg =  child.inq.shift ()/* line 429 */
-          began_long_run =  null/* line 430 */
-          continued_long_run =  null/* line 431 */
-          ended_long_run =  null/* line 432 */
-          let [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)/* line 433 */;
+      if (((! (is_self ( child, container))))) {/* line 427 */
+        if (((! ((0=== child.inq.length))))) {/* line 428 */
+          let msg =  child.inq.shift ()/* line 429 */;
+          let  began_long_run =  null;/* line 430 */
+          let  continued_long_run =  null;/* line 431 */
+          let  ended_long_run =  null;/* line 432 */
+          [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, msg)/* line 433 */;
           if ( began_long_run) {/* line 434 *//* line 435 */}
           else if ( continued_long_run) {/* line 436 *//* line 437 */}
           else if ( ended_long_run) {/* line 438 *//* line 439 *//* line 440 */}
           destroy_message ( msg)/* line 441 */}
         else {                /* line 442 */
           if ( child.state!= "idle") {/* line 443 */
-            msg = force_tick ( container, child)/* line 444 */
+            let msg = force_tick ( container, child)/* line 444 */;
             child.handler ( child, msg)/* line 445 */
             destroy_message ( msg)}/* line 446 */}/* line 447 */
         if ( child.state ==  "active") {/* line 448 */
           /*  if child remains active, then the container must remain active and must propagate “ticks“ to child *//* line 449 */
-          let  container.state =  "active";/* line 450 */}/* line 451 */
-        while ((not ((0=== child.outq.length)))) {/* line 452 */
-          msg =  child.outq.shift ()/* line 453 */
+          container.state =  "active";/* line 450 */}/* line 451 */
+        while (((! ((0=== child.outq.length))))) {/* line 452 */
+          let msg =  child.outq.shift ()/* line 453 */;
           route ( container, child, msg)/* line 454 */
           destroy_message ( msg)}}/* line 455 */}/* line 456 *//* line 457 *//* line 458 *//* line 459 */
 }
@@ -424,22 +439,22 @@ function is_tick (msg) {      /* line 465 */
 /*  Routes a single message to all matching destinations, according to *//* line 469 */
 /*  the container's connection network. *//* line 470 *//* line 471 */
 function route (container,from_component,message) {/* line 472 */
-    was_sent =  false
+    let  was_sent =  false;
     /*  for checking that output went somewhere (at least during bootstrap) *//* line 473 */
-    fromname =  ""            /* line 474 */
+    let  fromname =  "";      /* line 474 */
     if (is_tick ( message)) { /* line 475 */
       for (child in  container.children) {/* line 476 */
         attempt_tick ( container, child)/* line 477 */}
-      let  was_sent =  true;  /* line 478 */}
+      was_sent =  true;       /* line 478 */}
     else {                    /* line 479 */
-      if ((not (is_self ( from_component, container)))) {/* line 480 */
-        let  fromname =  from_component.name;/* line 481 */}
-      from_sender = mkSender ( fromname, from_component, message.port)/* line 482 *//* line 483 */
+      if (((! (is_self ( from_component, container))))) {/* line 480 */
+        fromname =  from_component.name;/* line 481 */}
+      let from_sender = mkSender ( fromname, from_component, message.port)/* line 482 */;/* line 483 */
       for (connector in  container.connections) {/* line 484 */
         if (sender_eq ( from_sender, connector.sender)) {/* line 485 */
           deposit ( container, connector, message)/* line 486 */
-          let  was_sent =  true;}}/* line 487 */}
-    if (not ( was_sent)) {    /* line 488 */
+          was_sent =  true;}} /* line 487 */}
+    if ((! ( was_sent))) {    /* line 488 */
       print ( "\n\n*** Error: ***")/* line 489 */
       print ( "***")          /* line 490 */
       print ( `${ container.name}${ `${ ": message '"}${ `${ message.port}${ `${ "' from "}${ `${ fromname}${ " dropped on floor..."}` }` }` }` }` )/* line 491 */
@@ -455,7 +470,7 @@ function any_child_ready (container) {/* line 497 */
 }
 
 function child_is_ready (eh) {/* line 504 */
-    return (not ((0=== eh.outq.length))) or (not ((0=== eh.inq.length))) or ( eh.state!= "idle") or (any_child_ready ( eh));/* line 505 *//* line 506 *//* line 507 */
+    return ((((((((! ((0=== eh.outq.length))))) || (((! ((0=== eh.inq.length))))))) || (( eh.state!= "idle")))) || ((any_child_ready ( eh))));/* line 505 *//* line 506 *//* line 507 */
 }
 
 function append_routing_descriptor (container,desc) {/* line 508 */
@@ -472,21 +487,27 @@ function container_injector (container,message) {/* line 512 */
 
 
                               /* line 1 *//* line 2 *//* line 3 */
-class Component_Registry:
-  def __init__ (self,):       /* line 4 */
+class Component_Registry {
+  constructor () {            /* line 4 */
+
     this.templates = {};      /* line 5 *//* line 6 */
+  }
+}
                               /* line 7 */
-class Template:
-  def __init__ (self,):       /* line 8 */
+class Template {
+  constructor () {            /* line 8 */
+
     this.name =  null;        /* line 9 */
     this.template_data =  null;/* line 10 */
     this.instantiator =  null;/* line 11 *//* line 12 */
+  }
+}
                               /* line 13 */
 function mkTemplate (name,template_data,instantiator) {/* line 14 */
-    templ =  new Template (); /* line 15 */
-    let  templ.name =  name;  /* line 16 */
-    let  templ.template_data =  template_data;/* line 17 */
-    let  templ.instantiator =  instantiator;/* line 18 */
+    let  templ =  new Template ();/* line 15 */;
+    templ.name =  name;       /* line 16 */
+    templ.template_data =  template_data;/* line 17 */
+    templ.instantiator =  instantiator;/* line 18 */
     return  templ;            /* line 19 *//* line 20 *//* line 21 */
 }
 
@@ -499,13 +520,12 @@ function read_and_convert_json_file (pathname,filename) {/* line 22 */
     } else {
     return undefined;
     }
-    }
                               /* line 23 *//* line 24 *//* line 25 */
 }
 
 function json2internal (pathname,container_xml) {/* line 26 */
-    fname =   container_xml   /* line 27 */
-    routings = read_and_convert_json_file ( pathname, fname)/* line 28 */
+    let fname =   container_xml/* line 27 */;
+    let routings = read_and_convert_json_file ( pathname, fname)/* line 28 */;
     return  routings;         /* line 29 *//* line 30 *//* line 31 */
 }
 
@@ -525,31 +545,31 @@ function register_component_allow_overwriting (reg,template) {
 }
 
 function abstracted_register_component (reg,template,ok_to_overwrite) {/* line 43 */
-    name = mangle_name ( template.name)/* line 44 */
-    if ( reg!= null and  name in  reg.templates and not  ok_to_overwrite) {/* line 45 */
+    let name = mangle_name ( template.name)/* line 44 */;
+    if ((((((( reg!= null) && ( name))) in ( reg.templates))) && ((!  ok_to_overwrite)))) {/* line 45 */
       load_error ( `${ "Component /"}${ `${ template.name}${ "/ already declared"}` }` )/* line 46 */
       return  reg;            /* line 47 */}
     else {                    /* line 48 */
-      let  reg.templates [name] =  template;/* line 49 */
+      reg.templates [name] =  template;/* line 49 */
       return  reg;            /* line 50 *//* line 51 */}/* line 52 *//* line 53 */
 }
 
 function get_component_instance (reg,full_name,owner) {/* line 54 */
-    template_name = mangle_name ( full_name)/* line 55 */
-    if ( template_name in  reg.templates) {/* line 56 */
-      template =  reg.templates [template_name]/* line 57 */
+    let template_name = mangle_name ( full_name)/* line 55 */;
+    if ((( template_name) in ( reg.templates))) {/* line 56 */
+      let template =  reg.templates [template_name];/* line 57 */
       if (( template ==  null)) {/* line 58 */
         load_error ( `${ "Registry Error (A): Can;t find component /"}${ `${ template_name}${ "/"}` }` )/* line 59 */
         return  null;         /* line 60 */}
       else {                  /* line 61 */
-        owner_name =  ""      /* line 62 */
-        instance_name =  template_name/* line 63 */
+        let owner_name =  ""; /* line 62 */
+        let instance_name =  template_name;/* line 63 */
         if ( null!= owner) {  /* line 64 */
-          let  owner_name =  owner.name;/* line 65 */
-          let  instance_name =  `${ owner_name}${ `${ "."}${ template_name}` }` ;/* line 66 */}
+          owner_name =  owner.name;/* line 65 */
+          instance_name =  `${ owner_name}${ `${ "."}${ template_name}` }` ;/* line 66 */}
         else {                /* line 67 */
-          let  instance_name =  template_name;/* line 68 */}
-        instance =  template.instantiator ( reg, owner, instance_name, template.template_data)/* line 69 */
+          instance_name =  template_name;/* line 68 */}
+        let instance =  template.instantiator ( reg, owner, instance_name, template.template_data)/* line 69 */;
         return  instance;}    /* line 70 */}
     else {                    /* line 71 */
       load_error ( `${ "Registry Error (B): Can't find component /"}${ `${ template_name}${ "/"}` }` )/* line 72 */
@@ -585,14 +605,14 @@ function generate_shell_components (reg,container_list) {/* line 94 */
         /*  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, *//* line 102 */
         for (child_descriptor in  diagram [ "children"]) {/* line 103 */
           if (first_char_is ( child_descriptor [ "name"], "$")) {/* line 104 */
-            name =  child_descriptor [ "name"]/* line 105 */
-            cmd =   name.substring (1) .strip ()/* line 106 */
-            generated_leaf = mkTemplate ( name, shell_out_instantiate, cmd)/* line 107 */
+            let name =  child_descriptor [ "name"];/* line 105 */
+            let cmd =   name.substring (1) .strip ();/* line 106 */
+            let generated_leaf = mkTemplate ( name, shell_out_instantiate, cmd)/* line 107 */;
             register_component ( reg, generated_leaf)/* line 108 */}
           else if (first_char_is ( child_descriptor [ "name"], "'")) {/* line 109 */
-            name =  child_descriptor [ "name"]/* line 110 */
-            s =   name.substring (1) /* line 111 */
-            generated_leaf = mkTemplate ( name, string_constant_instantiate, s)/* line 112 */
+            let name =  child_descriptor [ "name"];/* line 110 */
+            let s =   name.substring (1) /* line 111 */;
+            let generated_leaf = mkTemplate ( name, string_constant_instantiate, s)/* line 112 */;
             register_component_allow_overwriting ( reg, generated_leaf)/* line 113 *//* line 114 */}/* line 115 */}/* line 116 */}/* line 117 */}
     return  reg;              /* line 118 *//* line 119 *//* line 120 */
 }
@@ -622,8 +642,9 @@ function first_char_is (s,c) {/* line 125 */
 /*  function may want whenever it is invoked again. *//* line 146 */
 /*  */                        /* line 147 *//* line 148 */
 /*  Eh_States :: enum { idle, active } *//* line 149 */
-class Eh:
-  def __init__ (self,):       /* line 150 */
+class Eh {
+  constructor () {            /* line 150 */
+
     this.name =  "";          /* line 151 */
     this.inq =  []            /* line 152 */;
     this.outq =  []           /* line 153 */;
@@ -637,48 +658,50 @@ class Eh:
     this.instance_data =  null;/* line 161 */
     this.state =  "idle";     /* line 162 *//*  bootstrap debugging *//* line 163 */
     this.kind =  null;/*  enum { container, leaf, } *//* line 164 *//* line 165 */
+  }
+}
                               /* line 166 */
 /*  Creates a component that acts as a container. It is the same as a `Eh` instance *//* line 167 */
 /*  whose handler function is `container_handler`. *//* line 168 */
 function make_container (name,owner) {/* line 169 */
-    eh =  new Eh ();          /* line 170 */
-    let  eh.name =  name;     /* line 171 */
-    let  eh.owner =  owner;   /* line 172 */
-    let  eh.handler =  container_handler;/* line 173 */
-    let  eh.finject =  container_injector;/* line 174 */
-    let  eh.state =  "idle";  /* line 175 */
-    let  eh.kind =  "container";/* line 176 */
+    let  eh =  new Eh ();     /* line 170 */;
+    eh.name =  name;          /* line 171 */
+    eh.owner =  owner;        /* line 172 */
+    eh.handler =  container_handler;/* line 173 */
+    eh.finject =  container_injector;/* line 174 */
+    eh.state =  "idle";       /* line 175 */
+    eh.kind =  "container";   /* line 176 */
     return  eh;               /* line 177 *//* line 178 *//* line 179 */
 }
 
 /*  Creates a new leaf component out of a handler function, and a data parameter *//* line 180 */
 /*  that will be passed back to your handler when called. *//* line 181 *//* line 182 */
 function make_leaf (name,owner,instance_data,handler) {/* line 183 */
-    eh =  new Eh ();          /* line 184 */
-    let  eh.name =  `${ owner.name}${ `${ "."}${ name}` }` /* line 185 */;
-    let  eh.owner =  owner;   /* line 186 */
-    let  eh.handler =  handler;/* line 187 */
-    let  eh.instance_data =  instance_data;/* line 188 */
-    let  eh.state =  "idle";  /* line 189 */
-    let  eh.kind =  "leaf";   /* line 190 */
+    let  eh =  new Eh ();     /* line 184 */;
+    eh.name =  `${ owner.name}${ `${ "."}${ name}` }` /* line 185 */;
+    eh.owner =  owner;        /* line 186 */
+    eh.handler =  handler;    /* line 187 */
+    eh.instance_data =  instance_data;/* line 188 */
+    eh.state =  "idle";       /* line 189 */
+    eh.kind =  "leaf";        /* line 190 */
     return  eh;               /* line 191 *//* line 192 *//* line 193 */
 }
 
 /*  Sends a message on the given `port` with `data`, placing it on the output *//* line 194 */
 /*  of the given component. *//* line 195 *//* line 196 */
 function send (eh,port,datum,causingMessage) {/* line 197 */
-    msg = make_message ( port, datum)/* line 198 */
+    let msg = make_message ( port, datum)/* line 198 */;
     put_output ( eh, msg)     /* line 199 *//* line 200 *//* line 201 */
 }
 
 function send_string (eh,port,s,causingMessage) {/* line 202 */
-    datum = new_datum_string ( s)/* line 203 */
-    msg = make_message ( port, datum)/* line 204 */
+    let datum = new_datum_string ( s)/* line 203 */;
+    let msg = make_message ( port, datum)/* line 204 */;
     put_output ( eh, msg)     /* line 205 *//* line 206 *//* line 207 */
 }
 
 function forward (eh,port,msg) {/* line 208 */
-    fwdmsg = make_message ( port, msg.datum)/* line 209 */
+    let fwdmsg = make_message ( port, msg.datum)/* line 209 */;
     put_output ( eh, msg)     /* line 210 *//* line 211 *//* line 212 */
 }
 
@@ -699,18 +722,18 @@ function print_output_list (eh) {/* line 225 */
 }
 
 function spaces (n) {         /* line 230 */
-    s =  ""                   /* line 231 */
+    let  s =  "";             /* line 231 */
     for (i in range( n)) {    /* line 232 */
-      let  s =  s+ " ";       /* line 233 */}
+      s =  s+ " ";            /* line 233 */}
     return  s;                /* line 234 *//* line 235 *//* line 236 */
 }
 
 function set_active (eh) {    /* line 237 */
-    let  eh.state =  "active";/* line 238 *//* line 239 *//* line 240 */
+    eh.state =  "active";     /* line 238 *//* line 239 *//* line 240 */
 }
 
 function set_idle (eh) {      /* line 241 */
-    let  eh.state =  "idle";  /* line 242 *//* line 243 *//* line 244 */
+    eh.state =  "idle";       /* line 242 *//* line 243 *//* line 244 */
 }
 
 /*  Utility for printing a specific output message. *//* line 245 *//* line 246 */
@@ -723,13 +746,13 @@ function fetch_first_output (eh,port) {/* line 247 */
 
 function print_specific_output (eh,port) {/* line 254 */
     /*  port ∷ “” */          /* line 255 */
-    datum = fetch_first_output ( eh, port)/* line 256 */
+    let  datum = fetch_first_output ( eh, port)/* line 256 */;
     console.log ( datum.srepr ());/* line 257 *//* line 258 */
 }
 
 function print_specific_output_to_stderr (eh,port) {/* line 259 */
     /*  port ∷ “” */          /* line 260 */
-    datum = fetch_first_output ( eh, port)/* line 261 */
+    let  datum = fetch_first_output ( eh, port)/* line 261 */;
     /*  I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in... *//* line 262 */
     console.error ( datum.srepr ());/* line 263 *//* line 264 *//* line 265 */
 }
@@ -741,37 +764,37 @@ function put_output (eh,msg) {/* line 266 */
 let  root_project =  "";      /* line 270 */
 let  root_0D =  "";           /* line 271 *//* line 272 */
 function set_environment (rproject,r0D) {/* line 273 *//* line 274 *//* line 275 */
-    let  root_project =  rproject;/* line 276 */
-    let  root_0D =  r0D;      /* line 277 *//* line 278 *//* line 279 */
+    root_project =  rproject; /* line 276 */
+    root_0D =  r0D;           /* line 277 *//* line 278 *//* line 279 */
 }
 
 function probe_instantiate (reg,owner,name,template_data) {/* line 280 */
-    name_with_id = gensymbol ( "?")/* line 281 */
+    let name_with_id = gensymbol ( "?")/* line 281 */;
     return make_leaf ( name_with_id, owner, null, probe_handler)/* line 282 */;/* line 283 */
 }
 
 function probeA_instantiate (reg,owner,name,template_data) {/* line 284 */
-    name_with_id = gensymbol ( "?A")/* line 285 */
+    let name_with_id = gensymbol ( "?A")/* line 285 */;
     return make_leaf ( name_with_id, owner, null, probe_handler)/* line 286 */;/* line 287 *//* line 288 */
 }
 
 function probeB_instantiate (reg,owner,name,template_data) {/* line 289 */
-    name_with_id = gensymbol ( "?B")/* line 290 */
+    let name_with_id = gensymbol ( "?B")/* line 290 */;
     return make_leaf ( name_with_id, owner, null, probe_handler)/* line 291 */;/* line 292 *//* line 293 */
 }
 
 function probeC_instantiate (reg,owner,name,template_data) {/* line 294 */
-    name_with_id = gensymbol ( "?C")/* line 295 */
+    let name_with_id = gensymbol ( "?C")/* line 295 */;
     return make_leaf ( name_with_id, owner, null, probe_handler)/* line 296 */;/* line 297 *//* line 298 */
 }
 
 function probe_handler (eh,msg) {/* line 299 */
-    s =  msg.datum.srepr ()   /* line 300 */
+    let s =  msg.datum.srepr ();/* line 300 */
     console.error ( `${ "... probe "}${ `${ eh.name}${ `${ ": "}${ s}` }` }` );/* line 301 *//* line 302 *//* line 303 */
 }
 
 function trash_instantiate (reg,owner,name,template_data) {/* line 304 */
-    name_with_id = gensymbol ( "trash")/* line 305 */
+    let name_with_id = gensymbol ( "trash")/* line 305 */;
     return make_leaf ( name_with_id, owner, null, trash_handler)/* line 306 */;/* line 307 *//* line 308 */
 }
 
@@ -779,26 +802,32 @@ function trash_handler (eh,msg) {/* line 309 */
     /*  to appease dumped_on_floor checker *//* line 310 *//* line 311 *//* line 312 */
 }
 
-class TwoMessages:
-  def __init__ (self,):       /* line 313 */
+class TwoMessages {
+  constructor () {            /* line 313 */
+
     this.firstmsg =  null;    /* line 314 */
     this.secondmsg =  null;   /* line 315 *//* line 316 */
+  }
+}
                               /* line 317 */
 /*  Deracer_States :: enum { idle, waitingForFirstmsg, waitingForSecondmsg } *//* line 318 */
-class Deracer_Instance_Data:
-  def __init__ (self,):       /* line 319 */
+class Deracer_Instance_Data {
+  constructor () {            /* line 319 */
+
     this.state =  null;       /* line 320 */
     this.buffer =  null;      /* line 321 *//* line 322 */
+  }
+}
                               /* line 323 */
 function reclaim_Buffers_from_heap (inst) {/* line 324 *//* line 325 *//* line 326 *//* line 327 */
 }
 
 function deracer_instantiate (reg,owner,name,template_data) {/* line 328 */
-    name_with_id = gensymbol ( "deracer")/* line 329 */
-    inst =  new Deracer_Instance_Data ();/* line 330 */
-    let  inst.state =  "idle";/* line 331 */
-    let  inst.buffer =  new TwoMessages ();/* line 332 */;
-    eh = make_leaf ( name_with_id, owner, inst, deracer_handler)/* line 333 */
+    let name_with_id = gensymbol ( "deracer")/* line 329 */;
+    let  inst =  new Deracer_Instance_Data ();/* line 330 */;
+    inst.state =  "idle";     /* line 331 */
+    inst.buffer =  new TwoMessages ();/* line 332 */;
+    let eh = make_leaf ( name_with_id, owner, inst, deracer_handler)/* line 333 */;
     return  eh;               /* line 334 *//* line 335 *//* line 336 */
 }
 
@@ -809,28 +838,28 @@ function send_firstmsg_then_secondmsg (eh,inst) {/* line 337 */
 }
 
 function deracer_handler (eh,msg) {/* line 343 */
-    inst =  eh.instance_data  /* line 344 */
+    let  inst =  eh.instance_data;/* line 344 */
     if ( inst.state ==  "idle") {/* line 345 */
       if ( "1" ==  msg.port) {/* line 346 */
-        let  inst.buffer.firstmsg =  msg;/* line 347 */
-        let  inst.state =  "waitingForSecondmsg";/* line 348 */}
+        inst.buffer.firstmsg =  msg;/* line 347 */
+        inst.state =  "waitingForSecondmsg";/* line 348 */}
       else if ( "2" ==  msg.port) {/* line 349 */
-        let  inst.buffer.secondmsg =  msg;/* line 350 */
-        let  inst.state =  "waitingForFirstmsg";/* line 351 */}
+        inst.buffer.secondmsg =  msg;/* line 350 */
+        inst.state =  "waitingForFirstmsg";/* line 351 */}
       else {                  /* line 352 */
         runtime_error ( `${ "bad msg.port (case A) for deracer "}${ msg.port}` )}/* line 353 */}
     else if ( inst.state ==  "waitingForFirstmsg") {/* line 354 */
       if ( "1" ==  msg.port) {/* line 355 */
-        let  inst.buffer.firstmsg =  msg;/* line 356 */
+        inst.buffer.firstmsg =  msg;/* line 356 */
         send_firstmsg_then_secondmsg ( eh, inst)/* line 357 */
-        let  inst.state =  "idle";/* line 358 */}
+        inst.state =  "idle"; /* line 358 */}
       else {                  /* line 359 */
         runtime_error ( `${ "bad msg.port (case B) for deracer "}${ msg.port}` )}/* line 360 */}
     else if ( inst.state ==  "waitingForSecondmsg") {/* line 361 */
       if ( "2" ==  msg.port) {/* line 362 */
-        let  inst.buffer.secondmsg =  msg;/* line 363 */
+        inst.buffer.secondmsg =  msg;/* line 363 */
         send_firstmsg_then_secondmsg ( eh, inst)/* line 364 */
-        let  inst.state =  "idle";/* line 365 */}
+        inst.state =  "idle"; /* line 365 */}
       else {                  /* line 366 */
         runtime_error ( `${ "bad msg.port (case C) for deracer "}${ msg.port}` )}/* line 367 */}
     else {                    /* line 368 */
@@ -838,25 +867,24 @@ function deracer_handler (eh,msg) {/* line 343 */
 }
 
 function low_level_read_text_file_instantiate (reg,owner,name,template_data) {/* line 372 */
-    name_with_id = gensymbol ( "Low Level Read Text File")/* line 373 */
+    let name_with_id = gensymbol ( "Low Level Read Text File")/* line 373 */;
     return make_leaf ( name_with_id, owner, null, low_level_read_text_file_handler)/* line 374 */;/* line 375 *//* line 376 */
 }
 
 function low_level_read_text_file_handler (eh,msg) {/* line 377 */
-    fname =  msg.datum.srepr ()/* line 378 */
+    let fname =  msg.datum.srepr ();/* line 378 */
 
     data = fs.readFileSync (fname);
     if (data) {
-      send_string (eh, "", data, msg)
+      send_string (eh, "", data, msg);
     } else {
-      send_string (eh, "✗", f"read error on file '{fname}'", msg)
-    }
+      send_string (eh, "✗", `read error on file '${fname}'`, msg);
     }
                               /* line 379 *//* line 380 *//* line 381 */
 }
 
 function ensure_string_datum_instantiate (reg,owner,name,template_data) {/* line 382 */
-    name_with_id = gensymbol ( "Ensure String Datum")/* line 383 */
+    let name_with_id = gensymbol ( "Ensure String Datum")/* line 383 */;
     return make_leaf ( name_with_id, owner, null, ensure_string_datum_handler)/* line 384 */;/* line 385 *//* line 386 */
 }
 
@@ -864,28 +892,31 @@ function ensure_string_datum_handler (eh,msg) {/* line 387 */
     if ( "string" ==  msg.datum.kind ()) {/* line 388 */
       forward ( eh, "", msg)  /* line 389 */}
     else {                    /* line 390 */
-      emsg =  `${ "*** ensure: type error (expected a string datum) but got "}${ msg.datum}` /* line 391 */
+      let emsg =  `${ "*** ensure: type error (expected a string datum) but got "}${ msg.datum}` /* line 391 */;
       send_string ( eh, "✗", emsg, msg)/* line 392 */}/* line 393 *//* line 394 */
 }
 
-class Syncfilewrite_Data:
-  def __init__ (self,):       /* line 395 */
+class Syncfilewrite_Data {
+  constructor () {            /* line 395 */
+
     this.filename =  "";      /* line 396 *//* line 397 */
+  }
+}
                               /* line 398 */
 /*  temp copy for bootstrap, sends “done“ (error during bootstrap if not wired) *//* line 399 */
 function syncfilewrite_instantiate (reg,owner,name,template_data) {/* line 400 */
-    name_with_id = gensymbol ( "syncfilewrite")/* line 401 */
-    inst =  new Syncfilewrite_Data ();/* line 402 */
+    let name_with_id = gensymbol ( "syncfilewrite")/* line 401 */;
+    let inst =  new Syncfilewrite_Data ();/* line 402 */;
     return make_leaf ( name_with_id, owner, inst, syncfilewrite_handler)/* line 403 */;/* line 404 *//* line 405 */
 }
 
 function syncfilewrite_handler (eh,msg) {/* line 406 */
-    inst =  eh.instance_data  /* line 407 */
+    let  inst =  eh.instance_data;/* line 407 */
     if ( "filename" ==  msg.port) {/* line 408 */
-      let  inst.filename =  msg.datum.srepr ();/* line 409 */}
+      inst.filename =  msg.datum.srepr ();/* line 409 */}
     else if ( "input" ==  msg.port) {/* line 410 */
-      contents =  msg.datum.srepr ()/* line 411 */
-      f = open ( inst.filename, "w")/* line 412 */
+      let contents =  msg.datum.srepr ();/* line 411 */
+      let  f = open ( inst.filename, "w")/* line 412 */;
       if ( f!= null) {        /* line 413 */
         f.write ( msg.datum.srepr ())/* line 414 */
         f.close ()            /* line 415 */
@@ -894,64 +925,67 @@ function syncfilewrite_handler (eh,msg) {/* line 406 */
         send_string ( eh, "✗", `${ "open error on file "}${ inst.filename}` , msg)}/* line 418 */}/* line 419 *//* line 420 */
 }
 
-class StringConcat_Instance_Data:
-  def __init__ (self,):       /* line 421 */
+class StringConcat_Instance_Data {
+  constructor () {            /* line 421 */
+
     this.buffer1 =  null;     /* line 422 */
     this.buffer2 =  null;     /* line 423 */
     this.scount =  0;         /* line 424 *//* line 425 */
+  }
+}
                               /* line 426 */
 function stringconcat_instantiate (reg,owner,name,template_data) {/* line 427 */
-    name_with_id = gensymbol ( "stringconcat")/* line 428 */
-    instp =  new StringConcat_Instance_Data ();/* line 429 */
+    let name_with_id = gensymbol ( "stringconcat")/* line 428 */;
+    let instp =  new StringConcat_Instance_Data ();/* line 429 */;
     return make_leaf ( name_with_id, owner, instp, stringconcat_handler)/* line 430 */;/* line 431 *//* line 432 */
 }
 
 function stringconcat_handler (eh,msg) {/* line 433 */
-    inst =  eh.instance_data  /* line 434 */
+    let  inst =  eh.instance_data;/* line 434 */
     if ( "1" ==  msg.port) {  /* line 435 */
-      let  inst.buffer1 = clone_string ( msg.datum.srepr ())/* line 436 */;
-      let  inst.scount =  inst.scount+ 1;/* line 437 */
+      inst.buffer1 = clone_string ( msg.datum.srepr ())/* line 436 */;
+      inst.scount =  inst.scount+ 1;/* line 437 */
       maybe_stringconcat ( eh, inst, msg)/* line 438 */}
     else if ( "2" ==  msg.port) {/* line 439 */
-      let  inst.buffer2 = clone_string ( msg.datum.srepr ())/* line 440 */;
-      let  inst.scount =  inst.scount+ 1;/* line 441 */
+      inst.buffer2 = clone_string ( msg.datum.srepr ())/* line 440 */;
+      inst.scount =  inst.scount+ 1;/* line 441 */
       maybe_stringconcat ( eh, inst, msg)/* line 442 */}
     else {                    /* line 443 */
       runtime_error ( `${ "bad msg.port for stringconcat: "}${ msg.port}` )/* line 444 *//* line 445 */}/* line 446 *//* line 447 */
 }
 
 function maybe_stringconcat (eh,inst,msg) {/* line 448 */
-    if (( 0 == ( inst.buffer1.length)) and ( 0 == ( inst.buffer2.length))) {/* line 449 */
+    if (((( 0 == ( inst.buffer1.length))) && (( 0 == ( inst.buffer2.length))))) {/* line 449 */
       runtime_error ( "something is wrong in stringconcat, both strings are 0 length")/* line 450 */}
     if ( inst.scount >=  2) { /* line 451 */
-      concatenated_string =  ""/* line 452 */
+      let  concatenated_string =  "";/* line 452 */
       if ( 0 == ( inst.buffer1.length)) {/* line 453 */
-        let  concatenated_string =  inst.buffer2;/* line 454 */}
+        concatenated_string =  inst.buffer2;/* line 454 */}
       else if ( 0 == ( inst.buffer2.length)) {/* line 455 */
-        let  concatenated_string =  inst.buffer1;/* line 456 */}
+        concatenated_string =  inst.buffer1;/* line 456 */}
       else {                  /* line 457 */
-        let  concatenated_string =  inst.buffer1+ inst.buffer2;/* line 458 */}
+        concatenated_string =  inst.buffer1+ inst.buffer2;/* line 458 */}
       send_string ( eh, "", concatenated_string, msg)/* line 459 */
-      let  inst.buffer1 =  null;/* line 460 */
-      let  inst.buffer2 =  null;/* line 461 */
-      let  inst.scount =  0;  /* line 462 */}/* line 463 *//* line 464 */
+      inst.buffer1 =  null;   /* line 460 */
+      inst.buffer2 =  null;   /* line 461 */
+      inst.scount =  0;       /* line 462 */}/* line 463 *//* line 464 */
 }
 
 /*  */                        /* line 465 *//* line 466 */
 /*  this needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here *//* line 467 */
 function shell_out_instantiate (reg,owner,name,template_data) {/* line 468 */
-    name_with_id = gensymbol ( "shell_out")/* line 469 */
-    cmd =  template_data.split (" ")/* line 470 */
+    let name_with_id = gensymbol ( "shell_out")/* line 469 */;
+    let cmd =  template_data.split (" ")/* line 470 */;
     return make_leaf ( name_with_id, owner, cmd, shell_out_handler)/* line 471 */;/* line 472 *//* line 473 */
 }
 
 function shell_out_handler (eh,msg) {/* line 474 */
-    cmd =  eh.instance_data   /* line 475 */
-    s =  msg.datum.srepr ()   /* line 476 */
-    ret =  null               /* line 477 */
-    rc =  null                /* line 478 */
-    stdout =  null            /* line 479 */
-    stderr =  null            /* line 480 */
+    let cmd =  eh.instance_data;/* line 475 */
+    let s =  msg.datum.srepr ();/* line 476 */
+    let  ret =  null;         /* line 477 */
+    let  rc =  null;          /* line 478 */
+    let  stdout =  null;      /* line 479 */
+    let  stderr =  null;      /* line 480 */
 
     stdout = execSync(`${ cmd} ${ s}`, { encoding: 'utf-8' });
     ret = true;
@@ -963,17 +997,17 @@ function shell_out_handler (eh,msg) {/* line 474 */
 }
 
 function string_constant_instantiate (reg,owner,name,template_data) {/* line 489 *//* line 490 *//* line 491 */
-    name_with_id = gensymbol ( "strconst")/* line 492 */
-    s =  template_data        /* line 493 */
+    let name_with_id = gensymbol ( "strconst")/* line 492 */;
+    let  s =  template_data;  /* line 493 */
     if ( root_project!= "") { /* line 494 */
-      let  s =  s.replaceAll ( "_00_",  root_project)/* line 495 */;/* line 496 */}
+      s =  s.replaceAll ( "_00_",  root_project)/* line 495 */;/* line 496 */}
     if ( root_0D!= "") {      /* line 497 */
-      let  s =  s.replaceAll ( "_0D_",  root_0D)/* line 498 */;/* line 499 */}
+      s =  s.replaceAll ( "_0D_",  root_0D)/* line 498 */;/* line 499 */}
     return make_leaf ( name_with_id, owner, s, string_constant_handler)/* line 500 */;/* line 501 *//* line 502 */
 }
 
 function string_constant_handler (eh,msg) {/* line 503 */
-    s =  eh.instance_data     /* line 504 */
+    let s =  eh.instance_data;/* line 504 */
     send_string ( eh, "", s, msg)/* line 505 *//* line 506 *//* line 507 */
 }
 
@@ -990,10 +1024,10 @@ function string_clone (s) {   /* line 513 */
 /*  where ${_00_} is the root directory for the project *//* line 518 */
 /*  where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python) *//* line 519 *//* line 520 */
 function initialize_component_palette (root_project,root_0D,diagram_source_files) {/* line 521 */
-    reg = make_component_registry ()/* line 522 */
+    let  reg = make_component_registry ();/* line 522 */
     for (diagram_source in  diagram_source_files) {/* line 523 */
-      all_containers_within_single_file = json2internal ( root_project, diagram_source)/* line 524 */
-      let  reg = generate_shell_components ( reg, all_containers_within_single_file)/* line 525 */;
+      let all_containers_within_single_file = json2internal ( root_project, diagram_source)/* line 524 */;
+      reg = generate_shell_components ( reg, all_containers_within_single_file)/* line 525 */;
       for (container in  all_containers_within_single_file) {/* line 526 */
         register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))/* line 527 *//* line 528 */}/* line 529 */}
     initialize_stock_components ( reg)/* line 530 */
@@ -1001,9 +1035,9 @@ function initialize_component_palette (root_project,root_0D,diagram_source_files
 }
 
 function print_error_maybe (main_container) {/* line 534 */
-    error_port =  "✗"         /* line 535 */
-    err = fetch_first_output ( main_container, error_port)/* line 536 */
-    if (( err!= null) and ( 0 < (trimws ( err.srepr ()).length))) {/* line 537 */
+    let error_port =  "✗";    /* line 535 */
+    let err = fetch_first_output ( main_container, error_port)/* line 536 */;
+    if (((( err!= null)) && (( 0 < (trimws ( err.srepr ()).length))))) {/* line 537 */
       console.log ( "___ !!! ERRORS !!! ___");/* line 538 */
       print_specific_output ( main_container, error_port)/* line 539 */}/* line 540 *//* line 541 */
 }
@@ -1033,22 +1067,22 @@ let  runtime_errors =  false; /* line 564 *//* line 565 */
 function load_error (s) {     /* line 566 *//* line 567 */
     console.log ( s);         /* line 568 */
     console.log ();           /* line 569 */
-    let  load_errors =  true; /* line 570 *//* line 571 *//* line 572 */
+    load_errors =  true;      /* line 570 *//* line 571 *//* line 572 */
 }
 
 function runtime_error (s) {  /* line 573 *//* line 574 */
     console.log ( s);         /* line 575 */
-    let  runtime_errors =  true;/* line 576 *//* line 577 *//* line 578 */
+    runtime_errors =  true;   /* line 576 *//* line 577 *//* line 578 */
 }
 
 function fakepipename_instantiate (reg,owner,name,template_data) {/* line 579 */
-    instance_name = gensymbol ( "fakepipe")/* line 580 */
+    let instance_name = gensymbol ( "fakepipe")/* line 580 */;
     return make_leaf ( instance_name, owner, null, fakepipename_handler)/* line 581 */;/* line 582 *//* line 583 */
 }
 
 let  rand =  0;               /* line 584 *//* line 585 */
 function fakepipename_handler (eh,msg) {/* line 586 *//* line 587 */
-    let  rand =  rand+ 1;
+    rand =  rand+ 1;
     /*  not very random, but good enough _ 'rand' must be unique within a single run *//* line 588 */
     send_string ( eh, "", `${ "/tmp/fakepipe"}${ rand}` , msg)/* line 589 *//* line 590 *//* line 591 */
 }
@@ -1075,12 +1109,12 @@ function argv () {            /* line 613 */
 }
 
 function initialize () {      /* line 617 */
-    root_of_project =  argv[ 1] /* line 618 */
-    root_of_0D =  argv[ 2]    /* line 619 */
-    arg =  argv[ 3]           /* line 620 */
-    main_container_name =  argv[ 4] /* line 621 */
-    diagram_names =  argv.splice (0,  5-1) /* line 622 */
-    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)/* line 623 */
+    let root_of_project =  argv[ 1] /* line 618 */;
+    let root_of_0D =  argv[ 2] /* line 619 */;
+    let arg =  argv[ 3]       /* line 620 */;
+    let main_container_name =  argv[ 4] /* line 621 */;
+    let diagram_names =  argv.splice (0,  5-1) /* line 622 */;
+    let palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)/* line 623 */;
     return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]];/* line 624 *//* line 625 *//* line 626 */
 }
 
@@ -1093,25 +1127,25 @@ function start_show_all (palette,env) {
 }
 
 function start_helper (palette,env,show_all_outputs) {/* line 629 */
-    root_of_project =  env [ 0]/* line 630 */
-    root_of_0D =  env [ 1]    /* line 631 */
-    main_container_name =  env [ 2]/* line 632 */
-    diagram_names =  env [ 3] /* line 633 */
-    arg =  env [ 4]           /* line 634 */
+    let root_of_project =  env [ 0];/* line 630 */
+    let root_of_0D =  env [ 1];/* line 631 */
+    let main_container_name =  env [ 2];/* line 632 */
+    let diagram_names =  env [ 3];/* line 633 */
+    let arg =  env [ 4];      /* line 634 */
     set_environment ( root_of_project, root_of_0D)/* line 635 */
     /*  get entrypoint container *//* line 636 */
-    main_container = get_component_instance ( palette, main_container_name, null)/* line 637 */
+    let  main_container = get_component_instance ( palette, main_container_name, null)/* line 637 */;
     if ( null ==  main_container) {/* line 638 */
       load_error ( `${ "Couldn't find container with page name /"}${ `${ main_container_name}${ `${ "/ in files "}${ `${`${ diagram_names}`}${ " (check tab names, or disable compression?)"}` }` }` }` )/* line 642 *//* line 643 */}
-    if (not  load_errors) {   /* line 644 */
-      arg = new_datum_string ( arg)/* line 645 */
-      msg = make_message ( "", arg)/* line 646 */
+    if ((!  load_errors)) {   /* line 644 */
+      let  arg = new_datum_string ( arg)/* line 645 */;
+      let  msg = make_message ( "", arg)/* line 646 */;
       inject ( main_container, msg)/* line 647 */
       if ( show_all_outputs) {/* line 648 */
         dump_outputs ( main_container)/* line 649 */}
       else {                  /* line 650 */
         print_error_maybe ( main_container)/* line 651 */
-        outp = fetch_first_output ( main_container, "")/* line 652 */
+        let outp = fetch_first_output ( main_container, "")/* line 652 */;
         if ( null ==  outp) { /* line 653 */
           console.log ( "(no outputs)");/* line 654 */}
         else {                /* line 655 */
@@ -1122,12 +1156,12 @@ function start_helper (palette,env,show_all_outputs) {/* line 629 */
                               /* line 665 *//* line 666 */
 /*  utility functions  */     /* line 667 */
 function send_int (eh,port,i,causing_message) {/* line 668 */
-    datum = new_datum_int ( i)/* line 669 */
+    let datum = new_datum_int ( i)/* line 669 */;
     send ( eh, port, datum, causing_message)/* line 670 *//* line 671 *//* line 672 */
 }
 
 function send_bang (eh,port,causing_message) {/* line 673 */
-    datum = new_datum_bang () /* line 674 */
+    let datum = new_datum_bang ();/* line 674 */
     send ( eh, port, datum, causing_message)/* line 675 *//* line 676 *//* line 677 */
 }
 

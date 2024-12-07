@@ -130,9 +130,9 @@ x)))
   )
 (defun clone_datum_string (&optional  d)
   (declare (ignorable  d))                                  #|line 50|#
-  (let ((d (funcall (quote new_datum_string)  (slot-value  d 'data)  #|line 51|#)))
-    (declare (ignorable d))
-    (return-from clone_datum_string  d)                     #|line 52|#) #|line 53|#
+  (let ((newd (funcall (quote new_datum_string)  (slot-value  d 'data)  #|line 51|#)))
+    (declare (ignorable newd))
+    (return-from clone_datum_string  newd)                  #|line 52|#) #|line 53|#
   )
 (defun reclaim_datum_string (&optional  src)
   (declare (ignorable  src))                                #|line 55|#

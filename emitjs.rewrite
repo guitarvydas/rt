@@ -45,10 +45,9 @@ External [x line?] = ‛«x»«line»’
 ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
     data = fs.readFileSync («fname»);
     if (data) {⤷
-            send_string (eh, «ok», data, «msg»);⤶
-        } else {⤷
-            send_string (eh, «err», \`read error on file '\$\{«fname»}'\`, «msg»);⤶
-	}
+        send_string (eh, «ok», data, «msg»);⤶
+    } else {⤷
+        send_string (eh, «err», \`read error on file '\$\{«fname»}'\`, «msg»);⤶
     }
 ’
 
