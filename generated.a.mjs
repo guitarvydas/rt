@@ -1,9 +1,9 @@
 
 
 import * as fs from 'fs';
-var path = require('path');
+import path from 'path';
 const argv = process.argv.slice(2);
-const execSync = require('child_process').execSync;
+import execSync from 'child_process';
                               /* line 1 *//* line 2 */
 let  counter =  0;            /* line 3 *//* line 4 */
 let  digits = [ "₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀", "₂₁", "₂₂", "₂₃", "₂₄", "₂₅", "₂₆", "₂₇", "₂₈", "₂₉"];/* line 11 *//* line 12 *//* line 13 */

@@ -723,96 +723,90 @@
   #|  for fakepipe |#                                       #|line 609|#
   (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "fakepipename"  nil  #'fakepipename_instantiate )  #|line 610|#) #|line 611|#
   )
-(defun argv (&optional )
-  (declare (ignorable ))                                    #|line 613|#
-
-  (get-main-args)
-                                                            #|line 614|# #|line 615|#
-  )
 (defun initialize (&optional )
-  (declare (ignorable ))                                    #|line 617|#
-  (let ((root_of_project  (nth  1 (argv))                   #|line 618|#))
+  (declare (ignorable ))                                    #|line 613|#
+  (let ((root_of_project  (nth  1 (argv))                   #|line 614|#))
     (declare (ignorable root_of_project))
-    (let ((root_of_0D  (nth  2 (argv))                      #|line 619|#))
+    (let ((root_of_0D  (nth  2 (argv))                      #|line 615|#))
       (declare (ignorable root_of_0D))
-      (let ((arg  (nth  3 (argv))                           #|line 620|#))
+      (let ((arg  (nth  3 (argv))                           #|line 616|#))
         (declare (ignorable arg))
-        (let ((main_container_name  (nth  4 (argv))         #|line 621|#))
+        (let ((main_container_name  (nth  4 (argv))         #|line 617|#))
           (declare (ignorable main_container_name))
-          (let ((diagram_names  (nthcdr  5 (argv))          #|line 622|#))
+          (let ((diagram_names  (nthcdr  5 (argv))          #|line 618|#))
             (declare (ignorable diagram_names))
-            (let ((palette (funcall (quote initialize_component_palette)   root_of_project  root_of_0D  diagram_names  #|line 623|#)))
+            (let ((palette (funcall (quote initialize_component_palette)   root_of_project  root_of_0D  diagram_names  #|line 619|#)))
               (declare (ignorable palette))
-              (return-from initialize (values  palette (list   root_of_project  root_of_0D  main_container_name  diagram_names  arg ))) #|line 624|#)))))) #|line 625|#
+              (return-from initialize (values  palette (list   root_of_project  root_of_0D  main_container_name  diagram_names  arg ))) #|line 620|#)))))) #|line 621|#
   )
 (defun start (&optional  palette  env)
   (declare (ignorable  palette  env))
-  (funcall (quote start_helper)   palette  env  nil )       #|line 627|#
+  (funcall (quote start_helper)   palette  env  nil )       #|line 623|#
   )
 (defun start_show_all (&optional  palette  env)
   (declare (ignorable  palette  env))
-  (funcall (quote start_helper)   palette  env  t )         #|line 628|#
+  (funcall (quote start_helper)   palette  env  t )         #|line 624|#
   )
 (defun start_helper (&optional  palette  env  show_all_outputs)
-  (declare (ignorable  palette  env  show_all_outputs))     #|line 629|#
+  (declare (ignorable  palette  env  show_all_outputs))     #|line 625|#
   (let ((root_of_project (nth  0  env)))
-    (declare (ignorable root_of_project))                   #|line 630|#
+    (declare (ignorable root_of_project))                   #|line 626|#
     (let ((root_of_0D (nth  1  env)))
-      (declare (ignorable root_of_0D))                      #|line 631|#
+      (declare (ignorable root_of_0D))                      #|line 627|#
       (let ((main_container_name (nth  2  env)))
-        (declare (ignorable main_container_name))           #|line 632|#
+        (declare (ignorable main_container_name))           #|line 628|#
         (let ((diagram_names (nth  3  env)))
-          (declare (ignorable diagram_names))               #|line 633|#
+          (declare (ignorable diagram_names))               #|line 629|#
           (let ((arg (nth  4  env)))
-            (declare (ignorable arg))                       #|line 634|#
-            (funcall (quote set_environment)   root_of_project  root_of_0D  #|line 635|#)
-            #|  get entrypoint container |#                 #|line 636|#
-            (let (( main_container (funcall (quote get_component_instance)   palette  main_container_name  nil  #|line 637|#)))
+            (declare (ignorable arg))                       #|line 630|#
+            (funcall (quote set_environment)   root_of_project  root_of_0D  #|line 631|#)
+            #|  get entrypoint container |#                 #|line 632|#
+            (let (( main_container (funcall (quote get_component_instance)   palette  main_container_name  nil  #|line 633|#)))
               (declare (ignorable  main_container))
               (cond
-                (( equal    nil  main_container)            #|line 638|#
-                  (funcall (quote load_error)   (concatenate 'string  "Couldn't find container with page name /"  (concatenate 'string  main_container_name  (concatenate 'string  "/ in files "  (concatenate 'string (format nil "~a"  diagram_names)  " (check tab names, or disable compression?)"))))  #|line 642|#) #|line 643|#
+                (( equal    nil  main_container)            #|line 634|#
+                  (funcall (quote load_error)   (concatenate 'string  "Couldn't find container with page name /"  (concatenate 'string  main_container_name  (concatenate 'string  "/ in files "  (concatenate 'string (format nil "~a"  diagram_names)  " (check tab names, or disable compression?)"))))  #|line 638|#) #|line 639|#
                   ))
               (cond
-                ((not  load_errors)                         #|line 644|#
-                  (let (( arg (funcall (quote new_datum_string)   arg  #|line 645|#)))
+                ((not  load_errors)                         #|line 640|#
+                  (let (( arg (funcall (quote new_datum_string)   arg  #|line 641|#)))
                     (declare (ignorable  arg))
-                    (let (( msg (funcall (quote make_message)   ""  arg  #|line 646|#)))
+                    (let (( msg (funcall (quote make_message)   ""  arg  #|line 642|#)))
                       (declare (ignorable  msg))
-                      (funcall (quote inject)   main_container  msg  #|line 647|#)
+                      (funcall (quote inject)   main_container  msg  #|line 643|#)
                       (cond
-                        ( show_all_outputs                  #|line 648|#
-                          (funcall (quote dump_outputs)   main_container  #|line 649|#)
+                        ( show_all_outputs                  #|line 644|#
+                          (funcall (quote dump_outputs)   main_container  #|line 645|#)
                           )
-                        (t                                  #|line 650|#
-                          (funcall (quote print_error_maybe)   main_container  #|line 651|#)
-                          (let ((outp (funcall (quote fetch_first_output)   main_container  ""  #|line 652|#)))
+                        (t                                  #|line 646|#
+                          (funcall (quote print_error_maybe)   main_container  #|line 647|#)
+                          (let ((outp (funcall (quote fetch_first_output)   main_container  ""  #|line 648|#)))
                             (declare (ignorable outp))
                             (cond
-                              (( equal    nil  outp)        #|line 653|#
-                                (format *standard-output* "~a"  "(no outputs)") #|line 654|#
+                              (( equal    nil  outp)        #|line 649|#
+                                (format *standard-output* "~a"  "(no outputs)") #|line 650|#
                                 )
-                              (t                            #|line 655|#
-                                (funcall (quote print_specific_output)   main_container  ""  #|line 656|#) #|line 657|#
-                                )))                         #|line 658|#
+                              (t                            #|line 651|#
+                                (funcall (quote print_specific_output)   main_container  ""  #|line 652|#) #|line 653|#
+                                )))                         #|line 654|#
                           ))
                       (cond
-                        ( show_all_outputs                  #|line 659|#
-                          (format *standard-output* "~a"  "--- done ---") #|line 660|# #|line 661|#
-                          ))))                              #|line 662|#
-                  ))))))))                                  #|line 663|#
-  )                                                         #|line 665|# #|line 666|# #|  utility functions  |# #|line 667|#
+                        ( show_all_outputs                  #|line 655|#
+                          (format *standard-output* "~a"  "--- done ---") #|line 656|# #|line 657|#
+                          ))))                              #|line 658|#
+                  ))))))))                                  #|line 659|#
+  )                                                         #|line 661|# #|line 662|# #|  utility functions  |# #|line 663|#
 (defun send_int (&optional  eh  port  i  causing_message)
-  (declare (ignorable  eh  port  i  causing_message))       #|line 668|#
-  (let ((datum (funcall (quote new_datum_int)   i           #|line 669|#)))
+  (declare (ignorable  eh  port  i  causing_message))       #|line 664|#
+  (let ((datum (funcall (quote new_datum_int)   i           #|line 665|#)))
     (declare (ignorable datum))
-    (funcall (quote send)   eh  port  datum  causing_message  #|line 670|#)) #|line 671|#
+    (funcall (quote send)   eh  port  datum  causing_message  #|line 666|#)) #|line 667|#
   )
 (defun send_bang (&optional  eh  port  causing_message)
-  (declare (ignorable  eh  port  causing_message))          #|line 673|#
+  (declare (ignorable  eh  port  causing_message))          #|line 669|#
   (let ((datum (funcall (quote new_datum_bang) )))
-    (declare (ignorable datum))                             #|line 674|#
-    (funcall (quote send)   eh  port  datum  causing_message  #|line 675|#)) #|line 676|#
+    (declare (ignorable datum))                             #|line 670|#
+    (funcall (quote send)   eh  port  datum  causing_message  #|line 671|#)) #|line 672|#
   )
 
 

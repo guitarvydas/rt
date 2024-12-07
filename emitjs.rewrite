@@ -74,10 +74,11 @@ ExternalPhrase_basename [_octothorpe _basename lp s rp] = ‛ «s»’
 ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 ‛
 import * as fs from 'fs';
-var path = require('path');
+import path from 'path';
 const argv = process.argv.slice(2);
-const execSync = require('child_process').execSync;
+import execSync from 'child_process';
 ’
+
 ExternalPhrase_print_stdout [_octothorpe _ lp e rp] = ‛console.log («e»);’
 ExternalPhrase_print_stderr [_octothorpe _ lp e rp] = ‛console.error («e»);’
 ExternalPhrase_print_nl [_octothorpe _ lp rp] = ‛console.log ();’

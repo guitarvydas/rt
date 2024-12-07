@@ -610,10 +610,6 @@ defn initialize_stock_components (reg) {
     register_component (reg, mkTemplate ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate))
 }
 
-defn argv () {
-    # get_argv ()
-}
-
 defn initialize () {
     root_of_project ≡ #nthargv (1) 
     root_of_0D ≡ #nthargv (2)
