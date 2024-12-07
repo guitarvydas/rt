@@ -48,8 +48,8 @@ defn new_datum_string (s) {
 }
 
 defn clone_datum_string (d) {
-  d ≡ new_datum_string (d.data)
-  return d
+  newd ≡ new_datum_string (d.data)
+  return newd
 }
 
 defn reclaim_datum_string (src) {

@@ -1,3 +1,4 @@
-defn f () {
-        x ⇐ #negate (x)
+defn low_level_read_text_file_handler (eh, msg) {
+    fname ≡ msg.datum.srepr ()
+    # low_level_read_text_file_handler (eh, msg, fname, “”, “✗”)
 }
