@@ -2,7 +2,7 @@
 
 import * as fs from 'fs';
 import path from 'path';
-const argv = process.argv.slice(2);
+const argv = process.argv.slice(1);
 import execSync from 'child_process';
                               /* line 1 *//* line 2 */
 let  counter =  0;            /* line 3 *//* line 4 */
@@ -276,14 +276,14 @@ function container_instantiator (reg,owner,container_name,desc) {/* line 291 *//
     let children_by_id = {};
     /*  not strictly necessary, but, we can remove 1 runtime lookup by “compiling it out“ here *//* line 295 */
     /*  collect children */   /* line 296 */
-    for (child_desc in  desc [ "children"]) {/* line 297 */
+    for (let child_desc of  desc [ "children"]) {/* line 297 */
       let child_instance = get_component_instance ( reg, child_desc [ "name"], container)/* line 298 */;
       children.push ( child_instance) /* line 299 */
       let id =  child_desc [ "id"];/* line 300 */
       children_by_id [id] =  child_instance;/* line 301 *//* line 302 *//* line 303 */}
     container.children =  children;/* line 304 *//* line 305 */
     let connectors = [];      /* line 306 */
-    for (proto_conn in  desc [ "connections"]) {/* line 307 */
+    for (let proto_conn of  desc [ "connections"]) {/* line 307 */
       let  connector =  new Connector ();/* line 308 */;
       if ( proto_conn [ "dir"] ==  enumDown) {/* line 309 */
         connectors.push (create_down_connector ( container, proto_conn, connectors, children_by_id)) /* line 310 */}
@@ -400,7 +400,7 @@ function step_child (child,msg) {/* line 414 */
 
 function step_children (container,causingMessage) {/* line 423 */
     container.state =  "idle";/* line 424 */
-    for (child in   container.visit_ordering) {/* line 425 */
+    for (let child of   container.visit_ordering) {/* line 425 */
       /*  child = container represents self, skip it *//* line 426 */
       if (((! (is_self ( child, container))))) {/* line 427 */
         if (((! ((0=== child.inq.length))))) {/* line 428 */
@@ -443,14 +443,14 @@ function route (container,from_component,message) {/* line 472 */
     /*  for checking that output went somewhere (at least during bootstrap) *//* line 473 */
     let  fromname =  "";      /* line 474 */
     if (is_tick ( message)) { /* line 475 */
-      for (child in  container.children) {/* line 476 */
+      for (let child of  container.children) {/* line 476 */
         attempt_tick ( container, child)/* line 477 */}
       was_sent =  true;       /* line 478 */}
     else {                    /* line 479 */
       if (((! (is_self ( from_component, container))))) {/* line 480 */
         fromname =  from_component.name;/* line 481 */}
       let from_sender = mkSender ( fromname, from_component, message.port)/* line 482 */;/* line 483 */
-      for (connector in  container.connections) {/* line 484 */
+      for (let connector of  container.connections) {/* line 484 */
         if (sender_eq ( from_sender, connector.sender)) {/* line 485 */
           deposit ( container, connector, message)/* line 486 */
           was_sent =  true;}} /* line 487 */}
@@ -463,7 +463,7 @@ function route (container,from_component,message) {/* line 472 */
 }
 
 function any_child_ready (container) {/* line 497 */
-    for (child in  container.children) {/* line 498 */
+    for (let child of  container.children) {/* line 498 */
       if (child_is_ready ( child)) {/* line 499 */
         return  true;}        /* line 500 */}
     return  false;            /* line 501 *//* line 502 *//* line 503 */

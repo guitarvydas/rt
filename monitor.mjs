@@ -15,7 +15,7 @@ function monitor_handler (eh,msg) {/* line 10 */
     while ( i >  0) {         /* line 13 */
       s =  `${ " "}${ s}`     /* line 14 */;
       i =  i- 1;              /* line 15 *//* line 16 */}
-    print ( s)                /* line 17 *//* line 18 */
+    console.log ( s);         /* line 17 *//* line 18 */
 }
 
 

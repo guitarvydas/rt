@@ -638,8 +638,8 @@ defn start_helper (palette, env, show_all_outputs) {
 			  #strcons (#asstr (diagram_names), “ (check tab names, or disable compression?)”)))))
     }
     if not load_errors {
-        deftemp arg ⇐ new_datum_string (arg)
-        deftemp msg ⇐ make_message(“”, arg)
+        deftemp marg ⇐ new_datum_string (arg)
+        deftemp msg ⇐ make_message(“”, marg)
         inject (main_container, msg)
         if show_all_outputs {
             dump_outputs (main_container)

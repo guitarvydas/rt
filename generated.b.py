@@ -577,8 +577,8 @@ def start_helper (palette,env,show_all_outputs):            #line 625
     if  None ==  main_container:                            #line 634
         load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 638#line 639
     if not  load_errors:                                    #line 640
-        arg = new_datum_string ( arg)                       #line 641
-        msg = make_message ( "", arg)                       #line 642
+        marg = new_datum_string ( arg)                      #line 641
+        msg = make_message ( "", marg)                      #line 642
         inject ( main_container, msg)                       #line 643
         if  show_all_outputs:                               #line 644
             dump_outputs ( main_container)                  #line 645

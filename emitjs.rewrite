@@ -43,7 +43,11 @@ CommaIdent [_comma ident] = ‛, «ident»’
 
 External [x line?] = ‛«x»«line»’
 ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
-    data = fs.readFileSync («fname»);
+    if (fname == "0") {
+	data = fs.readFileSync (0);
+    } else {
+        data = fs.readFileSync («fname»);
+    }
     if (data) {⤷
         send_string (eh, «ok», data, «msg»);⤶
     } else {⤷
@@ -52,19 +56,25 @@ ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 o
 ’
 
 ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
-    let jstr = fs.readFileSync (\`\${«pathname»}/\${«fname»}\`);
-    let drawio = null;
+console.log («fname»);
+    let jstr = undefined;
+    if (filename == "0") {
+	jstr = fs.readFileSync (0);
+    } else {
+	jstr = fs.readFileSync (\`\${pathname}/\${filename}\`);
+    }
     if (jstr) {
         return JSON.parse (jstr);
     } else {
         return undefined;
     }
 ’
+
 ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛ argv’
 ExternalPhrase_freshQueue [_octothorpe _ lp rp] = ‛ []’
 ExternalPhrase_freshStack [_octothorpe _ lp rp] = ‛ []’
 ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ new «ident» ();’
-ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ argv.splice (0, «n»-1) ’
+ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ argv.splice («n») ’
 ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ argv[«n»] ’
 ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ «e».substring (1) ’
@@ -75,7 +85,7 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 ‛
 import * as fs from 'fs';
 import path from 'path';
-const argv = process.argv.slice(2);
+const argv = process.argv.slice(1);
 import execSync from 'child_process';
 ’
 
@@ -114,7 +124,7 @@ InitStatement [ _mark ident _33 Exp fluff*] = ‛\nthis.«ident» = «Exp»;«fl
 IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif («Exp») {«StatementBlock»}«ElifStatement»«ElseStatement»«rec»’
 ElifStatement [ _37 Exp StatementBlock] = ‛\nelse if («Exp») {«StatementBlock»}’
 ElseStatement [ _39 StatementBlock] = ‛\n else {«StatementBlock»}’
-ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor («ident» in «Exp») {«StatementBlock»}«rec»’
+ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor (let «ident» of «Exp») {«StatementBlock»}«rec»’
 WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile («Exp») {«StatementBlock»}«rec»’
 
 Assignment_multiple [ _55 Lvals+ _57 _58 Exp rec?] =‛\n[«Lvals»] = «Exp»;«rec»’

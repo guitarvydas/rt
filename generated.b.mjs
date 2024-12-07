@@ -26,8 +26,13 @@ function mkTemplate (name,template_data,instantiator) {/* line 14 */
 
 function read_and_convert_json_file (pathname,filename) {/* line 22 */
 
-    let jstr = fs.readFileSync (`${pathname}/${filename}`);
-    let drawio = null;
+    console.log (filename);
+    let jstr = undefined;
+    if (filename == "0") {
+    jstr = fs.readFileSync (0);
+    } else {
+    jstr = fs.readFileSync (`${pathname}/${filename}`);
+    }
     if (jstr) {
     return JSON.parse (jstr);
     } else {
@@ -92,7 +97,7 @@ function get_component_instance (reg,full_name,owner) {/* line 54 */
 function dump_registry (reg) {/* line 76 */
     nl ()                     /* line 77 */
     console.log ( "*** PALETTE ***");/* line 78 */
-    for (c in  reg.templates) {/* line 79 */
+    for (let c of  reg.templates) {/* line 79 */
       print ( c.name)         /* line 80 */}
     console.log ( "***************");/* line 81 */
     nl ()                     /* line 82 *//* line 83 *//* line 84 */
@@ -113,10 +118,10 @@ function generate_shell_components (reg,container_list) {/* line 94 */
     /*      {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []} *//* line 97 */
     /*  ] */                  /* line 98 */
     if ( null!= container_list) {/* line 99 */
-      for (diagram in  container_list) {/* line 100 */
+      for (let diagram of  container_list) {/* line 100 */
         /*  loop through every component in the diagram and look for names that start with “$“ *//* line 101 */
         /*  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, *//* line 102 */
-        for (child_descriptor in  diagram [ "children"]) {/* line 103 */
+        for (let child_descriptor of  diagram [ "children"]) {/* line 103 */
           if (first_char_is ( child_descriptor [ "name"], "$")) {/* line 104 */
             let name =  child_descriptor [ "name"];/* line 105 */
             let cmd =   name.substring (1) .strip ();/* line 106 */
@@ -230,13 +235,13 @@ function output_list (eh) {   /* line 220 */
 
 /*  Utility for printing an array of messages. *//* line 224 */
 function print_output_list (eh) {/* line 225 */
-    for (m in   eh.outq) {    /* line 226 */
+    for (let m of   eh.outq) {/* line 226 */
       console.log (format_message ( m));/* line 227 */}/* line 228 *//* line 229 */
 }
 
 function spaces (n) {         /* line 230 */
     let  s =  "";             /* line 231 */
-    for (i in range( n)) {    /* line 232 */
+    for (let i of range( n)) {/* line 232 */
       s =  s+ " ";            /* line 233 */}
     return  s;                /* line 234 *//* line 235 *//* line 236 */
 }
@@ -251,7 +256,7 @@ function set_idle (eh) {      /* line 241 */
 
 /*  Utility for printing a specific output message. *//* line 245 *//* line 246 */
 function fetch_first_output (eh,port) {/* line 247 */
-    for (msg in   eh.outq) {  /* line 248 */
+    for (let msg of   eh.outq) {/* line 248 */
       if (( msg.port ==  port)) {/* line 249 */
         return  msg.datum;}   /* line 250 */}
     return  null;             /* line 251 *//* line 252 *//* line 253 */
@@ -387,7 +392,11 @@ function low_level_read_text_file_instantiate (reg,owner,name,template_data) {/*
 function low_level_read_text_file_handler (eh,msg) {/* line 377 */
     let fname =  msg.datum.srepr ();/* line 378 */
 
+    if (fname == "0") {
+    data = fs.readFileSync (0);
+    } else {
     data = fs.readFileSync (fname);
+    }
     if (data) {
       send_string (eh, "", data, msg);
     } else {
@@ -538,10 +547,10 @@ function string_clone (s) {   /* line 513 */
 /*  where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python) *//* line 519 *//* line 520 */
 function initialize_component_palette (root_project,root_0D,diagram_source_files) {/* line 521 */
     let  reg = make_component_registry ();/* line 522 */
-    for (diagram_source in  diagram_source_files) {/* line 523 */
+    for (let diagram_source of  diagram_source_files) {/* line 523 */
       let all_containers_within_single_file = json2internal ( root_project, diagram_source)/* line 524 */;
       reg = generate_shell_components ( reg, all_containers_within_single_file)/* line 525 */;
-      for (container in  all_containers_within_single_file) {/* line 526 */
+      for (let container of  all_containers_within_single_file) {/* line 526 */
         register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))/* line 527 *//* line 528 */}/* line 529 */}
     initialize_stock_components ( reg)/* line 530 */
     return  reg;              /* line 531 *//* line 532 *//* line 533 */
@@ -622,7 +631,7 @@ function initialize () {      /* line 613 */
     let root_of_0D =  argv[ 2] /* line 615 */;
     let arg =  argv[ 3]       /* line 616 */;
     let main_container_name =  argv[ 4] /* line 617 */;
-    let diagram_names =  argv.splice (0,  5-1) /* line 618 */;
+    let diagram_names =  argv.splice ( 5) /* line 618 */;
     let palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)/* line 619 */;
     return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]];/* line 620 *//* line 621 *//* line 622 */
 }
@@ -647,8 +656,8 @@ function start_helper (palette,env,show_all_outputs) {/* line 625 */
     if ( null ==  main_container) {/* line 634 */
       load_error ( `${ "Couldn't find container with page name /"}${ `${ main_container_name}${ `${ "/ in files "}${ `${`${ diagram_names}`}${ " (check tab names, or disable compression?)"}` }` }` }` )/* line 638 *//* line 639 */}
     if ((!  load_errors)) {   /* line 640 */
-      let  arg = new_datum_string ( arg)/* line 641 */;
-      let  msg = make_message ( "", arg)/* line 642 */;
+      let  marg = new_datum_string ( arg)/* line 641 */;
+      let  msg = make_message ( "", marg)/* line 642 */;
       inject ( main_container, msg)/* line 643 */
       if ( show_all_outputs) {/* line 644 */
         dump_outputs ( main_container)/* line 645 */}

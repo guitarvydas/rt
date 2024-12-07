@@ -14,5 +14,5 @@ defn monitor_handler (eh, msg) {
         s ⇐ #strcons (“ ”, s)
         i ⇐ i - 1
     }
-    print (s)
+    #print_stdout (s)
 }

@@ -22,7 +22,7 @@
             (setf  s  (concatenate 'string  " "  s)         #|line 14|#)
             (setf  i (-  i  1))                             #|line 15|# #|line 16|#
             ))
-      (funcall (quote print)   s                            #|line 17|#))) #|line 18|#
+      (format *standard-output* "~a"  s)                    #|line 17|#)) #|line 18|#
   )
 
 

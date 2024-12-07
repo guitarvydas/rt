@@ -1443,9 +1443,9 @@ x)))
                   ))
               (cond
                 ((not  load_errors)                         #|line 640|#
-                  (let (( arg (funcall (quote new_datum_string)   arg  #|line 641|#)))
-                    (declare (ignorable  arg))
-                    (let (( msg (funcall (quote make_message)   ""  arg  #|line 642|#)))
+                  (let (( marg (funcall (quote new_datum_string)   arg  #|line 641|#)))
+                    (declare (ignorable  marg))
+                    (let (( msg (funcall (quote make_message)   ""  marg  #|line 642|#)))
                       (declare (ignorable  msg))
                       (funcall (quote inject)   main_container  msg  #|line 643|#)
                       (cond
@@ -1664,7 +1664,7 @@ x)))
             (setf  s  (concatenate 'string  " "  s)         #|line 14|#)
             (setf  i (-  i  1))                             #|line 15|# #|line 16|#
             ))
-      (funcall (quote print)   s                            #|line 17|#))) #|line 18|#
+      (format *standard-output* "~a"  s)                    #|line 17|#)) #|line 18|#
   )
 
 
