@@ -1,3 +1,4 @@
+emitjs.rewrite
 emitPython.rewrite
 emitcl.rewrite
 emit.ohm

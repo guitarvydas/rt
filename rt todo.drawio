@@ -33,14 +33,17 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="k3-NBaS7gSeshNO5Wvry-6" value="" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=50;dashed=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="280" y="120" width="370" height="550" as="geometry" />
+        </mxCell>
+        <mxCell id="jwDAsAfHGjH2qoedLleh-20" value="" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=50;dashed=1;container=0;" vertex="1" parent="1">
+          <mxGeometry x="270" y="700" width="370" height="240" as="geometry" />
+        </mxCell>
         <mxCell id="GOowlDmcxpSzJjVlir_V-2" value="" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#d5e8d4;strokeColor=#82b366;opacity=50;dashed=1;container=0;" vertex="1" parent="1">
           <mxGeometry x="670" y="120" width="240" height="760" as="geometry" />
         </mxCell>
         <mxCell id="GOowlDmcxpSzJjVlir_V-3" value="" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#f5f5f5;strokeColor=#666666;opacity=50;dashed=1;container=0;fontColor=#333333;textOpacity=50;" vertex="1" parent="1">
           <mxGeometry x="920" y="120" width="200" height="550" as="geometry" />
-        </mxCell>
-        <mxCell id="k3-NBaS7gSeshNO5Wvry-6" value="" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=50;dashed=1;container=0;" vertex="1" parent="1">
-          <mxGeometry x="280" y="120" width="370" height="550" as="geometry" />
         </mxCell>
         <mxCell id="k3-NBaS7gSeshNO5Wvry-1" value="REMics" style="ellipse;whiteSpace=wrap;html=1;labelBackgroundColor=none;sketch=1;curveFitting=1;jiggle=2;" vertex="1" parent="1">
           <mxGeometry x="80" y="160" width="120" height="80" as="geometry" />
@@ -128,6 +131,18 @@
         </mxCell>
         <mxCell id="jwDAsAfHGjH2qoedLleh-15" value="can the IDE be something other than a textual programming language?" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillStyle=hachure;fillColor=#f8cecc;strokeColor=#b85450;labelBackgroundColor=none;" vertex="1" parent="1">
           <mxGeometry x="950" y="360" width="130" height="88.21" as="geometry" />
+        </mxCell>
+        <mxCell id="jwDAsAfHGjH2qoedLleh-16" value="heaps" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillStyle=hachure;fillColor=#f8cecc;strokeColor=#b85450;labelBackgroundColor=none;" vertex="1" parent="1">
+          <mxGeometry x="320" y="789.9979487179487" width="120" height="88.2051282051282" as="geometry" />
+        </mxCell>
+        <mxCell id="jwDAsAfHGjH2qoedLleh-18" value="GC (Garbage Collection)" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillStyle=hachure;fillColor=#f8cecc;strokeColor=#b85450;labelBackgroundColor=none;" vertex="1" parent="1">
+          <mxGeometry x="430" y="797.9979487179487" width="120" height="88.2051282051282" as="geometry" />
+        </mxCell>
+        <mxCell id="jwDAsAfHGjH2qoedLleh-21" value="reconsider" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;sketch=1;curveFitting=1;jiggle=2;fillStyle=cross-hatch;fillColor=#f8cecc;strokeColor=#b85450;opacity=50;textOpacity=50;" vertex="1" parent="1">
+          <mxGeometry x="395" y="720" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="jwDAsAfHGjH2qoedLleh-22" value="CI/CD&lt;div&gt;(Q/A, quality)&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;sketch=1;curveFitting=1;jiggle=2;fillStyle=hachure;fillColor=#f8cecc;strokeColor=#b85450;labelBackgroundColor=none;" vertex="1" parent="1">
+          <mxGeometry x="320" y="909.9979487179487" width="120" height="88.2051282051282" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

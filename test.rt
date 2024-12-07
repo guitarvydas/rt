@@ -1,5 +1,3 @@
 defn f () {
         x ⇐ #negate (x)
 }
-
-
