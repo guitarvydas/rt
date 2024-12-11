@@ -119,18 +119,18 @@ function generate_shell_components (reg,container_list) {/* line 94 */
     /*  ] */                  /* line 98 */
     if ( null!= container_list) {/* line 99 */
       for (let diagram of  container_list) {/* line 100 */
-        /*  loop through every component in the diagram and look for names that start with “$“ *//* line 101 */
+        /*  loop through every component in the diagram and look for names that start with “$“ or “'“  *//* line 101 */
         /*  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, *//* line 102 */
         for (let child_descriptor of  diagram [ "children"]) {/* line 103 */
           if (first_char_is ( child_descriptor [ "name"], "$")) {/* line 104 */
             let name =  child_descriptor [ "name"];/* line 105 */
             let cmd =   name.substring (1) .strip ();/* line 106 */
-            let generated_leaf = mkTemplate ( name, shell_out_instantiate, cmd)/* line 107 */;
+            let generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)/* line 107 */;
             register_component ( reg, generated_leaf)/* line 108 */}
           else if (first_char_is ( child_descriptor [ "name"], "'")) {/* line 109 */
             let name =  child_descriptor [ "name"];/* line 110 */
             let s =   name.substring (1) /* line 111 */;
-            let generated_leaf = mkTemplate ( name, string_constant_instantiate, s)/* line 112 */;
+            let generated_leaf = mkTemplate ( name, s, string_constant_instantiate)/* line 112 */;
             register_component_allow_overwriting ( reg, generated_leaf)/* line 113 *//* line 114 */}/* line 115 */}/* line 116 */}/* line 117 */}
     return  reg;              /* line 118 *//* line 119 *//* line 120 */
 }

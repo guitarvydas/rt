@@ -102,18 +102,18 @@ def generate_shell_components (reg,container_list):         #line 94
     # ]                                                     #line 98
     if  None!= container_list:                              #line 99
         for diagram in  container_list:                     #line 100
-            # loop through every component in the diagram and look for names that start with “$“#line 101
+            # loop through every component in the diagram and look for names that start with “$“ or “'“ #line 101
             # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 102
             for child_descriptor in  diagram [ "children"]: #line 103
                 if first_char_is ( child_descriptor [ "name"], "$"):#line 104
                     name =  child_descriptor [ "name"]      #line 105
                     cmd =   name[1:] .strip ()              #line 106
-                    generated_leaf = mkTemplate ( name, shell_out_instantiate, cmd)#line 107
+                    generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)#line 107
                     register_component ( reg, generated_leaf)#line 108
                 elif first_char_is ( child_descriptor [ "name"], "'"):#line 109
                     name =  child_descriptor [ "name"]      #line 110
                     s =   name[1:]                          #line 111
-                    generated_leaf = mkTemplate ( name, string_constant_instantiate, s)#line 112
+                    generated_leaf = mkTemplate ( name, s, string_constant_instantiate)#line 112
                     register_component_allow_overwriting ( reg, generated_leaf)#line 113#line 114#line 115#line 116#line 117
     return  reg                                             #line 118#line 119#line 120
 
@@ -443,10 +443,12 @@ def shell_out_handler (eh,msg):                             #line 474
     rc =  None                                              #line 478
     stdout =  None                                          #line 479
     stderr =  None                                          #line 480
-    ret = subprocess.run ( cmd,   s, "UTF_8")
+
+    ret = subprocess.run (  cmd,   input= s.encode('utf-8'))
     rc = ret.returncode
-    stdout = ret.stdout
-    stderr = ret.stderr                                     #line 481
+    stdout = ret.stdout.decode('utf-8')
+    stderr = ret.stderr.decode('utf-8')
+                                                            #line 481
     if  rc!= 0:                                             #line 482
         send_string ( eh, "✗", stderr, msg)                 #line 483
     else:                                                   #line 484

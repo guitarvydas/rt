@@ -328,7 +328,7 @@ x)))
           (declare (ignorable target_component))            #|line 242|#
           (cond
             (( equal    target_component  nil)              #|line 243|#
-              (funcall (quote load_error)   (concatenate 'string  "internal error: .Down connection target internal error " (gethash  "target"  proto_conn)) ) #|line 244|#
+              (funcall (quote load_error)   (concatenate 'string  "internal error: .Down connection target internal error " (gethash  "name" (gethash  "target"  proto_conn))) ) #|line 244|#
               )
             (t                                              #|line 245|#
               (setf (slot-value  connector 'receiver) (funcall (quote mkReceiver)  (slot-value  target_component 'name)  target_component (gethash  "target_port"  proto_conn) (slot-value  target_component 'inq)  #|line 246|#)) #|line 247|#
@@ -346,13 +346,13 @@ x)))
         (declare (ignorable target_component))              #|line 255|#
         (cond
           (( equal    source_component  nil)                #|line 256|#
-            (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection source not ok " (gethash  "source"  proto_conn))  #|line 257|#)
+            (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection source not ok " (gethash  "name" (gethash  "source"  proto_conn)))  #|line 257|#)
             )
           (t                                                #|line 258|#
             (setf (slot-value  connector 'sender) (funcall (quote mkSender)  (slot-value  source_component 'name)  source_component (gethash  "source_port"  proto_conn)  #|line 259|#))
             (cond
               (( equal    target_component  nil)            #|line 260|#
-                (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection target not ok " (slot-value  proto_conn 'target))  #|line 261|#)
+                (funcall (quote load_error)   (concatenate 'string  "internal error: .Across connection target not ok " (gethash  "name" (gethash  "target"  proto_conn)))  #|line 261|#)
                 )
               (t                                            #|line 262|#
                 (setf (slot-value  connector 'receiver) (funcall (quote mkReceiver)  (slot-value  target_component 'name)  target_component (gethash  "target_port"  proto_conn) (slot-value  target_component 'inq)  #|line 263|#)) #|line 264|#
@@ -369,7 +369,7 @@ x)))
       (declare (ignorable source_component))                #|line 272|#
       (cond
         (( equal    source_component  nil)                  #|line 273|#
-          (funcall (quote print)   (concatenate 'string  "internal error: .Up connection source not ok " (gethash  "source"  proto_conn)) ) #|line 274|#
+          (funcall (quote print)   (concatenate 'string  "internal error: .Up connection source not ok " (gethash  "name" (gethash  "source"  proto_conn))) ) #|line 274|#
           )
         (t                                                  #|line 275|#
           (setf (slot-value  connector 'sender) (funcall (quote mkSender)  (slot-value  source_component 'name)  source_component (gethash  "source_port"  proto_conn)  #|line 276|#))
@@ -811,7 +811,7 @@ x)))
         do
           (progn
             diagram                                         #|line 100|#
-            #|  loop through every component in the diagram and look for names that start with “$“ |# #|line 101|#
+            #|  loop through every component in the diagram and look for names that start with “$“ or “'“  |# #|line 101|#
             #|  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |# #|line 102|#
             (loop for child_descriptor in (gethash  "children"  diagram)
               do
@@ -823,7 +823,7 @@ x)))
                         (declare (ignorable name))          #|line 105|#
                         (let ((cmd (funcall (slot-value  (subseq  name 1) 'strip) )))
                           (declare (ignorable cmd))         #|line 106|#
-                          (let ((generated_leaf (funcall (quote mkTemplate)   name  #'shell_out_instantiate  cmd  #|line 107|#)))
+                          (let ((generated_leaf (funcall (quote mkTemplate)   name  cmd  #'shell_out_instantiate  #|line 107|#)))
                             (declare (ignorable generated_leaf))
                             (funcall (quote register_component)   reg  generated_leaf  #|line 108|#))))
                       )
@@ -832,7 +832,7 @@ x)))
                         (declare (ignorable name))          #|line 110|#
                         (let ((s  (subseq  name 1)          #|line 111|#))
                           (declare (ignorable s))
-                          (let ((generated_leaf (funcall (quote mkTemplate)   name  #'string_constant_instantiate  s  #|line 112|#)))
+                          (let ((generated_leaf (funcall (quote mkTemplate)   name  s  #'string_constant_instantiate  #|line 112|#)))
                             (declare (ignorable generated_leaf))
                             (funcall (quote register_component_allow_overwriting)   reg  generated_leaf  #|line 113|#)))) #|line 114|#
                       ))                                    #|line 115|#

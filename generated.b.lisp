@@ -137,7 +137,7 @@
         do
           (progn
             diagram                                         #|line 100|#
-            #|  loop through every component in the diagram and look for names that start with “$“ |# #|line 101|#
+            #|  loop through every component in the diagram and look for names that start with “$“ or “'“  |# #|line 101|#
             #|  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, |# #|line 102|#
             (loop for child_descriptor in (gethash  "children"  diagram)
               do
@@ -149,7 +149,7 @@
                         (declare (ignorable name))          #|line 105|#
                         (let ((cmd (funcall (slot-value  (subseq  name 1) 'strip) )))
                           (declare (ignorable cmd))         #|line 106|#
-                          (let ((generated_leaf (funcall (quote mkTemplate)   name  #'shell_out_instantiate  cmd  #|line 107|#)))
+                          (let ((generated_leaf (funcall (quote mkTemplate)   name  cmd  #'shell_out_instantiate  #|line 107|#)))
                             (declare (ignorable generated_leaf))
                             (funcall (quote register_component)   reg  generated_leaf  #|line 108|#))))
                       )
@@ -158,7 +158,7 @@
                         (declare (ignorable name))          #|line 110|#
                         (let ((s  (subseq  name 1)          #|line 111|#))
                           (declare (ignorable s))
-                          (let ((generated_leaf (funcall (quote mkTemplate)   name  #'string_constant_instantiate  s  #|line 112|#)))
+                          (let ((generated_leaf (funcall (quote mkTemplate)   name  s  #'string_constant_instantiate  #|line 112|#)))
                             (declare (ignorable generated_leaf))
                             (funcall (quote register_component_allow_overwriting)   reg  generated_leaf  #|line 113|#)))) #|line 114|#
                       ))                                    #|line 115|#

@@ -228,7 +228,7 @@ function create_down_connector (container,proto_conn,connectors,children_by_id) 
     let id_proto =  target_proto [ "id"];/* line 241 */
     let target_component =  children_by_id [id_proto];/* line 242 */
     if (( target_component ==  null)) {/* line 243 */
-      load_error ( `${ "internal error: .Down connection target internal error "}${ proto_conn [ "target"]}` )/* line 244 */}
+      load_error ( `${ "internal error: .Down connection target internal error "}${( proto_conn [ "target"]) [ "name"]}` )/* line 244 */}
     else {                    /* line 245 */
       connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 246 */;/* line 247 */}
     return  connector;        /* line 248 *//* line 249 *//* line 250 */
@@ -240,11 +240,11 @@ function create_across_connector (container,proto_conn,connectors,children_by_id
     let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 254 */
     let target_component =  children_by_id [(( proto_conn [ "target"]) [ "id"])];/* line 255 */
     if ( source_component ==  null) {/* line 256 */
-      load_error ( `${ "internal error: .Across connection source not ok "}${ proto_conn [ "source"]}` )/* line 257 */}
+      load_error ( `${ "internal error: .Across connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 257 */}
     else {                    /* line 258 */
       connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 259 */;
       if ( target_component ==  null) {/* line 260 */
-        load_error ( `${ "internal error: .Across connection target not ok "}${ proto_conn.target}` )/* line 261 */}
+        load_error ( `${ "internal error: .Across connection target not ok "}${( proto_conn [ "target"]) [ "name"]}` )/* line 261 */}
       else {                  /* line 262 */
         connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 263 */;/* line 264 */}/* line 265 */}
     return  connector;        /* line 266 *//* line 267 *//* line 268 */
@@ -255,7 +255,7 @@ function create_up_connector (container,proto_conn,connectors,children_by_id) {/
     connector.direction =  "up";/* line 271 */
     let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 272 */
     if ( source_component ==  null) {/* line 273 */
-      print ( `${ "internal error: .Up connection source not ok "}${ proto_conn [ "source"]}` )/* line 274 */}
+      print ( `${ "internal error: .Up connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 274 */}
     else {                    /* line 275 */
       connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 276 */;
       connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 277 */;/* line 278 */}
@@ -606,18 +606,18 @@ function generate_shell_components (reg,container_list) {/* line 94 */
     /*  ] */                  /* line 98 */
     if ( null!= container_list) {/* line 99 */
       for (let diagram of  container_list) {/* line 100 */
-        /*  loop through every component in the diagram and look for names that start with “$“ *//* line 101 */
+        /*  loop through every component in the diagram and look for names that start with “$“ or “'“  *//* line 101 */
         /*  {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]}, *//* line 102 */
         for (let child_descriptor of  diagram [ "children"]) {/* line 103 */
           if (first_char_is ( child_descriptor [ "name"], "$")) {/* line 104 */
             let name =  child_descriptor [ "name"];/* line 105 */
             let cmd =   name.substring (1) .strip ();/* line 106 */
-            let generated_leaf = mkTemplate ( name, shell_out_instantiate, cmd)/* line 107 */;
+            let generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)/* line 107 */;
             register_component ( reg, generated_leaf)/* line 108 */}
           else if (first_char_is ( child_descriptor [ "name"], "'")) {/* line 109 */
             let name =  child_descriptor [ "name"];/* line 110 */
             let s =   name.substring (1) /* line 111 */;
-            let generated_leaf = mkTemplate ( name, string_constant_instantiate, s)/* line 112 */;
+            let generated_leaf = mkTemplate ( name, s, string_constant_instantiate)/* line 112 */;
             register_component_allow_overwriting ( reg, generated_leaf)/* line 113 *//* line 114 */}/* line 115 */}/* line 116 */}/* line 117 */}
     return  reg;              /* line 118 *//* line 119 *//* line 120 */
 }

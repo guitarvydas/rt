@@ -228,7 +228,7 @@ function create_down_connector (container,proto_conn,connectors,children_by_id) 
     let id_proto =  target_proto [ "id"];/* line 241 */
     let target_component =  children_by_id [id_proto];/* line 242 */
     if (( target_component ==  null)) {/* line 243 */
-      load_error ( `${ "internal error: .Down connection target internal error "}${ proto_conn [ "target"]}` )/* line 244 */}
+      load_error ( `${ "internal error: .Down connection target internal error "}${( proto_conn [ "target"]) [ "name"]}` )/* line 244 */}
     else {                    /* line 245 */
       connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 246 */;/* line 247 */}
     return  connector;        /* line 248 *//* line 249 *//* line 250 */
@@ -240,11 +240,11 @@ function create_across_connector (container,proto_conn,connectors,children_by_id
     let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 254 */
     let target_component =  children_by_id [(( proto_conn [ "target"]) [ "id"])];/* line 255 */
     if ( source_component ==  null) {/* line 256 */
-      load_error ( `${ "internal error: .Across connection source not ok "}${ proto_conn [ "source"]}` )/* line 257 */}
+      load_error ( `${ "internal error: .Across connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 257 */}
     else {                    /* line 258 */
       connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 259 */;
       if ( target_component ==  null) {/* line 260 */
-        load_error ( `${ "internal error: .Across connection target not ok "}${ proto_conn.target}` )/* line 261 */}
+        load_error ( `${ "internal error: .Across connection target not ok "}${( proto_conn [ "target"]) [ "name"]}` )/* line 261 */}
       else {                  /* line 262 */
         connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 263 */;/* line 264 */}/* line 265 */}
     return  connector;        /* line 266 *//* line 267 *//* line 268 */
@@ -255,7 +255,7 @@ function create_up_connector (container,proto_conn,connectors,children_by_id) {/
     connector.direction =  "up";/* line 271 */
     let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 272 */
     if ( source_component ==  null) {/* line 273 */
-      print ( `${ "internal error: .Up connection source not ok "}${ proto_conn [ "source"]}` )/* line 274 */}
+      print ( `${ "internal error: .Up connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 274 */}
     else {                    /* line 275 */
       connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 276 */;
       connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 277 */;/* line 278 */}

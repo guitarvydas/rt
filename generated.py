@@ -202,7 +202,7 @@ def create_down_connector (container,proto_conn,connectors,children_by_id):#line
     id_proto =  target_proto [ "id"]                        #line 241
     target_component =  children_by_id [id_proto]           #line 242
     if ( target_component ==  None):                        #line 243
-        load_error ( str( "internal error: .Down connection target internal error ") +  proto_conn [ "target"] )#line 244
+        load_error ( str( "internal error: .Down connection target internal error ") + ( proto_conn [ "target"]) [ "name"] )#line 244
     else:                                                   #line 245
         connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)#line 246#line 247
     return  connector                                       #line 248#line 249#line 250
@@ -213,11 +213,11 @@ def create_across_connector (container,proto_conn,connectors,children_by_id):#li
     source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])]#line 254
     target_component =  children_by_id [(( proto_conn [ "target"]) [ "id"])]#line 255
     if  source_component ==  None:                          #line 256
-        load_error ( str( "internal error: .Across connection source not ok ") +  proto_conn [ "source"] )#line 257
+        load_error ( str( "internal error: .Across connection source not ok ") + ( proto_conn [ "source"]) [ "name"] )#line 257
     else:                                                   #line 258
         connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])#line 259
         if  target_component ==  None:                      #line 260
-            load_error ( str( "internal error: .Across connection target not ok ") +  proto_conn.target )#line 261
+            load_error ( str( "internal error: .Across connection target not ok ") + ( proto_conn [ "target"]) [ "name"] )#line 261
         else:                                               #line 262
             connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)#line 263#line 264#line 265
     return  connector                                       #line 266#line 267#line 268
@@ -227,7 +227,7 @@ def create_up_connector (container,proto_conn,connectors,children_by_id):#line 2
     connector.direction =  "up"                             #line 271
     source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])]#line 272
     if  source_component ==  None:                          #line 273
-        print ( str( "internal error: .Up connection source not ok ") +  proto_conn [ "source"] )#line 274
+        print ( str( "internal error: .Up connection source not ok ") + ( proto_conn [ "source"]) [ "name"] )#line 274
     else:                                                   #line 275
         connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])#line 276
         connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)#line 277#line 278
@@ -536,18 +536,18 @@ def generate_shell_components (reg,container_list):         #line 94
     # ]                                                     #line 98
     if  None!= container_list:                              #line 99
         for diagram in  container_list:                     #line 100
-            # loop through every component in the diagram and look for names that start with “$“#line 101
+            # loop through every component in the diagram and look for names that start with “$“ or “'“ #line 101
             # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 102
             for child_descriptor in  diagram [ "children"]: #line 103
                 if first_char_is ( child_descriptor [ "name"], "$"):#line 104
                     name =  child_descriptor [ "name"]      #line 105
                     cmd =   name[1:] .strip ()              #line 106
-                    generated_leaf = mkTemplate ( name, shell_out_instantiate, cmd)#line 107
+                    generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)#line 107
                     register_component ( reg, generated_leaf)#line 108
                 elif first_char_is ( child_descriptor [ "name"], "'"):#line 109
                     name =  child_descriptor [ "name"]      #line 110
                     s =   name[1:]                          #line 111
-                    generated_leaf = mkTemplate ( name, string_constant_instantiate, s)#line 112
+                    generated_leaf = mkTemplate ( name, s, string_constant_instantiate)#line 112
                     register_component_allow_overwriting ( reg, generated_leaf)#line 113#line 114#line 115#line 116#line 117
     return  reg                                             #line 118#line 119#line 120
 
@@ -877,10 +877,12 @@ def shell_out_handler (eh,msg):                             #line 474
     rc =  None                                              #line 478
     stdout =  None                                          #line 479
     stderr =  None                                          #line 480
-    ret = subprocess.run ( cmd,   s, "UTF_8")
+
+    ret = subprocess.run (  cmd,   input= s.encode('utf-8'))
     rc = ret.returncode
-    stdout = ret.stdout
-    stderr = ret.stderr                                     #line 481
+    stdout = ret.stdout.decode('utf-8')
+    stderr = ret.stderr.decode('utf-8')
+                                                            #line 481
     if  rc!= 0:                                             #line 482
         send_string ( eh, "✗", stderr, msg)                 #line 483
     else:                                                   #line 484

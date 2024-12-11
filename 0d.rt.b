@@ -98,18 +98,18 @@ defn generate_shell_components (reg, container_list) {
     ⌈ ]⌉
     if ϕ != container_list {
         for diagram in container_list {
-            ⌈ loop through every component in the diagram and look for names that start with “$“⌉
+            ⌈ loop through every component in the diagram and look for names that start with “$“ or “'“ ⌉
             ⌈ {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},⌉
             for child_descriptor in diagram@“children” {
                 if first_char_is (child_descriptor@“name”, “$”) {
                     name ≡ child_descriptor@“name”
                     cmd ≡ #stringcdr (name).strip ()
-                    generated_leaf ≡ mkTemplate (name,  ↪︎shell_out_instantiate, cmd)
+                    generated_leaf ≡ mkTemplate (name,  cmd, ↪︎shell_out_instantiate)
                     register_component (reg, generated_leaf)
                 } elif first_char_is (child_descriptor@“name”, “'”) {
                     name ≡ child_descriptor@“name”
                     s ≡ #stringcdr (name)
-                    generated_leaf ≡ mkTemplate (name,  ↪︎string_constant_instantiate, s)
+                    generated_leaf ≡ mkTemplate (name,  s, ↪︎string_constant_instantiate)
                     register_component_allow_overwriting (reg, generated_leaf)
 		}
 	    }

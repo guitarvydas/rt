@@ -1,0 +1,52 @@
+import subprocess
+
+def run_subprocess(command_list, stdin_input=None):
+    """
+    Run a subprocess with given command list and optional stdin input.
+    
+    Args:
+        command_list (list): List of command and arguments to run
+        stdin_input (str, optional): Input to pass to subprocess stdin
+    
+    Returns:
+        dict: A dictionary containing return code, stdout, and stderr
+    """
+    try:
+        # Run the subprocess
+        result = subprocess.run(
+            command_list, 
+            input=stdin_input,  # Pass stdin input if provided
+            text=True,  # Convert input/output to text mode
+            capture_output=True  # Capture stdout and stderr
+        )
+        
+        # Return a dictionary with subprocess results
+        return {
+            'return_code': result.returncode,
+            'stdout': result.stdout.strip(),  # Remove leading/trailing whitespace
+            'stderr': result.stderr.strip()
+        }
+    
+    except Exception as e:
+        # Handle any unexpected errors during subprocess execution
+        return {
+            'return_code': None,
+            'stdout': '',
+            'stderr': str(e)
+        }
+
+#############
+
+try:
+    «ret» = subprocess.run («cmd», input=«args», text=True, capture_output=True)
+    «rc» = «ret».returncode
+    «out» = «ret».stdout.strip ()
+    «errout» = «ret».stderr.strip ()
+except Exception as e:
+    «rc» = 1
+    «rc» = 1
+    «out» = ''
+    «errout» = str(e)
+    
+
+

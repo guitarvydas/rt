@@ -241,7 +241,7 @@ defn create_down_connector (container, proto_conn, connectors, children_by_id) {
     id_proto ≡ target_proto@“id”
     target_component ≡ children_by_id@id_proto
     if (target_component = ϕ) {
-	load_error (#strcons (“internal error: .Down connection target internal error ”, proto_conn@“target”))}
+	load_error (#strcons (“internal error: .Down connection target internal error ”, (proto_conn@“target”)@“name”))}
     else{
 	connector.receiver ⇐ mkReceiver (target_component.name, target_component, proto_conn@“target_port”, target_component.inq)
     }
@@ -254,11 +254,11 @@ defn create_across_connector (container, proto_conn, connectors, children_by_id)
     source_component ≡ children_by_id@((proto_conn@“source”)@“id”)
     target_component ≡ children_by_id@((proto_conn@“target”)@“id”)
     if source_component = ϕ {
-	load_error (#strcons (“internal error: .Across connection source not ok ”, proto_conn@“source”))
+	load_error (#strcons (“internal error: .Across connection source not ok ”, (proto_conn@“source”)@“name”))
     } else {
 	connector.sender ⇐ mkSender (source_component.name, source_component, proto_conn@“source_port”)
 	if target_component = ϕ {
-	    load_error (#strcons (“internal error: .Across connection target not ok ”, proto_conn.target))
+	    load_error (#strcons (“internal error: .Across connection target not ok ”, (proto_conn@“target”)@“name”))
 	} else {
 	    connector.receiver ⇐ mkReceiver (target_component.name, target_component, proto_conn@“target_port”, target_component.inq)
 	}
@@ -271,7 +271,7 @@ defn create_up_connector (container, proto_conn, connectors, children_by_id) {
     connector.direction ⇐ “up”
     source_component ≡ children_by_id@((proto_conn@“source”)@“id”)
     if source_component = ϕ {
-	print (#strcons (“internal error: .Up connection source not ok ”, proto_conn@“source”)) }
+	print (#strcons (“internal error: .Up connection source not ok ”, (proto_conn@“source”)@“name”)) }
     else {
 	connector.sender ⇐ mkSender (source_component.name, source_component, proto_conn@“source_port”)
 	connector.receiver ⇐ mkReceiver (container.name, container, proto_conn@“target_port”, container.outq)
