@@ -163,8 +163,8 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
   (contents self))
 ’
 
-ExternalPhrase_print_stdout [_octothorpe _ lp e rp] = ‛(format *standard-output* "~a" «e»)’
-ExternalPhrase_print_stderr [_octothorpe _ lp e rp] = ‛(format *error-output* "~a" «e»)’
+ExternalPhrase_print_stdout [_octothorpe _ lp e rp] = ‛(format *standard-output* "~a~%25" «e»)’
+ExternalPhrase_print_stderr [_octothorpe _ lp e rp] = ‛(format *error-output* "~a~%25" «e»)’
 ExternalPhrase_print_nl [_octothorpe _ lp rp] = ‛(format *standard-output* "%0A")’
 ExternalPhrase_split_string_for_shell [_octothorpe _ lp s rp] = ‛(split-sequence '(#\\space) «s»)’
 ExternalPhrase_substitute [_octothorpe _ lp new_item _comma1 old_item _comma2 s rp] = ‛(substitute «new_item» «old_item» «s»)’

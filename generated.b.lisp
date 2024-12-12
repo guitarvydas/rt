@@ -106,19 +106,19 @@
 (defun dump_registry (&optional  reg)
   (declare (ignorable  reg))                                #|line 76|#
   (funcall (quote nl) )                                     #|line 77|#
-  (format *standard-output* "~a"  "*** PALETTE ***")        #|line 78|#
+  (format *standard-output* "~a~%"  "*** PALETTE ***")      #|line 78|#
   (loop for c in (slot-value  reg 'templates)
     do
       (progn
         c                                                   #|line 79|#
         (funcall (quote print)  (slot-value  c 'name) )     #|line 80|#
         ))
-  (format *standard-output* "~a"  "***************")        #|line 81|#
+  (format *standard-output* "~a~%"  "***************")      #|line 81|#
   (funcall (quote nl) )                                     #|line 82|# #|line 83|#
   )
 (defun print_stats (&optional  reg)
   (declare (ignorable  reg))                                #|line 85|#
-  (format *standard-output* "~a"  (concatenate 'string  "registry statistics: " (slot-value  reg 'stats))) #|line 86|# #|line 87|#
+  (format *standard-output* "~a~%"  (concatenate 'string  "registry statistics: " (slot-value  reg 'stats))) #|line 86|# #|line 87|#
   )
 (defun mangle_name (&optional  s)
   (declare (ignorable  s))                                  #|line 89|#
@@ -250,7 +250,7 @@
     do
       (progn
         m                                                   #|line 226|#
-        (format *standard-output* "~a" (funcall (quote format_message)   m )) #|line 227|#
+        (format *standard-output* "~a~%" (funcall (quote format_message)   m )) #|line 227|#
         ))                                                  #|line 228|#
   )
 (defun spaces (&optional  n)
@@ -291,7 +291,7 @@
   #|  port ∷ “” |#                                          #|line 255|#
   (let (( datum (funcall (quote fetch_first_output)   eh  port  #|line 256|#)))
     (declare (ignorable  datum))
-    (format *standard-output* "~a" (funcall (slot-value  datum 'srepr) )) #|line 257|#) #|line 258|#
+    (format *standard-output* "~a~%" (funcall (slot-value  datum 'srepr) )) #|line 257|#) #|line 258|#
   )
 (defun print_specific_output_to_stderr (&optional  eh  port)
   (declare (ignorable  eh  port))                           #|line 259|#
@@ -299,7 +299,7 @@
   (let (( datum (funcall (quote fetch_first_output)   eh  port  #|line 261|#)))
     (declare (ignorable  datum))
     #|  I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in... |# #|line 262|#
-    (format *error-output* "~a" (funcall (slot-value  datum 'srepr) )) #|line 263|#) #|line 264|#
+    (format *error-output* "~a~%" (funcall (slot-value  datum 'srepr) )) #|line 263|#) #|line 264|#
   )
 (defun put_output (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 266|#
@@ -340,7 +340,7 @@
   (declare (ignorable  eh  msg))                            #|line 299|#
   (let ((s (funcall (slot-value (slot-value  msg 'datum) 'srepr) )))
     (declare (ignorable s))                                 #|line 300|#
-    (format *error-output* "~a"  (concatenate 'string  "... probe "  (concatenate 'string (slot-value  eh 'name)  (concatenate 'string  ": "  s)))) #|line 301|#) #|line 302|#
+    (format *error-output* "~a~%"  (concatenate 'string  "... probe "  (concatenate 'string (slot-value  eh 'name)  (concatenate 'string  ": "  s)))) #|line 301|#) #|line 302|#
   )
 (defun trash_instantiate (&optional  reg  owner  name  template_data)
   (declare (ignorable  reg  owner  name  template_data))    #|line 304|#
@@ -658,18 +658,18 @@
       (declare (ignorable err))
       (cond
         (( and  (not (equal   err  nil)) ( <   0 (length (funcall (quote trimws)  (funcall (slot-value  err 'srepr) ) )))) #|line 537|#
-          (format *standard-output* "~a"  "___ !!! ERRORS !!! ___") #|line 538|#
+          (format *standard-output* "~a~%"  "___ !!! ERRORS !!! ___") #|line 538|#
           (funcall (quote print_specific_output)   main_container  error_port ) #|line 539|#
           ))))                                              #|line 540|#
   ) #|  debugging helpers |#                                #|line 542|# #|line 543|#
 (defun nl (&optional )
   (declare (ignorable ))                                    #|line 544|#
-  (format *standard-output* "~a"  "")                       #|line 545|# #|line 546|#
+  (format *standard-output* "~a~%"  "")                     #|line 545|# #|line 546|#
   )
 (defun dump_outputs (&optional  main_container)
   (declare (ignorable  main_container))                     #|line 548|#
   (funcall (quote nl) )                                     #|line 549|#
-  (format *standard-output* "~a"  "___ Outputs ___")        #|line 550|#
+  (format *standard-output* "~a~%"  "___ Outputs ___")      #|line 550|#
   (funcall (quote print_output_list)   main_container       #|line 551|#) #|line 552|#
   )
 (defun trimws (&optional  s)
@@ -685,14 +685,14 @@
 (defparameter  runtime_errors  nil)                         #|line 564|# #|line 565|#
 (defun load_error (&optional  s)
   (declare (ignorable  s))                                  #|line 566|# #|line 567|#
-  (format *standard-output* "~a"  s)                        #|line 568|#
+  (format *standard-output* "~a~%"  s)                      #|line 568|#
   (format *standard-output* "
   ")                                                        #|line 569|#
   (setf  load_errors  t)                                    #|line 570|# #|line 571|#
   )
 (defun runtime_error (&optional  s)
   (declare (ignorable  s))                                  #|line 573|# #|line 574|#
-  (format *standard-output* "~a"  s)                        #|line 575|#
+  (format *standard-output* "~a~%"  s)                      #|line 575|#
   (setf  runtime_errors  t)                                 #|line 576|# #|line 577|#
   )
 (defun fakepipename_instantiate (&optional  reg  owner  name  template_data)
@@ -723,90 +723,96 @@
   #|  for fakepipe |#                                       #|line 609|#
   (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "fakepipename"  nil  #'fakepipename_instantiate )  #|line 610|#) #|line 611|#
   )
-(defun initialize (&optional )
+(defun argv (&optional )
   (declare (ignorable ))                                    #|line 613|#
-  (let ((root_of_project  (nth  1 (argv))                   #|line 614|#))
+  (return-from argv
+    (get-main-args)
+                                                            #|line 614|#) #|line 615|#
+  )
+(defun initialize (&optional )
+  (declare (ignorable ))                                    #|line 617|#
+  (let ((root_of_project  (nth  1 (argv))                   #|line 618|#))
     (declare (ignorable root_of_project))
-    (let ((root_of_0D  (nth  2 (argv))                      #|line 615|#))
+    (let ((root_of_0D  (nth  2 (argv))                      #|line 619|#))
       (declare (ignorable root_of_0D))
-      (let ((arg  (nth  3 (argv))                           #|line 616|#))
+      (let ((arg  (nth  3 (argv))                           #|line 620|#))
         (declare (ignorable arg))
-        (let ((main_container_name  (nth  4 (argv))         #|line 617|#))
+        (let ((main_container_name  (nth  4 (argv))         #|line 621|#))
           (declare (ignorable main_container_name))
-          (let ((diagram_names  (nthcdr  5 (argv))          #|line 618|#))
+          (let ((diagram_names  (nthcdr  5 (argv))          #|line 622|#))
             (declare (ignorable diagram_names))
-            (let ((palette (funcall (quote initialize_component_palette)   root_of_project  root_of_0D  diagram_names  #|line 619|#)))
+            (let ((palette (funcall (quote initialize_component_palette)   root_of_project  root_of_0D  diagram_names  #|line 623|#)))
               (declare (ignorable palette))
-              (return-from initialize (values  palette (list   root_of_project  root_of_0D  main_container_name  diagram_names  arg ))) #|line 620|#)))))) #|line 621|#
+              (return-from initialize (values  palette (list   root_of_project  root_of_0D  main_container_name  diagram_names  arg ))) #|line 624|#)))))) #|line 625|#
   )
 (defun start (&optional  palette  env)
   (declare (ignorable  palette  env))
-  (funcall (quote start_helper)   palette  env  nil )       #|line 623|#
+  (funcall (quote start_helper)   palette  env  nil )       #|line 627|#
   )
 (defun start_show_all (&optional  palette  env)
   (declare (ignorable  palette  env))
-  (funcall (quote start_helper)   palette  env  t )         #|line 624|#
+  (funcall (quote start_helper)   palette  env  t )         #|line 628|#
   )
 (defun start_helper (&optional  palette  env  show_all_outputs)
-  (declare (ignorable  palette  env  show_all_outputs))     #|line 625|#
+  (declare (ignorable  palette  env  show_all_outputs))     #|line 629|#
   (let ((root_of_project (nth  0  env)))
-    (declare (ignorable root_of_project))                   #|line 626|#
+    (declare (ignorable root_of_project))                   #|line 630|#
     (let ((root_of_0D (nth  1  env)))
-      (declare (ignorable root_of_0D))                      #|line 627|#
+      (declare (ignorable root_of_0D))                      #|line 631|#
       (let ((main_container_name (nth  2  env)))
-        (declare (ignorable main_container_name))           #|line 628|#
+        (declare (ignorable main_container_name))           #|line 632|#
         (let ((diagram_names (nth  3  env)))
-          (declare (ignorable diagram_names))               #|line 629|#
+          (declare (ignorable diagram_names))               #|line 633|#
           (let ((arg (nth  4  env)))
-            (declare (ignorable arg))                       #|line 630|#
-            (funcall (quote set_environment)   root_of_project  root_of_0D  #|line 631|#)
-            #|  get entrypoint container |#                 #|line 632|#
-            (let (( main_container (funcall (quote get_component_instance)   palette  main_container_name  nil  #|line 633|#)))
+            (declare (ignorable arg))                       #|line 634|#
+            (funcall (quote set_environment)   root_of_project  root_of_0D  #|line 635|#)
+            #|  get entrypoint container |#                 #|line 636|#
+            (let (( main_container (funcall (quote get_component_instance)   palette  main_container_name  nil  #|line 637|#)))
               (declare (ignorable  main_container))
               (cond
-                (( equal    nil  main_container)            #|line 634|#
-                  (funcall (quote load_error)   (concatenate 'string  "Couldn't find container with page name /"  (concatenate 'string  main_container_name  (concatenate 'string  "/ in files "  (concatenate 'string (format nil "~a"  diagram_names)  " (check tab names, or disable compression?)"))))  #|line 638|#) #|line 639|#
+                (( equal    nil  main_container)            #|line 638|#
+                  (funcall (quote load_error)   (concatenate 'string  "Couldn't find container with page name /"  (concatenate 'string  main_container_name  (concatenate 'string  "/ in files "  (concatenate 'string (format nil "~a"  diagram_names)  " (check tab names, or disable compression?)"))))  #|line 642|#) #|line 643|#
                   ))
               (cond
-                ((not  load_errors)                         #|line 640|#
-                  (let (( marg (funcall (quote new_datum_string)   arg  #|line 641|#)))
+                ((not  load_errors)                         #|line 644|#
+                  (let (( marg (funcall (quote new_datum_string)   arg  #|line 645|#)))
                     (declare (ignorable  marg))
-                    (let (( msg (funcall (quote make_message)   ""  marg  #|line 642|#)))
+                    (let (( msg (funcall (quote make_message)   ""  marg  #|line 646|#)))
                       (declare (ignorable  msg))
-                      (funcall (quote inject)   main_container  msg  #|line 643|#)
+                      (funcall (quote inject)   main_container  msg  #|line 647|#)
                       (cond
-                        ( show_all_outputs                  #|line 644|#
-                          (funcall (quote dump_outputs)   main_container  #|line 645|#)
+                        ( show_all_outputs                  #|line 648|#
+                          (funcall (quote dump_outputs)   main_container  #|line 649|#)
                           )
-                        (t                                  #|line 646|#
-                          (funcall (quote print_error_maybe)   main_container  #|line 647|#)
-                          (let ((outp (funcall (quote fetch_first_output)   main_container  ""  #|line 648|#)))
+                        (t                                  #|line 650|#
+                          (funcall (quote print_error_maybe)   main_container  #|line 651|#)
+                          (let ((outp (funcall (quote fetch_first_output)   main_container  ""  #|line 652|#)))
                             (declare (ignorable outp))
                             (cond
-                              (( equal    nil  outp)        #|line 649|#
-                                (format *standard-output* "~a"  "(no outputs)") #|line 650|#
+                              (( equal    nil  outp)        #|line 653|#
+                                (format *standard-output* "~a~%"  "(no outputs)") #|line 654|#
                                 )
-                              (t                            #|line 651|#
-                                (funcall (quote print_specific_output)   main_container  ""  #|line 652|#) #|line 653|#
-                                )))                         #|line 654|#
+                              (t                            #|line 655|#
+                                (funcall (quote print_specific_output)   main_container  ""  #|line 656|#) #|line 657|#
+                                )))                         #|line 658|#
                           ))
                       (cond
-                        ( show_all_outputs                  #|line 655|#
-                          (format *standard-output* "~a"  "--- done ---") #|line 656|# #|line 657|#
-                          ))))                              #|line 658|#
-                  ))))))))                                  #|line 659|#
-  )                                                         #|line 661|# #|line 662|# #|  utility functions  |# #|line 663|#
+                        ( show_all_outputs                  #|line 659|#
+                          (format *standard-output* "~a~%"  "--- done ---") #|line 660|# #|line 661|#
+                          ))))                              #|line 662|#
+                  ))))))))                                  #|line 663|#
+  )                                                         #|line 665|# #|line 666|# #|  utility functions  |# #|line 667|#
 (defun send_int (&optional  eh  port  i  causing_message)
-  (declare (ignorable  eh  port  i  causing_message))       #|line 664|#
-  (let ((datum (funcall (quote new_datum_int)   i           #|line 665|#)))
+  (declare (ignorable  eh  port  i  causing_message))       #|line 668|#
+  (let ((datum (funcall (quote new_datum_int)   i           #|line 669|#)))
     (declare (ignorable datum))
-    (funcall (quote send)   eh  port  datum  causing_message  #|line 666|#)) #|line 667|#
+    (funcall (quote send)   eh  port  datum  causing_message  #|line 670|#)) #|line 671|#
   )
 (defun send_bang (&optional  eh  port  causing_message)
-  (declare (ignorable  eh  port  causing_message))          #|line 669|#
+  (declare (ignorable  eh  port  causing_message))          #|line 673|#
   (let ((datum (funcall (quote new_datum_bang) )))
-    (declare (ignorable datum))                             #|line 670|#
-    (funcall (quote send)   eh  port  datum  causing_message  #|line 671|#)) #|line 672|#
+    (declare (ignorable datum))                             #|line 674|#
+    (funcall (quote send)   eh  port  datum  causing_message  #|line 675|#)) #|line 676|#
   )
 
 

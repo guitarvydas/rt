@@ -90,10 +90,16 @@ ExternalPhrase_print_nl [_octothorpe _ lp rp] = ‛print ()’
 ExternalPhrase_split_string_for_shell [_octothorpe _ lp s rp] = ‛shlex.split («s»)’
 ExternalPhrase_substitute [_octothorpe _ lp find _comma1 replace _comma2 s rp] = ‛re.sub («find», «replace», «s»)’
 ExternalPhrase_run_command [_octothorpe _ lp cmd _comma1 args _comma2 ret _comma3 rc _comma4 out _comma5 errout rp] = ‛
-«ret» = subprocess.run ( «cmd»,   input=«args».encode('utf-8'))
-«rc» = «ret».returncode
-«out» = «ret».stdout.decode('utf-8')
-«errout» = «ret».stderr.decode('utf-8')
+try:⤷
+    «ret» = subprocess.run («cmd», input=«args», text=True, capture_output=True)
+    «rc» = «ret».returncode
+    «out» = «ret».stdout.strip ()
+    «errout» = «ret».stderr.strip ()⤶
+except Exception as e:⤷
+    «ret» = None
+    «rc» = 1
+    «out» = ''
+    «errout» = str(e)⤶
 ’
 ExternalPhrase_abort [_octothorpe _ lp rp] = ‛exit ()’
 ExternalPhrase_asstr [_octothorpe _ lp e rp] = ‛str («e»)’

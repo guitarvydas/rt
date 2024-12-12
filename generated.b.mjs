@@ -626,61 +626,65 @@ function initialize_stock_components (reg) {/* line 596 */
     register_component ( reg,mkTemplate ( "fakepipename", null, fakepipename_instantiate))/* line 610 *//* line 611 *//* line 612 */
 }
 
-function initialize () {      /* line 613 */
-    let root_of_project =  argv[ 1] /* line 614 */;
-    let root_of_0D =  argv[ 2] /* line 615 */;
-    let arg =  argv[ 3]       /* line 616 */;
-    let main_container_name =  argv[ 4] /* line 617 */;
-    let diagram_names =  argv.splice ( 5) /* line 618 */;
-    let palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)/* line 619 */;
-    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]];/* line 620 *//* line 621 *//* line 622 */
+function argv () {            /* line 613 */
+    return  argv              /* line 614 */;/* line 615 *//* line 616 */
+}
+
+function initialize () {      /* line 617 */
+    let root_of_project =  argv[ 1] /* line 618 */;
+    let root_of_0D =  argv[ 2] /* line 619 */;
+    let arg =  argv[ 3]       /* line 620 */;
+    let main_container_name =  argv[ 4] /* line 621 */;
+    let diagram_names =  argv.splice ( 5) /* line 622 */;
+    let palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)/* line 623 */;
+    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]];/* line 624 *//* line 625 *//* line 626 */
 }
 
 function start (palette,env) {
-    start_helper ( palette, env, false)/* line 623 */
+    start_helper ( palette, env, false)/* line 627 */
 }
 
 function start_show_all (palette,env) {
-    start_helper ( palette, env, true)/* line 624 */
+    start_helper ( palette, env, true)/* line 628 */
 }
 
-function start_helper (palette,env,show_all_outputs) {/* line 625 */
-    let root_of_project =  env [ 0];/* line 626 */
-    let root_of_0D =  env [ 1];/* line 627 */
-    let main_container_name =  env [ 2];/* line 628 */
-    let diagram_names =  env [ 3];/* line 629 */
-    let arg =  env [ 4];      /* line 630 */
-    set_environment ( root_of_project, root_of_0D)/* line 631 */
-    /*  get entrypoint container *//* line 632 */
-    let  main_container = get_component_instance ( palette, main_container_name, null)/* line 633 */;
-    if ( null ==  main_container) {/* line 634 */
-      load_error ( `${ "Couldn't find container with page name /"}${ `${ main_container_name}${ `${ "/ in files "}${ `${`${ diagram_names}`}${ " (check tab names, or disable compression?)"}` }` }` }` )/* line 638 *//* line 639 */}
-    if ((!  load_errors)) {   /* line 640 */
-      let  marg = new_datum_string ( arg)/* line 641 */;
-      let  msg = make_message ( "", marg)/* line 642 */;
-      inject ( main_container, msg)/* line 643 */
-      if ( show_all_outputs) {/* line 644 */
-        dump_outputs ( main_container)/* line 645 */}
-      else {                  /* line 646 */
-        print_error_maybe ( main_container)/* line 647 */
-        let outp = fetch_first_output ( main_container, "")/* line 648 */;
-        if ( null ==  outp) { /* line 649 */
-          console.log ( "(no outputs)");/* line 650 */}
-        else {                /* line 651 */
-          print_specific_output ( main_container, "")/* line 652 *//* line 653 */}/* line 654 */}
-      if ( show_all_outputs) {/* line 655 */
-        console.log ( "--- done ---");/* line 656 *//* line 657 */}/* line 658 */}/* line 659 *//* line 660 */
+function start_helper (palette,env,show_all_outputs) {/* line 629 */
+    let root_of_project =  env [ 0];/* line 630 */
+    let root_of_0D =  env [ 1];/* line 631 */
+    let main_container_name =  env [ 2];/* line 632 */
+    let diagram_names =  env [ 3];/* line 633 */
+    let arg =  env [ 4];      /* line 634 */
+    set_environment ( root_of_project, root_of_0D)/* line 635 */
+    /*  get entrypoint container *//* line 636 */
+    let  main_container = get_component_instance ( palette, main_container_name, null)/* line 637 */;
+    if ( null ==  main_container) {/* line 638 */
+      load_error ( `${ "Couldn't find container with page name /"}${ `${ main_container_name}${ `${ "/ in files "}${ `${`${ diagram_names}`}${ " (check tab names, or disable compression?)"}` }` }` }` )/* line 642 *//* line 643 */}
+    if ((!  load_errors)) {   /* line 644 */
+      let  marg = new_datum_string ( arg)/* line 645 */;
+      let  msg = make_message ( "", marg)/* line 646 */;
+      inject ( main_container, msg)/* line 647 */
+      if ( show_all_outputs) {/* line 648 */
+        dump_outputs ( main_container)/* line 649 */}
+      else {                  /* line 650 */
+        print_error_maybe ( main_container)/* line 651 */
+        let outp = fetch_first_output ( main_container, "")/* line 652 */;
+        if ( null ==  outp) { /* line 653 */
+          console.log ( "(no outputs)");/* line 654 */}
+        else {                /* line 655 */
+          print_specific_output ( main_container, "")/* line 656 *//* line 657 */}/* line 658 */}
+      if ( show_all_outputs) {/* line 659 */
+        console.log ( "--- done ---");/* line 660 *//* line 661 */}/* line 662 */}/* line 663 *//* line 664 */
 }
-                              /* line 661 *//* line 662 */
-/*  utility functions  */     /* line 663 */
-function send_int (eh,port,i,causing_message) {/* line 664 */
-    let datum = new_datum_int ( i)/* line 665 */;
-    send ( eh, port, datum, causing_message)/* line 666 *//* line 667 *//* line 668 */
+                              /* line 665 *//* line 666 */
+/*  utility functions  */     /* line 667 */
+function send_int (eh,port,i,causing_message) {/* line 668 */
+    let datum = new_datum_int ( i)/* line 669 */;
+    send ( eh, port, datum, causing_message)/* line 670 *//* line 671 *//* line 672 */
 }
 
-function send_bang (eh,port,causing_message) {/* line 669 */
-    let datum = new_datum_bang ();/* line 670 */
-    send ( eh, port, datum, causing_message)/* line 671 *//* line 672 *//* line 673 */
+function send_bang (eh,port,causing_message) {/* line 673 */
+    let datum = new_datum_bang ();/* line 674 */
+    send ( eh, port, datum, causing_message)/* line 675 *//* line 676 *//* line 677 */
 }
 
 
