@@ -12,7 +12,7 @@
   )
 (defun monitor_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 10|#
-  (let (( s (funcall (slot-value (slot-value  msg 'datum) 'srepr) )))
+  (let (( s (slot-value (slot-value  msg 'datum) 'v)))
     (declare (ignorable  s))                                #|line 11|#
     (let (( i (parse-integer  s)                            #|line 12|#))
       (declare (ignorable  i))
@@ -22,7 +22,7 @@
             (setf  s  (concatenate 'string  " "  s)         #|line 14|#)
             (setf  i (-  i  1))                             #|line 15|# #|line 16|#
             ))
-      (funcall (quote print)   s                            #|line 17|#))) #|line 18|#
+      (format *standard-output* "~a~%"  s)                  #|line 17|#)) #|line 18|#
   )
 
 

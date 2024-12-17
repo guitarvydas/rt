@@ -6,3 +6,6 @@ ${D2J} rt2py.drawio
 
 ${D2J} rt2cl.drawio
 ./gen-cl.bash test.rt generated.lisp
+
+${D2J} rt2js.drawio
+./gen-js.bash test.rt generated.mjs

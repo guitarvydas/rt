@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>KV Box GUI</title>
+    <title>RT Transpiler</title>
     <style>
         .row {
             display: flex;
@@ -40,11 +40,11 @@
                 <textarea id="cl" class="textarea" rows="15" columns="30" readonly></textarea>
             </div>
             <div class="kvbox">
-                <input type="text" class="tagbox" value="Python">
-                <textarea class="textarea" rows="15" readonly></textarea>
+                <input type="text" class="tagbox" value="Javascript">
+                <textarea class="textarea" rows="5" columns="5" readonly></textarea>
             </div>
             <div class="kvbox">
-                <input type="text" class="tagbox" value="Javascript">
+                <input type="text" class="tagbox" value="Python">
                 <textarea class="textarea" rows="5" readonly></textarea>
             </div>
             <div class="kvbox">
@@ -80,7 +80,7 @@
 
     <script>
         // Initialize WebSocket connection
-        const ws = new WebSocket('ws://localhost:8765');
+        const ws = new WebSocket('ws://localhost:8865');
 
         // WebSocket event handlers
         ws.onopen = () => {

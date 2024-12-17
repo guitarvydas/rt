@@ -2,12 +2,12 @@ defn decode_install (reg) {
     register_component (reg, mkTemplate (“Decode”, ϕ, ↪︎decode_instantiator))
 }
 
-defvar decode_digits ⇐ [“0”, “1”, “2”, “3”, “4”, “5”, “6”, “7”, “8”, “9”]
 defn decode_handler (eh, msg) {
     global decode_digits
-    deftemp i ⇐ #asint (msg.datum.srepr ())
+    s ≡ msg.datum.v
+    deftemp i ⇐ #asint (s)
     if i >= 0 and i <= 9 {
-        send_string (eh, decode_digits[i], decode_digits[i], msg)
+        send_string (eh, s, s, msg)
     }
     send_bang (eh, “done”, msg)
 }

@@ -27,3 +27,18 @@ cat generated.a.lisp generated.b.lisp >zd.lisp
 ./gen-cl.bash monitor.rt monitor.lisp
 
 cat zd.lisp count.lisp decode.lisp reverser.lisp delay.lisp monitor.lisp >generated.lisp
+# echo '*** Common Lisp not generated ***' >generated.lisp
+
+${D2J} rt2js.drawio
+./gen-js.bash 0d.rt.a generated.a.mjs
+./gen-js.bash 0d.rt.b generated.b.mjs
+cat generated.a.mjs generated.b.mjs > zd.mjs
+
+./gen-js.bash count.rt count.mjs
+./gen-js.bash decode.rt decode.mjs
+./gen-js.bash reverser.rt reverser.mjs
+./gen-js.bash delay.rt delay.mjs
+./gen-js.bash monitor.rt monitor.mjs
+
+cat zd.mjs count.mjs decode.mjs reverser.mjs delay.mjs monitor.mjs >generated.mjs
+

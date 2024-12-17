@@ -8,11 +8,11 @@ defn monitor_instantiator (reg, owner, name, template_data) {
 }
 
 defn monitor_handler (eh, msg) {
-    deftemp s ⇐ msg.datum.srepr ()
+    deftemp s ⇐ msg.datum.v
     deftemp i ⇐ #asint (s)
     while i > 0 {
         s ⇐ #strcons (“ ”, s)
         i ⇐ i - 1
     }
-    print (s)
+    #print_stdout (s)
 }

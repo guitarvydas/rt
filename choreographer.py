@@ -154,8 +154,8 @@ async def main():
     if not watcher.load_watch_list() or not watcher.load_send_pairs():
         return
     
-    async with websockets.serve(watcher.handle_client, "localhost", 8765):
-        print("WebSocket server started on ws://localhost:8765")
+    async with websockets.serve(watcher.handle_client, "localhost", 8865):
+        print("WebSocket server started on ws://localhost:8865")
         
         try:
             await watcher.watch_and_rebuild()

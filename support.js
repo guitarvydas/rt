@@ -22,4 +22,9 @@ function part (s, i) {
     return `${r.join ('')}`;
 }
 
+function enspace (arr) {
+    // create space-separated args for exec
+    return arr;
+    //return arr.join (" ");
+}
 
