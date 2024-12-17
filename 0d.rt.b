@@ -223,8 +223,11 @@ defn output_list (eh) {
 
 ⌈ Utility for printing an array of messages.⌉
 defn print_output_list (eh) {
+    #print_stdout (“{”)
     for m in #queue2list (eh.outq) {
-        #print_stdout (format_message (m))}
+        #print_stdout (format_message (m))
+    }
+    #print_stdout (“}”)
 }
 
 defn spaces (n) {

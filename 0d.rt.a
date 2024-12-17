@@ -219,13 +219,11 @@ defn format_message (m) {
     if m = ϕ {
         return “ϕ” }
     else {
-        return #strcons (“⟪”,
-	         #strcons (m.port,
-		   #strcons (“⦂”,
-		     #strcons (m.datum.srepr (), “⟫”))))
+        return #strcons (m.port,
+		   #strcons (“:”,
+		     #strcons (m.datum.srepr (), “,”)))
     }
 }
-
 
 defconst enumDown ≡ 0
 defconst enumAcross ≡ 1
