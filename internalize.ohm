@@ -9,6 +9,8 @@ internalize {
     | ~"❲" ~"❳" any -- any
 
   stringchar =
+    | "\\" "“" -- beginquote
+    | "\\" "”" -- endquote
     | "“" stringchar+ "”" -- rec
     | ~"“" ~"”" any -- other
 

@@ -8,6 +8,8 @@
   char_any [c] = ‛«c»’
 
   stringchar_rec [lb cs+ rb] = ‛«lb»«cs»«rb»’
+  stringchar_beginquote [bslash q] =‛%5C“’
+  stringchar_endquote [bslash q] =‛%5C”’
   stringchar_other [c] = ‛«c»’
 
   commentchar_rec [lb cs+ rb] = ‛«lb»«cs»«rb»’

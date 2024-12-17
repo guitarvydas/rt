@@ -28,27 +28,22 @@ defn subscripted_digit (n) {
 }
 
 defobj Datum () {
-      • data ⇐ ϕ
+      • v ⇐ ϕ
       • clone ⇐ ϕ
       • reclaim ⇐ ϕ
-      • srepr ⇐ ϕ
-      • kind ⇐ ϕ
-      • raw ⇐ ϕ
+      • other ⇐ ϕ ⌈ reserved for use on per-project basis ⌉
 }
 
 defn new_datum_string (s) {
     d ≡ #fresh (Datum)
-    d.data ⇐ s
+    d.v ⇐ s
     d.clone ⇐ λ: clone_datum_string (d)
     d.reclaim ⇐ λ: reclaim_datum_string (d)    
-    d.srepr ⇐ λ: srepr_datum_string (d)
-    d.raw ⇐ #asbytes (d.data)
-    d.kind ⇐ λ: “string”
     return d
 }
 
 defn clone_datum_string (d) {
-  newd ≡ new_datum_string (d.data)
+  newd ≡ new_datum_string (d.v)
   return newd
 }
 
@@ -56,18 +51,11 @@ defn reclaim_datum_string (src) {
   pass
 }
 
-defn srepr_datum_string (d) {
-  return d.data
-}
-
 defn new_datum_bang () {
     p ≡ #fresh (Datum)
-    p.data ⇐ ⊤
+    p.v ⇐ “”
     p.clone ⇐ λ: clone_datum_bang (p)
     p.reclaim ⇐ λ: reclaim_datum_bang (p)
-    p.srepr ⇐ λ: srepr_datum_bang ()
-    p.raw ⇐ λ: raw_datum_bang ()    
-    p.kind ⇐ λ: “bang”
     return p
 }
 
@@ -77,96 +65,6 @@ defn clone_datum_bang (d) {
 
 defn reclaim_datum_bang (d) {
     pass
-}
-
-defn srepr_datum_bang () {
-    return “!”
-}
-
-defn raw_datum_bang () {
-    return []
-}
-
-defn new_datum_tick () {
-    p ≡ new_datum_bang ()
-    p.kind ⇐ λ: “tick”
-    p.clone ⇐ λ: new_datum_tick ()
-    p.srepr ⇐ λ: srepr_datum_tick ()
-    p.raw ⇐ λ: raw_datum_tick ()
-    return p
-}
-
-defn srepr_datum_tick () {
-    return “.”
-}
-
-defn raw_datum_tick () {
-    return []
-}
-
-defn new_datum_bytes (b) {
-    p ≡ #fresh (Datum)
-    p.data ⇐ b
-    p.clone ⇐ λ: clone_datum_bytes (p)
-    p.reclaim ⇐ λ: reclaim_datum_bytes (p)
-    p.srepr ⇐ λ: srepr_datum_bytes (b)
-    p.raw ⇐ λ: raw_datum_bytes (b)
-    p.kind ⇐ λ: “bytes”
-    return p
-}
-
-defn clone_datum_bytes (src) {
-    p ≡ #fresh (Datum)
-    p.clone ⇐ src.clone
-    p.reclaim ⇐ src.reclaim
-    p.srepr ⇐ src.srepr
-    p.raw ⇐ src.raw
-    p.kind ⇐ src.kind
-    p.data ⇐ src.clone ()
-    return p
-}
-
-defn reclaim_datum_bytes (src) {
-    pass
-}
-
-defn srepr_datum_bytes (d) {
-    return d.data.decode (“UTF_8”)
-}
-defn raw_datum_bytes (d) {
-    return d.data
-}
-
-defn new_datum_handle (h) {
-    return new_datum_int (h)
-}
-
-defn new_datum_int (i) {
-    p ≡ #fresh (Datum)
-    p.data ⇐ i
-    p.clone ⇐ λ: clone_int (i)
-    p.reclaim ⇐ λ: reclaim_int (i)
-    p.srepr ⇐ λ: srepr_datum_int (i)
-    p.raw ⇐ λ: raw_datum_int (i)
-    p.kind ⇐ λ: “int”
-    return p
-}
-
-defn clone_int (i) {
-    p ≡ new_datum_int (i)
-    return p
-}
-
-defn reclaim_int (src) {
-    pass
-}
-
-defn srepr_datum_int (i) {
-  return #asstr (i)
-}
-
-defn raw_datum_int (i) {
-    return i
 }
 
 ⌈ Message passed to a leaf component.⌉
@@ -217,15 +115,11 @@ defn destroy_port (msg) {
 ⌈⌉
 defn format_message (m) {
     if m = ϕ {
-        return “ϕ” }
-    else {
-        return #strcons (“⟪”,
-	         #strcons (m.port,
-		   #strcons (“⦂”,
-		     #strcons (m.datum.srepr (), “⟫”))))
+        return #strcons (“\“”, #strcons (m.port, #strcons (“\”:\“”, #strcons (“ϕ”, “\”,”))))
+    } else {
+        return #strcons (“\“”, #strcons (m.port, #strcons (“\”:\“”, #strcons (m.datum.v, “\”,”))))
     }
 }
-
 
 defconst enumDown ≡ 0
 defconst enumAcross ≡ 1
@@ -396,7 +290,7 @@ defn deposit (parent, conn, message) {
 }
 
 defn force_tick (parent, eh) {
-    tick_msg ≡ make_message (“.”, new_datum_tick ())
+    tick_msg ≡ make_message (“.”, new_datum_bang ())
     push_message (parent, eh, eh.inq, tick_msg)
     return tick_msg
 }
@@ -438,32 +332,37 @@ defn step_children (container, causingMessage) {
                 } elif ended_long_run {
                     pass 
                 }
-                destroy_message(msg)}
-            else {
+                destroy_message(msg)
+            } else {
                 if child.state !=  “idle” {
                     msg ≡ force_tick (container, child)
                     child.handler(child, msg)
-                    destroy_message(msg)}}
+                    destroy_message(msg)
+		 }
+             }
             
             if child.state = “active” {
                 ⌈ if child remains active, then the container must remain active and must propagate “ticks“ to child⌉
-                container.state ⇐ “active”}
+                container.state ⇐ “active”
+	     }
             
             while (not (#empty (child.outq))) {
                 msg ≡ #dequeue (child.outq)
                 route(container, child, msg)
-                destroy_message(msg)}}}
-
-
+                destroy_message(msg)
+	     }
+	 }
+    }
 }
 
 defn attempt_tick (parent, eh) {
     if eh.state != “idle” {
-        force_tick (parent, eh)}
+        force_tick (parent, eh)
+    }
 }
 
 defn is_tick (msg) {
-    return “tick” = msg.datum.kind ()
+    return “.” = msg.port ⌈ assume that any message that is sent to port "." is a tick ⌉
 }
 
 ⌈ Routes a single message to all matching destinations, according to⌉
@@ -475,16 +374,20 @@ defn route (container, from_component, message) {
     if is_tick (message){
         for child in container.children {
             attempt_tick (container, child) }
-        was_sent ⇐ ⊤ }
-    else {
+        was_sent ⇐ ⊤
+    } else {
         if (not (is_self (from_component, container))) {
-            fromname ⇐ from_component.name }
+            fromname ⇐ from_component.name
+	}
         from_sender ≡ mkSender (fromname, from_component, message.port)
         
         for connector in container.connections {
             if sender_eq (from_sender, connector.sender) {
                 deposit (container, connector, message)
-                was_sent ⇐ ⊤}}}
+                was_sent ⇐ ⊤
+	    }
+	}
+    }
     if not (was_sent) {
         print (“\n\n*** Error: ***”)
         print (“***”)
@@ -497,7 +400,9 @@ defn route (container, from_component, message) {
 defn any_child_ready (container) {
     for child in container.children {
         if child_is_ready(child) {
-            return ⊤}}
+            return ⊤
+	}
+    }
     return ⊥
 }
 
