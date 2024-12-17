@@ -10,7 +10,7 @@ function monitor_instantiator (reg,owner,name,template_data) {/* line 5 */
 }
 
 function monitor_handler (eh,msg) {/* line 10 */
-    let  s =  msg.datum.srepr ();/* line 11 */
+    let  s =  msg.datum.v;    /* line 11 */
     let  i = Number ( s)      /* line 12 */;
     while ( i >  0) {         /* line 13 */
       s =  `${ " "}${ s}`     /* line 14 */;

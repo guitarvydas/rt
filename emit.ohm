@@ -61,7 +61,6 @@ emit {
      | "#" xkw<"abort"> "(" ")" -- abort
      | "#" xkw<"asstr"> "(" Exp ")" -- asstr
      | "#" xkw<"len"> "(" Exp ")" -- len
-     | "#" xkw<"asbytes"> "(" Exp ")" -- asbytes
      | "#" xkw<"asint"> "(" Exp ")" -- asint
      | "#" xkw<"enqueue"> "(" Exp Comma Exp ")" -- enqueue
      | "#" xkw<"dequeue"> "(" Exp ")" -- dequeue

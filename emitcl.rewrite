@@ -173,7 +173,6 @@ ExternalPhrase_run_command [_octothorpe _ lp cmd _comma1 args _comma2 ret _comma
 ExternalPhrase_abort [_octothorpe _ lp rp] = ‛(break)’
 ExternalPhrase_asstr [_octothorpe _ lp e rp] = ‛(format nil "~a" «e»)’
 ExternalPhrase_len [_octothorpe _ lp e rp] = ‛(length «e»)’
-ExternalPhrase_asbytes [_octothorpe _ lp e rp] = ‛(coerce «e» 'simple-vector)’
 ExternalPhrase_asint [_octothorpe _ lp e rp] = ‛(parse-integer «e»)’
 ExternalPhrase_enqueue [_octothorpe _ lp obj _comma e rp] = ‛(enqueue «obj» «e»)’
 ExternalPhrase_dequeue [_octothorpe _ lp obj rp] = ‛(dequeue «obj»)’

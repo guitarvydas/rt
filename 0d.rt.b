@@ -57,20 +57,23 @@ defn get_component_instance (reg, full_name, owner) {
         template ≡ reg.templates@template_name
         if (template = ϕ) {
             load_error (#strcons (“Registry Error (A): Can't find component /”, #strcons (template_name, “/”)))
-            return ϕ}
-        else {
+            return ϕ
+        } else {
             owner_name ≡ “”
             instance_name ≡ template_name
             if ϕ != owner {
                 owner_name ⇐ owner.name
-                instance_name ⇐ #strcons (owner_name, #strcons (“.”, template_name))}
-            else{
-                instance_name ⇐ template_name}
+                instance_name ⇐ #strcons (owner_name, #strcons (“.”, template_name))
+            } else {
+                instance_name ⇐ template_name
+	    }
             instance ≡ template.instantiator (reg, owner, instance_name, template.template_data)
-            return instance }}
-    else {
-            load_error (#strcons (“Registry Error (B): Can't find component /”, #strcons (template_name, “/”)))
-            return ϕ}
+            return instance
+	}
+    } else {
+        load_error (#strcons (“Registry Error (B): Can't find component /”, #strcons (template_name, “/”)))
+        return ϕ
+    }
 }
 
 defn dump_registry (reg) {
@@ -280,10 +283,6 @@ defn set_environment (rproject, r0D) {
     root_0D ⇐ r0D
 }
 
-defn probe_instantiate (reg, owner, name, template_data) {
-    name_with_id ≡ gensymbol (“?”)
-    return make_leaf (name_with_id, owner, ϕ, ↪︎probe_handler)
-}
 defn probeA_instantiate (reg, owner, name, template_data) {
     name_with_id ≡ gensymbol (“?A”)
     return make_leaf (name_with_id, owner,  ϕ,  ↪︎probe_handler)
@@ -346,30 +345,34 @@ defn send_firstmsg_then_secondmsg (eh, inst) {
 defn deracer_handler (eh, msg) {
     deftemp inst ⇐ eh.instance_data
     if inst.state = “idle” {
-        if “1” = msg.port{
+        if “1” = msg.port {
             inst.buffer.firstmsg ⇐ msg
-            inst.state ⇐ “waitingForSecondmsg”}
-        elif “2” = msg.port{
+            inst.state ⇐ “waitingForSecondmsg”
+        } elif “2” = msg.port {
             inst.buffer.secondmsg ⇐ msg
-            inst.state ⇐ “waitingForFirstmsg”}
-        else{
-            runtime_error (#strcons (“bad msg.port (case A) for deracer ”, msg.port))}}
-    elif inst.state = “waitingForFirstmsg” {
-        if “1” = msg.port{
+            inst.state ⇐ “waitingForFirstmsg”
+        } else {
+            runtime_error (#strcons (“bad msg.port (case A) for deracer ”, msg.port))
+	}
+    } elif inst.state = “waitingForFirstmsg” {
+        if “1” = msg.port {
             inst.buffer.firstmsg ⇐ msg
             send_firstmsg_then_secondmsg (eh, inst)
-            inst.state ⇐ “idle”}
-        else{
-            runtime_error (#strcons (“bad msg.port (case B) for deracer ”, msg.port))}}
-    elif inst.state = “waitingForSecondmsg”{
-        if “2” = msg.port{
+            inst.state ⇐ “idle”
+        } else {
+            runtime_error (#strcons (“bad msg.port (case B) for deracer ”, msg.port))
+	}
+    } elif inst.state = “waitingForSecondmsg” {
+        if “2” = msg.port {
             inst.buffer.secondmsg ⇐ msg
             send_firstmsg_then_secondmsg (eh, inst)
-            inst.state ⇐ “idle”}
-        else{
-            runtime_error (#strcons (“bad msg.port (case C) for deracer ”, msg.port))}}
-    else{
-        runtime_error (“bad state for deracer {eh.state}”)}
+            inst.state ⇐ “idle”
+        } else {
+            runtime_error (#strcons (“bad msg.port (case C) for deracer ”, msg.port))
+	}
+    } else {
+        runtime_error (“bad state for deracer {eh.state}”)
+    }
 }
 
 defn low_level_read_text_file_instantiate (reg, owner, name, template_data) {
@@ -388,11 +391,12 @@ defn ensure_string_datum_instantiate (reg, owner, name, template_data) {
 }
 
 defn ensure_string_datum_handler (eh, msg) {
-    if “string” = msg.datum.kind (){
-        forward (eh, “”, msg)}
-    else{
+    if “string” = msg.datum.kind () {
+        forward (eh, “”, msg)
+    } else {
         emsg ≡ #strcons (“*** ensure: type error (expected a string datum) but got ”, msg.datum)
-        send_string (eh, “✗”, emsg, msg)}
+        send_string (eh, “✗”, emsg, msg)
+    }
 }
 
 defobj Syncfilewrite_Data () {
@@ -409,16 +413,18 @@ defn syncfilewrite_instantiate (reg, owner, name, template_data) {
 defn syncfilewrite_handler (eh, msg) {
     deftemp inst ⇐ eh.instance_data
     if “filename” = msg.port {
-        inst.filename ⇐ msg.datum.srepr ()}
-    elif “input” = msg.port {
+        inst.filename ⇐ msg.datum.srepr ()
+    } elif “input” = msg.port {
         contents ≡ msg.datum.srepr ()
         deftemp f ⇐ open (inst.filename, “w”)
-        if f != ϕ{
+        if f != ϕ {
             f.write (msg.datum.srepr ())
             f.close ()
-            send (eh, “done”, new_datum_bang (), msg)}
-        else{
-            send_string (eh, “✗”, #strcons (“open error on file ”, inst.filename), msg)}}
+            send (eh, “done”, new_datum_bang (), msg)
+        } else {
+            send_string (eh, “✗”, #strcons (“open error on file ”, inst.filename), msg)
+	}
+    }
 }
 
 defobj StringConcat_Instance_Data () {
@@ -436,29 +442,31 @@ defn stringconcat_instantiate (reg, owner, name, template_data) {
 defn stringconcat_handler (eh, msg) {
     deftemp inst ⇐ eh.instance_data
     if “1” = msg.port{
-        inst.buffer1 ⇐ clone_string (msg.datum.srepr ())
+        inst.buffer1  ⇐ clone_string (msg.datum.srepr ())
         inst.scount ⇐ inst.scount + 1
-        maybe_stringconcat (eh, inst, msg)}
-    elif “2” = msg.port{
+        maybe_stringconcat (eh, inst, msg)
+    } elif “2” = msg.port {
         inst.buffer2 ⇐ clone_string (msg.datum.srepr ())
         inst.scount ⇐ inst.scount + 1
-        maybe_stringconcat (eh, inst, msg)}
-    else{
+        maybe_stringconcat (eh, inst, msg)
+    } else {
         runtime_error (#strcons (“bad msg.port for stringconcat: ”, msg.port))
     }
 }
 
 defn maybe_stringconcat (eh, inst, msg) {
-    if (0 = #len (inst.buffer1)) and (0 = #len (inst.buffer2)){
-        runtime_error (“something is wrong in stringconcat, both strings are 0 length”)}
-    if inst.scount >= 2{
+    if (0 = #len (inst.buffer1)) and (0 = #len (inst.buffer2)) {
+        runtime_error (“something is wrong in stringconcat, both strings are 0 length”)
+    }
+    if inst.scount >= 2 {
         deftemp concatenated_string ⇐ “”
-        if 0 = #len (inst.buffer1){
-            concatenated_string ⇐ inst.buffer2}
-        elif 0 = #len (inst.buffer2){
-            concatenated_string ⇐ inst.buffer1}
-        else{
-            concatenated_string ⇐ inst.buffer1 + inst.buffer2}        
+        if 0 = #len (inst.buffer1) {
+            concatenated_string ⇐ inst.buffer2
+        } elif 0 = #len (inst.buffer2) {
+            concatenated_string ⇐ inst.buffer1
+        } else {
+            concatenated_string ⇐ inst.buffer1 + inst.buffer2
+	}        
         send_string (eh, “”, concatenated_string, msg)
         inst.buffer1 ⇐ ϕ
         inst.buffer2 ⇐ ϕ
@@ -537,9 +545,10 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
 defn print_error_maybe (main_container) {
     error_port ≡ “✗”
     err ≡ fetch_first_output (main_container, error_port)
-    if (err !=  ϕ) and (0 < #len (trimws (err.srepr ()))){
+    if (err !=  ϕ) and (0 < #len (trimws (err.srepr ()))) {
         #print_stdout (“___ !!! ERRORS !!! ___”)
-        print_specific_output (main_container, error_port)}
+        print_specific_output (main_container, error_port)
+    }
 }
 
 ⌈ debugging helpers⌉
@@ -598,7 +607,6 @@ defn fakepipename_handler (eh, msg) {
 
 defn initialize_stock_components (reg) {
     register_component (reg, mkTemplate ( “1then2”, ϕ, ↪︎deracer_instantiate))
-    register_component (reg, mkTemplate ( “?”, ϕ, ↪︎probe_instantiate))
     register_component (reg, mkTemplate ( “?A”, ϕ, ↪︎probeA_instantiate))
     register_component (reg, mkTemplate ( “?B”, ϕ, ↪︎probeB_instantiate))
     register_component (reg, mkTemplate ( “?C”, ϕ, ↪︎probeC_instantiate))
@@ -669,7 +677,7 @@ defn start_helper (palette, env, show_all_outputs) {
 
 ⌈ utility functions ⌉
 defn send_int (eh, port, i, causing_message) {
-    datum ≡ new_datum_int (i)
+    datum ≡ new_datum_string (#asstr (i))
     send (eh, port, datum, causing_message)
 }
 
@@ -677,4 +685,3 @@ defn send_bang (eh, port, causing_message) {
     datum ≡ new_datum_bang ()
     send (eh, port, datum, causing_message)            
 }
-  

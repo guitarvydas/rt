@@ -12,7 +12,7 @@
   )
 (defun monitor_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 10|#
-  (let (( s (funcall (slot-value (slot-value  msg 'datum) 'srepr) )))
+  (let (( s (slot-value (slot-value  msg 'datum) 'v)))
     (declare (ignorable  s))                                #|line 11|#
     (let (( i (parse-integer  s)                            #|line 12|#))
       (declare (ignorable  i))

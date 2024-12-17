@@ -60,8 +60,10 @@ console.log («fname»);
     let jstr = undefined;
     if (filename == "0") {
 	jstr = fs.readFileSync (0);
-    } else {
+    } else if (pathname) {
 	jstr = fs.readFileSync (\`\${pathname}/\${filename}\`);
+    } else {
+	jstr = fs.readFileSync (\`\${filename}\`);
     }
     if (jstr) {
         return JSON.parse (jstr);
@@ -70,12 +72,12 @@ console.log («fname»);
     }
 ’
 
-ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛ argv’
+ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛ command_line_argv’
 ExternalPhrase_freshQueue [_octothorpe _ lp rp] = ‛ []’
 ExternalPhrase_freshStack [_octothorpe _ lp rp] = ‛ []’
 ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ new «ident» ();’
-ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ argv.splice («n») ’
-ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ argv[«n»] ’
+ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ command_line_argv.splice («n») ’
+ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ command_line_argv[«n»] ’
 ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ «e».substring (1) ’
 ExternalPhrase_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ \`\${«e1»}\${«e2»}\` ’
@@ -85,7 +87,7 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 ‛
 import * as fs from 'fs';
 import path from 'path';
-const argv = process.argv.slice(1);
+const command_line_argv = process.argv.slice(1);
 import execSync from 'child_process';
 ’
 
@@ -103,8 +105,6 @@ ExternalPhrase_run_command [_octothorpe _ lp cmd _comma1 args _comma2 ret _comma
 ExternalPhrase_abort [_octothorpe _ lp rp] = ‛ process.exit (1)’
 ExternalPhrase_asstr [_octothorpe _ lp e rp] = ‛\`\${«e»}\`’
 ExternalPhrase_len [_octothorpe _ lp e rp] = ‛(«e».length)’
-
-ExternalPhrase_asbytes [_octothorpe _ lp e rp] = ‛new TextEncoder().encode(«e»)’
 
 ExternalPhrase_asint [_octothorpe _ lp e rp] = ‛Number («e»)’
 ExternalPhrase_enqueue [_octothorpe _ lp obj _comma e rp] = ‛«obj».push («e»)’
