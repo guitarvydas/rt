@@ -260,13 +260,13 @@ defn fetch_first_output (eh, port) {
 defn print_specific_output (eh, port) {
     ⌈ port ∷ “”⌉
     deftemp datum ⇐ fetch_first_output (eh, port)
-    #print_stdout (datum.srepr ())
+    #print_stdout (datum.v)
 }
 defn print_specific_output_to_stderr (eh, port) {
     ⌈ port ∷ “”⌉
     deftemp datum ⇐ fetch_first_output (eh, port)
     ⌈ I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in...⌉
-    #print_stderr (datum.srepr ())
+    #print_stderr (datum.v)
 }
 
 defn put_output (eh, msg) {
@@ -299,7 +299,7 @@ defn probeC_instantiate (reg, owner, name, template_data) {
 }
 
 defn probe_handler (eh, msg) {
-    s ≡ msg.datum.srepr ()
+    s ≡ msg.datum.v
     #print_stderr (#strcons (“... probe ”, #strcons (eh.name, #strcons (“: ”, s))))
 }
 
@@ -381,7 +381,7 @@ defn low_level_read_text_file_instantiate (reg, owner, name, template_data) {
 }
 
 defn low_level_read_text_file_handler (eh, msg) {
-    fname ≡ msg.datum.srepr ()
+    fname ≡ msg.datum.v
     # low_level_read_text_file_handler (eh, msg, fname, “”, “✗”)
 }
 
@@ -413,12 +413,12 @@ defn syncfilewrite_instantiate (reg, owner, name, template_data) {
 defn syncfilewrite_handler (eh, msg) {
     deftemp inst ⇐ eh.instance_data
     if “filename” = msg.port {
-        inst.filename ⇐ msg.datum.srepr ()
+        inst.filename ⇐ msg.datum.v
     } elif “input” = msg.port {
-        contents ≡ msg.datum.srepr ()
+        contents ≡ msg.datum.v
         deftemp f ⇐ open (inst.filename, “w”)
         if f != ϕ {
-            f.write (msg.datum.srepr ())
+            f.write (msg.datum.v)
             f.close ()
             send (eh, “done”, new_datum_bang (), msg)
         } else {
@@ -442,11 +442,11 @@ defn stringconcat_instantiate (reg, owner, name, template_data) {
 defn stringconcat_handler (eh, msg) {
     deftemp inst ⇐ eh.instance_data
     if “1” = msg.port{
-        inst.buffer1  ⇐ clone_string (msg.datum.srepr ())
+        inst.buffer1  ⇐ clone_string (msg.datum.v)
         inst.scount ⇐ inst.scount + 1
         maybe_stringconcat (eh, inst, msg)
     } elif “2” = msg.port {
-        inst.buffer2 ⇐ clone_string (msg.datum.srepr ())
+        inst.buffer2 ⇐ clone_string (msg.datum.v)
         inst.scount ⇐ inst.scount + 1
         maybe_stringconcat (eh, inst, msg)
     } else {
@@ -484,7 +484,7 @@ defn shell_out_instantiate (reg, owner, name, template_data) {
 
 defn shell_out_handler (eh, msg) {
     cmd ≡ eh.instance_data
-    s ≡ msg.datum.srepr ()
+    s ≡ msg.datum.v
     deftemp ret ⇐ ϕ
     deftemp rc ⇐ ϕ
     deftemp stdout ⇐ ϕ
@@ -545,7 +545,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
 defn print_error_maybe (main_container) {
     error_port ≡ “✗”
     err ≡ fetch_first_output (main_container, error_port)
-    if (err !=  ϕ) and (0 < #len (trimws (err.srepr ()))) {
+    if (err !=  ϕ) and (0 < #len (trimws (err.v))) {
         #print_stdout (“___ !!! ERRORS !!! ___”)
         print_specific_output (main_container, error_port)
     }
