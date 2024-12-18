@@ -662,7 +662,7 @@ defn start_helper (palette, env, show_all_outputs) {
             print_error_maybe (main_container)
 	    outp ≡ fetch_first_output (main_container, “”)
 	    if ϕ = outp {
-                #print_stdout (“(no outputs)”)
+                #print_stdout (“«««no outputs»»»)”)
             } else {
                 print_specific_output (main_container, “”)
             }
@@ -672,7 +672,6 @@ defn start_helper (palette, env, show_all_outputs) {
         }
     }
 }
-
 
 
 ⌈ utility functions ⌉

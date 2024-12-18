@@ -667,22 +667,22 @@ function start_helper (palette,env,show_all_outputs) {/* line 640 */
         print_error_maybe ( main_container)/* line 662 */
         let outp = fetch_first_output ( main_container, "")/* line 663 */;
         if ( null ==  outp) { /* line 664 */
-          console.log ( "(no outputs)");/* line 665 */}
+          console.log ( "«««no outputs»»»)");/* line 665 */}
         else {                /* line 666 */
           print_specific_output ( main_container, "")/* line 667 *//* line 668 */}/* line 669 */}
       if ( show_all_outputs) {/* line 670 */
         console.log ( "--- done ---");/* line 671 *//* line 672 */}/* line 673 */}/* line 674 *//* line 675 */
 }
-                              /* line 676 *//* line 677 */
-/*  utility functions  */     /* line 678 */
-function send_int (eh,port,i,causing_message) {/* line 679 */
-    let datum = new_datum_string (`${ i}`)/* line 680 */;
-    send ( eh, port, datum, causing_message)/* line 681 *//* line 682 *//* line 683 */
+                              /* line 676 */
+/*  utility functions  */     /* line 677 */
+function send_int (eh,port,i,causing_message) {/* line 678 */
+    let datum = new_datum_string (`${ i}`)/* line 679 */;
+    send ( eh, port, datum, causing_message)/* line 680 *//* line 681 *//* line 682 */
 }
 
-function send_bang (eh,port,causing_message) {/* line 684 */
-    let datum = new_datum_bang ();/* line 685 */
-    send ( eh, port, datum, causing_message)/* line 686 *//* line 687 */
+function send_bang (eh,port,causing_message) {/* line 683 */
+    let datum = new_datum_bang ();/* line 684 */
+    send ( eh, port, datum, causing_message)/* line 685 *//* line 686 */
 }
 
 

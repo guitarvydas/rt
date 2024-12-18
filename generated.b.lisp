@@ -785,7 +785,7 @@
                             (declare (ignorable outp))
                             (cond
                               (( equal    nil  outp)        #|line 664|#
-                                (format *standard-output* "~a~%"  "(no outputs)") #|line 665|#
+                                (format *standard-output* "~a~%"  "«««no outputs»»»)") #|line 665|#
                                 )
                               (t                            #|line 666|#
                                 (funcall (quote print_specific_output)   main_container  ""  #|line 667|#) #|line 668|#
@@ -796,18 +796,18 @@
                           (format *standard-output* "~a~%"  "--- done ---") #|line 671|# #|line 672|#
                           ))))                              #|line 673|#
                   ))))))))                                  #|line 674|#
-  )                                                         #|line 676|# #|line 677|# #|  utility functions  |# #|line 678|#
+  )                                                         #|line 676|# #|  utility functions  |# #|line 677|#
 (defun send_int (&optional  eh  port  i  causing_message)
-  (declare (ignorable  eh  port  i  causing_message))       #|line 679|#
-  (let ((datum (funcall (quote new_datum_string)  (format nil "~a"  i)  #|line 680|#)))
+  (declare (ignorable  eh  port  i  causing_message))       #|line 678|#
+  (let ((datum (funcall (quote new_datum_string)  (format nil "~a"  i)  #|line 679|#)))
     (declare (ignorable datum))
-    (funcall (quote send)   eh  port  datum  causing_message  #|line 681|#)) #|line 682|#
+    (funcall (quote send)   eh  port  datum  causing_message  #|line 680|#)) #|line 681|#
   )
 (defun send_bang (&optional  eh  port  causing_message)
-  (declare (ignorable  eh  port  causing_message))          #|line 684|#
+  (declare (ignorable  eh  port  causing_message))          #|line 683|#
   (let ((datum (funcall (quote new_datum_bang) )))
-    (declare (ignorable datum))                             #|line 685|#
-    (funcall (quote send)   eh  port  datum  causing_message  #|line 686|#)) #|line 687|#
+    (declare (ignorable datum))                             #|line 684|#
+    (funcall (quote send)   eh  port  datum  causing_message  #|line 685|#)) #|line 686|#
   )
 
 
