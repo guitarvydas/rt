@@ -293,7 +293,7 @@
   #|  port ∷ “” |#                                          #|line 261|#
   (let (( datum (funcall (quote fetch_first_output)   eh  port  #|line 262|#)))
     (declare (ignorable  datum))
-    (format *standard-output* "~a~%" (funcall (slot-value  datum 'srepr) )) #|line 263|#) #|line 264|#
+    (format *standard-output* "~a~%" (slot-value  datum 'v)) #|line 263|#) #|line 264|#
   )
 (defun print_specific_output_to_stderr (&optional  eh  port)
   (declare (ignorable  eh  port))                           #|line 265|#
@@ -301,7 +301,7 @@
   (let (( datum (funcall (quote fetch_first_output)   eh  port  #|line 267|#)))
     (declare (ignorable  datum))
     #|  I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in... |# #|line 268|#
-    (format *error-output* "~a~%" (funcall (slot-value  datum 'srepr) )) #|line 269|#) #|line 270|#
+    (format *error-output* "~a~%" (slot-value  datum 'v))   #|line 269|#) #|line 270|#
   )
 (defun put_output (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 272|#
@@ -334,7 +334,7 @@
   )
 (defun probe_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 301|#
-  (let ((s (funcall (slot-value (slot-value  msg 'datum) 'srepr) )))
+  (let ((s (slot-value (slot-value  msg 'datum) 'v)))
     (declare (ignorable s))                                 #|line 302|#
     (format *error-output* "~a~%"  (concatenate 'string  "... probe "  (concatenate 'string (slot-value  eh 'name)  (concatenate 'string  ": "  s)))) #|line 303|#) #|line 304|#
   )
@@ -436,7 +436,7 @@
   )
 (defun low_level_read_text_file_handler (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 383|#
-  (let ((fname (funcall (slot-value (slot-value  msg 'datum) 'srepr) )))
+  (let ((fname (slot-value (slot-value  msg 'datum) 'v)))
     (declare (ignorable fname))                             #|line 384|#
 
     ;; read text from a named file fname, send the text out on port "" else send error info on port "✗"
@@ -485,16 +485,16 @@
     (declare (ignorable  inst))                             #|line 414|#
     (cond
       (( equal    "filename" (slot-value  msg 'port))       #|line 415|#
-        (setf (slot-value  inst 'filename) (funcall (slot-value (slot-value  msg 'datum) 'srepr) )) #|line 416|#
+        (setf (slot-value  inst 'filename) (slot-value (slot-value  msg 'datum) 'v)) #|line 416|#
         )
       (( equal    "input" (slot-value  msg 'port))          #|line 417|#
-        (let ((contents (funcall (slot-value (slot-value  msg 'datum) 'srepr) )))
+        (let ((contents (slot-value (slot-value  msg 'datum) 'v)))
           (declare (ignorable contents))                    #|line 418|#
           (let (( f (funcall (quote open)  (slot-value  inst 'filename)  "w"  #|line 419|#)))
             (declare (ignorable  f))
             (cond
               ((not (equal   f  nil))                       #|line 420|#
-                (funcall (slot-value  f 'write)  (funcall (slot-value (slot-value  msg 'datum) 'srepr) )  #|line 421|#)
+                (funcall (slot-value  f 'write)  (slot-value (slot-value  msg 'datum) 'v)  #|line 421|#)
                 (funcall (slot-value  f 'close) )           #|line 422|#
                 (funcall (quote send)   eh  "done" (funcall (quote new_datum_bang) )  msg  #|line 423|#)
                 )
@@ -524,12 +524,12 @@
     (declare (ignorable  inst))                             #|line 443|#
     (cond
       (( equal    "1" (slot-value  msg 'port))              #|line 444|#
-        (setf (slot-value  inst 'buffer1) (funcall (quote clone_string)  (funcall (slot-value (slot-value  msg 'datum) 'srepr) )  #|line 445|#))
+        (setf (slot-value  inst 'buffer1) (funcall (quote clone_string)  (slot-value (slot-value  msg 'datum) 'v)  #|line 445|#))
         (setf (slot-value  inst 'scount) (+ (slot-value  inst 'scount)  1)) #|line 446|#
         (funcall (quote maybe_stringconcat)   eh  inst  msg  #|line 447|#)
         )
       (( equal    "2" (slot-value  msg 'port))              #|line 448|#
-        (setf (slot-value  inst 'buffer2) (funcall (quote clone_string)  (funcall (slot-value (slot-value  msg 'datum) 'srepr) )  #|line 449|#))
+        (setf (slot-value  inst 'buffer2) (funcall (quote clone_string)  (slot-value (slot-value  msg 'datum) 'v)  #|line 449|#))
         (setf (slot-value  inst 'scount) (+ (slot-value  inst 'scount)  1)) #|line 450|#
         (funcall (quote maybe_stringconcat)   eh  inst  msg  #|line 451|#)
         )
@@ -575,7 +575,7 @@
   (declare (ignorable  eh  msg))                            #|line 485|#
   (let ((cmd (slot-value  eh 'instance_data)))
     (declare (ignorable cmd))                               #|line 486|#
-    (let ((s (funcall (slot-value (slot-value  msg 'datum) 'srepr) )))
+    (let ((s (slot-value (slot-value  msg 'datum) 'v)))
       (declare (ignorable s))                               #|line 487|#
       (let (( ret  nil))
         (declare (ignorable  ret))                          #|line 488|#
@@ -653,7 +653,7 @@
     (let ((err (funcall (quote fetch_first_output)   main_container  error_port  #|line 547|#)))
       (declare (ignorable err))
       (cond
-        (( and  (not (equal   err  nil)) ( <   0 (length (funcall (quote trimws)  (funcall (slot-value  err 'srepr) ) )))) #|line 548|#
+        (( and  (not (equal   err  nil)) ( <   0 (length (funcall (quote trimws)  (slot-value  err 'v) )))) #|line 548|#
           (format *standard-output* "~a~%"  "___ !!! ERRORS !!! ___") #|line 549|#
           (funcall (quote print_specific_output)   main_container  error_port  #|line 550|#) #|line 551|#
           ))))                                              #|line 552|#
@@ -785,7 +785,7 @@
                             (declare (ignorable outp))
                             (cond
                               (( equal    nil  outp)        #|line 664|#
-                                (format *standard-output* "~a~%"  "(no outputs)") #|line 665|#
+                                (format *standard-output* "~a~%"  "«««no outputs»»»)") #|line 665|#
                                 )
                               (t                            #|line 666|#
                                 (funcall (quote print_specific_output)   main_container  ""  #|line 667|#) #|line 668|#
@@ -796,18 +796,18 @@
                           (format *standard-output* "~a~%"  "--- done ---") #|line 671|# #|line 672|#
                           ))))                              #|line 673|#
                   ))))))))                                  #|line 674|#
-  )                                                         #|line 676|# #|line 677|# #|  utility functions  |# #|line 678|#
+  )                                                         #|line 676|# #|  utility functions  |# #|line 677|#
 (defun send_int (&optional  eh  port  i  causing_message)
-  (declare (ignorable  eh  port  i  causing_message))       #|line 679|#
-  (let ((datum (funcall (quote new_datum_string)  (format nil "~a"  i)  #|line 680|#)))
+  (declare (ignorable  eh  port  i  causing_message))       #|line 678|#
+  (let ((datum (funcall (quote new_datum_string)  (format nil "~a"  i)  #|line 679|#)))
     (declare (ignorable datum))
-    (funcall (quote send)   eh  port  datum  causing_message  #|line 681|#)) #|line 682|#
+    (funcall (quote send)   eh  port  datum  causing_message  #|line 680|#)) #|line 681|#
   )
 (defun send_bang (&optional  eh  port  causing_message)
-  (declare (ignorable  eh  port  causing_message))          #|line 684|#
+  (declare (ignorable  eh  port  causing_message))          #|line 683|#
   (let ((datum (funcall (quote new_datum_bang) )))
-    (declare (ignorable datum))                             #|line 685|#
-    (funcall (quote send)   eh  port  datum  causing_message  #|line 686|#)) #|line 687|#
+    (declare (ignorable datum))                             #|line 684|#
+    (funcall (quote send)   eh  port  datum  causing_message  #|line 685|#)) #|line 686|#
   )
 
 

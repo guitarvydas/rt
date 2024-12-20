@@ -656,14 +656,14 @@ function fetch_first_output (eh,port) {/* line 253 */
 function print_specific_output (eh,port) {/* line 260 */
     /*  port ∷ “” */          /* line 261 */
     let  datum = fetch_first_output ( eh, port)/* line 262 */;
-    console.log ( datum.srepr ());/* line 263 *//* line 264 */
+    console.log ( datum.v);   /* line 263 *//* line 264 */
 }
 
 function print_specific_output_to_stderr (eh,port) {/* line 265 */
     /*  port ∷ “” */          /* line 266 */
     let  datum = fetch_first_output ( eh, port)/* line 267 */;
     /*  I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in... *//* line 268 */
-    console.error ( datum.srepr ());/* line 269 *//* line 270 *//* line 271 */
+    console.error ( datum.v); /* line 269 *//* line 270 *//* line 271 */
 }
 
 function put_output (eh,msg) {/* line 272 */
@@ -693,7 +693,7 @@ function probeC_instantiate (reg,owner,name,template_data) {/* line 296 */
 }
 
 function probe_handler (eh,msg) {/* line 301 */
-    let s =  msg.datum.srepr ();/* line 302 */
+    let s =  msg.datum.v;     /* line 302 */
     console.error ( `${ "... probe "}${ `${ eh.name}${ `${ ": "}${ s}` }` }` );/* line 303 *//* line 304 *//* line 305 */
 }
 
@@ -776,7 +776,7 @@ function low_level_read_text_file_instantiate (reg,owner,name,template_data) {/*
 }
 
 function low_level_read_text_file_handler (eh,msg) {/* line 383 */
-    let fname =  msg.datum.srepr ();/* line 384 */
+    let fname =  msg.datum.v; /* line 384 */
 
     if (fname == "0") {
     data = fs.readFileSync (0);
@@ -821,12 +821,12 @@ function syncfilewrite_instantiate (reg,owner,name,template_data) {/* line 407 *
 function syncfilewrite_handler (eh,msg) {/* line 413 */
     let  inst =  eh.instance_data;/* line 414 */
     if ( "filename" ==  msg.port) {/* line 415 */
-      inst.filename =  msg.datum.srepr ();/* line 416 */}
+      inst.filename =  msg.datum.v;/* line 416 */}
     else if ( "input" ==  msg.port) {/* line 417 */
-      let contents =  msg.datum.srepr ();/* line 418 */
+      let contents =  msg.datum.v;/* line 418 */
       let  f = open ( inst.filename, "w")/* line 419 */;
       if ( f!= null) {        /* line 420 */
-        f.write ( msg.datum.srepr ())/* line 421 */
+        f.write ( msg.datum.v)/* line 421 */
         f.close ()            /* line 422 */
         send ( eh, "done",new_datum_bang (), msg)/* line 423 */}
       else {                  /* line 424 */
@@ -851,11 +851,11 @@ function stringconcat_instantiate (reg,owner,name,template_data) {/* line 436 */
 function stringconcat_handler (eh,msg) {/* line 442 */
     let  inst =  eh.instance_data;/* line 443 */
     if ( "1" ==  msg.port) {  /* line 444 */
-      inst.buffer1 = clone_string ( msg.datum.srepr ())/* line 445 */;
+      inst.buffer1 = clone_string ( msg.datum.v)/* line 445 */;
       inst.scount =  inst.scount+ 1;/* line 446 */
       maybe_stringconcat ( eh, inst, msg)/* line 447 */}
     else if ( "2" ==  msg.port) {/* line 448 */
-      inst.buffer2 = clone_string ( msg.datum.srepr ())/* line 449 */;
+      inst.buffer2 = clone_string ( msg.datum.v)/* line 449 */;
       inst.scount =  inst.scount+ 1;/* line 450 */
       maybe_stringconcat ( eh, inst, msg)/* line 451 */}
     else {                    /* line 452 */
@@ -889,7 +889,7 @@ function shell_out_instantiate (reg,owner,name,template_data) {/* line 479 */
 
 function shell_out_handler (eh,msg) {/* line 485 */
     let cmd =  eh.instance_data;/* line 486 */
-    let s =  msg.datum.srepr ();/* line 487 */
+    let s =  msg.datum.v;     /* line 487 */
     let  ret =  null;         /* line 488 */
     let  rc =  null;          /* line 489 */
     let  stdout =  null;      /* line 490 */
@@ -945,7 +945,7 @@ function initialize_component_palette (root_project,root_0D,diagram_source_files
 function print_error_maybe (main_container) {/* line 545 */
     let error_port =  "✗";    /* line 546 */
     let err = fetch_first_output ( main_container, error_port)/* line 547 */;
-    if (((( err!= null)) && (( 0 < (trimws ( err.srepr ()).length))))) {/* line 548 */
+    if (((( err!= null)) && (( 0 < (trimws ( err.v).length))))) {/* line 548 */
       console.log ( "___ !!! ERRORS !!! ___");/* line 549 */
       print_specific_output ( main_container, error_port)/* line 550 *//* line 551 */}/* line 552 *//* line 553 */
 }
@@ -1054,22 +1054,22 @@ function start_helper (palette,env,show_all_outputs) {/* line 640 */
         print_error_maybe ( main_container)/* line 662 */
         let outp = fetch_first_output ( main_container, "")/* line 663 */;
         if ( null ==  outp) { /* line 664 */
-          console.log ( "(no outputs)");/* line 665 */}
+          console.log ( "«««no outputs»»»)");/* line 665 */}
         else {                /* line 666 */
           print_specific_output ( main_container, "")/* line 667 *//* line 668 */}/* line 669 */}
       if ( show_all_outputs) {/* line 670 */
         console.log ( "--- done ---");/* line 671 *//* line 672 */}/* line 673 */}/* line 674 *//* line 675 */
 }
-                              /* line 676 *//* line 677 */
-/*  utility functions  */     /* line 678 */
-function send_int (eh,port,i,causing_message) {/* line 679 */
-    let datum = new_datum_string (`${ i}`)/* line 680 */;
-    send ( eh, port, datum, causing_message)/* line 681 *//* line 682 *//* line 683 */
+                              /* line 676 */
+/*  utility functions  */     /* line 677 */
+function send_int (eh,port,i,causing_message) {/* line 678 */
+    let datum = new_datum_string (`${ i}`)/* line 679 */;
+    send ( eh, port, datum, causing_message)/* line 680 *//* line 681 *//* line 682 */
 }
 
-function send_bang (eh,port,causing_message) {/* line 684 */
-    let datum = new_datum_bang ();/* line 685 */
-    send ( eh, port, datum, causing_message)/* line 686 *//* line 687 */
+function send_bang (eh,port,causing_message) {/* line 683 */
+    let datum = new_datum_bang ();/* line 684 */
+    send ( eh, port, datum, causing_message)/* line 685 *//* line 686 */
 }
 
 
