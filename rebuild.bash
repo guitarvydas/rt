@@ -34,7 +34,7 @@ ${D2J} rt2js.drawio
 # python3 main.py . - 0d.rt.b main rt2js.drawio.json >generated.b.mjs
 # cat generated.a.mjs generated.b.mjs > zd.mjs
 
-python3 main.py . - count.rt main rt2js.drawio.json >count.mjs
+python3 main.py . - 'x' main rt2js.drawio.json >count.mjs
 # python3 main.py . - decode.rt main rt2js.drawio.json >decode.mjs
 # python3 main.py . - reverser.rt main rt2js.drawio.json >reverser.mjs
 # python3 main.py . - delay.rt main rt2js.drawio.json >delay.mjs
