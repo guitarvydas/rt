@@ -1,4 +1,3 @@
-"javascript":"
 
 
 let  count_counter =  0;                               /* line 1 */
@@ -1218,4 +1217,3 @@ function send_bang (eh,port,causing_message) {         /* line 685 */
 
 
 
-",

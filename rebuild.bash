@@ -30,12 +30,12 @@ echo '*** Python not generated ***' >generated.py
 echo '*** Common Lisp not generated ***' >generated.lisp
 
 ${D2J} rt2js.drawio
-python3 main.py . - 'x' main rt2js.drawio.json >generated.mjs
+python3 main.py . - - main rt2js.drawio.json >generated-js.json
 
 
-echo '"javascript":"' >generated-js.json
-cat generated.mjs >> generated-js.json
-echo '",' >> generated-js.json
+# echo '"javascript":"' >generated-js.json
+# cat generated.mjs >> generated-js.json
+# echo '",' >> generated-js.json
 echo '"python":"' >generated-py.json
 cat generated.py >> generated-py.json
 echo '",' >> generated-py.json
