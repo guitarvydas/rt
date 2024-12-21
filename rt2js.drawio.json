@@ -1,6 +1,57 @@
 [
     {
         "file": "rt2js.drawio",
+        "name": "main",
+        "children": [
+            {
+                "name": "Generate Javascript",
+                "id": 5
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Generate Javascript",
+                    "id": 5
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Generate Javascript",
+                    "id": 5
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Generate Javascript",
+                    "id": 5
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            }
+        ]
+    },
+    {
+        "file": "rt2js.drawio",
         "name": "Generate Javascript",
         "children": [
             {
@@ -227,57 +278,6 @@
                     "id": 0
                 },
                 "target_port": ""
-            }
-        ]
-    },
-    {
-        "file": "rt2js.drawio",
-        "name": "main",
-        "children": [
-            {
-                "name": "Generate Javascript",
-                "id": 5
-            }
-        ],
-        "connections": [
-            {
-                "dir": 0,
-                "source": {
-                    "name": "",
-                    "id": 0
-                },
-                "source_port": "",
-                "target": {
-                    "name": "Generate Javascript",
-                    "id": 5
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 5
-                },
-                "source_port": "",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 5
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
             }
         ]
     },
@@ -741,6 +741,19 @@
                     "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
                     "id": 5
                 },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
+                    "id": 5
+                },
                 "source_port": "\u2717",
                 "target": {
                     "name": "",
@@ -751,15 +764,15 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "$ ./ndsl internalize.ohm internalize.rewrite\u00a0",
-                    "id": 5
+                    "name": "Read Text File",
+                    "id": 11
                 },
-                "source_port": "",
+                "source_port": "\u2717",
                 "target": {
                     "name": "",
                     "id": 0
                 },
-                "target_port": ""
+                "target_port": "\u2717"
             }
         ]
     },
