@@ -34,13 +34,11 @@ ${D2J} rt2js.drawio
 # python3 main.py . - 0d.rt.b main rt2js.drawio.json >generated.b.mjs
 # cat generated.a.mjs generated.b.mjs > zd.mjs
 
-python3 main.py . - 'x' main rt2js.drawio.json >count.mjs
-# python3 main.py . - decode.rt main rt2js.drawio.json >decode.mjs
+python3 main.py . - 'x' main rt2js.drawio.json >gen.mjs
 # python3 main.py . - reverser.rt main rt2js.drawio.json >reverser.mjs
 # python3 main.py . - delay.rt main rt2js.drawio.json >delay.mjs
-# python3 main.py . - monitor.rt main rt2js.drawio.json >monitor.mjs
 
-cat count.mjs zd.mjs decode.mjs reverser.mjs delay.mjs monitor.mjs >generated.mjs
+cat gen.mjs zd.mjs reverser.mjs delay.mjs >generated.mjs
 
 
 echo '"javascript":"' >generated-js.json
