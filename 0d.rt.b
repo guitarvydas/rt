@@ -455,22 +455,24 @@ defn stringconcat_handler (eh, msg) {
 }
 
 defn maybe_stringconcat (eh, inst, msg) {
-    if (0 = #len (inst.buffer1)) and (0 = #len (inst.buffer2)) {
-        runtime_error (“something is wrong in stringconcat, both strings are 0 length”)
-    }
     if inst.scount >= 2 {
-        deftemp concatenated_string ⇐ “”
-        if 0 = #len (inst.buffer1) {
-            concatenated_string ⇐ inst.buffer2
-        } elif 0 = #len (inst.buffer2) {
-            concatenated_string ⇐ inst.buffer1
-        } else {
-            concatenated_string ⇐ inst.buffer1 + inst.buffer2
-	}        
-        send_string (eh, “”, concatenated_string, msg)
-        inst.buffer1 ⇐ ϕ
-        inst.buffer2 ⇐ ϕ
-        inst.scount ⇐ 0}
+        if (0 = #len (inst.buffer1)) and (0 = #len (inst.buffer2)) {
+    	    runtime_error (“something is wrong in stringconcat, both strings are 0 length”)
+	} else {
+	    deftemp concatenated_string ⇐ “”
+	    if 0 = #len (inst.buffer1) {
+		concatenated_string ⇐ inst.buffer2
+	    } elif 0 = #len (inst.buffer2) {
+		concatenated_string ⇐ inst.buffer1
+	    } else {
+		concatenated_string ⇐ inst.buffer1 + inst.buffer2
+	    }    
+	    send_string (eh, “”, concatenated_string, msg)
+	    inst.buffer1 ⇐ ϕ
+	    inst.buffer2 ⇐ ϕ
+	    inst.scount ⇐ 0
+	}
+    }
 }
 
 ⌈⌉
