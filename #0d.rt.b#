@@ -619,7 +619,7 @@ defn switch1star_handler (eh, msg) {
     whichOutput ≡ inst.state
     if “” = msg.port {
 	if “1” = whichOutput {
-	    forward (eh, “1*”, msg.datum.v)
+	    forward (eh, “1”, msg.datum.v)
 	    inst.state ⇐ “*”
 	} elif “*” = whichOutput {
 	    forward (eh, “*”, msg.datum.v)
