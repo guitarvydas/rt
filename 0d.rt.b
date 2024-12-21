@@ -604,6 +604,58 @@ defn fakepipename_handler (eh, msg) {
 }
 
 
+defobj Switch1star_Instance_Data () {
+        • state ⇐ “1”
+}
+
+defn switch1star_instantiate (reg, owner, name, template_data) {
+    name_with_id ≡ gensymbol (“switch1*”)
+    instp ≡ #fresh (Switch1star_Instance_Data)
+    return make_leaf (name_with_id, owner, instp, ↪︎switch1star_handler)
+}
+
+defn switch1star_handler (eh, msg) {
+    deftemp inst ⇐ eh.instance_data
+    whichOutput ≡ inst.state
+    if “” = msg.port {
+	if “1” = whichOutput {
+	    forward (eh, “1*”, msg.datum.v)
+	    inst.state ⇐ “*”
+	} elif “*” = whichOutput {
+	    forward (eh, “*”, msg.datum.v)
+	} else {
+	    send (eh, “✗”, “internal error bad state in switch1*”, msg)
+	}
+    } elif “reset” = msg.port {
+	    inst.state ⇐ “1”
+    } else {
+        send (eh, “✗”, “internal error bad message for switch1*”, msg)
+    }
+}
+
+defobj Latch_Instance_Data () {
+        • datum ⇐ ϕ
+}
+
+defn latch_instantiate (reg, owner, name, template_data) {
+    name_with_id ≡ gensymbol (“latch”)
+    instp ≡ #fresh (Latch_Instance_Data)
+    return make_leaf (name_with_id, owner, instp, ↪︎latch_handler)
+}
+
+defn latch_handler (eh, msg) {
+    deftemp inst ⇐ eh.instance_data
+    whichOutput ≡ inst.state
+    if “” = msg.port {
+        inst.datum ⇐ msg.datum
+    } elif “release” = msg.port {
+        deftemp d ⇐ inst.datum
+        send (eh, “”, d, msg)
+    } else {
+        send (eh, “✗”, “internal error bad message for latch”, msg)
+    }
+}
+
 ⌈ all of the the built_in leaves are listed here⌉
 ⌈ future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project⌉
 
@@ -619,6 +671,8 @@ defn initialize_stock_components (reg) {
 
     register_component (reg, mkTemplate ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate))
     register_component (reg, mkTemplate ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate))
+    register_component (reg, mkTemplate ( “switch1*”, ϕ, ↪︎switch1star_instantiate))
+    register_component (reg, mkTemplate ( “latch”, ϕ, ↪︎latch_instantiate))
        ⌈ for fakepipe⌉
     register_component (reg, mkTemplate ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate))
 }
