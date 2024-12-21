@@ -763,20 +763,19 @@
   (declare (ignorable  eh  msg))                            #|line 646|#
   (let (( inst (slot-value  eh 'instance_data)))
     (declare (ignorable  inst))                             #|line 647|#
-    (let ((whichOutput (slot-value  inst 'state)))
-      (declare (ignorable whichOutput))                     #|line 648|#
-      (cond
-        (( equal    "" (slot-value  msg 'port))             #|line 649|#
-          (setf (slot-value  inst 'datum) (slot-value  msg 'datum)) #|line 650|#
-          )
-        (( equal    "release" (slot-value  msg 'port))      #|line 651|#
-          (let (( d (slot-value  inst 'datum)))
-            (declare (ignorable  d))                        #|line 652|#
-            (funcall (quote send)   eh  ""  d  msg          #|line 653|#))
-          )
-        (t                                                  #|line 654|#
-          (funcall (quote send)   eh  "✗"  "internal error bad message for latch"  msg  #|line 655|#) #|line 656|#
-          ))))                                              #|line 657|#
+    (cond
+      (( equal    "" (slot-value  msg 'port))               #|line 648|#
+        (setf (slot-value  inst 'datum) (slot-value  msg 'datum)) #|line 649|#
+        )
+      (( equal    "release" (slot-value  msg 'port))        #|line 650|#
+        (let (( d (slot-value  inst 'datum)))
+          (declare (ignorable  d))                          #|line 651|#
+          (funcall (quote send)   eh  ""  d  msg            #|line 652|#)
+          (setf (slot-value  inst 'datum)  nil)             #|line 653|#)
+        )
+      (t                                                    #|line 654|#
+        (funcall (quote send)   eh  "✗"  "internal error bad message for latch"  msg  #|line 655|#) #|line 656|#
+        )))                                                 #|line 657|#
   ) #|  all of the the built_in leaves are listed here |#   #|line 659|# #|  future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project |# #|line 660|# #|line 661|#
 (defun initialize_stock_components (&optional  reg)
   (declare (ignorable  reg))                                #|line 662|#

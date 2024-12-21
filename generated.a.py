@@ -99,9 +99,9 @@ def destroy_port (msg):                                     #line 111
 #                                                           #line 115
 def format_message (m):                                     #line 116
     if  m ==  None:                                         #line 117
-        return  str( "%5C“") +  str( m.port) +  str( "%5C”:%5C“") +  str( "ϕ") +  "%5C”,"    #line 118
+        return  str( "‹") +  str( m.port) +  str( "›:‹") +  str( "ϕ") +  "›,"    #line 118
     else:                                                   #line 119
-        return  str( "%5C“") +  str( m.port) +  str( "%5C”:%5C“") +  str( m.datum.v) +  "%5C”,"    #line 120#line 121#line 122#line 123
+        return  str( "‹") +  str( m.port) +  str( "›:‹") +  str( m.datum.v) +  "›,"    #line 120#line 121#line 122#line 123
 
 enumDown =  0                                               #line 124
 enumAcross =  1                                             #line 125
@@ -141,7 +141,7 @@ def create_up_connector (container,proto_conn,connectors,children_by_id):#line 1
     connector.direction =  "up"                             #line 165
     source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])]#line 166
     if  source_component ==  None:                          #line 167
-        print ( str( "internal error: .Up connection source not ok ") + ( proto_conn [ "source"]) [ "name"] )#line 168
+        load_error ( str( "internal error: .Up connection source not ok ") + ( proto_conn [ "source"]) [ "name"] )#line 168
     else:                                                   #line 169
         connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])#line 170
         connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)#line 171#line 172

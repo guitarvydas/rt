@@ -645,12 +645,12 @@ defn latch_instantiate (reg, owner, name, template_data) {
 
 defn latch_handler (eh, msg) {
     deftemp inst ⇐ eh.instance_data
-    whichOutput ≡ inst.state
     if “” = msg.port {
         inst.datum ⇐ msg.datum
     } elif “release” = msg.port {
         deftemp d ⇐ inst.datum
         send (eh, “”, d, msg)
+        inst.datum ⇐ ϕ
     } else {
         send (eh, “✗”, “internal error bad message for latch”, msg)
     }

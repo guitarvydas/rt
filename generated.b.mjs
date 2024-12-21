@@ -654,12 +654,12 @@ function latch_instantiate (reg,owner,name,template_data) {/* line 640 */
 
 function latch_handler (eh,msg) {                      /* line 646 */
     let  inst =  eh.instance_data;                     /* line 647 */
-    let whichOutput =  inst.state;                     /* line 648 */
-    if ( "" ==  msg.port) {                            /* line 649 */
-      inst.datum =  msg.datum;                         /* line 650 */}
-    else if ( "release" ==  msg.port) {                /* line 651 */
-      let  d =  inst.datum;                            /* line 652 */
-      send ( eh, "", d, msg)                           /* line 653 */}
+    if ( "" ==  msg.port) {                            /* line 648 */
+      inst.datum =  msg.datum;                         /* line 649 */}
+    else if ( "release" ==  msg.port) {                /* line 650 */
+      let  d =  inst.datum;                            /* line 651 */
+      send ( eh, "", d, msg)                           /* line 652 */
+      inst.datum =  null;                              /* line 653 */}
     else {                                             /* line 654 */
       send ( eh, "✗", "internal error bad message for latch", msg)/* line 655 *//* line 656 */}/* line 657 *//* line 658 */
 }

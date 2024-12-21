@@ -109,9 +109,9 @@ function destroy_port (msg) {                          /* line 111 *//* line 112
 /*  */                                                 /* line 115 */
 function format_message (m) {                          /* line 116 */
     if ( m ==  null) {                                 /* line 117 */
-      return  `${ "%5C“"}${ `${ m.port}${ `${ "%5C”:%5C“"}${ `${ "ϕ"}${ "%5C”,"}` }` }` }` /* line 118 */;}
+      return  `${ "‹"}${ `${ m.port}${ `${ "›:‹"}${ `${ "ϕ"}${ "›,"}` }` }` }` /* line 118 */;}
     else {                                             /* line 119 */
-      return  `${ "%5C“"}${ `${ m.port}${ `${ "%5C”:%5C“"}${ `${ m.datum.v}${ "%5C”,"}` }` }` }` /* line 120 */;/* line 121 */}/* line 122 *//* line 123 */
+      return  `${ "‹"}${ `${ m.port}${ `${ "›:‹"}${ `${ m.datum.v}${ "›,"}` }` }` }` /* line 120 */;/* line 121 */}/* line 122 *//* line 123 */
 }
 
 const  enumDown =  0                                   /* line 124 */;
@@ -154,7 +154,7 @@ function create_up_connector (container,proto_conn,connectors,children_by_id) {/
     connector.direction =  "up";                       /* line 165 */
     let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 166 */
     if ( source_component ==  null) {                  /* line 167 */
-      print ( `${ "internal error: .Up connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 168 */}
+      load_error ( `${ "internal error: .Up connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 168 */}
     else {                                             /* line 169 */
       connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 170 */;
       connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 171 */;/* line 172 */}

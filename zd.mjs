@@ -109,9 +109,9 @@ function destroy_port (msg) {                          /* line 111 *//* line 112
 /*  */                                                 /* line 115 */
 function format_message (m) {                          /* line 116 */
     if ( m ==  null) {                                 /* line 117 */
-      return  `${ "%5C“"}${ `${ m.port}${ `${ "%5C”:%5C“"}${ `${ "ϕ"}${ "%5C”,"}` }` }` }` /* line 118 */;}
+      return  `${ "‹"}${ `${ m.port}${ `${ "›:‹"}${ `${ "ϕ"}${ "›,"}` }` }` }` /* line 118 */;}
     else {                                             /* line 119 */
-      return  `${ "%5C“"}${ `${ m.port}${ `${ "%5C”:%5C“"}${ `${ m.datum.v}${ "%5C”,"}` }` }` }` /* line 120 */;/* line 121 */}/* line 122 *//* line 123 */
+      return  `${ "‹"}${ `${ m.port}${ `${ "›:‹"}${ `${ m.datum.v}${ "›,"}` }` }` }` /* line 120 */;/* line 121 */}/* line 122 *//* line 123 */
 }
 
 const  enumDown =  0                                   /* line 124 */;
@@ -154,7 +154,7 @@ function create_up_connector (container,proto_conn,connectors,children_by_id) {/
     connector.direction =  "up";                       /* line 165 */
     let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 166 */
     if ( source_component ==  null) {                  /* line 167 */
-      print ( `${ "internal error: .Up connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 168 */}
+      load_error ( `${ "internal error: .Up connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 168 */}
     else {                                             /* line 169 */
       connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 170 */;
       connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 171 */;/* line 172 */}
@@ -1041,12 +1041,12 @@ function latch_instantiate (reg,owner,name,template_data) {/* line 640 */
 
 function latch_handler (eh,msg) {                      /* line 646 */
     let  inst =  eh.instance_data;                     /* line 647 */
-    let whichOutput =  inst.state;                     /* line 648 */
-    if ( "" ==  msg.port) {                            /* line 649 */
-      inst.datum =  msg.datum;                         /* line 650 */}
-    else if ( "release" ==  msg.port) {                /* line 651 */
-      let  d =  inst.datum;                            /* line 652 */
-      send ( eh, "", d, msg)                           /* line 653 */}
+    if ( "" ==  msg.port) {                            /* line 648 */
+      inst.datum =  msg.datum;                         /* line 649 */}
+    else if ( "release" ==  msg.port) {                /* line 650 */
+      let  d =  inst.datum;                            /* line 651 */
+      send ( eh, "", d, msg)                           /* line 652 */
+      inst.datum =  null;                              /* line 653 */}
     else {                                             /* line 654 */
       send ( eh, "✗", "internal error bad message for latch", msg)/* line 655 *//* line 656 */}/* line 657 *//* line 658 */
 }
