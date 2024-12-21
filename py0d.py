@@ -1193,22 +1193,22 @@ def stringconcat_handler (eh, msg):
     
 
 def maybe_stringconcat (eh, inst, msg):      
-    if (0 == len (inst.buffer1)) and (0 == len (inst.buffer2)):
-        runtime_error ("something is wrong in stringconcat, both strings are 0 length")
-    
     if inst.count >= 2:
-        concatenated_string = ""
-        if 0 == len (inst.buffer1):
-            concatenated_string = inst.buffer2
-        elif 0 == len (inst.buffer2):
-            concatenated_string = inst.buffer1
+        if (0 == len (inst.buffer1)) and (0 == len (inst.buffer2)):
+            runtime_error ("something is wrong in stringconcat, both strings are 0 length")
         else:
-            concatenated_string = inst.buffer1 + inst.buffer2
-        
-        send_string (eh, "", concatenated_string, msg)
-        inst.buffer1 = None
-        inst.buffer2 = None
-        inst.count = 0
+            concatenated_string = ""
+            if 0 == len (inst.buffer1):
+                concatenated_string = inst.buffer2
+            elif 0 == len (inst.buffer2):
+                concatenated_string = inst.buffer1
+            else:
+                concatenated_string = inst.buffer1 + inst.buffer2
+                
+                send_string (eh, "", concatenated_string, msg)
+                inst.buffer1 = None
+                inst.buffer2 = None
+                inst.count = 0
 
 ####
 
