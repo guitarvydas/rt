@@ -54,9 +54,7 @@ ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 o
         send_string (eh, «err», \`read error on file '\$\{«fname»}'\`, «msg»);⤶
     }
 ’
-
 ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
-console.log («fname»);
     let jstr = undefined;
     if (filename == "0") {
 	jstr = fs.readFileSync (0);

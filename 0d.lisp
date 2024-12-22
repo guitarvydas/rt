@@ -528,10 +528,10 @@ x)))
           ))
       (cond
         ((not  was_sent)                                    #|line 391|#
-          (funcall (quote print)   "\n\n*** Error: ***"     #|line 392|#)
-          (funcall (quote print)   "***"                    #|line 393|#)
-          (funcall (quote print)   (concatenate 'string (slot-value  container 'name)  (concatenate 'string  ": message '"  (concatenate 'string (slot-value  message 'port)  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))  #|line 394|#)
-          (funcall (quote print)   "***"                    #|line 395|#)
+          (format *standard-output* "~a~%"  "\n\n*** Error: ***") #|line 392|#
+          (format *standard-output* "~a~%"  "***")          #|line 393|#
+          (format *standard-output* "~a~%"  (concatenate 'string (slot-value  container 'name)  (concatenate 'string  ": message '"  (concatenate 'string (slot-value  message 'port)  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))) #|line 394|#
+          (format *standard-output* "~a~%"  "***")          #|line 395|#
           (break)                                           #|line 396|# #|line 397|#
           ))))                                              #|line 398|#
   )
@@ -671,7 +671,7 @@ x)))
     do
       (progn
         c                                                   #|line 502|#
-        (funcall (quote print)  (slot-value  c 'name) )     #|line 503|#
+        (format *standard-output* "~a~%" (slot-value  c 'name)) #|line 503|#
         ))
   (format *standard-output* "~a~%"  "***************")      #|line 504|#
   (funcall (quote nl) )                                     #|line 505|# #|line 506|#
@@ -1062,7 +1062,7 @@ x)))
                           )
                         (t                                  #|line 864|#
                           (funcall (quote print_error_maybe)   main_container  #|line 865|#)
-                          (let ((outp (funcall (quote fetch_first_output)   main_container  "" ⎩86
+                          (let ((outp (funcall (quote fetch_first_output)   main_contai
 
 
 

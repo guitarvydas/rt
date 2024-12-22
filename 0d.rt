@@ -389,10 +389,10 @@ defn route (container, from_component, message) {
 	}
     }
     if not (was_sent) {
-        print (“\n\n*** Error: ***”)
-        print (“***”)
-        print (#strcons (container.name, #strcons (“: message '”, #strcons (message.port, #strcons (“' from ”, #strcons (fromname, “ dropped on floor...”))))))
-        print (“***”)
+        #print_stdout (“\n\n*** Error: ***”)
+        #print_stdout (“***”)
+        #print_stdout (#strcons (container.name, #strcons (“: message '”, #strcons (message.port, #strcons (“' from ”, #strcons (fromname, “ dropped on floor...”))))))
+        #print_stdout (“***”)
         #abort ()
     }
 }
@@ -500,7 +500,7 @@ defn dump_registry (reg) {
     nl ()
     #print_stdout (“*** PALETTE ***”)
     for c in reg.templates{
-        print (c.name)}
+        #print_stdout (c.name)}
     #print_stdout (“***************”)
     nl ()
 }

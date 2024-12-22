@@ -528,10 +528,10 @@ x)))
           ))
       (cond
         ((not  was_sent)                                    #|line 391|#
-          (funcall (quote print)   "\n\n*** Error: ***"     #|line 392|#)
-          (funcall (quote print)   "***"                    #|line 393|#)
-          (funcall (quote print)   (concatenate 'string (slot-value  container 'name)  (concatenate 'string  ": message '"  (concatenate 'string (slot-value  message 'port)  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))  #|line 394|#)
-          (funcall (quote print)   "***"                    #|line 395|#)
+          (format *standard-output* "~a~%"  "\n\n*** Error: ***") #|line 392|#
+          (format *standard-output* "~a~%"  "***")          #|line 393|#
+          (format *standard-output* "~a~%"  (concatenate 'string (slot-value  container 'name)  (concatenate 'string  ": message '"  (concatenate 'string (slot-value  message 'port)  (concatenate 'string  "' from "  (concatenate 'string  fromname  " dropped on floor...")))))) #|line 394|#
+          (format *standard-output* "~a~%"  "***")          #|line 395|#
           (break)                                           #|line 396|# #|line 397|#
           ))))                                              #|line 398|#
   )
@@ -671,7 +671,7 @@ x)))
     do
       (progn
         c                                                   #|line 502|#
-        (funcall (quote print)  (slot-value  c 'name) )     #|line 503|#
+        (format *standard-output* "~a~%" (slot-value  c 'name)) #|line 503|#
         ))
   (format *standard-output* "~a~%"  "***************")      #|line 504|#
   (funcall (quote nl) )                                     #|line 505|# #|line 506|#
@@ -1062,7 +1062,7 @@ x)))
                           )
                         (t                                  #|line 864|#
                           (funcall (quote print_error_maybe)   main_container  #|line 865|#)
-                          (let ((outp (funcall (quote fetch_first_output)   main_container  "" ⎩86
+                          (let ((outp (funcall (quote fetch_first_output)   main_contai
 
 
 
@@ -1259,8 +1259,8 @@ x)))
   )
 (defclass StringConcat_Instance_Data ()                     #|line 145|#
   (
-    (buffer1 :accessor buffer1 :initarg :buffer1 :initform  nil)  #|line 146|#
-    (buffer2 :accessor buffer2 :initarg :buffer2 :initform  nil)  #|line 147|#
+    (buffer1 :accessor buffer1 :initarg :buffer1 :initform  "")  #|line 146|#
+    (buffer2 :accessor buffer2 :initarg :buffer2 :initform  "")  #|line 147|#
     (scount :accessor scount :initarg :scount :initform  0)  #|line 148|#)) #|line 149|#
 
                                                             #|line 150|#
@@ -1295,51 +1295,45 @@ x)))
   (declare (ignorable  eh  inst  msg))                      #|line 172|#
   (cond
     (( >=  (slot-value  inst 'scount)  2)                   #|line 173|#
-      (cond
-        (( and  ( equal    0 (length (slot-value  inst 'buffer1))) ( equal    0 (length (slot-value  inst 'buffer2)))) #|line 174|#
-          (funcall (quote runtime_error)   "something is wrong in stringconcat, both strings are 0 length"  #|line 175|#)
-          )
-        (t                                                  #|line 176|#
-          (let (( concatenated_string  ""))
-            (declare (ignorable  concatenated_string))      #|line 177|#
-            (cond
-              (( equal    0 (length (slot-value  inst 'buffer1))) #|line 178|#
-                (setf  concatenated_string (slot-value  inst 'buffer2)) #|line 179|#
-                )
-              (( equal    0 (length (slot-value  inst 'buffer2))) #|line 180|#
-                (setf  concatenated_string (slot-value  inst 'buffer1)) #|line 181|#
-                )
-              (t                                            #|line 182|#
-                (setf  concatenated_string (+ (slot-value  inst 'buffer1) (slot-value  inst 'buffer2))) #|line 183|# #|line 184|#
-                ))
-            (funcall (quote send_string)   eh  ""  concatenated_string  msg  #|line 185|#)
-            (setf (slot-value  inst 'buffer1)  nil)         #|line 186|#
-            (setf (slot-value  inst 'buffer2)  nil)         #|line 187|#
-            (setf (slot-value  inst 'scount)  0)            #|line 188|#) #|line 189|#
-          ))                                                #|line 190|#
-      ))                                                    #|line 191|#
-  ) #|  |#                                                  #|line 193|# #|line 194|#
+      (let (( concatenated_string  ""))
+        (declare (ignorable  concatenated_string))          #|line 174|#
+        (cond
+          (( equal    0 (length (slot-value  inst 'buffer1))) #|line 175|#
+            (setf  concatenated_string (slot-value  inst 'buffer2)) #|line 176|#
+            )
+          (( equal    0 (length (slot-value  inst 'buffer2))) #|line 177|#
+            (setf  concatenated_string (slot-value  inst 'buffer1)) #|line 178|#
+            )
+          (t                                                #|line 179|#
+            (setf  concatenated_string (+ (slot-value  inst 'buffer1) (slot-value  inst 'buffer2))) #|line 180|# #|line 181|#
+            ))
+        (funcall (quote send_string)   eh  ""  concatenated_string  msg  #|line 182|#)
+        (setf (slot-value  inst 'buffer1)  "")              #|line 183|#
+        (setf (slot-value  inst 'buffer2)  "")              #|line 184|#
+        (setf (slot-value  inst 'scount)  0)                #|line 185|#) #|line 186|#
+      ))                                                    #|line 187|#
+  ) #|  |#                                                  #|line 189|# #|line 190|#
 (defun string_constant_instantiate (&optional  reg  owner  name  template_data)
-  (declare (ignorable  reg  owner  name  template_data))    #|line 195|# #|line 196|# #|line 197|#
-  (let ((name_with_id (funcall (quote gensymbol)   "strconst"  #|line 198|#)))
+  (declare (ignorable  reg  owner  name  template_data))    #|line 191|# #|line 192|# #|line 193|#
+  (let ((name_with_id (funcall (quote gensymbol)   "strconst"  #|line 194|#)))
     (declare (ignorable name_with_id))
     (let (( s  template_data))
-      (declare (ignorable  s))                              #|line 199|#
+      (declare (ignorable  s))                              #|line 195|#
       (cond
-        ((not (equal   root_project  ""))                   #|line 200|#
-          (setf  s (substitute  "_00_"  root_project  s)    #|line 201|#) #|line 202|#
+        ((not (equal   root_project  ""))                   #|line 196|#
+          (setf  s (substitute  "_00_"  root_project  s)    #|line 197|#) #|line 198|#
           ))
       (cond
-        ((not (equal   root_0D  ""))                        #|line 203|#
-          (setf  s (substitute  "_0D_"  root_0D  s)         #|line 204|#) #|line 205|#
+        ((not (equal   root_0D  ""))                        #|line 199|#
+          (setf  s (substitute  "_0D_"  root_0D  s)         #|line 200|#) #|line 201|#
           ))
-      (return-from string_constant_instantiate (funcall (quote make_leaf)   name_with_id  owner  s  #'string_constant_handler  #|line 206|#)))) #|line 207|#
+      (return-from string_constant_instantiate (funcall (quote make_leaf)   name_with_id  owner  s  #'string_constant_handler  #|line 202|#)))) #|line 203|#
   )
 (defun string_constant_handler (&optional  eh  msg)
-  (declare (ignorable  eh  msg))                            #|line 209|#
+  (declare (ignorable  eh  msg))                            #|line 205|#
   (let ((s (slot-value  eh 'instance_data)))
-    (declare (ignorable s))                                 #|line 210|#
-    (funcall (quote send_string)   eh  ""  s  msg           #|line 211|#)) #|line 212|#
+    (declare (ignorable s))                                 #|line 206|#
+    (funcall (quote send_string)   eh  ""  s  msg           #|line 207|#)) #|line 208|#
   )
 
 

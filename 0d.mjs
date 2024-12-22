@@ -355,10 +355,10 @@ function route (container,from_component,message) {    /* line 371 */
           deposit ( container, connector, message)     /* line 386 */
           was_sent =  true;                            /* line 387 *//* line 388 */}/* line 389 */}/* line 390 */}
     if ((! ( was_sent))) {                             /* line 391 */
-      print ( "\n\n*** Error: ***")                    /* line 392 */
-      print ( "***")                                   /* line 393 */
-      print ( `${ container.name}${ `${ ": message '"}${ `${ message.port}${ `${ "' from "}${ `${ fromname}${ " dropped on floor..."}` }` }` }` }` )/* line 394 */
-      print ( "***")                                   /* line 395 */
+      console.log ( "\n\n*** Error: ***");             /* line 392 */
+      console.log ( "***");                            /* line 393 */
+      console.log ( `${ container.name}${ `${ ": message '"}${ `${ message.port}${ `${ "' from "}${ `${ fromname}${ " dropped on floor..."}` }` }` }` }` );/* line 394 */
+      console.log ( "***");                            /* line 395 */
       process.exit (1)                                 /* line 396 *//* line 397 */}/* line 398 *//* line 399 */
 }
 
@@ -407,7 +407,6 @@ function mkTemplate (name,template_data,instantiator) {/* line 434 */
 
 function read_and_convert_json_file (pathname,filename) {/* line 442 */
 
-    console.log (filename);
     let jstr = undefined;
     if (filename == "0") {
     jstr = fs.readFileSync (0);
@@ -481,7 +480,7 @@ function dump_registry (reg) {                         /* line 499 */
     nl ()                                              /* line 500 */
     console.log ( "*** PALETTE ***");                  /* line 501 */
     for (let c of  reg.templates) {                    /* line 502 */
-      print ( c.name)                                  /* line 503 */}
+      console.log ( c.name);                           /* line 503 */}
     console.log ( "***************");                  /* line 504 */
     nl ()                                              /* line 505 *//* line 506 *//* line 507 */
 }

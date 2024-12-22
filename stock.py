@@ -138,8 +138,8 @@ def syncfilewrite_handler (eh,msg):                         #line 128
 
 class StringConcat_Instance_Data:
     def __init__ (self,):                                   #line 145
-        self.buffer1 =  None                                #line 146
-        self.buffer2 =  None                                #line 147
+        self.buffer1 =  ""                                  #line 146
+        self.buffer2 =  ""                                  #line 147
         self.scount =  0                                    #line 148#line 149
                                                             #line 150
 def stringconcat_instantiate (reg,owner,name,template_data):#line 151
@@ -162,36 +162,33 @@ def stringconcat_handler (eh,msg):                          #line 157
 
 def maybe_stringconcat (eh,inst,msg):                       #line 172
     if  inst.scount >=  2:                                  #line 173
-        if ( 0 == len ( inst.buffer1)) and ( 0 == len ( inst.buffer2)):#line 174
-            runtime_error ( "something is wrong in stringconcat, both strings are 0 length")#line 175
-        else:                                               #line 176
-            concatenated_string =  ""                       #line 177
-            if  0 == len ( inst.buffer1):                   #line 178
-                concatenated_string =  inst.buffer2         #line 179
-            elif  0 == len ( inst.buffer2):                 #line 180
-                concatenated_string =  inst.buffer1         #line 181
-            else:                                           #line 182
-                concatenated_string =  inst.buffer1+ inst.buffer2#line 183#line 184
-            send_string ( eh, "", concatenated_string, msg) #line 185
-            inst.buffer1 =  None                            #line 186
-            inst.buffer2 =  None                            #line 187
-            inst.scount =  0                                #line 188#line 189#line 190#line 191#line 192
+        concatenated_string =  ""                           #line 174
+        if  0 == len ( inst.buffer1):                       #line 175
+            concatenated_string =  inst.buffer2             #line 176
+        elif  0 == len ( inst.buffer2):                     #line 177
+            concatenated_string =  inst.buffer1             #line 178
+        else:                                               #line 179
+            concatenated_string =  inst.buffer1+ inst.buffer2#line 180#line 181
+        send_string ( eh, "", concatenated_string, msg)     #line 182
+        inst.buffer1 =  ""                                  #line 183
+        inst.buffer2 =  ""                                  #line 184
+        inst.scount =  0                                    #line 185#line 186#line 187#line 188
 
-#                                                           #line 193#line 194
-def string_constant_instantiate (reg,owner,name,template_data):#line 195
-    global root_project                                     #line 196
-    global root_0D                                          #line 197
-    name_with_id = gensymbol ( "strconst")                  #line 198
-    s =  template_data                                      #line 199
-    if  root_project!= "":                                  #line 200
-        s = re.sub ( "_00_",  root_project,  s)             #line 201#line 202
-    if  root_0D!= "":                                       #line 203
-        s = re.sub ( "_0D_",  root_0D,  s)                  #line 204#line 205
-    return make_leaf ( name_with_id, owner, s, string_constant_handler)#line 206#line 207#line 208
+#                                                           #line 189#line 190
+def string_constant_instantiate (reg,owner,name,template_data):#line 191
+    global root_project                                     #line 192
+    global root_0D                                          #line 193
+    name_with_id = gensymbol ( "strconst")                  #line 194
+    s =  template_data                                      #line 195
+    if  root_project!= "":                                  #line 196
+        s = re.sub ( "_00_",  root_project,  s)             #line 197#line 198
+    if  root_0D!= "":                                       #line 199
+        s = re.sub ( "_0D_",  root_0D,  s)                  #line 200#line 201
+    return make_leaf ( name_with_id, owner, s, string_constant_handler)#line 202#line 203#line 204
 
-def string_constant_handler (eh,msg):                       #line 209
-    s =  eh.instance_data                                   #line 210
-    send_string ( eh, "", s, msg)                           #line 211#line 212
+def string_constant_handler (eh,msg):                       #line 205
+    s =  eh.instance_data                                   #line 206
+    send_string ( eh, "", s, msg)                           #line 207#line 208
 
 
 

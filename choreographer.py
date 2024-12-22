@@ -145,6 +145,7 @@ class FileWatcher:
                 else:
                     contents = self.collect_file_contents()
                     await self.broadcast_message(contents)
+                break
             
             await asyncio.sleep(0.02)  # 20ms delay
 

@@ -9,8 +9,9 @@ decode.rt
 reverser.rt
 delay.rt
 monitor.rt
-0d.rt.a
-0d.rt.b
+0d.rt
+stock.rt
+shellout.rt
 rt2py.drawio
 rt2cl.drawio
 rt2js.drawio

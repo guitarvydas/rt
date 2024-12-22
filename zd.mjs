@@ -355,10 +355,10 @@ function route (container,from_component,message) {    /* line 371 */
           deposit ( container, connector, message)     /* line 386 */
           was_sent =  true;                            /* line 387 *//* line 388 */}/* line 389 */}/* line 390 */}
     if ((! ( was_sent))) {                             /* line 391 */
-      print ( "\n\n*** Error: ***")                    /* line 392 */
-      print ( "***")                                   /* line 393 */
-      print ( `${ container.name}${ `${ ": message '"}${ `${ message.port}${ `${ "' from "}${ `${ fromname}${ " dropped on floor..."}` }` }` }` }` )/* line 394 */
-      print ( "***")                                   /* line 395 */
+      console.log ( "\n\n*** Error: ***");             /* line 392 */
+      console.log ( "***");                            /* line 393 */
+      console.log ( `${ container.name}${ `${ ": message '"}${ `${ message.port}${ `${ "' from "}${ `${ fromname}${ " dropped on floor..."}` }` }` }` }` );/* line 394 */
+      console.log ( "***");                            /* line 395 */
       process.exit (1)                                 /* line 396 *//* line 397 */}/* line 398 *//* line 399 */
 }
 
@@ -407,7 +407,6 @@ function mkTemplate (name,template_data,instantiator) {/* line 434 */
 
 function read_and_convert_json_file (pathname,filename) {/* line 442 */
 
-    console.log (filename);
     let jstr = undefined;
     if (filename == "0") {
     jstr = fs.readFileSync (0);
@@ -481,7 +480,7 @@ function dump_registry (reg) {                         /* line 499 */
     nl ()                                              /* line 500 */
     console.log ( "*** PALETTE ***");                  /* line 501 */
     for (let c of  reg.templates) {                    /* line 502 */
-      print ( c.name)                                  /* line 503 */}
+      console.log ( c.name);                           /* line 503 */}
     console.log ( "***************");                  /* line 504 */
     nl ()                                              /* line 505 *//* line 506 *//* line 507 */
 }
@@ -1013,8 +1012,8 @@ function syncfilewrite_handler (eh,msg) {              /* line 128 */
 class StringConcat_Instance_Data {
   constructor () {                                     /* line 145 */
 
-    this.buffer1 =  null;                              /* line 146 */
-    this.buffer2 =  null;                              /* line 147 */
+    this.buffer1 =  "";                                /* line 146 */
+    this.buffer2 =  "";                                /* line 147 */
     this.scount =  0;                                  /* line 148 *//* line 149 */
   }
 }
@@ -1041,36 +1040,33 @@ function stringconcat_handler (eh,msg) {               /* line 157 */
 
 function maybe_stringconcat (eh,inst,msg) {            /* line 172 */
     if ( inst.scount >=  2) {                          /* line 173 */
-      if (((( 0 == ( inst.buffer1.length))) && (( 0 == ( inst.buffer2.length))))) {/* line 174 */
-        runtime_error ( "something is wrong in stringconcat, both strings are 0 length")/* line 175 */}
-      else {                                           /* line 176 */
-        let  concatenated_string =  "";                /* line 177 */
-        if ( 0 == ( inst.buffer1.length)) {            /* line 178 */
-          concatenated_string =  inst.buffer2;         /* line 179 */}
-        else if ( 0 == ( inst.buffer2.length)) {       /* line 180 */
-          concatenated_string =  inst.buffer1;         /* line 181 */}
-        else {                                         /* line 182 */
-          concatenated_string =  inst.buffer1+ inst.buffer2;/* line 183 *//* line 184 */}
-        send_string ( eh, "", concatenated_string, msg)/* line 185 */
-        inst.buffer1 =  null;                          /* line 186 */
-        inst.buffer2 =  null;                          /* line 187 */
-        inst.scount =  0;                              /* line 188 *//* line 189 */}/* line 190 */}/* line 191 *//* line 192 */
+      let  concatenated_string =  "";                  /* line 174 */
+      if ( 0 == ( inst.buffer1.length)) {              /* line 175 */
+        concatenated_string =  inst.buffer2;           /* line 176 */}
+      else if ( 0 == ( inst.buffer2.length)) {         /* line 177 */
+        concatenated_string =  inst.buffer1;           /* line 178 */}
+      else {                                           /* line 179 */
+        concatenated_string =  inst.buffer1+ inst.buffer2;/* line 180 *//* line 181 */}
+      send_string ( eh, "", concatenated_string, msg)  /* line 182 */
+      inst.buffer1 =  "";                              /* line 183 */
+      inst.buffer2 =  "";                              /* line 184 */
+      inst.scount =  0;                                /* line 185 *//* line 186 */}/* line 187 *//* line 188 */
 }
 
-/*  */                                                 /* line 193 *//* line 194 */
-function string_constant_instantiate (reg,owner,name,template_data) {/* line 195 *//* line 196 *//* line 197 */
-    let name_with_id = gensymbol ( "strconst")         /* line 198 */;
-    let  s =  template_data;                           /* line 199 */
-    if ( root_project!= "") {                          /* line 200 */
-      s =  s.replaceAll ( "_00_",  root_project)       /* line 201 */;/* line 202 */}
-    if ( root_0D!= "") {                               /* line 203 */
-      s =  s.replaceAll ( "_0D_",  root_0D)            /* line 204 */;/* line 205 */}
-    return make_leaf ( name_with_id, owner, s, string_constant_handler)/* line 206 */;/* line 207 *//* line 208 */
+/*  */                                                 /* line 189 *//* line 190 */
+function string_constant_instantiate (reg,owner,name,template_data) {/* line 191 *//* line 192 *//* line 193 */
+    let name_with_id = gensymbol ( "strconst")         /* line 194 */;
+    let  s =  template_data;                           /* line 195 */
+    if ( root_project!= "") {                          /* line 196 */
+      s =  s.replaceAll ( "_00_",  root_project)       /* line 197 */;/* line 198 */}
+    if ( root_0D!= "") {                               /* line 199 */
+      s =  s.replaceAll ( "_0D_",  root_0D)            /* line 200 */;/* line 201 */}
+    return make_leaf ( name_with_id, owner, s, string_constant_handler)/* line 202 */;/* line 203 *//* line 204 */
 }
 
-function string_constant_handler (eh,msg) {            /* line 209 */
-    let s =  eh.instance_data;                         /* line 210 */
-    send_string ( eh, "", s, msg)                      /* line 211 *//* line 212 */
+function string_constant_handler (eh,msg) {            /* line 205 */
+    let s =  eh.instance_data;                         /* line 206 */
+    send_string ( eh, "", s, msg)                      /* line 207 *//* line 208 */
 }
 
 
