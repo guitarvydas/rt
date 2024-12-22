@@ -234,7 +234,7 @@
   (declare (ignorable  eh  port  msg))                      #|line 211|#
   (let ((fwdmsg (funcall (quote make_message)   port (slot-value  msg 'datum)  #|line 212|#)))
     (declare (ignorable fwdmsg))
-    (funcall (quote put_output)   eh  msg                   #|line 213|#)) #|line 214|#
+    (funcall (quote put_output)   eh  fwdmsg                #|line 213|#)) #|line 214|#
   )
 (defun inject (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 216|#
@@ -729,11 +729,11 @@
         (( equal    "" (slot-value  msg 'port))             #|line 620|#
           (cond
             (( equal    "1"  whichOutput)                   #|line 621|#
-              (funcall (quote forward)   eh  "1*" (slot-value (slot-value  msg 'datum) 'v)  #|line 622|#)
+              (funcall (quote forward)   eh  "1"  msg       #|line 622|#)
               (setf (slot-value  inst 'state)  "*")         #|line 623|#
               )
             (( equal    "*"  whichOutput)                   #|line 624|#
-              (funcall (quote forward)   eh  "*" (slot-value (slot-value  msg 'datum) 'v)  #|line 625|#)
+              (funcall (quote forward)   eh  "*"  msg       #|line 625|#)
               )
             (t                                              #|line 626|#
               (funcall (quote send)   eh  "✗"  "internal error bad state in switch1*"  msg  #|line 627|#) #|line 628|#
@@ -763,20 +763,19 @@
   (declare (ignorable  eh  msg))                            #|line 646|#
   (let (( inst (slot-value  eh 'instance_data)))
     (declare (ignorable  inst))                             #|line 647|#
-    (let ((whichOutput (slot-value  inst 'state)))
-      (declare (ignorable whichOutput))                     #|line 648|#
-      (cond
-        (( equal    "" (slot-value  msg 'port))             #|line 649|#
-          (setf (slot-value  inst 'datum) (slot-value  msg 'datum)) #|line 650|#
-          )
-        (( equal    "release" (slot-value  msg 'port))      #|line 651|#
-          (let (( d (slot-value  inst 'datum)))
-            (declare (ignorable  d))                        #|line 652|#
-            (funcall (quote send)   eh  ""  d  msg          #|line 653|#))
-          )
-        (t                                                  #|line 654|#
-          (funcall (quote send)   eh  "✗"  "internal error bad message for latch"  msg  #|line 655|#) #|line 656|#
-          ))))                                              #|line 657|#
+    (cond
+      (( equal    "" (slot-value  msg 'port))               #|line 648|#
+        (setf (slot-value  inst 'datum) (slot-value  msg 'datum)) #|line 649|#
+        )
+      (( equal    "release" (slot-value  msg 'port))        #|line 650|#
+        (let (( d (slot-value  inst 'datum)))
+          (declare (ignorable  d))                          #|line 651|#
+          (funcall (quote send)   eh  ""  d  msg            #|line 652|#)
+          (setf (slot-value  inst 'datum)  nil)             #|line 653|#)
+        )
+      (t                                                    #|line 654|#
+        (funcall (quote send)   eh  "✗"  "internal error bad message for latch"  msg  #|line 655|#) #|line 656|#
+        )))                                                 #|line 657|#
   ) #|  all of the the built_in leaves are listed here |#   #|line 659|# #|  future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project |# #|line 660|# #|line 661|#
 (defun initialize_stock_components (&optional  reg)
   (declare (ignorable  reg))                                #|line 662|#

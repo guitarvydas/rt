@@ -1,4 +1,3 @@
-"javascript":"
 
 
 let  count_counter =  0;                               /* line 1 */
@@ -1281,4 +1280,5 @@ function monitor_handler (eh,msg) {                    /* line 10 */
 
 
 
-",
+let [palette, env] = initialize ();
+start_show_all (palette, env);

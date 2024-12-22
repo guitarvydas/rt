@@ -193,7 +193,7 @@ def send_string (eh,port,s,causingMessage):                 #line 205
 
 def forward (eh,port,msg):                                  #line 211
     fwdmsg = make_message ( port, msg.datum)                #line 212
-    put_output ( eh, msg)                                   #line 213#line 214#line 215
+    put_output ( eh, fwdmsg)                                #line 213#line 214#line 215
 
 def inject (eh,msg):                                        #line 216
     eh.finject ( eh, msg)                                   #line 217#line 218#line 219
@@ -555,10 +555,10 @@ def switch1star_handler (eh,msg):                           #line 617
     whichOutput =  inst.state                               #line 619
     if  "" ==  msg.port:                                    #line 620
         if  "1" ==  whichOutput:                            #line 621
-            forward ( eh, "1*", msg.datum.v)                #line 622
+            forward ( eh, "1", msg)                         #line 622
             inst.state =  "*"                               #line 623
         elif  "*" ==  whichOutput:                          #line 624
-            forward ( eh, "*", msg.datum.v)                 #line 625
+            forward ( eh, "*", msg)                         #line 625
         else:                                               #line 626
             send ( eh, "✗", "internal error bad state in switch1*", msg)#line 627#line 628
     elif  "reset" ==  msg.port:                             #line 629
@@ -577,12 +577,12 @@ def latch_instantiate (reg,owner,name,template_data):       #line 640
 
 def latch_handler (eh,msg):                                 #line 646
     inst =  eh.instance_data                                #line 647
-    whichOutput =  inst.state                               #line 648
-    if  "" ==  msg.port:                                    #line 649
-        inst.datum =  msg.datum                             #line 650
-    elif  "release" ==  msg.port:                           #line 651
-        d =  inst.datum                                     #line 652
-        send ( eh, "", d, msg)                              #line 653
+    if  "" ==  msg.port:                                    #line 648
+        inst.datum =  msg.datum                             #line 649
+    elif  "release" ==  msg.port:                           #line 650
+        d =  inst.datum                                     #line 651
+        send ( eh, "", d, msg)                              #line 652
+        inst.datum =  None                                  #line 653
     else:                                                   #line 654
         send ( eh, "✗", "internal error bad message for latch", msg)#line 655#line 656#line 657#line 658
 

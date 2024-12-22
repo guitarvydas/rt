@@ -195,10 +195,10 @@ x)))
   (declare (ignorable  m))                                  #|line 116|#
   (cond
     (( equal    m  nil)                                     #|line 117|#
-      (return-from format_message  (concatenate 'string  "%5C“"  (concatenate 'string (slot-value  m 'port)  (concatenate 'string  "%5C”:%5C“"  (concatenate 'string  "ϕ"  "%5C”,")))) #|line 118|#)
+      (return-from format_message  (concatenate 'string  "‹"  (concatenate 'string (slot-value  m 'port)  (concatenate 'string  "›:‹"  (concatenate 'string  "ϕ"  "›,")))) #|line 118|#)
       )
     (t                                                      #|line 119|#
-      (return-from format_message  (concatenate 'string  "%5C“"  (concatenate 'string (slot-value  m 'port)  (concatenate 'string  "%5C”:%5C“"  (concatenate 'string (slot-value (slot-value  m 'datum) 'v)  "%5C”,")))) #|line 120|#) #|line 121|#
+      (return-from format_message  (concatenate 'string  "‹"  (concatenate 'string (slot-value  m 'port)  (concatenate 'string  "›:‹"  (concatenate 'string (slot-value (slot-value  m 'datum) 'v)  "›,")))) #|line 120|#) #|line 121|#
       ))                                                    #|line 122|#
   )
 (defparameter  enumDown  0)
@@ -261,7 +261,7 @@ x)))
       (declare (ignorable source_component))                #|line 166|#
       (cond
         (( equal    source_component  nil)                  #|line 167|#
-          (funcall (quote print)   (concatenate 'string  "internal error: .Up connection source not ok " (gethash  "name" (gethash  "source"  proto_conn))) ) #|line 168|#
+          (funcall (quote load_error)   (concatenate 'string  "internal error: .Up connection source not ok " (gethash  "name" (gethash  "source"  proto_conn))) ) #|line 168|#
           )
         (t                                                  #|line 169|#
           (setf (slot-value  connector 'sender) (funcall (quote mkSender)  (slot-value  source_component 'name)  source_component (gethash  "source_port"  proto_conn)  #|line 170|#))

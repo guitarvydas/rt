@@ -222,7 +222,7 @@ function send_string (eh,port,s,causingMessage) {      /* line 205 */
 
 function forward (eh,port,msg) {                       /* line 211 */
     let fwdmsg = make_message ( port, msg.datum)       /* line 212 */;
-    put_output ( eh, msg)                              /* line 213 *//* line 214 *//* line 215 */
+    put_output ( eh, fwdmsg)                           /* line 213 *//* line 214 *//* line 215 */
 }
 
 function inject (eh,msg) {                             /* line 216 */
@@ -627,10 +627,10 @@ function switch1star_handler (eh,msg) {                /* line 617 */
     let whichOutput =  inst.state;                     /* line 619 */
     if ( "" ==  msg.port) {                            /* line 620 */
       if ( "1" ==  whichOutput) {                      /* line 621 */
-        forward ( eh, "1*", msg.datum.v)               /* line 622 */
+        forward ( eh, "1", msg)                        /* line 622 */
         inst.state =  "*";                             /* line 623 */}
       else if ( "*" ==  whichOutput) {                 /* line 624 */
-        forward ( eh, "*", msg.datum.v)                /* line 625 */}
+        forward ( eh, "*", msg)                        /* line 625 */}
       else {                                           /* line 626 */
         send ( eh, "✗", "internal error bad state in switch1*", msg)/* line 627 *//* line 628 */}}
     else if ( "reset" ==  msg.port) {                  /* line 629 */
@@ -654,12 +654,12 @@ function latch_instantiate (reg,owner,name,template_data) {/* line 640 */
 
 function latch_handler (eh,msg) {                      /* line 646 */
     let  inst =  eh.instance_data;                     /* line 647 */
-    let whichOutput =  inst.state;                     /* line 648 */
-    if ( "" ==  msg.port) {                            /* line 649 */
-      inst.datum =  msg.datum;                         /* line 650 */}
-    else if ( "release" ==  msg.port) {                /* line 651 */
-      let  d =  inst.datum;                            /* line 652 */
-      send ( eh, "", d, msg)                           /* line 653 */}
+    if ( "" ==  msg.port) {                            /* line 648 */
+      inst.datum =  msg.datum;                         /* line 649 */}
+    else if ( "release" ==  msg.port) {                /* line 650 */
+      let  d =  inst.datum;                            /* line 651 */
+      send ( eh, "", d, msg)                           /* line 652 */
+      inst.datum =  null;                              /* line 653 */}
     else {                                             /* line 654 */
       send ( eh, "✗", "internal error bad message for latch", msg)/* line 655 *//* line 656 */}/* line 657 *//* line 658 */
 }
