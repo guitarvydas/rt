@@ -2,9 +2,10 @@
 set -e
 D2J=./das2json/mac/das2json
 ${D2J} rt2py.drawio
-./gen-py.bash 0d.rt.a generated.a.py
-./gen-py.bash 0d.rt.b generated.b.py
-cat generated.a.py generated.b.py > zd.py
+./gen-py.bash 0d.rt 0d.py
+./gen-py.bash stock.rt stock.py
+./gen-py.bash shellout.rt shellout.py
+cat 0d.py stock.py shellout.py > zd.py
 
 ./gen-py.bash count.rt count.py
 ./gen-py.bash decode.rt decode.py
@@ -16,9 +17,10 @@ cat zd.py count.py decode.py reverser.py delay.py monitor.py >generated.py
 #echo '*** Python not generated ***' >generated.py
 
 ${D2J} rt2cl.drawio
-./gen-cl.bash 0d.rt.a generated.a.lisp
-./gen-cl.bash 0d.rt.b generated.b.lisp
-cat generated.a.lisp generated.b.lisp >zd.lisp
+./gen-cl.bash 0d.rt 0d.lisp
+./gen-cl.bash stock.rt stock.lisp
+./gen-cl.bash shellout.rt shellout.lisp
+cat 0d.lisp stock.lisp shellout.lisp >zd.lisp
 
 ./gen-cl.bash count.rt count.lisp
 ./gen-cl.bash decode.rt decode.lisp
@@ -30,9 +32,10 @@ cat zd.lisp count.lisp decode.lisp reverser.lisp delay.lisp monitor.lisp >genera
 #echo '*** Common Lisp not generated ***' >generated.lisp
 
 ${D2J} rt2js.drawio
-python3 main.py . - 0d.rt.a main rt2js.drawio.json >generated.a.mjs
-python3 main.py . - 0d.rt.b main rt2js.drawio.json >generated.b.mjs
-cat generated.a.mjs generated.b.mjs > zd.mjs
+python3 main.py . - 0d.rt main rt2js.drawio.json >0d.mjs
+python3 main.py . - stock.rt main rt2js.drawio.json >stock.mjs
+python3 main.py . - shellout.rt main rt2js.drawio.json >shellout.mjs
+cat 0d.mjs stock.mjs shellout.mjs > zd.mjs
 
 python3 main.py . - count.rt main rt2js.drawio.json >count.mjs
 python3 main.py . - decode.rt main rt2js.drawio.json >decode.mjs
