@@ -4,6 +4,365 @@
         "name": "main",
         "children": [
             {
+                "name": "String Concat*",
+                "id": 3
+            },
+            {
+                "name": "List Filenames",
+                "id": 5
+            },
+            {
+                "name": "Generate Javascript",
+                "id": 12
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "List Filenames",
+                    "id": 5
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "Generate Javascript",
+                    "id": 12
+                },
+                "source_port": "",
+                "target": {
+                    "name": "String Concat*",
+                    "id": 3
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "List Filenames",
+                    "id": 5
+                },
+                "source_port": "",
+                "target": {
+                    "name": "Generate Javascript",
+                    "id": 12
+                },
+                "target_port": "1"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "Generate Javascript",
+                    "id": 12
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "List Filenames",
+                    "id": 5
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "String Concat*",
+                    "id": 3
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "String Concat*",
+                    "id": 3
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            }
+        ]
+    },
+    {
+        "file": "rt2js.drawio",
+        "name": "List Filenames",
+        "children": [
+            {
+                "name": "'",
+                "id": 5
+            },
+            {
+                "name": "'count.rt",
+                "id": 6
+            },
+            {
+                "name": "'decode.rt",
+                "id": 13
+            },
+            {
+                "name": "'reverser.rt",
+                "id": 16
+            },
+            {
+                "name": "'delay.rt",
+                "id": 19
+            },
+            {
+                "name": "'0d.rt.a",
+                "id": 22
+            },
+            {
+                "name": "'0d.rt.b",
+                "id": 25
+            },
+            {
+                "name": "'monitor.rt",
+                "id": 30
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'count.rt",
+                    "id": 6
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'decode.rt",
+                    "id": 13
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'reverser.rt",
+                    "id": 16
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'monitor.rt",
+                    "id": 30
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'decode.rt",
+                    "id": 13
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'reverser.rt",
+                    "id": 16
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'delay.rt",
+                    "id": 19
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'delay.rt",
+                    "id": 19
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'0d.rt.a",
+                    "id": 22
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'0d.rt.a",
+                    "id": 22
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'0d.rt.b",
+                    "id": 25
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'0d.rt.b",
+                    "id": 25
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'",
+                    "id": 5
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'count.rt",
+                    "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'monitor.rt",
+                    "id": 30
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'",
+                    "id": 5
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "fin"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'count.rt",
+                    "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'monitor.rt",
+                    "id": 30
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'decode.rt",
+                    "id": 13
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'reverser.rt",
+                    "id": 16
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'delay.rt",
+                    "id": 19
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'0d.rt.a",
+                    "id": 22
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'0d.rt.b",
+                    "id": 25
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            }
+        ]
+    },
+    {
+        "file": "rt2js.drawio",
+        "name": "old main",
+        "children": [
+            {
                 "name": "stringconcat",
                 "id": 3
             },
@@ -1803,87 +2162,23 @@
     },
     {
         "file": "rt2js.drawio",
-        "name": "dev",
+        "name": "String Concat*",
         "children": [
             {
+                "name": "switch1*",
+                "id": 5
+            },
+            {
                 "name": "stringconcat",
-                "id": 3
-            },
-            {
-                "name": "Generate Javascript",
-                "id": 6
-            },
-            {
-                "name": "'0d.rt.b",
                 "id": 11
             },
             {
-                "name": "'count.rt",
-                "id": 12
-            },
-            {
-                "name": "Generate Javascript",
-                "id": 17
-            },
-            {
-                "name": "'monitor.rt",
-                "id": 23
-            },
-            {
-                "name": "Generate Javascript",
-                "id": 26
-            },
-            {
                 "name": "stringconcat",
-                "id": 27
+                "id": 19
             },
             {
-                "name": "'0d.rt.a",
-                "id": 33
-            },
-            {
-                "name": "Generate Javascript",
-                "id": 34
-            },
-            {
-                "name": "'decode.rt",
-                "id": 38
-            },
-            {
-                "name": "stringconcat",
-                "id": 43
-            },
-            {
-                "name": "Generate Javascript",
-                "id": 49
-            },
-            {
-                "name": "Generate Javascript",
-                "id": 52
-            },
-            {
-                "name": "'reverser.rt",
-                "id": 56
-            },
-            {
-                "name": "Generate Javascript",
-                "id": 60
-            },
-            {
-                "name": "'delay.rt",
-                "id": 64
-            },
-            {
-                "name": "stringconcat",
-                "id": 68
-            },
-            {
-                "name": "stringconcat",
-                "id": 73
-            },
-            {
-                "name": "stringconcat",
-                "id": 74
+                "name": "latch",
+                "id": 25
             }
         ],
         "connections": [
@@ -1895,8 +2190,8 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "'reverser.rt",
-                    "id": 56
+                    "name": "switch1*",
+                    "id": 5
                 },
                 "target_port": ""
             },
@@ -1906,12 +2201,12 @@
                     "name": "",
                     "id": 0
                 },
-                "source_port": "",
+                "source_port": "fini",
                 "target": {
-                    "name": "'delay.rt",
-                    "id": 64
+                    "name": "latch",
+                    "id": 25
                 },
-                "target_port": ""
+                "target_port": "release"
             },
             {
                 "dir": 0,
@@ -1919,317 +2214,96 @@
                     "name": "",
                     "id": 0
                 },
-                "source_port": "",
+                "source_port": "fini",
                 "target": {
-                    "name": "'decode.rt",
-                    "id": 38
+                    "name": "switch1*",
+                    "id": 5
                 },
-                "target_port": ""
+                "target_port": "reset"
             },
             {
-                "dir": 0,
+                "dir": 1,
                 "source": {
-                    "name": "",
-                    "id": 0
+                    "name": "switch1*",
+                    "id": 5
                 },
-                "source_port": "",
+                "source_port": "1",
                 "target": {
-                    "name": "'monitor.rt",
-                    "id": 23
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 0,
-                "source": {
-                    "name": "",
-                    "id": 0
-                },
-                "source_port": "",
-                "target": {
-                    "name": "'count.rt",
-                    "id": 12
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 0,
-                "source": {
-                    "name": "",
-                    "id": 0
-                },
-                "source_port": "",
-                "target": {
-                    "name": "'0d.rt.a",
-                    "id": 33
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 0,
-                "source": {
-                    "name": "",
-                    "id": 0
-                },
-                "source_port": "",
-                "target": {
-                    "name": "'0d.rt.b",
+                    "name": "stringconcat",
                     "id": 11
                 },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 60
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 74
-                },
-                "target_port": "2"
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 52
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 68
-                },
                 "target_port": "2"
             },
             {
                 "dir": 1,
                 "source": {
                     "name": "stringconcat",
-                    "id": 74
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 3
-                },
-                "target_port": "1"
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "stringconcat",
-                    "id": 3
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 73
-                },
-                "target_port": "1"
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "stringconcat",
-                    "id": 68
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 74
-                },
-                "target_port": "1"
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'delay.rt",
-                    "id": 64
-                },
-                "source_port": "",
-                "target": {
-                    "name": "Generate Javascript",
-                    "id": 60
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'reverser.rt",
-                    "id": 56
-                },
-                "source_port": "",
-                "target": {
-                    "name": "Generate Javascript",
-                    "id": 52
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "stringconcat",
-                    "id": 43
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 68
-                },
-                "target_port": "1"
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 34
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 43
-                },
-                "target_port": "2"
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'decode.rt",
-                    "id": 38
-                },
-                "source_port": "",
-                "target": {
-                    "name": "Generate Javascript",
-                    "id": 34
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "stringconcat",
-                    "id": 27
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 43
-                },
-                "target_port": "1"
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'count.rt",
-                    "id": 12
-                },
-                "source_port": "",
-                "target": {
-                    "name": "Generate Javascript",
-                    "id": 6
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'0d.rt.a",
-                    "id": 33
-                },
-                "source_port": "",
-                "target": {
-                    "name": "Generate Javascript",
-                    "id": 49
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'monitor.rt",
-                    "id": 23
-                },
-                "source_port": "",
-                "target": {
-                    "name": "Generate Javascript",
-                    "id": 17
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 17
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 27
-                },
-                "target_port": "2"
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 6
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 27
-                },
-                "target_port": "1"
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'0d.rt.b",
                     "id": 11
                 },
                 "source_port": "",
                 "target": {
-                    "name": "Generate Javascript",
-                    "id": 26
+                    "name": "stringconcat",
+                    "id": 19
+                },
+                "target_port": "1"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "stringconcat",
+                    "id": 19
+                },
+                "source_port": "",
+                "target": {
+                    "name": "stringconcat",
+                    "id": 19
+                },
+                "target_port": "1"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "switch1*",
+                    "id": 5
+                },
+                "source_port": "1",
+                "target": {
+                    "name": "stringconcat",
+                    "id": 11
+                },
+                "target_port": "1"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "stringconcat",
+                    "id": 19
+                },
+                "source_port": "",
+                "target": {
+                    "name": "latch",
+                    "id": 25
                 },
                 "target_port": ""
             },
             {
                 "dir": 1,
                 "source": {
-                    "name": "Generate Javascript",
-                    "id": 49
+                    "name": "switch1*",
+                    "id": 5
                 },
-                "source_port": "",
+                "source_port": "*",
                 "target": {
                     "name": "stringconcat",
-                    "id": 3
-                },
-                "target_port": "2"
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 26
-                },
-                "source_port": "",
-                "target": {
-                    "name": "stringconcat",
-                    "id": 73
+                    "id": 19
                 },
                 "target_port": "2"
             },
             {
                 "dir": 2,
                 "source": {
-                    "name": "Generate Javascript",
-                    "id": 52
+                    "name": "stringconcat",
+                    "id": 19
                 },
                 "source_port": "\u2717",
                 "target": {
@@ -2241,10 +2315,10 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "Generate Javascript",
-                    "id": 60
+                    "name": "switch1*",
+                    "id": 5
                 },
-                "source_port": "\u2717",
+                "source_port": "*",
                 "target": {
                     "name": "",
                     "id": 0
@@ -2255,7 +2329,7 @@
                 "dir": 2,
                 "source": {
                     "name": "stringconcat",
-                    "id": 74
+                    "id": 11
                 },
                 "source_port": "\u2717",
                 "target": {
@@ -2267,47 +2341,8 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "stringconcat",
-                    "id": 68
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "stringconcat",
-                    "id": 43
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 34
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "stringconcat",
-                    "id": 73
+                    "name": "latch",
+                    "id": 25
                 },
                 "source_port": "",
                 "target": {
@@ -2319,86 +2354,8 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "stringconcat",
-                    "id": 73
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "stringconcat",
-                    "id": 3
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "stringconcat",
-                    "id": 27
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 17
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 6
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 49
-                },
-                "source_port": "\u2717",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "\u2717"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "Generate Javascript",
-                    "id": 26
+                    "name": "latch",
+                    "id": 25
                 },
                 "source_port": "\u2717",
                 "target": {
