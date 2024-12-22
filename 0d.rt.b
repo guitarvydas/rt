@@ -210,7 +210,7 @@ defn send_string (eh, port, s, causingMessage) {
 
 defn forward (eh, port, msg) {
     fwdmsg ≡ make_message(port, msg.datum)
-    put_output (eh, msg)
+    put_output (eh, fwdmsg)
 }
 
 defn inject (eh, msg) {
@@ -619,10 +619,10 @@ defn switch1star_handler (eh, msg) {
     whichOutput ≡ inst.state
     if “” = msg.port {
 	if “1” = whichOutput {
-	    forward (eh, “1*”, msg.datum.v)
+	    forward (eh, “1”, msg)
 	    inst.state ⇐ “*”
 	} elif “*” = whichOutput {
-	    forward (eh, “*”, msg.datum.v)
+	    forward (eh, “*”, msg)
 	} else {
 	    send (eh, “✗”, “internal error bad state in switch1*”, msg)
 	}

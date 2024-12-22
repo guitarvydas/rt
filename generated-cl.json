@@ -802,7 +802,7 @@ x)))
   (declare (ignorable  eh  port  msg))                      #|line 211|#
   (let ((fwdmsg (funcall (quote make_message)   port (slot-value  msg 'datum)  #|line 212|#)))
     (declare (ignorable fwdmsg))
-    (funcall (quote put_output)   eh  msg                   #|line 213|#)) #|line 214|#
+    (funcall (quote put_output)   eh  fwdmsg                #|line 213|#)) #|line 214|#
   )
 (defun inject (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 216|#
@@ -1297,11 +1297,11 @@ x)))
         (( equal    "" (slot-value  msg 'port))             #|line 620|#
           (cond
             (( equal    "1"  whichOutput)                   #|line 621|#
-              (funcall (quote forward)   eh  "1*" (slot-value (slot-value  msg 'datum) 'v)  #|line 622|#)
+              (funcall (quote forward)   eh  "1"  msg       #|line 622|#)
               (setf (slot-value  inst 'state)  "*")         #|line 623|#
               )
             (( equal    "*"  whichOutput)                   #|line 624|#
-              (funcall (quote forward)   eh  "*" (slot-value (slot-value  msg 'datum) 'v)  #|line 625|#)
+              (funcall (quote forward)   eh  "*"  msg       #|line 625|#)
               )
             (t                                              #|line 626|#
               (funcall (quote send)   eh  "✗"  "internal error bad state in switch1*"  msg  #|line 627|#) #|line 628|#

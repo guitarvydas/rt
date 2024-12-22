@@ -1,15 +1,15 @@
 [
     {
-        "file": "tester.drawio",
+        "file": "switch1startester.drawio",
         "name": "main",
         "children": [
             {
-                "name": "latch",
+                "name": "switch1*",
                 "id": 4
             },
             {
                 "name": "stimulus",
-                "id": 8
+                "id": 9
             }
         ],
         "connections": [
@@ -22,7 +22,7 @@
                 "source_port": "",
                 "target": {
                     "name": "stimulus",
-                    "id": 8
+                    "id": 9
                 },
                 "target_port": ""
             },
@@ -30,11 +30,11 @@
                 "dir": 1,
                 "source": {
                     "name": "stimulus",
-                    "id": 8
+                    "id": 9
                 },
                 "source_port": "c",
                 "target": {
-                    "name": "latch",
+                    "name": "switch1*",
                     "id": 4
                 },
                 "target_port": ""
@@ -43,36 +43,49 @@
                 "dir": 1,
                 "source": {
                     "name": "stimulus",
-                    "id": 8
+                    "id": 9
                 },
-                "source_port": "rel",
+                "source_port": "fini",
                 "target": {
-                    "name": "latch",
+                    "name": "switch1*",
                     "id": 4
                 },
-                "target_port": "release"
+                "target_port": "reset"
             },
             {
                 "dir": 2,
                 "source": {
-                    "name": "latch",
+                    "name": "switch1*",
                     "id": 4
                 },
-                "source_port": "",
+                "source_port": "1",
                 "target": {
                     "name": "",
                     "id": 0
                 },
-                "target_port": ""
+                "target_port": "1"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "switch1*",
+                    "id": 4
+                },
+                "source_port": "*",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "*"
             }
         ]
     },
     {
-        "file": "tester.drawio",
+        "file": "switch1startester.drawio",
         "name": "stimulus",
         "children": [
             {
-                "name": "'",
+                "name": "'b",
                 "id": 3
             },
             {
@@ -84,23 +97,23 @@
                 "id": 9
             },
             {
-                "name": "'X",
-                "id": 12
+                "name": "'",
+                "id": 14
             },
             {
                 "name": "'",
                 "id": 15
             },
             {
-                "name": "'d",
+                "name": "'X",
                 "id": 19
             },
             {
-                "name": "'e",
-                "id": 22
+                "name": "'c",
+                "id": 23
             },
             {
-                "name": "'f",
+                "name": "'a",
                 "id": 25
             }
         ],
@@ -114,33 +127,7 @@
                 "source_port": "",
                 "target": {
                     "name": "'X",
-                    "id": 12
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'e",
-                    "id": 22
-                },
-                "source_port": "",
-                "target": {
-                    "name": "'f",
-                    "id": 25
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'d",
                     "id": 19
-                },
-                "source_port": "",
-                "target": {
-                    "name": "'e",
-                    "id": 22
                 },
                 "target_port": ""
             },
@@ -154,6 +141,32 @@
                 "target": {
                     "name": "'",
                     "id": 15
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'a",
+                    "id": 25
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'b",
+                    "id": 3
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'b",
+                    "id": 3
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'c",
+                    "id": 23
                 },
                 "target_port": ""
             },
@@ -167,32 +180,6 @@
                 "target": {
                     "name": "'Z",
                     "id": 9
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'f",
-                    "id": 25
-                },
-                "source_port": "",
-                "target": {
-                    "name": "'",
-                    "id": 3
-                },
-                "target_port": ""
-            },
-            {
-                "dir": 1,
-                "source": {
-                    "name": "'",
-                    "id": 15
-                },
-                "source_port": "",
-                "target": {
-                    "name": "'d",
-                    "id": 19
                 },
                 "target_port": ""
             },
@@ -200,7 +187,7 @@
                 "dir": 1,
                 "source": {
                     "name": "'X",
-                    "id": 12
+                    "id": 19
                 },
                 "source_port": "",
                 "target": {
@@ -210,88 +197,36 @@
                 "target_port": ""
             },
             {
-                "dir": 2,
+                "dir": 1,
                 "source": {
-                    "name": "'",
-                    "id": 3
+                    "name": "'c",
+                    "id": 23
                 },
                 "source_port": "",
                 "target": {
-                    "name": "",
-                    "id": 0
+                    "name": "'",
+                    "id": 14
                 },
-                "target_port": "rel"
+                "target_port": ""
             },
             {
-                "dir": 2,
+                "dir": 1,
                 "source": {
                     "name": "'",
                     "id": 15
                 },
                 "source_port": "",
                 "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "rel"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "'f",
+                    "name": "'a",
                     "id": 25
                 },
-                "source_port": "",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "c"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "'e",
-                    "id": 22
-                },
-                "source_port": "",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "c"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "'d",
-                    "id": 19
-                },
-                "source_port": "",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "c"
+                "target_port": ""
             },
             {
                 "dir": 2,
                 "source": {
                     "name": "'Z",
                     "id": 9
-                },
-                "source_port": "",
-                "target": {
-                    "name": "",
-                    "id": 0
-                },
-                "target_port": "c"
-            },
-            {
-                "dir": 2,
-                "source": {
-                    "name": "'Y",
-                    "id": 6
                 },
                 "source_port": "",
                 "target": {
@@ -304,7 +239,85 @@
                 "dir": 2,
                 "source": {
                     "name": "'X",
-                    "id": 12
+                    "id": 19
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'Y",
+                    "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'",
+                    "id": 15
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "fini"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'",
+                    "id": 14
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "fini"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'c",
+                    "id": 23
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'b",
+                    "id": 3
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'a",
+                    "id": 25
                 },
                 "source_port": "",
                 "target": {

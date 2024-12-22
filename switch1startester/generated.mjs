@@ -634,7 +634,7 @@ function send_string (eh,port,s,causingMessage) {      /* line 205 */
 
 function forward (eh,port,msg) {                       /* line 211 */
     let fwdmsg = make_message ( port, msg.datum)       /* line 212 */;
-    put_output ( eh, msg)                              /* line 213 *//* line 214 *//* line 215 */
+    put_output ( eh, fwdmsg)                           /* line 213 *//* line 214 *//* line 215 */
 }
 
 function inject (eh,msg) {                             /* line 216 */
@@ -1039,10 +1039,10 @@ function switch1star_handler (eh,msg) {                /* line 617 */
     let whichOutput =  inst.state;                     /* line 619 */
     if ( "" ==  msg.port) {                            /* line 620 */
       if ( "1" ==  whichOutput) {                      /* line 621 */
-        forward ( eh, "1*", msg.datum.v)               /* line 622 */
+        forward ( eh, "1", msg)                        /* line 622 */
         inst.state =  "*";                             /* line 623 */}
       else if ( "*" ==  whichOutput) {                 /* line 624 */
-        forward ( eh, "*", msg.datum.v)                /* line 625 */}
+        forward ( eh, "*", msg)                        /* line 625 */}
       else {                                           /* line 626 */
         send ( eh, "✗", "internal error bad state in switch1*", msg)/* line 627 *//* line 628 */}}
     else if ( "reset" ==  msg.port) {                  /* line 629 */
@@ -1280,5 +1280,3 @@ function monitor_handler (eh,msg) {                    /* line 10 */
 
 
 
-let [palette, env] = initialize ();
-start_show_all (palette, env);

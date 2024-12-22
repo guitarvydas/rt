@@ -2,17 +2,17 @@
 
 D2J=../das2json/mac/das2json
 
-all: tester
+all: switch1startester
 
-tester: tester.drawio.json generated.mjs
-	cat generated.mjs main.mjs >tester.mjs
-	node tester.mjs "." "-" "-" main tester.drawio.json
+switch1startester: switch1startester.drawio.json generated.mjs
+	cat generated.mjs main.mjs >switch1startester.mjs
+	node switch1startester.mjs "." "-" "-" main switch1startester.drawio.json
 
 generated.mjs: ../../rt/generated.mjs
 	cp ../../rt/generated.mjs ./generated.mjs
 
-tester.drawio.json: ./tester.drawio ./tester.drawio.json
-	${D2J} tester.drawio
+switch1startester.drawio.json: ./switch1startester.drawio 
+	${D2J} switch1startester.drawio
 
 ## house-keeping
 
