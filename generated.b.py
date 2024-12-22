@@ -193,7 +193,7 @@ def send_string (eh,port,s,causingMessage):                 #line 205
 
 def forward (eh,port,msg):                                  #line 211
     fwdmsg = make_message ( port, msg.datum)                #line 212
-    put_output ( eh, msg)                                   #line 213#line 214#line 215
+    put_output ( eh, fwdmsg)                                #line 213#line 214#line 215
 
 def inject (eh,msg):                                        #line 216
     eh.finject ( eh, msg)                                   #line 217#line 218#line 219
@@ -541,74 +541,121 @@ def fakepipename_handler (eh,msg):                          #line 600
     # not very random, but good enough _ 'rand' must be unique within a single run#line 602
     send_string ( eh, "", str( "/tmp/fakepipe") +  rand , msg)#line 603#line 604#line 605
                                                             #line 606
-# all of the the built_in leaves are listed here            #line 607
-# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 608#line 609
-def initialize_stock_components (reg):                      #line 610
-    register_component ( reg,mkTemplate ( "1then2", None, deracer_instantiate))#line 611
-    register_component ( reg,mkTemplate ( "?A", None, probeA_instantiate))#line 612
-    register_component ( reg,mkTemplate ( "?B", None, probeB_instantiate))#line 613
-    register_component ( reg,mkTemplate ( "?C", None, probeC_instantiate))#line 614
-    register_component ( reg,mkTemplate ( "trash", None, trash_instantiate))#line 615#line 616
-    register_component ( reg,mkTemplate ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 617
-    register_component ( reg,mkTemplate ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 618#line 619
-    register_component ( reg,mkTemplate ( "syncfilewrite", None, syncfilewrite_instantiate))#line 620
-    register_component ( reg,mkTemplate ( "stringconcat", None, stringconcat_instantiate))#line 621
-    # for fakepipe                                          #line 622
-    register_component ( reg,mkTemplate ( "fakepipename", None, fakepipename_instantiate))#line 623#line 624#line 625
+class Switch1star_Instance_Data:
+    def __init__ (self,):                                   #line 607
+        self.state =  "1"                                   #line 608#line 609
+                                                            #line 610
+def switch1star_instantiate (reg,owner,name,template_data): #line 611
+    name_with_id = gensymbol ( "switch1*")                  #line 612
+    instp =  Switch1star_Instance_Data ()                   #line 613
+    return make_leaf ( name_with_id, owner, instp, switch1star_handler)#line 614#line 615#line 616
 
-def argv ():                                                #line 626
-    return  sys.argv                                        #line 627#line 628#line 629
+def switch1star_handler (eh,msg):                           #line 617
+    inst =  eh.instance_data                                #line 618
+    whichOutput =  inst.state                               #line 619
+    if  "" ==  msg.port:                                    #line 620
+        if  "1" ==  whichOutput:                            #line 621
+            forward ( eh, "1", msg)                         #line 622
+            inst.state =  "*"                               #line 623
+        elif  "*" ==  whichOutput:                          #line 624
+            forward ( eh, "*", msg)                         #line 625
+        else:                                               #line 626
+            send ( eh, "✗", "internal error bad state in switch1*", msg)#line 627#line 628
+    elif  "reset" ==  msg.port:                             #line 629
+        inst.state =  "1"                                   #line 630
+    else:                                                   #line 631
+        send ( eh, "✗", "internal error bad message for switch1*", msg)#line 632#line 633#line 634#line 635
 
-def initialize ():                                          #line 630
-    root_of_project =  sys.argv[ 1]                         #line 631
-    root_of_0D =  sys.argv[ 2]                              #line 632
-    arg =  sys.argv[ 3]                                     #line 633
-    main_container_name =  sys.argv[ 4]                     #line 634
-    diagram_names =  sys.argv[ 5:]                          #line 635
-    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)#line 636
-    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 637#line 638#line 639
+class Latch_Instance_Data:
+    def __init__ (self,):                                   #line 636
+        self.datum =  None                                  #line 637#line 638
+                                                            #line 639
+def latch_instantiate (reg,owner,name,template_data):       #line 640
+    name_with_id = gensymbol ( "latch")                     #line 641
+    instp =  Latch_Instance_Data ()                         #line 642
+    return make_leaf ( name_with_id, owner, instp, latch_handler)#line 643#line 644#line 645
+
+def latch_handler (eh,msg):                                 #line 646
+    inst =  eh.instance_data                                #line 647
+    if  "" ==  msg.port:                                    #line 648
+        inst.datum =  msg.datum                             #line 649
+    elif  "release" ==  msg.port:                           #line 650
+        d =  inst.datum                                     #line 651
+        send ( eh, "", d, msg)                              #line 652
+        inst.datum =  None                                  #line 653
+    else:                                                   #line 654
+        send ( eh, "✗", "internal error bad message for latch", msg)#line 655#line 656#line 657#line 658
+
+# all of the the built_in leaves are listed here            #line 659
+# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 660#line 661
+def initialize_stock_components (reg):                      #line 662
+    register_component ( reg,mkTemplate ( "1then2", None, deracer_instantiate))#line 663
+    register_component ( reg,mkTemplate ( "?A", None, probeA_instantiate))#line 664
+    register_component ( reg,mkTemplate ( "?B", None, probeB_instantiate))#line 665
+    register_component ( reg,mkTemplate ( "?C", None, probeC_instantiate))#line 666
+    register_component ( reg,mkTemplate ( "trash", None, trash_instantiate))#line 667#line 668
+    register_component ( reg,mkTemplate ( "Low Level Read Text File", None, low_level_read_text_file_instantiate))#line 669
+    register_component ( reg,mkTemplate ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 670#line 671
+    register_component ( reg,mkTemplate ( "syncfilewrite", None, syncfilewrite_instantiate))#line 672
+    register_component ( reg,mkTemplate ( "stringconcat", None, stringconcat_instantiate))#line 673
+    register_component ( reg,mkTemplate ( "switch1*", None, switch1star_instantiate))#line 674
+    register_component ( reg,mkTemplate ( "latch", None, latch_instantiate))#line 675
+    # for fakepipe                                          #line 676
+    register_component ( reg,mkTemplate ( "fakepipename", None, fakepipename_instantiate))#line 677#line 678#line 679
+
+def argv ():                                                #line 680
+    return  sys.argv                                        #line 681#line 682#line 683
+
+def initialize ():                                          #line 684
+    root_of_project =  sys.argv[ 1]                         #line 685
+    root_of_0D =  sys.argv[ 2]                              #line 686
+    arg =  sys.argv[ 3]                                     #line 687
+    main_container_name =  sys.argv[ 4]                     #line 688
+    diagram_names =  sys.argv[ 5:]                          #line 689
+    palette = initialize_component_palette ( root_of_project, root_of_0D, diagram_names)#line 690
+    return [ palette,[ root_of_project, root_of_0D, main_container_name, diagram_names, arg]]#line 691#line 692#line 693
 
 def start (palette,env):
-    start_helper ( palette, env, False)                     #line 640
+    start_helper ( palette, env, False)                     #line 694
 
 def start_show_all (palette,env):
-    start_helper ( palette, env, True)                      #line 641
+    start_helper ( palette, env, True)                      #line 695
 
-def start_helper (palette,env,show_all_outputs):            #line 642
-    root_of_project =  env [ 0]                             #line 643
-    root_of_0D =  env [ 1]                                  #line 644
-    main_container_name =  env [ 2]                         #line 645
-    diagram_names =  env [ 3]                               #line 646
-    arg =  env [ 4]                                         #line 647
-    set_environment ( root_of_project, root_of_0D)          #line 648
-    # get entrypoint container                              #line 649
-    main_container = get_component_instance ( palette, main_container_name, None)#line 650
-    if  None ==  main_container:                            #line 651
-        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 655#line 656
-    if not  load_errors:                                    #line 657
-        marg = new_datum_string ( arg)                      #line 658
-        msg = make_message ( "", marg)                      #line 659
-        inject ( main_container, msg)                       #line 660
-        if  show_all_outputs:                               #line 661
-            dump_outputs ( main_container)                  #line 662
-        else:                                               #line 663
-            print_error_maybe ( main_container)             #line 664
-            outp = fetch_first_output ( main_container, "") #line 665
-            if  None ==  outp:                              #line 666
-                print ( "«««no outputs»»»)")                #line 667
-            else:                                           #line 668
-                print_specific_output ( main_container, "") #line 669#line 670#line 671
-        if  show_all_outputs:                               #line 672
-            print ( "--- done ---")                         #line 673#line 674#line 675#line 676#line 677
-                                                            #line 678
-# utility functions                                         #line 679
-def send_int (eh,port,i,causing_message):                   #line 680
-    datum = new_datum_string (str ( i))                     #line 681
-    send ( eh, port, datum, causing_message)                #line 682#line 683#line 684
+def start_helper (palette,env,show_all_outputs):            #line 696
+    root_of_project =  env [ 0]                             #line 697
+    root_of_0D =  env [ 1]                                  #line 698
+    main_container_name =  env [ 2]                         #line 699
+    diagram_names =  env [ 3]                               #line 700
+    arg =  env [ 4]                                         #line 701
+    set_environment ( root_of_project, root_of_0D)          #line 702
+    # get entrypoint container                              #line 703
+    main_container = get_component_instance ( palette, main_container_name, None)#line 704
+    if  None ==  main_container:                            #line 705
+        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 709#line 710
+    if not  load_errors:                                    #line 711
+        marg = new_datum_string ( arg)                      #line 712
+        msg = make_message ( "", marg)                      #line 713
+        inject ( main_container, msg)                       #line 714
+        if  show_all_outputs:                               #line 715
+            dump_outputs ( main_container)                  #line 716
+        else:                                               #line 717
+            print_error_maybe ( main_container)             #line 718
+            outp = fetch_first_output ( main_container, "") #line 719
+            if  None ==  outp:                              #line 720
+                print ( "«««no outputs»»»)")                #line 721
+            else:                                           #line 722
+                print_specific_output ( main_container, "") #line 723#line 724#line 725
+        if  show_all_outputs:                               #line 726
+            print ( "--- done ---")                         #line 727#line 728#line 729#line 730#line 731
+                                                            #line 732
+# utility functions                                         #line 733
+def send_int (eh,port,i,causing_message):                   #line 734
+    datum = new_datum_string (str ( i))                     #line 735
+    send ( eh, port, datum, causing_message)                #line 736#line 737#line 738
 
-def send_bang (eh,port,causing_message):                    #line 685
-    datum = new_datum_bang ()                               #line 686
-    send ( eh, port, datum, causing_message)                #line 687#line 688
+def send_bang (eh,port,causing_message):                    #line 739
+    datum = new_datum_bang ()                               #line 740
+    send ( eh, port, datum, causing_message)                #line 741#line 742
 
 
 

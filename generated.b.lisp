@@ -234,7 +234,7 @@
   (declare (ignorable  eh  port  msg))                      #|line 211|#
   (let ((fwdmsg (funcall (quote make_message)   port (slot-value  msg 'datum)  #|line 212|#)))
     (declare (ignorable fwdmsg))
-    (funcall (quote put_output)   eh  msg                   #|line 213|#)) #|line 214|#
+    (funcall (quote put_output)   eh  fwdmsg                #|line 213|#)) #|line 214|#
   )
 (defun inject (&optional  eh  msg)
   (declare (ignorable  eh  msg))                            #|line 216|#
@@ -705,111 +705,184 @@
   (setf  rand (+  rand  1))
   #|  not very random, but good enough _ 'rand' must be unique within a single run |# #|line 602|#
   (funcall (quote send_string)   eh  ""  (concatenate 'string  "/tmp/fakepipe"  rand)  msg  #|line 603|#) #|line 604|#
-  )                                                         #|line 606|# #|  all of the the built_in leaves are listed here |# #|line 607|# #|  future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project |# #|line 608|# #|line 609|#
+  )                                                         #|line 606|#
+(defclass Switch1star_Instance_Data ()                      #|line 607|#
+  (
+    (state :accessor state :initarg :state :initform  "1")  #|line 608|#)) #|line 609|#
+
+                                                            #|line 610|#
+(defun switch1star_instantiate (&optional  reg  owner  name  template_data)
+  (declare (ignorable  reg  owner  name  template_data))    #|line 611|#
+  (let ((name_with_id (funcall (quote gensymbol)   "switch1*"  #|line 612|#)))
+    (declare (ignorable name_with_id))
+    (let ((instp  (make-instance 'Switch1star_Instance_Data) #|line 613|#))
+      (declare (ignorable instp))
+      (return-from switch1star_instantiate (funcall (quote make_leaf)   name_with_id  owner  instp  #'switch1star_handler  #|line 614|#)))) #|line 615|#
+  )
+(defun switch1star_handler (&optional  eh  msg)
+  (declare (ignorable  eh  msg))                            #|line 617|#
+  (let (( inst (slot-value  eh 'instance_data)))
+    (declare (ignorable  inst))                             #|line 618|#
+    (let ((whichOutput (slot-value  inst 'state)))
+      (declare (ignorable whichOutput))                     #|line 619|#
+      (cond
+        (( equal    "" (slot-value  msg 'port))             #|line 620|#
+          (cond
+            (( equal    "1"  whichOutput)                   #|line 621|#
+              (funcall (quote forward)   eh  "1"  msg       #|line 622|#)
+              (setf (slot-value  inst 'state)  "*")         #|line 623|#
+              )
+            (( equal    "*"  whichOutput)                   #|line 624|#
+              (funcall (quote forward)   eh  "*"  msg       #|line 625|#)
+              )
+            (t                                              #|line 626|#
+              (funcall (quote send)   eh  "✗"  "internal error bad state in switch1*"  msg  #|line 627|#) #|line 628|#
+              ))
+          )
+        (( equal    "reset" (slot-value  msg 'port))        #|line 629|#
+          (setf (slot-value  inst 'state)  "1")             #|line 630|#
+          )
+        (t                                                  #|line 631|#
+          (funcall (quote send)   eh  "✗"  "internal error bad message for switch1*"  msg  #|line 632|#) #|line 633|#
+          ))))                                              #|line 634|#
+  )
+(defclass Latch_Instance_Data ()                            #|line 636|#
+  (
+    (datum :accessor datum :initarg :datum :initform  nil)  #|line 637|#)) #|line 638|#
+
+                                                            #|line 639|#
+(defun latch_instantiate (&optional  reg  owner  name  template_data)
+  (declare (ignorable  reg  owner  name  template_data))    #|line 640|#
+  (let ((name_with_id (funcall (quote gensymbol)   "latch"  #|line 641|#)))
+    (declare (ignorable name_with_id))
+    (let ((instp  (make-instance 'Latch_Instance_Data)      #|line 642|#))
+      (declare (ignorable instp))
+      (return-from latch_instantiate (funcall (quote make_leaf)   name_with_id  owner  instp  #'latch_handler  #|line 643|#)))) #|line 644|#
+  )
+(defun latch_handler (&optional  eh  msg)
+  (declare (ignorable  eh  msg))                            #|line 646|#
+  (let (( inst (slot-value  eh 'instance_data)))
+    (declare (ignorable  inst))                             #|line 647|#
+    (cond
+      (( equal    "" (slot-value  msg 'port))               #|line 648|#
+        (setf (slot-value  inst 'datum) (slot-value  msg 'datum)) #|line 649|#
+        )
+      (( equal    "release" (slot-value  msg 'port))        #|line 650|#
+        (let (( d (slot-value  inst 'datum)))
+          (declare (ignorable  d))                          #|line 651|#
+          (funcall (quote send)   eh  ""  d  msg            #|line 652|#)
+          (setf (slot-value  inst 'datum)  nil)             #|line 653|#)
+        )
+      (t                                                    #|line 654|#
+        (funcall (quote send)   eh  "✗"  "internal error bad message for latch"  msg  #|line 655|#) #|line 656|#
+        )))                                                 #|line 657|#
+  ) #|  all of the the built_in leaves are listed here |#   #|line 659|# #|  future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project |# #|line 660|# #|line 661|#
 (defun initialize_stock_components (&optional  reg)
-  (declare (ignorable  reg))                                #|line 610|#
-  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "1then2"  nil  #'deracer_instantiate )  #|line 611|#)
-  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?A"  nil  #'probeA_instantiate )  #|line 612|#)
-  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?B"  nil  #'probeB_instantiate )  #|line 613|#)
-  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?C"  nil  #'probeC_instantiate )  #|line 614|#)
-  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "trash"  nil  #'trash_instantiate )  #|line 615|#) #|line 616|#
-  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Low Level Read Text File"  nil  #'low_level_read_text_file_instantiate )  #|line 617|#)
-  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Ensure String Datum"  nil  #'ensure_string_datum_instantiate )  #|line 618|#) #|line 619|#
-  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "syncfilewrite"  nil  #'syncfilewrite_instantiate )  #|line 620|#)
-  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "stringconcat"  nil  #'stringconcat_instantiate )  #|line 621|#)
-  #|  for fakepipe |#                                       #|line 622|#
-  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "fakepipename"  nil  #'fakepipename_instantiate )  #|line 623|#) #|line 624|#
+  (declare (ignorable  reg))                                #|line 662|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "1then2"  nil  #'deracer_instantiate )  #|line 663|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?A"  nil  #'probeA_instantiate )  #|line 664|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?B"  nil  #'probeB_instantiate )  #|line 665|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "?C"  nil  #'probeC_instantiate )  #|line 666|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "trash"  nil  #'trash_instantiate )  #|line 667|#) #|line 668|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Low Level Read Text File"  nil  #'low_level_read_text_file_instantiate )  #|line 669|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "Ensure String Datum"  nil  #'ensure_string_datum_instantiate )  #|line 670|#) #|line 671|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "syncfilewrite"  nil  #'syncfilewrite_instantiate )  #|line 672|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "stringconcat"  nil  #'stringconcat_instantiate )  #|line 673|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "switch1*"  nil  #'switch1star_instantiate )  #|line 674|#)
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "latch"  nil  #'latch_instantiate )  #|line 675|#)
+  #|  for fakepipe |#                                       #|line 676|#
+  (funcall (quote register_component)   reg (funcall (quote mkTemplate)   "fakepipename"  nil  #'fakepipename_instantiate )  #|line 677|#) #|line 678|#
   )
 (defun argv (&optional )
-  (declare (ignorable ))                                    #|line 626|#
+  (declare (ignorable ))                                    #|line 680|#
   (return-from argv
     (get-main-args)
-                                                            #|line 627|#) #|line 628|#
+                                                            #|line 681|#) #|line 682|#
   )
 (defun initialize (&optional )
-  (declare (ignorable ))                                    #|line 630|#
-  (let ((root_of_project  (nth  1 (argv))                   #|line 631|#))
+  (declare (ignorable ))                                    #|line 684|#
+  (let ((root_of_project  (nth  1 (argv))                   #|line 685|#))
     (declare (ignorable root_of_project))
-    (let ((root_of_0D  (nth  2 (argv))                      #|line 632|#))
+    (let ((root_of_0D  (nth  2 (argv))                      #|line 686|#))
       (declare (ignorable root_of_0D))
-      (let ((arg  (nth  3 (argv))                           #|line 633|#))
+      (let ((arg  (nth  3 (argv))                           #|line 687|#))
         (declare (ignorable arg))
-        (let ((main_container_name  (nth  4 (argv))         #|line 634|#))
+        (let ((main_container_name  (nth  4 (argv))         #|line 688|#))
           (declare (ignorable main_container_name))
-          (let ((diagram_names  (nthcdr  5 (argv))          #|line 635|#))
+          (let ((diagram_names  (nthcdr  5 (argv))          #|line 689|#))
             (declare (ignorable diagram_names))
-            (let ((palette (funcall (quote initialize_component_palette)   root_of_project  root_of_0D  diagram_names  #|line 636|#)))
+            (let ((palette (funcall (quote initialize_component_palette)   root_of_project  root_of_0D  diagram_names  #|line 690|#)))
               (declare (ignorable palette))
-              (return-from initialize (values  palette (list   root_of_project  root_of_0D  main_container_name  diagram_names  arg ))) #|line 637|#)))))) #|line 638|#
+              (return-from initialize (values  palette (list   root_of_project  root_of_0D  main_container_name  diagram_names  arg ))) #|line 691|#)))))) #|line 692|#
   )
 (defun start (&optional  palette  env)
   (declare (ignorable  palette  env))
-  (funcall (quote start_helper)   palette  env  nil )       #|line 640|#
+  (funcall (quote start_helper)   palette  env  nil )       #|line 694|#
   )
 (defun start_show_all (&optional  palette  env)
   (declare (ignorable  palette  env))
-  (funcall (quote start_helper)   palette  env  t )         #|line 641|#
+  (funcall (quote start_helper)   palette  env  t )         #|line 695|#
   )
 (defun start_helper (&optional  palette  env  show_all_outputs)
-  (declare (ignorable  palette  env  show_all_outputs))     #|line 642|#
+  (declare (ignorable  palette  env  show_all_outputs))     #|line 696|#
   (let ((root_of_project (nth  0  env)))
-    (declare (ignorable root_of_project))                   #|line 643|#
+    (declare (ignorable root_of_project))                   #|line 697|#
     (let ((root_of_0D (nth  1  env)))
-      (declare (ignorable root_of_0D))                      #|line 644|#
+      (declare (ignorable root_of_0D))                      #|line 698|#
       (let ((main_container_name (nth  2  env)))
-        (declare (ignorable main_container_name))           #|line 645|#
+        (declare (ignorable main_container_name))           #|line 699|#
         (let ((diagram_names (nth  3  env)))
-          (declare (ignorable diagram_names))               #|line 646|#
+          (declare (ignorable diagram_names))               #|line 700|#
           (let ((arg (nth  4  env)))
-            (declare (ignorable arg))                       #|line 647|#
-            (funcall (quote set_environment)   root_of_project  root_of_0D  #|line 648|#)
-            #|  get entrypoint container |#                 #|line 649|#
-            (let (( main_container (funcall (quote get_component_instance)   palette  main_container_name  nil  #|line 650|#)))
+            (declare (ignorable arg))                       #|line 701|#
+            (funcall (quote set_environment)   root_of_project  root_of_0D  #|line 702|#)
+            #|  get entrypoint container |#                 #|line 703|#
+            (let (( main_container (funcall (quote get_component_instance)   palette  main_container_name  nil  #|line 704|#)))
               (declare (ignorable  main_container))
               (cond
-                (( equal    nil  main_container)            #|line 651|#
-                  (funcall (quote load_error)   (concatenate 'string  "Couldn't find container with page name /"  (concatenate 'string  main_container_name  (concatenate 'string  "/ in files "  (concatenate 'string (format nil "~a"  diagram_names)  " (check tab names, or disable compression?)"))))  #|line 655|#) #|line 656|#
+                (( equal    nil  main_container)            #|line 705|#
+                  (funcall (quote load_error)   (concatenate 'string  "Couldn't find container with page name /"  (concatenate 'string  main_container_name  (concatenate 'string  "/ in files "  (concatenate 'string (format nil "~a"  diagram_names)  " (check tab names, or disable compression?)"))))  #|line 709|#) #|line 710|#
                   ))
               (cond
-                ((not  load_errors)                         #|line 657|#
-                  (let (( marg (funcall (quote new_datum_string)   arg  #|line 658|#)))
+                ((not  load_errors)                         #|line 711|#
+                  (let (( marg (funcall (quote new_datum_string)   arg  #|line 712|#)))
                     (declare (ignorable  marg))
-                    (let (( msg (funcall (quote make_message)   ""  marg  #|line 659|#)))
+                    (let (( msg (funcall (quote make_message)   ""  marg  #|line 713|#)))
                       (declare (ignorable  msg))
-                      (funcall (quote inject)   main_container  msg  #|line 660|#)
+                      (funcall (quote inject)   main_container  msg  #|line 714|#)
                       (cond
-                        ( show_all_outputs                  #|line 661|#
-                          (funcall (quote dump_outputs)   main_container  #|line 662|#)
+                        ( show_all_outputs                  #|line 715|#
+                          (funcall (quote dump_outputs)   main_container  #|line 716|#)
                           )
-                        (t                                  #|line 663|#
-                          (funcall (quote print_error_maybe)   main_container  #|line 664|#)
-                          (let ((outp (funcall (quote fetch_first_output)   main_container  ""  #|line 665|#)))
+                        (t                                  #|line 717|#
+                          (funcall (quote print_error_maybe)   main_container  #|line 718|#)
+                          (let ((outp (funcall (quote fetch_first_output)   main_container  ""  #|line 719|#)))
                             (declare (ignorable outp))
                             (cond
-                              (( equal    nil  outp)        #|line 666|#
-                                (format *standard-output* "~a~%"  "«««no outputs»»»)") #|line 667|#
+                              (( equal    nil  outp)        #|line 720|#
+                                (format *standard-output* "~a~%"  "«««no outputs»»»)") #|line 721|#
                                 )
-                              (t                            #|line 668|#
-                                (funcall (quote print_specific_output)   main_container  ""  #|line 669|#) #|line 670|#
-                                )))                         #|line 671|#
+                              (t                            #|line 722|#
+                                (funcall (quote print_specific_output)   main_container  ""  #|line 723|#) #|line 724|#
+                                )))                         #|line 725|#
                           ))
                       (cond
-                        ( show_all_outputs                  #|line 672|#
-                          (format *standard-output* "~a~%"  "--- done ---") #|line 673|# #|line 674|#
-                          ))))                              #|line 675|#
-                  ))))))))                                  #|line 676|#
-  )                                                         #|line 678|# #|  utility functions  |# #|line 679|#
+                        ( show_all_outputs                  #|line 726|#
+                          (format *standard-output* "~a~%"  "--- done ---") #|line 727|# #|line 728|#
+                          ))))                              #|line 729|#
+                  ))))))))                                  #|line 730|#
+  )                                                         #|line 732|# #|  utility functions  |# #|line 733|#
 (defun send_int (&optional  eh  port  i  causing_message)
-  (declare (ignorable  eh  port  i  causing_message))       #|line 680|#
-  (let ((datum (funcall (quote new_datum_string)  (format nil "~a"  i)  #|line 681|#)))
+  (declare (ignorable  eh  port  i  causing_message))       #|line 734|#
+  (let ((datum (funcall (quote new_datum_string)  (format nil "~a"  i)  #|line 735|#)))
     (declare (ignorable datum))
-    (funcall (quote send)   eh  port  datum  causing_message  #|line 682|#)) #|line 683|#
+    (funcall (quote send)   eh  port  datum  causing_message  #|line 736|#)) #|line 737|#
   )
 (defun send_bang (&optional  eh  port  causing_message)
-  (declare (ignorable  eh  port  causing_message))          #|line 685|#
+  (declare (ignorable  eh  port  causing_message))          #|line 739|#
   (let ((datum (funcall (quote new_datum_bang) )))
-    (declare (ignorable datum))                             #|line 686|#
-    (funcall (quote send)   eh  port  datum  causing_message  #|line 687|#)) #|line 688|#
+    (declare (ignorable datum))                             #|line 740|#
+    (funcall (quote send)   eh  port  datum  causing_message  #|line 741|#)) #|line 742|#
   )
 
 
