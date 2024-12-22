@@ -11,7 +11,7 @@ tester: tester.drawio.json generated.mjs
 generated.mjs: ../../rt/generated.mjs
 	cp ../../rt/generated.mjs ./generated.mjs
 
-tester.drawio.json: ./tester.drawio ./tester.drawio.json
+tester.drawio.json: ./tester.drawio
 	${D2J} tester.drawio
 
 ## house-keeping
