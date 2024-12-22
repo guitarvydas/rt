@@ -428,8 +428,8 @@ defn syncfilewrite_handler (eh, msg) {
 }
 
 defobj StringConcat_Instance_Data () {
-        • buffer1 ⇐ ϕ
-        • buffer2 ⇐ ϕ
+        • buffer1 ⇐ “”
+        • buffer2 ⇐ “”
         • scount ⇐ 0
 }
 
@@ -468,8 +468,8 @@ defn maybe_stringconcat (eh, inst, msg) {
 		concatenated_string ⇐ inst.buffer1 + inst.buffer2
 	    }    
 	    send_string (eh, “”, concatenated_string, msg)
-	    inst.buffer1 ⇐ ϕ
-	    inst.buffer2 ⇐ ϕ
+	    inst.buffer1 ⇐ “”
+	    inst.buffer2 ⇐ “”
 	    inst.scount ⇐ 0
 	}
     }

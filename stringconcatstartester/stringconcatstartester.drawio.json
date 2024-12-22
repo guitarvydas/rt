@@ -1,0 +1,471 @@
+[
+    {
+        "file": "stringconcatstartester.drawio",
+        "name": "main",
+        "children": [
+            {
+                "name": "String Concat *",
+                "id": 4
+            },
+            {
+                "name": "stimulus",
+                "id": 9
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "stimulus",
+                    "id": 9
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "stimulus",
+                    "id": 9
+                },
+                "source_port": "c",
+                "target": {
+                    "name": "String Concat *",
+                    "id": 4
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "stimulus",
+                    "id": 9
+                },
+                "source_port": "fini",
+                "target": {
+                    "name": "String Concat *",
+                    "id": 4
+                },
+                "target_port": "fini"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "String Concat *",
+                    "id": 4
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "String Concat *",
+                    "id": 4
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            }
+        ]
+    },
+    {
+        "file": "stringconcatstartester.drawio",
+        "name": "stimulus",
+        "children": [
+            {
+                "name": "'b",
+                "id": 3
+            },
+            {
+                "name": "'Y",
+                "id": 6
+            },
+            {
+                "name": "'Z",
+                "id": 9
+            },
+            {
+                "name": "'",
+                "id": 14
+            },
+            {
+                "name": "'",
+                "id": 15
+            },
+            {
+                "name": "'X",
+                "id": 19
+            },
+            {
+                "name": "'c",
+                "id": 23
+            },
+            {
+                "name": "'a",
+                "id": 25
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'X",
+                    "id": 19
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'Z",
+                    "id": 9
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'",
+                    "id": 15
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'a",
+                    "id": 25
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'b",
+                    "id": 3
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'b",
+                    "id": 3
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'c",
+                    "id": 23
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'Y",
+                    "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'Z",
+                    "id": 9
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'X",
+                    "id": 19
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'Y",
+                    "id": 6
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'c",
+                    "id": 23
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'",
+                    "id": 14
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'",
+                    "id": 15
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'a",
+                    "id": 25
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'Z",
+                    "id": 9
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'X",
+                    "id": 19
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'Y",
+                    "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'",
+                    "id": 15
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "fini"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'",
+                    "id": 14
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "fini"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'c",
+                    "id": 23
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'b",
+                    "id": 3
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'a",
+                    "id": 25
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            }
+        ]
+    },
+    {
+        "file": "stringconcatstartester.drawio",
+        "name": "String Concat *",
+        "children": [
+            {
+                "name": "switch1*",
+                "id": 5
+            },
+            {
+                "name": "stringconcat",
+                "id": 11
+            },
+            {
+                "name": "latch",
+                "id": 17
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "fini",
+                "target": {
+                    "name": "latch",
+                    "id": 17
+                },
+                "target_port": "release"
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "latch",
+                    "id": 17
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "latch",
+                    "id": 17
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "latch",
+                    "id": 17
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            }
+        ]
+    },
+    {
+        "file": "stringconcatstartester.drawio",
+        "name": "skip first",
+        "children": [
+            {
+                "name": "switch1*",
+                "id": 8
+            },
+            {
+                "name": "trash",
+                "id": 11
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "switch1*",
+                    "id": 8
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "reset",
+                "target": {
+                    "name": "switch1*",
+                    "id": 8
+                },
+                "target_port": "reset"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "switch1*",
+                    "id": 8
+                },
+                "source_port": "1",
+                "target": {
+                    "name": "trash",
+                    "id": 11
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "switch1*",
+                    "id": 8
+                },
+                "source_port": "*",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": ""
+            }
+        ]
+    }
+]

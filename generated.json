@@ -837,8 +837,8 @@ function syncfilewrite_handler (eh,msg) {/* line 413 */
 class StringConcat_Instance_Data {
   constructor () {            /* line 430 */
 
-    this.buffer1 =  null;     /* line 431 */
-    this.buffer2 =  null;     /* line 432 */
+    this.buffer1 =  "";     /* line 431 */
+    this.buffer2 =  "";     /* line 432 */
     this.scount =  0;         /* line 433 *//* line 434 */
   }
 }
@@ -875,8 +875,8 @@ function maybe_stringconcat (eh,inst,msg) {/* line 457 */
       else {                  /* line 467 */
         concatenated_string =  inst.buffer1+ inst.buffer2;/* line 468 *//* line 469 */}
       send_string ( eh, "", concatenated_string, msg)/* line 470 */
-      inst.buffer1 =  null;   /* line 471 */
-      inst.buffer2 =  null;   /* line 472 */
+      inst.buffer1 =  "";   /* line 471 */
+      inst.buffer2 =  "";   /* line 472 */
       inst.scount =  0;       /* line 473 */}/* line 474 *//* line 475 */
 }
 

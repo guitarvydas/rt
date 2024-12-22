@@ -1274,3 +1274,5 @@ function send_bang (eh,port,causing_message) {         /* line 739 */
 
 
 
+let [palette, env] = initialize ();
+start_show_all (palette, env);
