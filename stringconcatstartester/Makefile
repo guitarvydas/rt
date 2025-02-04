@@ -8,8 +8,8 @@ stringconcatstartester: stringconcatstartester.drawio.json generated.mjs
 	cat generated.mjs main.mjs >stringconcatstartester.mjs
 	node stringconcatstartester.mjs "." "-" "-" main stringconcatstartester.drawio.json
 
-generated.mjs: ../../rt/generated.mjs
-	cp ../../rt/generated.mjs ./generated.mjs
+generated.mjs: ../generated.mjs
+	cp ../generated.mjs ./generated.mjs
 
 stringconcatstartester.drawio.json: ./stringconcatstartester.drawio 
 	${D2J} stringconcatstartester.drawio

@@ -1,6 +1,6 @@
 syntax {
 
-  Main = TopLevel+
+  Main = ParaMark TopLevel+
   TopLevel =
     | Defvar -- defvar
     | Defconst -- defconst
@@ -214,4 +214,6 @@ syntax {
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
 
   Comma = line? "," line?
+
+  ParaMark = "¶"
 }

@@ -1,5 +1,3 @@
-
-
 def monitor_install (reg):                                  #line 1
     register_component ( reg,mkTemplate ( "@", None, monitor_instantiator))#line 2#line 3#line 4
 
@@ -14,8 +12,3 @@ def monitor_handler (eh,msg):                               #line 10
         s =  str( " ") +  s                                 #line 14
         i =  i- 1                                           #line 15#line 16
     print ( s)                                              #line 17#line 18
-
-
-
-
-

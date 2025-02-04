@@ -1,13 +1,20 @@
 import sys
 import re
+from repl import live_update
 
 def check_for_stars(source_code):
     found = False
-    for line_num, line in enumerate(source_code.splitlines(), start=1):
+    good = ''
+    for line in source_code.splitlines():
         if '>>>' in line:
             found = True
-            print(f"\n{line}", file=sys.stderr)
-        print (f"{line}")
+            #print(f"errcheck: {line}", file=sys.stderr)
+        else:
+            good += line + '\n'
+    if not found:
+        print (good, file=sys.stdout)
+    else:
+        exit (1)
 
 if __name__ == "__main__":
     try:

@@ -8,10 +8,10 @@ tester: tester.drawio.json generated.mjs
 	cat generated.mjs main.mjs >tester.mjs
 	node tester.mjs "." "-" "-" main tester.drawio.json
 
-generated.mjs: ../../rt/generated.mjs
-	cp ../../rt/generated.mjs ./generated.mjs
+generated.mjs: ~/projects/rt/generated.mjs
+	cp ~/projects/rt/generated.mjs ./generated.mjs
 
-tester.drawio.json: ./tester.drawio ./tester.drawio.json
+tester.drawio.json: ./tester.drawio
 	${D2J} tester.drawio
 
 ## house-keeping

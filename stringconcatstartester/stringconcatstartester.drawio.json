@@ -85,7 +85,7 @@
         "name": "stimulus",
         "children": [
             {
-                "name": "'b",
+                "name": "'J",
                 "id": 3
             },
             {
@@ -109,12 +109,28 @@
                 "id": 19
             },
             {
-                "name": "'c",
-                "id": 23
+                "name": "'L",
+                "id": 22
             },
             {
                 "name": "'a",
                 "id": 25
+            },
+            {
+                "name": "'b",
+                "id": 28
+            },
+            {
+                "name": "'c",
+                "id": 31
+            },
+            {
+                "name": "'",
+                "id": 36
+            },
+            {
+                "name": "'K",
+                "id": 40
             }
         ],
         "connections": [
@@ -134,6 +150,71 @@
             {
                 "dir": 1,
                 "source": {
+                    "name": "'",
+                    "id": 15
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'a",
+                    "id": 25
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'c",
+                    "id": 31
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'",
+                    "id": 36
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'b",
+                    "id": 28
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'c",
+                    "id": 31
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'",
+                    "id": 36
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'J",
+                    "id": 3
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'a",
+                    "id": 25
+                },
+                "source_port": "",
+                "target": {
+                    "name": "'b",
+                    "id": 28
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
                     "name": "'Z",
                     "id": 9
                 },
@@ -147,26 +228,26 @@
             {
                 "dir": 1,
                 "source": {
-                    "name": "'a",
-                    "id": 25
+                    "name": "'J",
+                    "id": 3
                 },
                 "source_port": "",
                 "target": {
-                    "name": "'b",
-                    "id": 3
+                    "name": "'K",
+                    "id": 40
                 },
                 "target_port": ""
             },
             {
                 "dir": 1,
                 "source": {
-                    "name": "'b",
-                    "id": 3
+                    "name": "'K",
+                    "id": 40
                 },
                 "source_port": "",
                 "target": {
-                    "name": "'c",
-                    "id": 23
+                    "name": "'L",
+                    "id": 22
                 },
                 "target_port": ""
             },
@@ -199,8 +280,8 @@
             {
                 "dir": 1,
                 "source": {
-                    "name": "'c",
-                    "id": 23
+                    "name": "'L",
+                    "id": 22
                 },
                 "source_port": "",
                 "target": {
@@ -210,23 +291,23 @@
                 "target_port": ""
             },
             {
-                "dir": 1,
+                "dir": 2,
                 "source": {
                     "name": "'",
-                    "id": 15
+                    "id": 36
                 },
                 "source_port": "",
                 "target": {
-                    "name": "'a",
-                    "id": 25
+                    "name": "",
+                    "id": 0
                 },
-                "target_port": ""
+                "target_port": "fini"
             },
             {
                 "dir": 2,
                 "source": {
-                    "name": "'Z",
-                    "id": 9
+                    "name": "'c",
+                    "id": 31
                 },
                 "source_port": "",
                 "target": {
@@ -238,8 +319,21 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "'X",
-                    "id": 19
+                    "name": "'b",
+                    "id": 28
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'a",
+                    "id": 25
                 },
                 "source_port": "",
                 "target": {
@@ -253,6 +347,19 @@
                 "source": {
                     "name": "'Y",
                     "id": 6
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'Z",
+                    "id": 9
                 },
                 "source_port": "",
                 "target": {
@@ -290,8 +397,8 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "'c",
-                    "id": 23
+                    "name": "'L",
+                    "id": 22
                 },
                 "source_port": "",
                 "target": {
@@ -303,7 +410,20 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "'b",
+                    "name": "'K",
+                    "id": 40
+                },
+                "source_port": "",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "c"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "'J",
                     "id": 3
                 },
                 "source_port": "",
@@ -316,8 +436,8 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "'a",
-                    "id": 25
+                    "name": "'X",
+                    "id": 19
                 },
                 "source_port": "",
                 "target": {
@@ -333,16 +453,24 @@
         "name": "String Concat *",
         "children": [
             {
+                "name": "seq12",
+                "id": 4
+            },
+            {
                 "name": "switch1*",
                 "id": 5
             },
             {
-                "name": "stringconcat",
+                "name": "wstringconcat",
                 "id": 11
             },
             {
                 "name": "latch",
-                "id": 17
+                "id": 18
+            },
+            {
+                "name": "'",
+                "id": 26
             }
         ],
         "connections": [
@@ -354,10 +482,10 @@
                 },
                 "source_port": "fini",
                 "target": {
-                    "name": "latch",
-                    "id": 17
+                    "name": "seq12",
+                    "id": 4
                 },
-                "target_port": "release"
+                "target_port": ""
             },
             {
                 "dir": 0,
@@ -367,8 +495,125 @@
                 },
                 "source_port": "",
                 "target": {
+                    "name": "switch1*",
+                    "id": 5
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "'",
+                    "id": 26
+                },
+                "source_port": "",
+                "target": {
+                    "name": "wstringconcat",
+                    "id": 11
+                },
+                "target_port": "1"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "switch1*",
+                    "id": 5
+                },
+                "source_port": "1",
+                "target": {
+                    "name": "wstringconcat",
+                    "id": 11
+                },
+                "target_port": "2"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "switch1*",
+                    "id": 5
+                },
+                "source_port": "*",
+                "target": {
+                    "name": "wstringconcat",
+                    "id": 11
+                },
+                "target_port": "2"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "switch1*",
+                    "id": 5
+                },
+                "source_port": "1",
+                "target": {
+                    "name": "'",
+                    "id": 26
+                },
+                "target_port": ""
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "seq12",
+                    "id": 4
+                },
+                "source_port": "1",
+                "target": {
                     "name": "latch",
-                    "id": 17
+                    "id": 18
+                },
+                "target_port": "release"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "seq12",
+                    "id": 4
+                },
+                "source_port": "2",
+                "target": {
+                    "name": "switch1*",
+                    "id": 5
+                },
+                "target_port": "reset"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "seq12",
+                    "id": 4
+                },
+                "source_port": "2",
+                "target": {
+                    "name": "wstringconcat",
+                    "id": 11
+                },
+                "target_port": "reset"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "wstringconcat",
+                    "id": 11
+                },
+                "source_port": "",
+                "target": {
+                    "name": "wstringconcat",
+                    "id": 11
+                },
+                "target_port": "1"
+            },
+            {
+                "dir": 1,
+                "source": {
+                    "name": "wstringconcat",
+                    "id": 11
+                },
+                "source_port": "",
+                "target": {
+                    "name": "latch",
+                    "id": 18
                 },
                 "target_port": ""
             },
@@ -376,7 +621,20 @@
                 "dir": 2,
                 "source": {
                     "name": "latch",
-                    "id": 17
+                    "id": 18
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "latch",
+                    "id": 18
                 },
                 "source_port": "",
                 "target": {
@@ -388,8 +646,21 @@
             {
                 "dir": 2,
                 "source": {
-                    "name": "latch",
-                    "id": 17
+                    "name": "wstringconcat",
+                    "id": 11
+                },
+                "source_port": "\u2717",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "\u2717"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "switch1*",
+                    "id": 5
                 },
                 "source_port": "\u2717",
                 "target": {
@@ -402,15 +673,11 @@
     },
     {
         "file": "stringconcatstartester.drawio",
-        "name": "skip first",
+        "name": "seq12",
         "children": [
             {
-                "name": "switch1*",
+                "name": "1then2",
                 "id": 8
-            },
-            {
-                "name": "trash",
-                "id": 11
             }
         ],
         "connections": [
@@ -422,10 +689,87 @@
                 },
                 "source_port": "",
                 "target": {
-                    "name": "switch1*",
+                    "name": "1then2",
                     "id": 8
                 },
-                "target_port": ""
+                "target_port": "2"
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "",
+                "target": {
+                    "name": "1then2",
+                    "id": 8
+                },
+                "target_port": "1"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "1then2",
+                    "id": 8
+                },
+                "source_port": "2",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "2"
+            },
+            {
+                "dir": 2,
+                "source": {
+                    "name": "1then2",
+                    "id": 8
+                },
+                "source_port": "1",
+                "target": {
+                    "name": "",
+                    "id": 0
+                },
+                "target_port": "1"
+            }
+        ]
+    },
+    {
+        "file": "stringconcatstartester.drawio",
+        "name": "wstringconcat",
+        "children": [
+            {
+                "name": "stringconcat",
+                "id": 8
+            }
+        ],
+        "connections": [
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "1",
+                "target": {
+                    "name": "stringconcat",
+                    "id": 8
+                },
+                "target_port": "1"
+            },
+            {
+                "dir": 0,
+                "source": {
+                    "name": "",
+                    "id": 0
+                },
+                "source_port": "2",
+                "target": {
+                    "name": "stringconcat",
+                    "id": 8
+                },
+                "target_port": "2"
             },
             {
                 "dir": 0,
@@ -435,31 +779,31 @@
                 },
                 "source_port": "reset",
                 "target": {
-                    "name": "switch1*",
+                    "name": "stringconcat",
                     "id": 8
                 },
                 "target_port": "reset"
             },
             {
-                "dir": 1,
+                "dir": 2,
                 "source": {
-                    "name": "switch1*",
+                    "name": "stringconcat",
                     "id": 8
                 },
-                "source_port": "1",
+                "source_port": "\u2717",
                 "target": {
-                    "name": "trash",
-                    "id": 11
+                    "name": "",
+                    "id": 0
                 },
-                "target_port": ""
+                "target_port": "\u2717"
             },
             {
                 "dir": 2,
                 "source": {
-                    "name": "switch1*",
+                    "name": "stringconcat",
                     "id": 8
                 },
-                "source_port": "*",
+                "source_port": "",
                 "target": {
                     "name": "",
                     "id": 0
