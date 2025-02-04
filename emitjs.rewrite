@@ -1,6 +1,6 @@
 % rewrite emitJavascript {
 
-Main [ TopLevel+] = ‛«TopLevel»’
+Main [ Para TopLevel+] = ‛«Para»«TopLevel»’
 
 TopLevel_defvar [ Defvar] =‛«Defvar»’
 TopLevel_defconst [ Defconst] =‛«Defconst»’
@@ -78,6 +78,7 @@ ExternalPhrase_freshStack [_octothorpe _ lp rp] = ‛ []’
 ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ new «ident» ();’
 ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ command_line_argv.splice («n») ’
 ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ command_line_argv[«n»] ’
+ExternalPhrase_stringshrink [_octothorpe _83 _84 e _85 ] =‛ «e»’
 ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ «e».substring (1) ’
 ExternalPhrase_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ \`\${«e1»}\${«e2»}\` ’
@@ -94,6 +95,7 @@ import execSync from 'child_process';
 ExternalPhrase_print_stdout [_octothorpe _ lp e rp] = ‛console.log («e»);’
 ExternalPhrase_print_stderr [_octothorpe _ lp e rp] = ‛console.error («e»);’
 ExternalPhrase_print_nl [_octothorpe _ lp rp] = ‛console.log ();’
+ExternalPhrase_print_nl_stderr [_octothorpe _ lp rp] = ‛’
 ExternalPhrase_split_string_for_shell [_octothorpe _ lp s rp] = ‛«s».split (" ")’
 ExternalPhrase_substitute [_octothorpe _ lp find _comma1 replace _comma2 s rp] = ‛«s».replaceAll («find», «replace»)’
 ExternalPhrase_run_command [_octothorpe _ lp cmd _comma1 args _comma2 ret _comma3 rc _comma4 out _comma5 errout rp] = 
@@ -112,6 +114,9 @@ ExternalPhrase_dequeue [_octothorpe _ lp obj rp] = ‛«obj».shift ()’
 ExternalPhrase_empty [_octothorpe _ lp q rp] = ‛(0===«q».length)’
 ExternalPhrase_queue2list [_octothorpe _ lp q rp] = ‛ «q»’
 ExternalPhrase_negate [_octothorpe _ lp x rp] = ‛(-«x»)’
+
+ExternalPhrase_liveUpdate [_octothorpe _ lp s1 _comma s2 rp] = ‛live_update («s1», «s2»)’
+ExternalPhrase_queueAsJsonToStdout [_octothorpe _ lp x rp] = ‛??? (???deque_to_json («x»))’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 
@@ -246,4 +251,5 @@ port [s] = ‛«s»’
 
 line [lb cs* rb] = ‛«lb»«cs»«rb»’
 Comma [line1? _comma line2?] = ‛«_comma»’
+ParaMark [c] = ‛«c»’
 }

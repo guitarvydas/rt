@@ -8,8 +8,8 @@ switch1startester: switch1startester.drawio.json generated.mjs
 	cat generated.mjs main.mjs >switch1startester.mjs
 	node switch1startester.mjs "." "-" "-" main switch1startester.drawio.json
 
-generated.mjs: ../../rt/generated.mjs
-	cp ../../rt/generated.mjs ./generated.mjs
+generated.mjs: ../generated.mjs
+	cp ../generated.mjs ./generated.mjs
 
 switch1startester.drawio.json: ./switch1startester.drawio 
 	${D2J} switch1startester.drawio

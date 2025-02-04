@@ -1,5 +1,3 @@
-
-
 def delay_install (reg):                                    #line 1
     register_component ( reg,mkTemplate ( "Delay", None, delay_instantiator))#line 2#line 3#line 4
 
@@ -31,8 +29,3 @@ def delay_handler (eh,msg):                                 #line 22
         forward ( eh, "", info.saved_message)               #line 33
         next =  0                                           #line 34#line 35
     info.counter =  next                                    #line 36#line 37#line 38
-
-
-
-
-
