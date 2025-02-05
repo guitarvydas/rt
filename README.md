@@ -82,9 +82,14 @@
 	- RT is a VHLL that uses Python, Javascript and Common Lisp as "assemblers"
 	- `rt` pushed to [repo](https://github.com/guitarvydas/rt/tree/dev)
 	- `t2t` pushed to [repo](https://github.com/guitarvydas/t2t)
+	- next: release to 'main' branch
 	- next: test Javascript and Common Lisp self-compilation
-	- next-next: implement Larson Scanner in Javascript in a browser
+	- next: implement Larson Scanner in Javascript in a browser
 	- README.md expanded to include some discussion of the mechanics of this stuff.
 	- of interest: this is all fast enough to look like a REPL, although it spawns several heavy-weight processes and uses a local browser and websockets
 	
-	
+# Future TODOs
+- stream parser - copy over and rebuild
+- Lox transpiler to Python
+  - clean install for new Lox project
+  - create new minimum copy of everything in this directory to build Lox
