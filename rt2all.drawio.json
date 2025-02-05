@@ -96,7 +96,7 @@
     "file": "rt2all.drawio"
   },
   {
-    "name": "List Filenames",
+    "name": "List Filenames Kernel0D",
     "children": [
       {
         "name": "'0D.rt",
@@ -234,7 +234,7 @@
     "file": "rt2all.drawio"
   },
   {
-    "name": "List Filenames Including Larson Scanner",
+    "name": "List Filenames",
     "children": [
       {
         "name": "'count.rt",
