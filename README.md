@@ -80,8 +80,7 @@
 		- this means that drawings can be reduced to JSON, a format which can be manipulated by just about any programming language
 	- got "RT" ("recursive text") compiler (transpiler) to run, at least for Python, and to self-compile 
 	- RT is a VHLL that uses Python, Javascript and Common Lisp as "assemblers"
-	- `rt` pushed to [repo](https://github.com/guitarvydas/rt/tree/dev)
-	- `t2t` pushed to [repo](https://github.com/guitarvydas/t2t)
+	- `rt` pushed to [repo](https://github.com/guitarvydas/rt/tree/main)
 	- next: release to 'main' branch
 	- next: test Javascript and Common Lisp self-compilation
 	- next: implement Larson Scanner in Javascript in a browser
