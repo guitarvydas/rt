@@ -210,7 +210,7 @@ defn send_string (eh, port, s, causingMessage) {
 
 defn forward (eh, port, msg) {
     fwdmsg ≡ make_message(port, msg.datum)
-    put_output (eh, msg)
+    put_output (eh, fwdmsg)
 }
 
 defn inject (eh, msg) {
@@ -260,13 +260,13 @@ defn fetch_first_output (eh, port) {
 defn print_specific_output (eh, port) {
     ⌈ port ∷ “”⌉
     deftemp datum ⇐ fetch_first_output (eh, port)
-    #print_stdout (datum.srepr ())
+    #print_stdout (datum.v)
 }
 defn print_specific_output_to_stderr (eh, port) {
     ⌈ port ∷ “”⌉
     deftemp datum ⇐ fetch_first_output (eh, port)
     ⌈ I don't remember why I found it useful to print to stderr during bootstrapping, so I've left it in...⌉
-    #print_stderr (datum.srepr ())
+    #print_stderr (datum.v)
 }
 
 defn put_output (eh, msg) {
@@ -299,7 +299,7 @@ defn probeC_instantiate (reg, owner, name, template_data) {
 }
 
 defn probe_handler (eh, msg) {
-    s ≡ msg.datum.srepr ()
+    s ≡ msg.datum.v
     #print_stderr (#strcons (“... probe ”, #strcons (eh.name, #strcons (“: ”, s))))
 }
 
@@ -381,7 +381,7 @@ defn low_level_read_text_file_instantiate (reg, owner, name, template_data) {
 }
 
 defn low_level_read_text_file_handler (eh, msg) {
-    fname ≡ msg.datum.srepr ()
+    fname ≡ msg.datum.v
     # low_level_read_text_file_handler (eh, msg, fname, “”, “✗”)
 }
 
@@ -413,12 +413,12 @@ defn syncfilewrite_instantiate (reg, owner, name, template_data) {
 defn syncfilewrite_handler (eh, msg) {
     deftemp inst ⇐ eh.instance_data
     if “filename” = msg.port {
-        inst.filename ⇐ msg.datum.srepr ()
+        inst.filename ⇐ msg.datum.v
     } elif “input” = msg.port {
-        contents ≡ msg.datum.srepr ()
+        contents ≡ msg.datum.v
         deftemp f ⇐ open (inst.filename, “w”)
         if f != ϕ {
-            f.write (msg.datum.srepr ())
+            f.write (msg.datum.v)
             f.close ()
             send (eh, “done”, new_datum_bang (), msg)
         } else {
@@ -428,8 +428,8 @@ defn syncfilewrite_handler (eh, msg) {
 }
 
 defobj StringConcat_Instance_Data () {
-        • buffer1 ⇐ ϕ
-        • buffer2 ⇐ ϕ
+        • buffer1 ⇐ “”
+        • buffer2 ⇐ “”
         • scount ⇐ 0
 }
 
@@ -442,11 +442,11 @@ defn stringconcat_instantiate (reg, owner, name, template_data) {
 defn stringconcat_handler (eh, msg) {
     deftemp inst ⇐ eh.instance_data
     if “1” = msg.port{
-        inst.buffer1  ⇐ clone_string (msg.datum.srepr ())
+        inst.buffer1  ⇐ clone_string (msg.datum.v)
         inst.scount ⇐ inst.scount + 1
         maybe_stringconcat (eh, inst, msg)
     } elif “2” = msg.port {
-        inst.buffer2 ⇐ clone_string (msg.datum.srepr ())
+        inst.buffer2 ⇐ clone_string (msg.datum.v)
         inst.scount ⇐ inst.scount + 1
         maybe_stringconcat (eh, inst, msg)
     } else {
@@ -455,22 +455,24 @@ defn stringconcat_handler (eh, msg) {
 }
 
 defn maybe_stringconcat (eh, inst, msg) {
-    if (0 = #len (inst.buffer1)) and (0 = #len (inst.buffer2)) {
-        runtime_error (“something is wrong in stringconcat, both strings are 0 length”)
-    }
     if inst.scount >= 2 {
-        deftemp concatenated_string ⇐ “”
-        if 0 = #len (inst.buffer1) {
-            concatenated_string ⇐ inst.buffer2
-        } elif 0 = #len (inst.buffer2) {
-            concatenated_string ⇐ inst.buffer1
-        } else {
-            concatenated_string ⇐ inst.buffer1 + inst.buffer2
-	}        
-        send_string (eh, “”, concatenated_string, msg)
-        inst.buffer1 ⇐ ϕ
-        inst.buffer2 ⇐ ϕ
-        inst.scount ⇐ 0}
+        if (0 = #len (inst.buffer1)) and (0 = #len (inst.buffer2)) {
+    	    runtime_error (“something is wrong in stringconcat, both strings are 0 length”)
+	} else {
+	    deftemp concatenated_string ⇐ “”
+	    if 0 = #len (inst.buffer1) {
+		concatenated_string ⇐ inst.buffer2
+	    } elif 0 = #len (inst.buffer2) {
+		concatenated_string ⇐ inst.buffer1
+	    } else {
+		concatenated_string ⇐ inst.buffer1 + inst.buffer2
+	    }    
+	    send_string (eh, “”, concatenated_string, msg)
+	    inst.buffer1 ⇐ “”
+	    inst.buffer2 ⇐ “”
+	    inst.scount ⇐ 0
+	}
+    }
 }
 
 ⌈⌉
@@ -484,7 +486,7 @@ defn shell_out_instantiate (reg, owner, name, template_data) {
 
 defn shell_out_handler (eh, msg) {
     cmd ≡ eh.instance_data
-    s ≡ msg.datum.srepr ()
+    s ≡ msg.datum.v
     deftemp ret ⇐ ϕ
     deftemp rc ⇐ ϕ
     deftemp stdout ⇐ ϕ
@@ -545,7 +547,7 @@ defn initialize_component_palette (root_project, root_0D, diagram_source_files) 
 defn print_error_maybe (main_container) {
     error_port ≡ “✗”
     err ≡ fetch_first_output (main_container, error_port)
-    if (err !=  ϕ) and (0 < #len (trimws (err.srepr ()))) {
+    if (err !=  ϕ) and (0 < #len (trimws (err.v))) {
         #print_stdout (“___ !!! ERRORS !!! ___”)
         print_specific_output (main_container, error_port)
     }
@@ -602,6 +604,58 @@ defn fakepipename_handler (eh, msg) {
 }
 
 
+defobj Switch1star_Instance_Data () {
+        • state ⇐ “1”
+}
+
+defn switch1star_instantiate (reg, owner, name, template_data) {
+    name_with_id ≡ gensymbol (“switch1*”)
+    instp ≡ #fresh (Switch1star_Instance_Data)
+    return make_leaf (name_with_id, owner, instp, ↪︎switch1star_handler)
+}
+
+defn switch1star_handler (eh, msg) {
+    deftemp inst ⇐ eh.instance_data
+    whichOutput ≡ inst.state
+    if “” = msg.port {
+	if “1” = whichOutput {
+	    forward (eh, “1”, msg)
+	    inst.state ⇐ “*”
+	} elif “*” = whichOutput {
+	    forward (eh, “*”, msg)
+	} else {
+	    send (eh, “✗”, “internal error bad state in switch1*”, msg)
+	}
+    } elif “reset” = msg.port {
+	    inst.state ⇐ “1”
+    } else {
+        send (eh, “✗”, “internal error bad message for switch1*”, msg)
+    }
+}
+
+defobj Latch_Instance_Data () {
+        • datum ⇐ ϕ
+}
+
+defn latch_instantiate (reg, owner, name, template_data) {
+    name_with_id ≡ gensymbol (“latch”)
+    instp ≡ #fresh (Latch_Instance_Data)
+    return make_leaf (name_with_id, owner, instp, ↪︎latch_handler)
+}
+
+defn latch_handler (eh, msg) {
+    deftemp inst ⇐ eh.instance_data
+    if “” = msg.port {
+        inst.datum ⇐ msg.datum
+    } elif “release” = msg.port {
+        deftemp d ⇐ inst.datum
+        send (eh, “”, d, msg)
+        inst.datum ⇐ ϕ
+    } else {
+        send (eh, “✗”, “internal error bad message for latch”, msg)
+    }
+}
+
 ⌈ all of the the built_in leaves are listed here⌉
 ⌈ future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project⌉
 
@@ -617,6 +671,8 @@ defn initialize_stock_components (reg) {
 
     register_component (reg, mkTemplate ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate))
     register_component (reg, mkTemplate ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate))
+    register_component (reg, mkTemplate ( “switch1*”, ϕ, ↪︎switch1star_instantiate))
+    register_component (reg, mkTemplate ( “latch”, ϕ, ↪︎latch_instantiate))
        ⌈ for fakepipe⌉
     register_component (reg, mkTemplate ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate))
 }
@@ -662,7 +718,7 @@ defn start_helper (palette, env, show_all_outputs) {
             print_error_maybe (main_container)
 	    outp ≡ fetch_first_output (main_container, “”)
 	    if ϕ = outp {
-                #print_stdout (“(no outputs)”)
+                #print_stdout (“«««no outputs»»»)”)
             } else {
                 print_specific_output (main_container, “”)
             }
@@ -672,7 +728,6 @@ defn start_helper (palette, env, show_all_outputs) {
         }
     }
 }
-
 
 
 ⌈ utility functions ⌉

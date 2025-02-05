@@ -7,12 +7,14 @@ SRC=reverser.rt
 #SRC=test.err.rt
 #SRC=0d.rt
 
-D2J=./das2json/mac/das2json
+
 
 all:
+	cp rebuild-all.bash rebuild.bash
 	python3 choreographer.py
 
-
+# kernel0d.py: ~/projects/rt/generated.py
+# 	cp ~/projects/rt/generated.py ./kernel0d.py
 
 ## house-keeping
 
@@ -23,10 +25,11 @@ clean:
 	rm -rf *~
 	rm -rf __pycache__
 	rm -f generated-*
+	rm -f rebuild.bash
 
 install-js-requires:
-	npm install yargs prompt-sync ohm-js
-
-# python3 -m venv ./rt
-# source rt/bin/activate
-# pip3 install websockets
+	npm install yargs prompt-sync ohm-js @xmldom/xmldom
+pyenv:
+	python3 -m venv ./rt
+	# source rt/bin/activate
+	# pip3 install websockets

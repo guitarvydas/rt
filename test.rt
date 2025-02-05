@@ -1,4 +1,5 @@
-defn low_level_read_text_file_handler (eh, msg) {
-    fname ≡ msg.datum.srepr ()
-    # low_level_read_text_file_handler (eh, msg, fname, “”, “✗”)
+defn probeA_instantiate (reg, owner, name, template_data) {
+    name_with_id ≡ gensymbol (“?A”)
+    return make_leaf (name_with_id, owner,  ϕ,  ↪︎probe_handler)
 }
+

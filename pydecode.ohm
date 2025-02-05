@@ -12,6 +12,7 @@ pydecode {
     | "%20"                     -- space
     | "%09"                     -- tab
     | "%0A"                     -- newline
+    | "¶"                       -- paramark
     | any                       -- other
 }
 

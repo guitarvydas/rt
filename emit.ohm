@@ -1,6 +1,6 @@
 emit {
 
-  Main = TopLevel+
+  Main = ParaMark TopLevel+
   TopLevel =
     | Defvar -- defvar
     | Defconst -- defconst
@@ -49,12 +49,14 @@ emit {
      | "#" xkw<"stringcar"> "(" Exp ")" -- stringcar
      | "#" xkw<"stringcdr"> "(" Exp ")" -- stringcdr
      | "#" xkw<"strcons"> "(" Exp Comma Exp ")" -- strcons
+     | "#" xkw<"stringshrink"> "(" Exp ")" -- stringshrink
      | "#" xkw<"append"> "(" Exp Comma Exp ")" -- append
      | "#" xkw<"basename"> "(" Exp ")" -- basename
      | "#" xkw<"preamble"> "(" ")" -- preamble
      | "#" xkw<"print_stdout"> "(" Exp ")" -- print_stdout
      | "#" xkw<"print_stderr"> "(" Exp ")" -- print_stderr
      | "#" xkw<"print_nl"> "(" ")" -- print_nl
+     | "#" xkw<"print_nl_stderr"> "(" ")" -- print_nl_stderr
      | "#" xkw<"split_string_for_shell"> "(" Exp ")" -- split_string_for_shell
      | "#" xkw<"substitute"> "(" Exp Comma Exp Comma Exp ")" -- substitute
      | "#" xkw<"run_command"> "(" Cmd Comma Args Comma ret Comma rc Comma stdout Comma stderr ")" -- run_command
@@ -67,6 +69,8 @@ emit {
      | "#" xkw<"empty"> "(" Exp ")" -- empty
      | "#" xkw<"queue2list"> "(" Exp ")" -- queue2list
      | "#" xkw<"negate"> "(" Exp ")" -- negate
+     | "#" xkw<"live_update"> "(" Exp "," Exp ")" -- liveUpdate
+     | "#" xkw<"queue_as_json_to_stdout"> "(" Exp ")" -- queueAsJsonToStdout
      
      | "#" ident "(" StuffInsideParentheses* ")" -- unrecognized
 
@@ -277,4 +281,5 @@ emit {
   line = "⎩" (~"⎩" ~"⎭" any)* "⎭"
 
   Comma = line? "," line?
+  ParaMark = "¶"
 }

@@ -1,4 +1,4 @@
-import py0d as zd
+import kernel0d as zd
 import sys
 
 [palette, env] = zd.initialize ()

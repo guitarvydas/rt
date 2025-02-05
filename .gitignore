@@ -5,6 +5,7 @@ package*.json
 #*
 .#*
 junk*
+tmp*
 *.bkp
 _.py
 __pycache__/

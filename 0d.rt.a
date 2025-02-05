@@ -115,9 +115,9 @@ defn destroy_port (msg) {
 ⌈⌉
 defn format_message (m) {
     if m = ϕ {
-        return #strcons (“\“”, #strcons (m.port, #strcons (“\”:\“”, #strcons (“ϕ”, “\”,”))))
+        return #strcons (“‹”, #strcons (m.port, #strcons (“›:‹”, #strcons (“ϕ”, “›,”))))
     } else {
-        return #strcons (“\“”, #strcons (m.port, #strcons (“\”:\“”, #strcons (m.datum.v, “\”,”))))
+        return #strcons (“‹”, #strcons (m.port, #strcons (“›:‹”, #strcons (m.datum.v, “›,”))))
     }
 }
 
@@ -165,7 +165,7 @@ defn create_up_connector (container, proto_conn, connectors, children_by_id) {
     connector.direction ⇐ “up”
     source_component ≡ children_by_id@((proto_conn@“source”)@“id”)
     if source_component = ϕ {
-	print (#strcons (“internal error: .Up connection source not ok ”, (proto_conn@“source”)@“name”)) }
+	load_error (#strcons (“internal error: .Up connection source not ok ”, (proto_conn@“source”)@“name”)) }
     else {
 	connector.sender ⇐ mkSender (source_component.name, source_component, proto_conn@“source_port”)
 	connector.receiver ⇐ mkReceiver (container.name, container, proto_conn@“target_port”, container.outq)

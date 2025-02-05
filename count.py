@@ -1,5 +1,3 @@
-
-
 count_counter =  0                                          #line 1
 count_direction =  1                                        #line 2#line 3
 def count_handler (eh,msg):                                 #line 4
@@ -16,8 +14,3 @@ def count_instantiator (reg,owner,name,template_data):      #line 14
 
 def count_install (reg):                                    #line 19
     register_component ( reg,mkTemplate ( "Count", None, count_instantiator))#line 20#line 21
-
-
-
-
-
