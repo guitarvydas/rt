@@ -399,11 +399,7 @@ defn route (container, from_component, mevent) {
 	}
     }
     if not (was_sent) {
-        #print_stderr (“\n\n*** Error: ***”)
-        #print_stderr (“***”)
-        #print_stderr (#strcons (container.name, #strcons (“: mevent '”, #strcons (mevent.port, #strcons (“' from ”, #strcons (fromname, “ dropped on floor...”))))))
-        #print_stderr (“***”)
-        #abort ()
+        #live_update (“Error”, #strcons (container.name, #strcons (“: mevent '”, #strcons (mevent.port, #strcons (“' from ”, #strcons (fromname, “ dropped on floor...”))))))
     }
 }
 

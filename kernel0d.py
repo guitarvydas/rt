@@ -1,3 +1,19 @@
+import sys
+import re
+import subprocess
+import shlex
+import os
+import json
+from collections import deque
+import socket
+import struct
+import base64
+import hashlib
+import random
+from zd.repl import live_update
+
+
+
 # this needs to be rewritten to use the low_level "shell_out“ component, this can be done solely as a diagram without using python code here#line 1
 def shell_out_instantiate (reg,owner,name,template_data):#line 2
     name_with_id = gensymbol ( "shell_out")            #line 3
@@ -23,10 +39,10 @@ def shell_out_handler (eh,msg):                        #line 8
         stdout = ''
         stderr = str(e)
                                                        #line 15
-    if  rc!= 0:                                        #line 16
-        send_string ( eh, "✗", str( stdout) +  stderr , msg)#line 17
+    if  rc == 0:                                        #line 16
+        send_string ( eh, "", str( stdout) +  stderr , msg)
     else:                                              #line 18
-        send_string ( eh, "", str( stdout) +  stderr , msg)#line 19#line 20#line 21#line 22
+        send_string ( eh, "✗", str( stdout) +  stderr , msg)
 
 def generate_shell_components (reg,container_list):    #line 23
     # [                                                #line 24
@@ -74,7 +90,7 @@ def probeC_instantiate (reg,owner,name,template_data): #line 11
 def probe_handler (eh,mev):                            #line 16
     global ticktime                                    #line 17
     s =  mev.datum.v                                   #line 18
-    live_update ( "[{\"Live\", \"  @",  str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +  str(  s[:30].replace ('\r','⦙').replace ('\n', '⧚') ) +  "\"};"      )#line 20#line 21#line 22
+    live_update ( "Live", "  @" + str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +  str(  s[:30].replace ('\r','⦙').replace ('\n', '⧚') )      )#line 20#line 21#line 22
 
 def trash_instantiate (reg,owner,name,template_data):  #line 23
     name_with_id = gensymbol ( "trash")                #line 24
@@ -329,19 +345,6 @@ def initialize_stock_components (reg):                 #line 285
 
 
 #
-import sys
-import re
-import subprocess
-import shlex
-import os
-import json
-from collections import deque
-import socket
-import struct
-import base64
-import hashlib
-import random
-from repl import live_update
 
 def deque_to_json(d):
     # """
@@ -622,6 +625,7 @@ def is_self (child,container):                         #line 311
 
 def step_child (child,mev):                            #line 316
     before_state =  child.state                        #line 317
+    live_update ("Info", child.name)
     child.handler ( child, mev)                        #line 318
     after_state =  child.state                         #line 319
     return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"]#line 322#line 323#line 324
@@ -686,11 +690,7 @@ def route (container,from_component,mevent):           #line 379
                 deposit ( container, connector, mevent)#line 396
                 was_sent =  True                       #line 397#line 398#line 399#line 400
     if not ( was_sent):                                #line 401
-        print ( "\n\n*** Error: ***", file=sys.stderr) #line 402
-        print ( "***", file=sys.stderr)                #line 403
-        print ( str( container.name) +  str( ": mevent '") +  str( mevent.port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     , file=sys.stderr)#line 404
-        print ( "***", file=sys.stderr)                #line 405
-        exit ()                                        #line 406#line 407#line 408#line 409
+        live_update ("Error", str( container.name) +  str( ": mevent '") +  str( mevent.port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     , file=sys.stderr)
 
 def any_child_ready (container):                       #line 410
     for child in  container.children:                  #line 411
@@ -725,7 +725,6 @@ def mkTemplate (name,template_data,instantiator):      #line 444
     return  templ                                      #line 449#line 450#line 451
 
 def read_and_convert_json_file (pathname,filename):    #line 452
-
     try:
         fil = open(filename, "r")
         json_data = fil.read()
@@ -736,7 +735,7 @@ def read_and_convert_json_file (pathname,filename):    #line 452
         print (f"File not found: '{filename}'")
         return None
     except json.JSONDecodeError as e:
-        print ("Error decoding JSON in file: '{e}'")
+        print (f"Error decoding JSON in file: '{e}'")
         return None
                                                        #line 453#line 454#line 455
 

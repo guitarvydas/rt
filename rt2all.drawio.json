@@ -96,7 +96,7 @@
     "file": "rt2all.drawio"
   },
   {
-    "name": "List Filenames",
+    "name": "List Filenames Kernel0D",
     "children": [
       {
         "name": "'0D.rt",
@@ -234,7 +234,7 @@
     "file": "rt2all.drawio"
   },
   {
-    "name": "List Filenames Including Larson Scanner",
+    "name": "List Filenames",
     "children": [
       {
         "name": "'count.rt",
@@ -257,7 +257,7 @@
         "id": 19
       },
       {
-        "name": "'stock.rt",
+        "name": "'empty.rt",
         "id": 22
       },
       {
@@ -275,6 +275,10 @@
       {
         "name": "'0d.rt",
         "id": 36
+      },
+      {
+        "name": "'stock.rt",
+        "id": 40
       }
     ],
     "connections": [
@@ -366,7 +370,7 @@
         "source_port": "",
         "target_port": "1",
         "source": {
-          "name": "'stock.rt",
+          "name": "'empty.rt",
           "id": 22
         },
         "target": {
@@ -379,7 +383,7 @@
         "source_port": "",
         "target_port": "2",
         "source": {
-          "name": "'stock.rt",
+          "name": "'empty.rt",
           "id": 22
         },
         "target": {
@@ -410,7 +414,7 @@
         },
         "target": {
           "name": "'stock.rt",
-          "id": 22
+          "id": 40
         }
       },
       {
@@ -424,6 +428,19 @@
         "target": {
           "name": "'0d.rt",
           "id": 36
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "'stock.rt",
+          "id": 40
+        },
+        "target": {
+          "name": "'empty.rt",
+          "id": 22
         }
       },
       {
@@ -505,6 +522,15 @@
         "source": {
           "name": "'0d.rt",
           "id": 36
+        }
+      },
+      {
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "'stock.rt",
+          "id": 40
         }
       }
     ],
