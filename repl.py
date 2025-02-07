@@ -11,7 +11,7 @@ def live_update(key, value):
     """Send live update through websocket 8966
     
     Args:
-        key: String key (e.g., "Live", "Info", "Errors")
+        key: String key (e.g., "Live", "Info", "✗")
         value: String value to send
     """
     try:

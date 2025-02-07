@@ -49,21 +49,24 @@ def generate_shell_components (reg,container_list):    #line 23
     #     {;file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 25
     #     {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []}#line 26
     # ]                                                #line 27
-    if  None!= container_list:                         #line 28
-        for diagram in  container_list:                #line 29
-            # loop through every component in the diagram and look for names that start with “$“ or “'“ #line 30
-            # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 31
-            for child_descriptor in  diagram [ "children"]:#line 32
-                if first_char_is ( child_descriptor [ "name"], "$"):#line 33
-                    name =  child_descriptor [ "name"] #line 34
-                    cmd =   name[1:] .strip ()         #line 35
-                    generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)#line 36
-                    register_component ( reg, generated_leaf)#line 37
-                elif first_char_is ( child_descriptor [ "name"], "'"):#line 38
-                    name =  child_descriptor [ "name"] #line 39
-                    s =   name[1:]                     #line 40
-                    generated_leaf = mkTemplate ( name, s, string_constant_instantiate)#line 41
-                    register_component_allow_overwriting ( reg, generated_leaf)#line 42#line 43#line 44#line 45#line 46
+    try: 
+        if  None!= container_list:                         #line 28
+            for diagram in  container_list:                #line 29
+                # loop through every component in the diagram and look for names that start with “$“ or “'“ #line 30
+                # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 31
+                for child_descriptor in  diagram [ "children"]:#line 32
+                    if first_char_is ( child_descriptor [ "name"], "$"):#line 33
+                        name =  child_descriptor [ "name"] #line 34
+                        cmd =   name[1:] .strip ()         #line 35
+                        generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)#line 36
+                        register_component ( reg, generated_leaf)#line 37
+                    elif first_char_is ( child_descriptor [ "name"], "'"):#line 38
+                        name =  child_descriptor [ "name"] #line 39
+                        s =   name[1:]                     #line 40
+                        generated_leaf = mkTemplate ( name, s, string_constant_instantiate)#line 41
+                        register_component_allow_overwriting ( reg, generated_leaf)#line 42#line 43#line 44#line 45#line 46
+    except Exception as e:
+        load_error (e)
     return  reg                                        #line 47#line 48#line 49
 
 def first_char (s):                                    #line 50
@@ -625,7 +628,7 @@ def is_self (child,container):                         #line 311
 
 def step_child (child,mev):                            #line 316
     before_state =  child.state                        #line 317
-    # live_update ("Info", child.name)
+    # live_update ("Info", child.name) ## for debugging bootstrap
     child.handler ( child, mev)                        #line 318
     after_state =  child.state                         #line 319
     return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"]#line 322#line 323#line 324
@@ -690,7 +693,7 @@ def route (container,from_component,mevent):           #line 379
                 deposit ( container, connector, mevent)#line 396
                 was_sent =  True                       #line 397#line 398#line 399#line 400
     if not ( was_sent):                                #line 401
-        live_update ("Error", str( container.name) +  str( ": mevent '") +  str( mevent.port) +  str( "' from ") +  str( fromname) +  " dropped on floor...")
+        live_update ("✗", str( container.name) +  str( ": mevent '") +  str( mevent.port) +  str( "' from ") +  str( fromname) +  " dropped on floor...") + f"\n/{mevent.datum.v}/"
 
 def any_child_ready (container):                       #line 410
     for child in  container.children:                  #line 411
@@ -918,13 +921,12 @@ load_errors =  False                                   #line 665
 runtime_errors =  False                                #line 666#line 667
 def load_error (s):                                    #line 668
     global load_errors                                 #line 669
-    live_update ("Info", s)
-                                                       #line 671
+    live_update ("✗", s)
     load_errors =  True                                #line 672#line 673#line 674
 
 def runtime_error (s):                                 #line 675
     global runtime_errors                              #line 676
-    live_update ("Info", s)
+    live_update ("✗", s)
     runtime_errors =  True                             #line 678#line 679#line 680
                                                        #line 681
 def argv ():                                           #line 682

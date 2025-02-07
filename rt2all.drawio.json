@@ -50,7 +50,7 @@
       {
         "dir": 2,
         "source_port": "✗",
-        "target_port": "Errors",
+        "target_port": "✗",
         "source": {
           "name": "List Filenames",
           "id": 7
@@ -68,7 +68,7 @@
       {
         "dir": 2,
         "source_port": "✗",
-        "target_port": "Errors",
+        "target_port": "✗",
         "source": {
           "name": "Generate",
           "id": 12

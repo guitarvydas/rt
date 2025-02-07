@@ -79,7 +79,7 @@ class FileWatcher:
         try:
             json_mevent = json.dumps(mevent_array)
         except Exception as e:
-            json_mevent = '[{"Errors":"in broadcast mevent"}, {"Errors": ' + f'{e!r}' + '}]'
+            json_mevent = '[{"✗":"in broadcast mevent"}, {"✗": ' + f'{e!r}' + '}]'
 
         disconnected_clients = set()
         
@@ -97,7 +97,7 @@ class FileWatcher:
 
     async def clear(self):
         """Send nothing mevent to all connected clients to clear their displays"""
-        await self.broadcast_mevent([{"Errors": "commence..."}])
+        await self.broadcast_mevent([{"✗": "commence..."}])
 
     async def handle_client(self, websocket):
         """Handle individual WebSocket client"""
@@ -142,7 +142,7 @@ class FileWatcher:
                         a = json.loads(stdout)
                         a.append({"Info": stderr})
                     except Exception as e:
-                        a = [{"Errors": f' stdout=/{stdout}/ exception=/{e!r}/'}]
+                        a = [{"✗": f' stdout=/{stdout}/ exception=/{e!r}/'}]
                         print (a)
                 else:
                     # fail case
@@ -150,7 +150,7 @@ class FileWatcher:
                         stdout = ''
                     if stderr is None:
                         stderr = ''
-                    a = [{"Info": stdout}, {"Errors": f"Build failed with code {return_code}\n{stderr}"}]
+                    a = [{"Info": stdout}, {"✗": f"Build failed with code {return_code}\n{stderr}"}]
 
                 await self.broadcast_mevent(a)
             
