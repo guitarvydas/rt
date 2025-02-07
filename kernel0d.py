@@ -318,7 +318,7 @@ def latch_handler (eh,mev):                            #line 264
         d =  inst.datum                                #line 269
         if  d ==  None:                                #line 270
             send_string ( eh, "", "", mev)             #line 271
-            print ( " *** latch sending empty string ***", file=sys.stderr)#line 272
+            live_update ("Info", " >>> latch sending empty string")
         else:                                          #line 273
             send ( eh, "", d, mev)                     #line 274#line 275
         inst.datum =  None                             #line 276
@@ -625,7 +625,7 @@ def is_self (child,container):                         #line 311
 
 def step_child (child,mev):                            #line 316
     before_state =  child.state                        #line 317
-    live_update ("Info", child.name)
+    # live_update ("Info", child.name)
     child.handler ( child, mev)                        #line 318
     after_state =  child.state                         #line 319
     return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"]#line 322#line 323#line 324
@@ -690,7 +690,7 @@ def route (container,from_component,mevent):           #line 379
                 deposit ( container, connector, mevent)#line 396
                 was_sent =  True                       #line 397#line 398#line 399#line 400
     if not ( was_sent):                                #line 401
-        live_update ("Error", str( container.name) +  str( ": mevent '") +  str( mevent.port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     , file=sys.stderr)
+        live_update ("Error", str( container.name) +  str( ": mevent '") +  str( mevent.port) +  str( "' from ") +  str( fromname) +  " dropped on floor...")
 
 def any_child_ready (container):                       #line 410
     for child in  container.children:                  #line 411
@@ -918,13 +918,13 @@ load_errors =  False                                   #line 665
 runtime_errors =  False                                #line 666#line 667
 def load_error (s):                                    #line 668
     global load_errors                                 #line 669
-    print ( s, file=sys.stderr)                        #line 670
+    live_update ("Info", s)
                                                        #line 671
     load_errors =  True                                #line 672#line 673#line 674
 
 def runtime_error (s):                                 #line 675
     global runtime_errors                              #line 676
-    print ( s, file=sys.stderr)                        #line 677
+    live_update ("Info", s)
     runtime_errors =  True                             #line 678#line 679#line 680
                                                        #line 681
 def argv ():                                           #line 682
