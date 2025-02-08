@@ -159,7 +159,7 @@
                     
                     if (values.length > 0) {
                         // Append new values to buffer with separator
-                        const newContent = values.join('\n¶\n') + '\n';
+                        const newContent = values.join('\n \n') + '\n';
                         buffers.set(tagValue, buffers.get(tagValue) + newContent);
                         
                         // Update textarea with full buffer content

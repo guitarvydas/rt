@@ -287,8 +287,8 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": "'count.rt",
-          "id": 7
+          "name": "'empty.rt",
+          "id": 22
         }
       },
       {
@@ -764,42 +764,6 @@
         "target": {
           "name": "Generate Python",
           "id": 13
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "Generate Javascript",
-          "id": 8
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "Generate Common Lisp",
-          "id": 18
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "fini",
-        "target_port": "fini",
-        "target": {
-          "name": "Generate Javascript",
-          "id": 8
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "fini",
-        "target_port": "fini",
-        "target": {
-          "name": "Generate Common Lisp",
-          "id": 18
         }
       },
       {
@@ -2782,7 +2746,7 @@
     "name": "Cleanup",
     "children": [
       {
-        "name": "$ node cleanup.js",
+        "name": "$ python3 cleanup.py",
         "id": 5
       }
     ],
@@ -2792,7 +2756,7 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": "$ node cleanup.js",
+          "name": "$ python3 cleanup.py",
           "id": 5
         }
       },
@@ -2801,7 +2765,7 @@
         "source_port": "",
         "target_port": "",
         "source": {
-          "name": "$ node cleanup.js",
+          "name": "$ python3 cleanup.py",
           "id": 5
         }
       },
@@ -2810,7 +2774,7 @@
         "source_port": "✗",
         "target_port": "✗",
         "source": {
-          "name": "$ node cleanup.js",
+          "name": "$ python3 cleanup.py",
           "id": 5
         }
       }
