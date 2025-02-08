@@ -710,7 +710,6 @@ defn start (palette, env) {
         deftemp marg ⇐ new_datum_string (arg)
         deftemp mev ⇐ make_mevent(“”, marg)
         inject (main_container, mev)
-	#queue_as_json_to_stdout (main_container.outq)
 	}
     #live_update (“Live”, “...end”)
 }
