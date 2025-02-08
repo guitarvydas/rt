@@ -3,6 +3,7 @@ internalize {
   char =
     | nl -- nl
     | "“" stringchar* "”" -- string
+    | "\"" stringchar* "\"" -- dqstring
     | "⌈" commentchar* "⌉" -- comment
     | "❲" wordchar+ "❳" -- word
     | id -- ident
@@ -11,8 +12,9 @@ internalize {
   stringchar =
     | "\\" "“" -- beginquote
     | "\\" "”" -- endquote
+    | "\\" "\"" -- dqquote
     | "“" stringchar+ "”" -- rec
-    | ~"“" ~"”" any -- other
+    | ~"“" ~"”" ~"\"" any -- other
 
   commentchar =
     | "⌈" commentchar+ "⌉" -- rec
