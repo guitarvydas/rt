@@ -10,7 +10,7 @@ import struct
 import base64
 import hashlib
 import random
-from zd.repl import live_update
+from repl import live_update
 
 
 
@@ -49,21 +49,24 @@ def generate_shell_components (reg,container_list):    #line 23
     #     {;file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 25
     #     {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []}#line 26
     # ]                                                #line 27
-    if  None!= container_list:                         #line 28
-        for diagram in  container_list:                #line 29
-            # loop through every component in the diagram and look for names that start with “$“ or “'“ #line 30
-            # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 31
-            for child_descriptor in  diagram [ "children"]:#line 32
-                if first_char_is ( child_descriptor [ "name"], "$"):#line 33
-                    name =  child_descriptor [ "name"] #line 34
-                    cmd =   name[1:] .strip ()         #line 35
-                    generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)#line 36
-                    register_component ( reg, generated_leaf)#line 37
-                elif first_char_is ( child_descriptor [ "name"], "'"):#line 38
-                    name =  child_descriptor [ "name"] #line 39
-                    s =   name[1:]                     #line 40
-                    generated_leaf = mkTemplate ( name, s, string_constant_instantiate)#line 41
-                    register_component_allow_overwriting ( reg, generated_leaf)#line 42#line 43#line 44#line 45#line 46
+    try: 
+        if  None!= container_list:                         #line 28
+            for diagram in  container_list:                #line 29
+                # loop through every component in the diagram and look for names that start with “$“ or “'“ #line 30
+                # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 31
+                for child_descriptor in  diagram [ "children"]:#line 32
+                    if first_char_is ( child_descriptor [ "name"], "$"):#line 33
+                        name =  child_descriptor [ "name"] #line 34
+                        cmd =   name[1:] .strip ()         #line 35
+                        generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)#line 36
+                        register_component ( reg, generated_leaf)#line 37
+                    elif first_char_is ( child_descriptor [ "name"], "'"):#line 38
+                        name =  child_descriptor [ "name"] #line 39
+                        s =   name[1:]                     #line 40
+                        generated_leaf = mkTemplate ( name, s, string_constant_instantiate)#line 41
+                        register_component_allow_overwriting ( reg, generated_leaf)#line 42#line 43#line 44#line 45#line 46
+    except Exception as e:
+        load_error (e)
     return  reg                                        #line 47#line 48#line 49
 
 def first_char (s):                                    #line 50
@@ -90,7 +93,7 @@ def probeC_instantiate (reg,owner,name,template_data): #line 11
 def probe_handler (eh,mev):                            #line 16
     global ticktime                                    #line 17
     s =  mev.datum.v                                   #line 18
-    live_update ( "Live", "  @" + str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +  str(  s[:30].replace ('\r','⦙').replace ('\n', '⧚') )      )#line 20#line 21#line 22
+    live_update ( "Info", "  @" + str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +  str(  s[:30].replace ('\r','⦙').replace ('\n', '⧚') )      )#line 20#line 21#line 22
 
 def trash_instantiate (reg,owner,name,template_data):  #line 23
     name_with_id = gensymbol ( "trash")                #line 24
@@ -318,7 +321,7 @@ def latch_handler (eh,mev):                            #line 264
         d =  inst.datum                                #line 269
         if  d ==  None:                                #line 270
             send_string ( eh, "", "", mev)             #line 271
-            print ( " *** latch sending empty string ***", file=sys.stderr)#line 272
+            live_update ("Info", " >>> latch sending empty string")
         else:                                          #line 273
             send ( eh, "", d, mev)                     #line 274#line 275
         inst.datum =  None                             #line 276
@@ -368,7 +371,8 @@ def deque_to_json(d):
                                                        #line 1#line 2
 counter =  0                                           #line 3
 ticktime =  0                                          #line 4#line 5
-digits = [ "₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀", "₂₁", "₂₂", "₂₃", "₂₄", "₂₅", "₂₆", "₂₇", "₂₈", "₂₉"]#line 12#line 13#line 14
+# digits = [ "₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀", "₂₁", "₂₂", "₂₃", "₂₄", "₂₅", "₂₆", "₂₇", "₂₈", "₂₉"]#line 12#line 13#line 14
+digits = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29"]#line 12#line 13#line 14
 def gensymbol (s):                                     #line 15
     global counter                                     #line 16
     name_with_id =  str( s) + subscripted_digit ( counter) #line 17
@@ -625,7 +629,7 @@ def is_self (child,container):                         #line 311
 
 def step_child (child,mev):                            #line 316
     before_state =  child.state                        #line 317
-    live_update ("Info", child.name)
+    # live_update ("Info", child.name) ## for debugging bootstrap
     child.handler ( child, mev)                        #line 318
     after_state =  child.state                         #line 319
     return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"]#line 322#line 323#line 324
@@ -690,7 +694,7 @@ def route (container,from_component,mevent):           #line 379
                 deposit ( container, connector, mevent)#line 396
                 was_sent =  True                       #line 397#line 398#line 399#line 400
     if not ( was_sent):                                #line 401
-        live_update ("Error", str( container.name) +  str( ": mevent '") +  str( mevent.port) +  str( "' from ") +  str( fromname) +  " dropped on floor..."     , file=sys.stderr)
+        live_update ("✗", str( container.name) +  str( ": mevent '") +  str( mevent.port) +  str( "' from ") +  str( fromname) +  " dropped on floor...") + f"\n/{mevent.datum.v}/"
 
 def any_child_ready (container):                       #line 410
     for child in  container.children:                  #line 411
@@ -918,13 +922,12 @@ load_errors =  False                                   #line 665
 runtime_errors =  False                                #line 666#line 667
 def load_error (s):                                    #line 668
     global load_errors                                 #line 669
-    print ( s, file=sys.stderr)                        #line 670
-                                                       #line 671
+    live_update ("✗", s)
     load_errors =  True                                #line 672#line 673#line 674
 
 def runtime_error (s):                                 #line 675
     global runtime_errors                              #line 676
-    print ( s, file=sys.stderr)                        #line 677
+    live_update ("✗", s)
     runtime_errors =  True                             #line 678#line 679#line 680
                                                        #line 681
 def argv ():                                           #line 682
@@ -941,7 +944,7 @@ def initialize ():                                     #line 686
 
 def start (palette,env):                               #line 696
     live_update ( "",  "reset")                        #line 697
-    live_update ( "Live",  "begin...")                 #line 698
+    live_update ( "Info",  "begin...")                 #line 698
     root_of_project =  env [ 0]                        #line 699
     root_of_0D =  env [ 1]                             #line 700
     main_container_name =  env [ 2]                    #line 701
@@ -957,7 +960,7 @@ def start (palette,env):                               #line 696
         mev = make_mevent ( "", marg)                  #line 715
         inject ( main_container, mev)                  #line 716
         print (deque_to_json ( main_container.outq))   #line 717#line 718
-    live_update ( "Live",  "...end")                   #line 719#line 720#line 721
+    live_update ( "Info",  "...end")                   #line 719#line 720#line 721
                                                        #line 722
 # utility functions                                    #line 723
 def send_int (eh,port,i,causing_mevent):               #line 724

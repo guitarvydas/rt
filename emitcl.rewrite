@@ -186,6 +186,7 @@ ExternalPhrase_liveUpdate [_octothorpe _ lp s1 _comma s2 rp] = ‛(live_update �
 ExternalPhrase_queueAsJsonToStdout [_octothorpe _ lp x rp] = ‛(queue-as-json-to-stdout «x»)’
 
 
+
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 
 Deftemp [_deftemp lval _mutate e rec?] = ‛\n(let ((«lval» «e»))⤷\n(declare (ignorable «lval»))«rec»⤶)’
@@ -268,6 +269,10 @@ Atom_ident [ ident ] =‛ «ident»’
 
 PrimaryComma [ Primary _94? line?] = ‛«Primary» «line»’
 PairComma [ Pair _95?] = ‛«Pair» ’
+
+StuffInsideParentheses_rec [lp stuff* rp] = ‛«lp»«stuff»«rp»’
+StuffInsideParentheses_default [x] = ‛«x»’
+
 Lval [ Exp ] = ‛«Exp»’
 keyword [ _144] = ‛«_144»’
 Formals_noformals [ _148 _149] =‛’

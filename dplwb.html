@@ -58,22 +58,15 @@
         <!-- Errors and Info -->
         <div class="row">
             <div class="kvbox">
-                <input type="text" class="tagbox" value="Errors">
-                <textarea id="errors" class="textarea" rows="5" readonly></textarea>
+                <input type="text" class="tagbox" value="✗">
+                <textarea id="errors" class="textarea" rows="15" readonly></textarea>
             </div>
             <div class="kvbox">
                 <input type="text" class="tagbox" value="Info">
-                <textarea id="info" class="textarea" rows="5" readonly></textarea>
+                <textarea id="info" class="textarea" rows="15" readonly></textarea>
             </div>
         </div>
 
-        <!-- Live -->
-        <div class="row">
-            <div class="kvbox">
-                <input type="text" class="tagbox" value="Live">
-                <textarea class="textarea" rows="15" readonly></textarea>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -108,7 +101,7 @@
             console.log('Connected to WebSocket server');
             const status = '-- opened --\n';
             buffers.set('CommonLisp', status);
-            buffers.set('Errors', status);
+            buffers.set('✗', status);
             updateTextArea(document.getElementById('cl'), status);
             updateTextArea(document.getElementById('errors'), status);
         };
@@ -117,18 +110,18 @@
             console.error('WebSocket error:', error);
             const status = '-- websocket error --\n';
             buffers.set('CommonLisp', buffers.get('CommonLisp') + status);
-            buffers.set('Errors', buffers.get('Errors') + status);
+            buffers.set('✗', buffers.get('✗') + status);
             updateTextArea(document.getElementById('cl'), buffers.get('CommonLisp'));
-            updateTextArea(document.getElementById('errors'), buffers.get('Errors'));
+            updateTextArea(document.getElementById('errors'), buffers.get('✗'));
         };
 
         ws.onclose = () => {
             console.log('Disconnected from WebSocket server');
             const status = '-- disconnected --\n';
             buffers.set('CommonLisp', buffers.get('CommonLisp') + status);
-            buffers.set('Errors', buffers.get('Errors') + status);
+            buffers.set('✗', buffers.get('✗') + status);
             updateTextArea(document.getElementById('cl'), buffers.get('CommonLisp'));
-            updateTextArea(document.getElementById('errors'), buffers.get('Errors'));
+            updateTextArea(document.getElementById('errors'), buffers.get('✗'));
         };
 
         ws.onmessage = (event) => {
@@ -159,7 +152,7 @@
                     
                     if (values.length > 0) {
                         // Append new values to buffer with separator
-                        const newContent = values.join('\n¶\n') + '\n';
+                        const newContent = values.join('\n \n') + '\n';
                         buffers.set(tagValue, buffers.get(tagValue) + newContent);
                         
                         // Update textarea with full buffer content
@@ -169,8 +162,8 @@
             } catch (error) {
                 console.error('Error processing message:', error);
                 const errorMessage = `Error processing message: ${error.message}\n`;
-                buffers.set('Errors', buffers.get('Errors') + errorMessage);
-                updateTextArea(document.getElementById('errors'), buffers.get('Errors'));
+                buffers.set('✗', buffers.get('✗') + errorMessage);
+                updateTextArea(document.getElementById('errors'), buffers.get('✗'));
             }
         };
     </script>

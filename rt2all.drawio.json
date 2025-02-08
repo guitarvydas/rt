@@ -50,7 +50,7 @@
       {
         "dir": 2,
         "source_port": "✗",
-        "target_port": "Errors",
+        "target_port": "✗",
         "source": {
           "name": "List Filenames",
           "id": 7
@@ -68,7 +68,7 @@
       {
         "dir": 2,
         "source_port": "✗",
-        "target_port": "Errors",
+        "target_port": "✗",
         "source": {
           "name": "Generate",
           "id": 12
@@ -287,8 +287,8 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": "'count.rt",
-          "id": 7
+          "name": "'empty.rt",
+          "id": 22
         }
       },
       {
@@ -753,8 +753,8 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": "Generate Python",
-          "id": 13
+          "name": "Generate Common Lisp",
+          "id": 18
         }
       },
       {
@@ -762,8 +762,8 @@
         "source_port": "fini",
         "target_port": "fini",
         "target": {
-          "name": "Generate Python",
-          "id": 13
+          "name": "Generate Common Lisp",
+          "id": 18
         }
       },
       {
@@ -780,8 +780,17 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": "Generate Common Lisp",
-          "id": 18
+          "name": "Generate Python",
+          "id": 13
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "fini",
+        "target_port": "fini",
+        "target": {
+          "name": "Generate Python",
+          "id": 13
         }
       },
       {
@@ -791,15 +800,6 @@
         "target": {
           "name": "Generate Javascript",
           "id": 8
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "fini",
-        "target_port": "fini",
-        "target": {
-          "name": "Generate Common Lisp",
-          "id": 18
         }
       },
       {
@@ -947,26 +947,6 @@
       {
         "name": "String Concat *",
         "id": 22
-      },
-      {
-        "name": "?A",
-        "id": 27
-      },
-      {
-        "name": "?B",
-        "id": 29
-      },
-      {
-        "name": "?C",
-        "id": 31
-      },
-      {
-        "name": "?A",
-        "id": 33
-      },
-      {
-        "name": "?B",
-        "id": 35
       }
     ],
     "connections": [
@@ -1038,71 +1018,6 @@
         "target": {
           "name": "String Concat *",
           "id": 22
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "String Concat *",
-          "id": 22
-        },
-        "target": {
-          "name": "?B",
-          "id": 35
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "Grep for Errors",
-          "id": 18
-        },
-        "target": {
-          "name": "?A",
-          "id": 33
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "$ python3 jsrelocate.py 55",
-          "id": 14
-        },
-        "target": {
-          "name": "?C",
-          "id": 31
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "Exhale Javascript",
-          "id": 10
-        },
-        "target": {
-          "name": "?B",
-          "id": 29
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "RT to Javascript",
-          "id": 6
-        },
-        "target": {
-          "name": "?A",
-          "id": 27
         }
       },
       {
@@ -2782,7 +2697,7 @@
     "name": "Cleanup",
     "children": [
       {
-        "name": "$ node cleanup.js",
+        "name": "$ python3 cleanup.py",
         "id": 5
       }
     ],
@@ -2792,7 +2707,7 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": "$ node cleanup.js",
+          "name": "$ python3 cleanup.py",
           "id": 5
         }
       },
@@ -2801,7 +2716,7 @@
         "source_port": "",
         "target_port": "",
         "source": {
-          "name": "$ node cleanup.js",
+          "name": "$ python3 cleanup.py",
           "id": 5
         }
       },
@@ -2810,7 +2725,7 @@
         "source_port": "✗",
         "target_port": "✗",
         "source": {
-          "name": "$ node cleanup.js",
+          "name": "$ python3 cleanup.py",
           "id": 5
         }
       }

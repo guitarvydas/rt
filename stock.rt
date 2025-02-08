@@ -16,7 +16,7 @@ defn probeC_instantiate (reg, owner, name, template_data) {
 defn probe_handler (eh, mev) {
     global ticktime
     s ≡ mev.datum.v
-    #live_update ("Live",
+    #live_update (“Live”,
         #strcons (“  @”, 
                   #strcons (#asstr (ticktime),
 		            #strcons (“  ”,
