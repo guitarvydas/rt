@@ -8,7 +8,7 @@ from repl import live_update
 src = sys.stdin.read().replace('¶', '\n')
 
 # Send live update first
-live_update("Info", f"cleanup.py")
+# live_update("Info", f"cleanup.py")
 
 # Write to /tmp/src
 with open('/tmp/src', 'w') as f:

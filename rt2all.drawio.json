@@ -947,26 +947,6 @@
       {
         "name": "String Concat *",
         "id": 22
-      },
-      {
-        "name": "?A",
-        "id": 27
-      },
-      {
-        "name": "?B",
-        "id": 29
-      },
-      {
-        "name": "?C",
-        "id": 31
-      },
-      {
-        "name": "?A",
-        "id": 33
-      },
-      {
-        "name": "?B",
-        "id": 35
       }
     ],
     "connections": [
@@ -1038,71 +1018,6 @@
         "target": {
           "name": "String Concat *",
           "id": 22
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "String Concat *",
-          "id": 22
-        },
-        "target": {
-          "name": "?B",
-          "id": 35
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "Grep for Errors",
-          "id": 18
-        },
-        "target": {
-          "name": "?A",
-          "id": 33
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "$ python3 jsrelocate.py 55",
-          "id": 14
-        },
-        "target": {
-          "name": "?C",
-          "id": 31
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "Exhale Javascript",
-          "id": 10
-        },
-        "target": {
-          "name": "?B",
-          "id": 29
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "RT to Javascript",
-          "id": 6
-        },
-        "target": {
-          "name": "?A",
-          "id": 27
         }
       },
       {
