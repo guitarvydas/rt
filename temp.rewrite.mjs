@@ -27,7 +27,7 @@ return exit_rule ("char_string");
 },
 char_comment : function (lb,cs,rb,) {
 enter_rule ("char_comment");
-    set_return (`#${cs.rwr ().join ('')}`);
+    set_return (`/* ${cs.rwr ().join ('')} */`);
 return exit_rule ("char_comment");
 },
 char_errormessage : function (lb,cs,rb,) {
@@ -37,7 +37,7 @@ return exit_rule ("char_errormessage");
 },
 char_line : function (lb,cs,rb,) {
 enter_rule ("char_line");
-    set_return (`#line ${cs.rwr ().join ('')}`);
+    set_return (`/* line ${cs.rwr ().join ('')} */`);
 return exit_rule ("char_line");
 },
 char_ulb : function (c,) {
@@ -75,11 +75,6 @@ enter_rule ("char_newline");
     set_return (`
 `);
 return exit_rule ("char_newline");
-},
-char_paramark : function (c,) {
-enter_rule ("char_paramark");
-    set_return (`¶`);
-return exit_rule ("char_paramark");
 },
 char_other : function (c,) {
 enter_rule ("char_other");

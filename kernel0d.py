@@ -93,7 +93,7 @@ def probeC_instantiate (reg,owner,name,template_data): #line 11
 def probe_handler (eh,mev):                            #line 16
     global ticktime                                    #line 17
     s =  mev.datum.v                                   #line 18
-    live_update ( "Live", "  @" + str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +  str(  s[:30].replace ('\r','⦙').replace ('\n', '⧚') )      )#line 20#line 21#line 22
+    live_update ( "Info", "  @" + str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +  str(  s[:30].replace ('\r','⦙').replace ('\n', '⧚') )      )#line 20#line 21#line 22
 
 def trash_instantiate (reg,owner,name,template_data):  #line 23
     name_with_id = gensymbol ( "trash")                #line 24
@@ -944,7 +944,6 @@ def initialize ():                                     #line 686
 
 def start (palette,env):                               #line 696
     live_update ( "",  "reset")                        #line 697
-    live_update ( "Live",  "begin...")                 #line 698
     live_update ( "Info",  "begin...")                 #line 698
     root_of_project =  env [ 0]                        #line 699
     root_of_0D =  env [ 1]                             #line 700
@@ -961,7 +960,7 @@ def start (palette,env):                               #line 696
         mev = make_mevent ( "", marg)                  #line 715
         inject ( main_container, mev)                  #line 716
         print (deque_to_json ( main_container.outq))   #line 717#line 718
-    live_update ( "Live",  "...end")                   #line 719#line 720#line 721
+    live_update ( "Info",  "...end")                   #line 719#line 720#line 721
                                                        #line 722
 # utility functions                                    #line 723
 def send_int (eh,port,i,causing_mevent):               #line 724
