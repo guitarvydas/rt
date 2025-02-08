@@ -97,7 +97,7 @@ class FileWatcher:
 
     async def clear(self):
         """Send nothing mevent to all connected clients to clear their displays"""
-        await self.broadcast_mevent([{"✗": "commence..."}])
+        await self.broadcast_mevent([{"✗": "...commence..."},{"Info": "...commence..."}])
 
     async def handle_client(self, websocket):
         """Handle individual WebSocket client"""

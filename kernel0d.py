@@ -10,7 +10,7 @@ import struct
 import base64
 import hashlib
 import random
-from zd.repl import live_update
+from repl import live_update
 
 
 
@@ -371,7 +371,8 @@ def deque_to_json(d):
                                                        #line 1#line 2
 counter =  0                                           #line 3
 ticktime =  0                                          #line 4#line 5
-digits = [ "₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀", "₂₁", "₂₂", "₂₃", "₂₄", "₂₅", "₂₆", "₂₇", "₂₈", "₂₉"]#line 12#line 13#line 14
+# digits = [ "₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉", "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀", "₂₁", "₂₂", "₂₃", "₂₄", "₂₅", "₂₆", "₂₇", "₂₈", "₂₉"]#line 12#line 13#line 14
+digits = [ "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29"]#line 12#line 13#line 14
 def gensymbol (s):                                     #line 15
     global counter                                     #line 16
     name_with_id =  str( s) + subscripted_digit ( counter) #line 17
@@ -944,6 +945,7 @@ def initialize ():                                     #line 686
 def start (palette,env):                               #line 696
     live_update ( "",  "reset")                        #line 697
     live_update ( "Live",  "begin...")                 #line 698
+    live_update ( "Info",  "begin...")                 #line 698
     root_of_project =  env [ 0]                        #line 699
     root_of_0D =  env [ 1]                             #line 700
     main_container_name =  env [ 2]                    #line 701
