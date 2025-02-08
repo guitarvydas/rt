@@ -753,8 +753,8 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": "Generate Javascript",
-          "id": 8
+          "name": "Generate Common Lisp",
+          "id": 18
         }
       },
       {
@@ -762,8 +762,8 @@
         "source_port": "fini",
         "target_port": "fini",
         "target": {
-          "name": "Generate Javascript",
-          "id": 8
+          "name": "Generate Common Lisp",
+          "id": 18
         }
       },
       {
