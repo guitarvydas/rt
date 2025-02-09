@@ -5,20 +5,25 @@ from repl import live_update
 def check_for_stars(source_code):
     found = False
     good = ''
+    rc = 0
     for line in source_code.splitlines():
         if '>>>' in line:
             found = True
-            #print(f"errcheck: {line}", file=sys.stderr)
+            print(f"error: {line}", file=sys.stderr)
         else:
             good += line + '\n'
-    if not found:
-        print (good, file=sys.stdout)
+    if found:
+        print ("errors found", file=sys.stderr)
+        rc = 1
     else:
-        exit (1)
+        print (good, file=sys.stdout)
+        rc = 0
+    return rc
 
 if __name__ == "__main__":
     try:
         source_code = sys.stdin.read()
-        check_for_stars(source_code)
+        rc = check_for_stars(source_code)
+        exit (rc)
     except FileNotFoundError:
         print(f"in errgrep.py: File '{filename}' not found.", file=sys.stderr)

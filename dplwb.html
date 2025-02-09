@@ -28,11 +28,14 @@
             overflow: scroll;
             white-space: pre; 
         }
+
+        .ignored-tag {
+            color: red;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- kvboxes for Javascript and Python-->
         <div class="row">
             <div class="kvbox">
                 <input type="text" class="tagbox" value="Javascript">
@@ -54,34 +57,32 @@
             </div>
         </div>
 
-        <!-- Errors and Info -->
         <div class="row">
             <div class="kvbox">
                 <input type="text" class="tagbox" value="✗">
-                <textarea id="errors" class="textarea" rows="15" readonly></textarea>
+                <textarea id="errors" class="textarea" rows="10" readonly></textarea>
             </div>
             <div class="kvbox">
                 <input type="text" class="tagbox" value="Info">
-                <textarea id="info" class="textarea" rows="15" readonly></textarea>
+                <div id="info" class="textarea" style="height: 160px; overflow-y: auto; background: white;"></div>
             </div>
         </div>
 
     </div>
 
     <script>
-        // Initialize buffers for each kvbox
         const buffers = new Map();
-        
-        // Initialize WebSocket connection
         const ws = new WebSocket('ws://localhost:8865');
 
-        // Function to update textarea and scroll to bottom
         function updateTextArea(textarea, content) {
-            textarea.value = content;
+            if (textarea.id === 'info') {
+                textarea.innerHTML = content;
+            } else {
+                textarea.value = content;
+            }
             textarea.scrollTop = textarea.scrollHeight;
         }
 
-        // Function to clear all kvboxes and buffers
         function resetAll() {
             document.querySelectorAll('.tagbox').forEach(tagbox => {
                 const textarea = tagbox.nextElementSibling;
@@ -90,14 +91,11 @@
             });
         }
 
-        // Initialize buffers for each kvbox
         document.querySelectorAll('.tagbox').forEach(tagbox => {
             buffers.set(tagbox.value, '');
         });
 
-        // WebSocket event handlers
         ws.onopen = () => {
-            console.log('Connected to WebSocket server');
             const status = '-- opened --\n';
             buffers.set('CommonLisp', status);
             buffers.set('✗', status);
@@ -106,7 +104,6 @@
         };
 
         ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
             const status = '-- websocket error --\n';
             buffers.set('CommonLisp', buffers.get('CommonLisp') + status);
             buffers.set('✗', buffers.get('✗') + status);
@@ -115,7 +112,6 @@
         };
 
         ws.onclose = () => {
-            console.log('Disconnected from WebSocket server');
             const status = '-- disconnected --\n';
             buffers.set('CommonLisp', buffers.get('CommonLisp') + status);
             buffers.set('✗', buffers.get('✗') + status);
@@ -126,40 +122,45 @@
         ws.onmessage = (event) => {
             try {
                 const data = JSON.parse(event.data);
-                
-                // Handle both array and single object cases
                 const dataArray = Array.isArray(data) ? data : [data];
                 
-                // Check for reset command
                 if (dataArray.length === 1 && "" in dataArray[0] && dataArray[0][""] === "reset") {
                     resetAll();
                     return;
                 }
 
-                // Get all tagboxes
-                const tagboxes = document.querySelectorAll('.tagbox');
+                const validTags = new Set([...document.querySelectorAll('.tagbox')].map(box => box.value));
                 
-                // For each tagbox
-                tagboxes.forEach(tagbox => {
+                dataArray.forEach(item => {
+                    Object.keys(item).forEach(tag => {
+                        if (!validTags.has(tag)) {
+                            const infoMessage = `<span class="ignored-tag">tag ignored: ${tag}</span>\n`;
+                            buffers.set('Info', (buffers.get('Info') || '') + infoMessage);
+                            updateTextArea(document.getElementById('info'), buffers.get('Info'));
+                        }
+                    });
+                    });
+
+                    dataArray.forEach (item => {
+		    console.log (Object.keys(item));
+		    console.log (item);
+		    });
+
+                document.querySelectorAll('.tagbox').forEach(tagbox => {
                     const tagValue = tagbox.value;
                     const textarea = tagbox.nextElementSibling;
                     
-                    // Collect all values for this tag across the array
                     const values = dataArray
                         .map(item => item[tagValue])
                         .filter(value => value !== undefined);
                     
                     if (values.length > 0) {
-                        // Append new values to buffer with separator
-                        const newContent = values.join('\n \n') + '\n';
+                        const newContent = values.join('\n\n') + '\n';
                         buffers.set(tagValue, buffers.get(tagValue) + newContent);
-                        
-                        // Update textarea with full buffer content
                         updateTextArea(textarea, buffers.get(tagValue));
                     }
                 });
             } catch (error) {
-                console.error('Error processing message:', error);
                 const errorMessage = `Error processing message: ${error.message}\n`;
                 buffers.set('✗', buffers.get('✗') + errorMessage);
                 updateTextArea(document.getElementById('errors'), buffers.get('✗'));

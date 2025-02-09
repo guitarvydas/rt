@@ -140,21 +140,21 @@ def deracer_handler (eh,mev):                          #line 62
             inst.buffer.secondmev =  mev               #line 69
             inst.state =  "waitingForFirstmev"         #line 70
         else:                                          #line 71
-            runtime_error ( str( "bad mev.port (case A) for deracer ") +  mev.port )#line 72#line 73
+            runtime_error ( str( "bad mev.port (case A) for deracer port=") +  mev.port )#line 72#line 73
     elif  inst.state ==  "waitingForFirstmev":         #line 74
         if  "1" ==  mev.port:                          #line 75
             inst.buffer.firstmev =  mev                #line 76
             send_firstmev_then_secondmev ( eh, inst)   #line 77
             inst.state =  "idle"                       #line 78
         else:                                          #line 79
-            runtime_error ( str( "bad mev.port (case B) for deracer ") +  mev.port )#line 80#line 81
+            runtime_error ( str( "bad mev.port (case B) for deracer port=") +  mev.port )#line 80#line 81
     elif  inst.state ==  "waitingForSecondmev":        #line 82
         if  "2" ==  mev.port:                          #line 83
             inst.buffer.secondmev =  mev               #line 84
             send_firstmev_then_secondmev ( eh, inst)   #line 85
             inst.state =  "idle"                       #line 86
         else:                                          #line 87
-            runtime_error ( str( "bad mev.port (case C) for deracer ") +  mev.port )#line 88#line 89
+            runtime_error ( str( "bad mev.port (case C) for deracer port=") +  mev.port )#line 88#line 89
     else:                                              #line 90
         runtime_error ( "bad state for deracer {eh.state}")#line 91#line 92#line 93#line 94
 
@@ -631,7 +631,7 @@ def step_child (child,mev):                            #line 316
     global ticktime
     before_state =  child.state                        #line 317
     # live_update ("Info", child.name) ## for debugging bootstrap
-    #live_update ("Info", str (ticktime)) ## for debugging bootstrap
+    # live_update ("Info", str (ticktime)) ## for debugging bootstrap
     child.handler ( child, mev)                        #line 318
     after_state =  child.state                         #line 319
     return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"]#line 322#line 323#line 324

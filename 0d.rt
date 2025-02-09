@@ -399,7 +399,7 @@ defn route (container, from_component, mevent) {
 	}
     }
     if not (was_sent) {
-        #live_update (“Error”, #strcons (container.name, #strcons (“: mevent '”, #strcons (mevent.port, #strcons (“' from ”, #strcons (fromname, “ dropped on floor...”))))))
+        #live_update (“✗”, #strcons (container.name, #strcons (“: mevent '”, #strcons (mevent.port, #strcons (“' from ”, #strcons (fromname, “ dropped on floor...”))))))
     }
 }
 
@@ -616,14 +616,11 @@ defn put_output (eh, mev) {
     #enqueue (eh.outq, mev)
 }
 
-defvar root_project ⇐ “”
-defvar root_0D ⇐ “”
+defvar projectRoot ⇐ “”
 
-defn set_environment (rproject, r0D) {
-    global root_project
-    global root_0D
-    root_project ⇐ rproject
-    root_0D ⇐ r0D
+defn set_environment (project_root) {
+    global projectRoot
+    projectRoot ⇐ project_root
 }
 
 
@@ -679,7 +676,7 @@ defn argv () {
     return #get_argv ()
 }
 
-defn initialize (root_of_project, diagram_names) {
+defn initialize (project_root, diagram_names) {
     arg ≡ ϕ
     palette ≡ initialize_component_palette (project_root, diagram_names)
     return [palette, [project_root, diagram_names, arg]]
@@ -687,12 +684,12 @@ defn initialize (root_of_project, diagram_names) {
 
 defn start (arg, main_container_name, palette, env) {
     #live_update (“”, “reset”)
-    #live_update (“Live”, “begin...”)
+    #live_update (“Info”, “begin...”)
     project_root ≡ env [0]
     diagram_names ≡ env [1]
-    set_environment (root_of_project)
+    set_environment (project_root)
     ⌈ get entrypoint container⌉
-    deftemp main_container ⇐ get_component_instance(palette, main_container_name)
+    deftemp main_container ⇐ get_component_instance(palette, main_container_name, ϕ)
     if ϕ = main_container {
         load_error (#strcons (“Couldn't find container with page name /”,
 	              #strcons (main_container_name,
@@ -704,7 +701,7 @@ defn start (arg, main_container_name, palette, env) {
         deftemp mev ⇐ make_mevent(“”, marg)
         inject (main_container, mev)
 	}
-    #live_update (“Live”, “...end”)
+    #live_update (“Info”, “...end”)
 }
 
 
