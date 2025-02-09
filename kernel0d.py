@@ -631,7 +631,7 @@ def step_child (child,mev):                            #line 316
     global ticktime
     before_state =  child.state                        #line 317
     # live_update ("Info", child.name) ## for debugging bootstrap
-    live_update ("Info", str (ticktime)) ## for debugging bootstrap
+    #live_update ("Info", str (ticktime)) ## for debugging bootstrap
     child.handler ( child, mev)                        #line 318
     after_state =  child.state                         #line 319
     return [ before_state ==  "idle" and  after_state!= "idle", before_state!= "idle" and  after_state!= "idle", before_state!= "idle" and  after_state ==  "idle"]#line 322#line 323#line 324
