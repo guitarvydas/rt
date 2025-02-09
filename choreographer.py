@@ -113,7 +113,7 @@ class FileWatcher:
                     try:
                         # Parse incoming mevent
                         data = json.loads(mevent)
-                        # Forward mevent to all clients on 8965
+                        # Forward mevent to all clients on 8865
                         await self.broadcast_mevent(data)
                     except json.JSONDecodeError as e:
                         print(f"Error decoding JSON mevent: {mevent}, error: {e}")
@@ -162,9 +162,9 @@ async def main():
         return
     
     # Start both websocket servers
-    async with websockets.serve(watcher.handle_client, "localhost", 8965), \
-               websockets.serve(watcher.handle_live_client, "localhost", 8966):
-        print("WebSocket servers started on ws://localhost:8965 and ws://localhost:8966")
+    async with websockets.serve(watcher.handle_client, "localhost", 8865), \
+               websockets.serve(watcher.handle_live_client, "localhost", 8866):
+        print("WebSocket servers started on ws://localhost:8865 and ws://localhost:8866")
         
         try:
             await watcher.watch_and_rebuild()

@@ -2,6 +2,6 @@ defn TEST () {
   if (x) {
     y
   } else {
-    return "z"
+    z
   }
 }

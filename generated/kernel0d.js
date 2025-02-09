@@ -17,9 +17,11 @@ function shell_out_handler (eh,msg) {                  /* line 8 */
     ret = true;
                                                        /* line 15 */
     if ( rc ==  0) {                                   /* line 16 */
-      send_string ( eh, "", `${ stdout}${ stderr}` , msg)/* line 17 */}
+      send_string ( eh, "", `${ stdout}${ stderr}` , msg)/* line 17 */
+    }
     else {                                             /* line 18 */
-      send_string ( eh, "✗", `${ stdout}${ stderr}` , msg)/* line 19 *//* line 20 */}/* line 21 *//* line 22 */
+      send_string ( eh, "✗", `${ stdout}${ stderr}` , msg)/* line 19 *//* line 20 */
+    }                                                  /* line 21 *//* line 22 */
 }
 
 function generate_shell_components (reg,container_list) {/* line 23 */
@@ -36,12 +38,17 @@ function generate_shell_components (reg,container_list) {/* line 23 */
             let name =  child_descriptor [ "name"];    /* line 34 */
             let cmd =   name.substring (1) .strip ();  /* line 35 */
             let generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)/* line 36 */;
-            register_component ( reg, generated_leaf)  /* line 37 */}
+            register_component ( reg, generated_leaf)  /* line 37 */
+          }
           else if (first_char_is ( child_descriptor [ "name"], "'")) {/* line 38 */
             let name =  child_descriptor [ "name"];    /* line 39 */
             let s =   name.substring (1)               /* line 40 */;
             let generated_leaf = mkTemplate ( name, s, string_constant_instantiate)/* line 41 */;
-            register_component_allow_overwriting ( reg, generated_leaf)/* line 42 *//* line 43 */}/* line 44 */}/* line 45 */}/* line 46 */}
+            register_component_allow_overwriting ( reg, generated_leaf)/* line 42 *//* line 43 */
+          }                                            /* line 44 */
+        }                                              /* line 45 */
+      }                                                /* line 46 */
+    }
     return  reg;                                       /* line 47 *//* line 48 *//* line 49 */
 }
 
@@ -55,8 +62,6 @@ function first_char_is (s,c) {                         /* line 54 */
                                                        /* line 58 */
 /*  TODO: #run_command needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here *//* line 59 */
 /*  I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped *//* line 60 *//* line 61 */
-
-/*   intentionally left empty  */                      /* line 1 */
 
 import * as fs from 'fs';
 import path from 'path';
@@ -74,9 +79,11 @@ function gensymbol (s) {                               /* line 15 *//* line 16 *
 
 function subscripted_digit (n) {                       /* line 22 *//* line 23 */
     if (((( n >=  0) && ( n <=  29)))) {               /* line 24 */
-      return  digits [ n];                             /* line 25 */}
+      return  digits [ n];                             /* line 25 */
+    }
     else {                                             /* line 26 */
-      return  `${ "₊"}${`${ n}`}`                      /* line 27 */;/* line 28 */}/* line 29 *//* line 30 */
+      return  `${ "₊"}${`${ n}`}`                      /* line 27 */;/* line 28 */
+    }                                                  /* line 29 *//* line 30 */
 }
 
 class Datum {
@@ -168,16 +175,20 @@ function destroy_port (mev) {                          /* line 112 *//* line 113
 /*  */                                                 /* line 116 */
 function format_mevent (m) {                           /* line 117 */
     if ( m ==  null) {                                 /* line 118 */
-      return  "{}";                                    /* line 119 */}
+      return  "{}";                                    /* line 119 */
+    }
     else {                                             /* line 120 */
-      return  `${ "{\""}${ `${ m.port}${ `${ "\":\""}${ `${ m.datum.v}${ "\"}"}` }` }` }` /* line 121 */;/* line 122 */}/* line 123 */
+      return  `${ "{\""}${ `${ m.port}${ `${ "\":\""}${ `${ m.datum.v}${ "\"}"}` }` }` }` /* line 121 */;/* line 122 */
+    }                                                  /* line 123 */
 }
 
 function format_mevent_raw (m) {                       /* line 124 */
     if ( m ==  null) {                                 /* line 125 */
-      return  "";                                      /* line 126 */}
+      return  "";                                      /* line 126 */
+    }
     else {                                             /* line 127 */
-      return  m.datum.v;                               /* line 128 *//* line 129 */}/* line 130 *//* line 131 */
+      return  m.datum.v;                               /* line 128 *//* line 129 */
+    }                                                  /* line 130 *//* line 131 */
 }
 
 const  enumDown =  0                                   /* line 132 */;
@@ -193,9 +204,11 @@ function create_down_connector (container,proto_conn,connectors,children_by_id) 
     let id_proto =  target_proto [ "id"];              /* line 143 */
     let target_component =  children_by_id [id_proto]; /* line 144 */
     if (( target_component ==  null)) {                /* line 145 */
-      load_error ( `${ "internal error: .Down connection target internal error "}${( proto_conn [ "target"]) [ "name"]}` )/* line 146 */}
+      load_error ( `${ "internal error: .Down connection target internal error "}${( proto_conn [ "target"]) [ "name"]}` )/* line 146 */
+    }
     else {                                             /* line 147 */
-      connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 148 */;/* line 149 */}
+      connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 148 */;/* line 149 */
+    }
     return  connector;                                 /* line 150 *//* line 151 *//* line 152 */
 }
 
@@ -205,13 +218,17 @@ function create_across_connector (container,proto_conn,connectors,children_by_id
     let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 156 */
     let target_component =  children_by_id [(( proto_conn [ "target"]) [ "id"])];/* line 157 */
     if ( source_component ==  null) {                  /* line 158 */
-      load_error ( `${ "internal error: .Across connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 159 */}
+      load_error ( `${ "internal error: .Across connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 159 */
+    }
     else {                                             /* line 160 */
       connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 161 */;
       if ( target_component ==  null) {                /* line 162 */
-        load_error ( `${ "internal error: .Across connection target not ok "}${( proto_conn [ "target"]) [ "name"]}` )/* line 163 */}
+        load_error ( `${ "internal error: .Across connection target not ok "}${( proto_conn [ "target"]) [ "name"]}` )/* line 163 */
+      }
       else {                                           /* line 164 */
-        connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 165 */;/* line 166 */}/* line 167 */}
+        connector.receiver = mkReceiver ( target_component.name, target_component, proto_conn [ "target_port"], target_component.inq)/* line 165 */;/* line 166 */
+      }                                                /* line 167 */
+    }
     return  connector;                                 /* line 168 *//* line 169 *//* line 170 */
 }
 
@@ -220,10 +237,12 @@ function create_up_connector (container,proto_conn,connectors,children_by_id) {/
     connector.direction =  "up";                       /* line 173 */
     let source_component =  children_by_id [(( proto_conn [ "source"]) [ "id"])];/* line 174 */
     if ( source_component ==  null) {                  /* line 175 */
-      load_error ( `${ "internal error: .Up connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 176 */}
+      load_error ( `${ "internal error: .Up connection source not ok "}${( proto_conn [ "source"]) [ "name"]}` )/* line 176 */
+    }
     else {                                             /* line 177 */
       connector.sender = mkSender ( source_component.name, source_component, proto_conn [ "source_port"])/* line 178 */;
-      connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 179 */;/* line 180 */}
+      connector.receiver = mkReceiver ( container.name, container, proto_conn [ "target_port"], container.outq)/* line 179 */;/* line 180 */
+    }
     return  connector;                                 /* line 181 *//* line 182 *//* line 183 */
 }
 
@@ -245,19 +264,25 @@ function container_instantiator (reg,owner,container_name,desc) {/* line 193 *//
       let child_instance = get_component_instance ( reg, child_desc [ "name"], container)/* line 200 */;
       children.push ( child_instance)                  /* line 201 */
       let id =  child_desc [ "id"];                    /* line 202 */
-      children_by_id [id] =  child_instance;           /* line 203 *//* line 204 *//* line 205 */}
+      children_by_id [id] =  child_instance;           /* line 203 *//* line 204 *//* line 205 */
+    }
     container.children =  children;                    /* line 206 *//* line 207 */
     let connectors = [];                               /* line 208 */
     for (let proto_conn of  desc [ "connections"]) {   /* line 209 */
       let  connector =  new Connector ();              /* line 210 */;
       if ( proto_conn [ "dir"] ==  enumDown) {         /* line 211 */
-        connectors.push (create_down_connector ( container, proto_conn, connectors, children_by_id)) /* line 212 */}
+        connectors.push (create_down_connector ( container, proto_conn, connectors, children_by_id)) /* line 212 */
+      }
       else if ( proto_conn [ "dir"] ==  enumAcross) {  /* line 213 */
-        connectors.push (create_across_connector ( container, proto_conn, connectors, children_by_id)) /* line 214 */}
+        connectors.push (create_across_connector ( container, proto_conn, connectors, children_by_id)) /* line 214 */
+      }
       else if ( proto_conn [ "dir"] ==  enumUp) {      /* line 215 */
-        connectors.push (create_up_connector ( container, proto_conn, connectors, children_by_id)) /* line 216 */}
+        connectors.push (create_up_connector ( container, proto_conn, connectors, children_by_id)) /* line 216 */
+      }
       else if ( proto_conn [ "dir"] ==  enumThrough) { /* line 217 */
-        connectors.push (create_through_connector ( container, proto_conn, connectors, children_by_id)) /* line 218 *//* line 219 */}/* line 220 */}
+        connectors.push (create_through_connector ( container, proto_conn, connectors, children_by_id)) /* line 218 *//* line 219 */
+      }                                                /* line 220 */
+    }
     container.connections =  connectors;               /* line 221 */
     return  container;                                 /* line 222 *//* line 223 *//* line 224 */
 }
@@ -267,7 +292,8 @@ function container_handler (container,mevent) {        /* line 226 */
     route ( container, container, mevent)
     /*  references to 'self' are replaced by the container during instantiation *//* line 227 */
     while (any_child_ready ( container)) {             /* line 228 */
-      step_children ( container, mevent)               /* line 229 */}/* line 230 *//* line 231 */
+      step_children ( container, mevent)               /* line 229 */
+    }                                                  /* line 230 *//* line 231 */
 }
 
 /*  Frees the given container and associated data. */  /* line 232 */
@@ -374,27 +400,38 @@ function step_children (container,causingMevent) {     /* line 325 */
           let  continued_long_run =  null;             /* line 333 */
           let  ended_long_run =  null;                 /* line 334 */
           [ began_long_run, continued_long_run, ended_long_run] = step_child ( child, mev)/* line 335 */;
-          if ( began_long_run) {                       /* line 336 *//* line 337 */}
-          else if ( continued_long_run) {              /* line 338 *//* line 339 */}
-          else if ( ended_long_run) {                  /* line 340 *//* line 341 *//* line 342 */}
-          destroy_mevent ( mev)                        /* line 343 */}
+          if ( began_long_run) {                       /* line 336 *//* line 337 */
+          }
+          else if ( continued_long_run) {              /* line 338 *//* line 339 */
+          }
+          else if ( ended_long_run) {                  /* line 340 *//* line 341 *//* line 342 */
+          }
+          destroy_mevent ( mev)                        /* line 343 */
+        }
         else {                                         /* line 344 */
           if ( child.state!= "idle") {                 /* line 345 */
             let mev = force_tick ( container, child)   /* line 346 */;
             child.handler ( child, mev)                /* line 347 */
-            destroy_mevent ( mev)                      /* line 348 *//* line 349 */}/* line 350 */}/* line 351 */
+            destroy_mevent ( mev)                      /* line 348 *//* line 349 */
+          }                                            /* line 350 */
+        }                                              /* line 351 */
         if ( child.state ==  "active") {               /* line 352 */
           /*  if child remains active, then the container must remain active and must propagate “ticks“ to child *//* line 353 */
-          container.state =  "active";                 /* line 354 *//* line 355 */}/* line 356 */
+          container.state =  "active";                 /* line 354 *//* line 355 */
+        }                                              /* line 356 */
         while (((! ((0=== child.outq.length))))) {     /* line 357 */
           let mev =  child.outq.shift ()               /* line 358 */;
           route ( container, child, mev)               /* line 359 */
-          destroy_mevent ( mev)                        /* line 360 *//* line 361 */}/* line 362 */}/* line 363 */}/* line 364 *//* line 365 */
+          destroy_mevent ( mev)                        /* line 360 *//* line 361 */
+        }                                              /* line 362 */
+      }                                                /* line 363 */
+    }                                                  /* line 364 *//* line 365 */
 }
 
 function attempt_tick (parent,eh) {                    /* line 366 */
     if ( eh.state!= "idle") {                          /* line 367 */
-      force_tick ( parent, eh)                         /* line 368 *//* line 369 */}/* line 370 *//* line 371 */
+      force_tick ( parent, eh)                         /* line 368 *//* line 369 */
+    }                                                  /* line 370 *//* line 371 */
 }
 
 function is_tick (mev) {                               /* line 372 */
@@ -411,24 +448,33 @@ function route (container,from_component,mevent) {     /* line 379 */
     ticktime =  ticktime+ 1;                           /* line 383 */
     if (is_tick ( mevent)) {                           /* line 384 */
       for (let child of  container.children) {         /* line 385 */
-        attempt_tick ( container, child)               /* line 386 */}
-      was_sent =  true;                                /* line 387 */}
+        attempt_tick ( container, child)               /* line 386 */
+      }
+      was_sent =  true;                                /* line 387 */
+    }
     else {                                             /* line 388 */
       if (((! (is_self ( from_component, container))))) {/* line 389 */
-        fromname =  from_component.name;               /* line 390 *//* line 391 */}
+        fromname =  from_component.name;               /* line 390 *//* line 391 */
+      }
       let from_sender = mkSender ( fromname, from_component, mevent.port)/* line 392 */;/* line 393 */
       for (let connector of  container.connections) {  /* line 394 */
         if (sender_eq ( from_sender, connector.sender)) {/* line 395 */
           deposit ( container, connector, mevent)      /* line 396 */
-          was_sent =  true;                            /* line 397 *//* line 398 */}/* line 399 */}/* line 400 */}
+          was_sent =  true;                            /* line 397 *//* line 398 */
+        }                                              /* line 399 */
+      }                                                /* line 400 */
+    }
     if ((! ( was_sent))) {                             /* line 401 */
-      live_update ( "Error",  `${ container.name}${ `${ ": mevent '"}${ `${ mevent.port}${ `${ "' from "}${ `${ fromname}${ " dropped on floor..."}` }` }` }` }` )/* line 402 *//* line 403 */}/* line 404 *//* line 405 */
+      live_update ( "Error",  `${ container.name}${ `${ ": mevent '"}${ `${ mevent.port}${ `${ "' from "}${ `${ fromname}${ " dropped on floor..."}` }` }` }` }` )/* line 402 *//* line 403 */
+    }                                                  /* line 404 *//* line 405 */
 }
 
 function any_child_ready (container) {                 /* line 406 */
     for (let child of  container.children) {           /* line 407 */
       if (child_is_ready ( child)) {                   /* line 408 */
-        return  true;                                  /* line 409 *//* line 410 */}/* line 411 */}
+        return  true;                                  /* line 409 *//* line 410 */
+      }                                                /* line 411 */
+    }
     return  false;                                     /* line 412 *//* line 413 *//* line 414 */
 }
 
@@ -512,10 +558,12 @@ function abstracted_register_component (reg,template,ok_to_overwrite) {/* line 4
     let name = mangle_name ( template.name)            /* line 470 */;
     if ((((((( reg!= null) && ( name))) in ( reg.templates))) && ((!  ok_to_overwrite)))) {/* line 471 */
       load_error ( `${ "Component /"}${ `${ template.name}${ "/ already declared"}` }` )/* line 472 */
-      return  reg;                                     /* line 473 */}
+      return  reg;                                     /* line 473 */
+    }
     else {                                             /* line 474 */
       reg.templates [name] =  template;                /* line 475 */
-      return  reg;                                     /* line 476 *//* line 477 */}/* line 478 *//* line 479 */
+      return  reg;                                     /* line 476 *//* line 477 */
+    }                                                  /* line 478 *//* line 479 */
 }
 
 function get_component_instance (reg,full_name,owner) {/* line 480 */
@@ -524,27 +572,34 @@ function get_component_instance (reg,full_name,owner) {/* line 480 */
       let template =  reg.templates [template_name];   /* line 483 */
       if (( template ==  null)) {                      /* line 484 */
         load_error ( `${ "Registry Error (A): Can't find component /"}${ `${ template_name}${ "/"}` }` )/* line 485 */
-        return  null;                                  /* line 486 */}
+        return  null;                                  /* line 486 */
+      }
       else {                                           /* line 487 */
         let owner_name =  "";                          /* line 488 */
         let instance_name =  template_name;            /* line 489 */
         if ( null!= owner) {                           /* line 490 */
           owner_name =  owner.name;                    /* line 491 */
-          instance_name =  `${ owner_name}${ `${ "▹"}${ template_name}` }` /* line 492 */;}
+          instance_name =  `${ owner_name}${ `${ "▹"}${ template_name}` }` /* line 492 */;
+        }
         else {                                         /* line 493 */
-          instance_name =  template_name;              /* line 494 *//* line 495 */}
+          instance_name =  template_name;              /* line 494 *//* line 495 */
+        }
         let instance =  template.instantiator ( reg, owner, instance_name, template.template_data)/* line 496 */;
-        return  instance;                              /* line 497 *//* line 498 */}}
+        return  instance;                              /* line 497 *//* line 498 */
+      }
+    }
     else {                                             /* line 499 */
       load_error ( `${ "Registry Error (B): Can't find component /"}${ `${ template_name}${ "/"}` }` )/* line 500 */
-      return  null;                                    /* line 501 *//* line 502 */}/* line 503 *//* line 504 */
+      return  null;                                    /* line 501 *//* line 502 */
+    }                                                  /* line 503 *//* line 504 */
 }
 
 function dump_registry (reg) {                         /* line 505 */
     nl ()                                              /* line 506 */
     console.log ( "*** PALETTE ***");                  /* line 507 */
     for (let c of  reg.templates) {                    /* line 508 */
-      print ( c.name)                                  /* line 509 */}
+      print ( c.name)                                  /* line 509 */
+    }
     console.log ( "***************");                  /* line 510 */
     nl ()                                              /* line 511 *//* line 512 *//* line 513 */
 }
@@ -677,7 +732,9 @@ function initialize_component_palette (root_project,root_0D,diagram_source_files
       let all_containers_within_single_file = json2internal ( root_project, diagram_source)/* line 646 */;
       reg = generate_shell_components ( reg, all_containers_within_single_file)/* line 647 */;
       for (let container of  all_containers_within_single_file) {/* line 648 */
-        register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))/* line 649 *//* line 650 */}/* line 651 */}
+        register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))/* line 649 *//* line 650 */
+      }                                                /* line 651 */
+    }
     initialize_stock_components ( reg)                 /* line 652 */
     return  reg;                                       /* line 653 *//* line 654 *//* line 655 */
 }
@@ -725,24 +782,25 @@ function start (palette,env) {                         /* line 692 */
     /*  get entrypoint container */                    /* line 701 */
     let  main_container = get_component_instance ( palette, main_container_name, null)/* line 702 */;
     if ( null ==  main_container) {                    /* line 703 */
-      load_error ( `${ "Couldn't find container with page name /"}${ `${ main_container_name}${ `${ "/ in files "}${ `${`${ diagram_names}`}${ " (check tab names, or disable compression?)"}` }` }` }` )/* line 707 *//* line 708 */}
+      load_error ( `${ "Couldn't find container with page name /"}${ `${ main_container_name}${ `${ "/ in files "}${ `${`${ diagram_names}`}${ " (check tab names, or disable compression?)"}` }` }` }` )/* line 707 *//* line 708 */
+    }
     if ((!  load_errors)) {                            /* line 709 */
       let  marg = new_datum_string ( arg)              /* line 710 */;
       let  mev = make_mevent ( "", marg)               /* line 711 */;
-      inject ( main_container, mev)                    /* line 712 */
-      ??? (???deque_to_json ( main_container.outq))    /* line 713 *//* line 714 */}
-    live_update ( "Live",  "...end")                   /* line 715 *//* line 716 *//* line 717 */
+      inject ( main_container, mev)                    /* line 712 *//* line 713 */
+    }
+    live_update ( "Live",  "...end")                   /* line 714 *//* line 715 *//* line 716 */
 }
-                                                       /* line 718 */
-/*  utility functions  */                              /* line 719 */
-function send_int (eh,port,i,causing_mevent) {         /* line 720 */
-    let datum = new_datum_string (`${ i}`)             /* line 721 */;
-    send ( eh, port, datum, causing_mevent)            /* line 722 *//* line 723 *//* line 724 */
+                                                       /* line 717 */
+/*  utility functions  */                              /* line 718 */
+function send_int (eh,port,i,causing_mevent) {         /* line 719 */
+    let datum = new_datum_string (`${ i}`)             /* line 720 */;
+    send ( eh, port, datum, causing_mevent)            /* line 721 *//* line 722 *//* line 723 */
 }
 
-function send_bang (eh,port,causing_mevent) {          /* line 725 */
-    let datum = new_datum_bang ();                     /* line 726 */
-    send ( eh, port, datum, causing_mevent)            /* line 727 *//* line 728 */
+function send_bang (eh,port,causing_mevent) {          /* line 724 */
+    let datum = new_datum_bang ();                     /* line 725 */
+    send ( eh, port, datum, causing_mevent)            /* line 726 *//* line 727 */
 }
- 
+
 /*   intentionally left empty  */                      /* line 1 */

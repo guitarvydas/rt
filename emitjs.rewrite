@@ -126,11 +126,11 @@ Defsynonym_legal [id _eqv e rec?] = ‛\nlet «id» = «e»;«rec»’
 
 
 InitStatement [ _mark ident _33 Exp fluff*] = ‛\nthis.«ident» = «Exp»;«fluff»’
-IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif («Exp») {«StatementBlock»}«ElifStatement»«ElseStatement»«rec»’
-ElifStatement [ _37 Exp StatementBlock] = ‛\nelse if («Exp») {«StatementBlock»}’
-ElseStatement [ _39 StatementBlock] = ‛\n else {«StatementBlock»}’
-ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor (let «ident» of «Exp») {«StatementBlock»}«rec»’
-WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile («Exp») {«StatementBlock»}«rec»’
+IfStatement [ _35 Exp StatementBlock ElifStatement* ElseStatement? rec?] = ‛\nif («Exp») {«StatementBlock»\n}«ElifStatement»«ElseStatement»«rec»’
+ElifStatement [ _37 Exp StatementBlock] = ‛\nelse if («Exp») {«StatementBlock»\n}’
+ElseStatement [ _39 StatementBlock] = ‛\n else {«StatementBlock»\n}’
+ForStatement [ _41 ident _43 Exp StatementBlock rec?] = ‛\nfor (let «ident» of «Exp») {«StatementBlock»\n}«rec»’
+WhileStatement [ _45 Exp StatementBlock rec?] = ‛\nwhile («Exp») {«StatementBlock»\n}«rec»’
 
 Assignment_multiple [ _55 Lvals+ _57 _58 Exp rec?] =‛\n[«Lvals»] = «Exp»;«rec»’
 Assignment_single [ Lval _59 Exp rec?] =‛\n«Lval» = «Exp»;«rec»’
