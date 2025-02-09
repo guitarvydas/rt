@@ -8,7 +8,7 @@ import hashlib
 import random
 
 def live_update(key, value):
-    """Send live update through websocket 8966
+    """Send live update through websocket 8866
     
     Args:
         key: String key (e.g., "Live", "Info", "✗")
@@ -17,7 +17,7 @@ def live_update(key, value):
     try:
         # Create socket connection
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.connect(('localhost', 8966))
+        sock.connect(('localhost', 8866))
         
         # Generate random 16-byte key for handshake
         websocket_key = base64.b64encode(bytes([random.randint(0, 255) for _ in range(16)])).decode()
@@ -25,7 +25,7 @@ def live_update(key, value):
         # Send handshake request
         handshake = (
             f"GET / HTTP/1.1\r\n"
-            f"Host: localhost:8966\r\n"
+            f"Host: localhost:8866\r\n"
             f"Upgrade: websocket\r\n"
             f"Connection: Upgrade\r\n"
             f"Sec-WebSocket-Key: {websocket_key}\r\n"

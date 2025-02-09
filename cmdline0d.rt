@@ -640,10 +640,10 @@ defn string_clone (s) {
 ⌈ where ${_00_} is the root directory for the project⌉
 ⌈ where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python)⌉
 
-defn initialize_component_palette (project_root, diagram_source_files) {
+defn initialize_component_palette (root_project, root_0D, diagram_source_files) {
     deftemp reg ⇐ make_component_registry ()
     for diagram_source in diagram_source_files {
-        all_containers_within_single_file ≡ json2internal (project_root, diagram_source)
+        all_containers_within_single_file ≡ json2internal (root_project, diagram_source)
         reg ⇐ generate_shell_components (reg, all_containers_within_single_file)
         for container in all_containers_within_single_file {
             register_component (reg, mkTemplate (container@“name” , ⌈ template_data=⌉ container, ⌈ instantiator=⌉ ↪︎container_instantiator))
@@ -679,20 +679,27 @@ defn argv () {
     return #get_argv ()
 }
 
-defn initialize (root_of_project, diagram_names) {
-    arg ≡ ϕ
-    palette ≡ initialize_component_palette (project_root, diagram_names)
-    return [palette, [project_root, diagram_names, arg]]
+defn initialize () {
+    root_of_project ≡ #nthargv (1) 
+    root_of_0D ≡ #nthargv (2)
+    arg ≡ #nthargv (3)
+    main_container_name ≡ #nthargv (4)
+    diagram_names ≡ #nthargvcdr (5)
+    palette ≡ initialize_component_palette (root_of_project, root_of_0D, diagram_names)
+    return [palette, [root_of_project, root_of_0D, main_container_name, diagram_names, arg]]
 }
 
-defn start (arg, main_container_name, palette, env) {
+defn start (palette, env) {
     #live_update (“”, “reset”)
     #live_update (“Live”, “begin...”)
-    project_root ≡ env [0]
-    diagram_names ≡ env [1]
-    set_environment (root_of_project)
+    root_of_project ≡ env [0]
+    root_of_0D ≡ env [1]
+    main_container_name ≡ env [2]
+    diagram_names ≡ env [3]
+    arg ≡ env [4]
+    set_environment (root_of_project, root_of_0D)
     ⌈ get entrypoint container⌉
-    deftemp main_container ⇐ get_component_instance(palette, main_container_name)
+    deftemp main_container ⇐ get_component_instance(palette, main_container_name, ϕ)
     if ϕ = main_container {
         load_error (#strcons (“Couldn't find container with page name /”,
 	              #strcons (main_container_name,

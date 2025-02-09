@@ -260,7 +260,7 @@
     "file": "rt2all.drawio"
   },
   {
-    "name": "List Filenames",
+    "name": "TEST List Filenames",
     "children": [
       {
         "name": "'empty.rt",
@@ -372,7 +372,7 @@
     "file": "rt2all.drawio"
   },
   {
-    "name": "ALL List Filenames",
+    "name": "List Filenames",
     "children": [
       {
         "name": "'count.rt",
