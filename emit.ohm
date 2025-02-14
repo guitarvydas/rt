@@ -40,12 +40,9 @@ emit {
    ExternalPhrase =
      | "#" xkw<"low_level_read_text_file_handler"> "(" eh Comma msg Comma fname Comma ok Comma err ")" -- read
      | "#" xkw<"read_and_convert_json_file"> "(" pathname Comma fname ")" -- racjf
-     | "#" xkw<"get_argv"> "(" ")" -- getargv
      | "#" xkw<"freshQueue"> "(" ")" -- freshQueue
      | "#" xkw<"freshStack"> "(" ")" -- freshStack
      | "#" xkw<"fresh"> "(" ident ")" -- fresh
-     | "#" xkw<"nthargv"> "(" Exp ")" -- nthargv
-     | "#" xkw<"nthargvcdr"> "(" Exp ")" -- nthargvcdr
      | "#" xkw<"stringcar"> "(" Exp ")" -- stringcar
      | "#" xkw<"stringcdr"> "(" Exp ")" -- stringcdr
      | "#" xkw<"strcons"> "(" Exp Comma Exp ")" -- strcons

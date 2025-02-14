@@ -64,12 +64,9 @@ ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
         print ("Error decoding JSON in file: '{e}'")
         return None⤶
 ’
-ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛ sys.argv’
 ExternalPhrase_freshQueue [_octothorpe _ lp rp] = ‛ deque ([])’
 ExternalPhrase_freshStack [_octothorpe _ lp rp] = ‛ []’
 ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ «ident» ()’
-ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ sys.argv[«n»:] ’
-ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ sys.argv[«n»] ’
 ExternalPhrase_stringshrink [_octothorpe _83 _84 e _85 ] =‛ «e»[:30].replace ('\\r','⦙').replace ('\\n', '⧚') ’
 ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ «e»[1:] ’

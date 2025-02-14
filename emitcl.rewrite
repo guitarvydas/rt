@@ -54,19 +54,13 @@ ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 o
 
 ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
   ;; read json from a named file and convert it into internal form (a list of Container alists)
-  (with-open-file (f (format nil "~a/~a.lisp" «pathname» «fname») :direction :input)⤷
+  (with-open-file (f (format nil "~a~a" «pathname» «fname») :direction :input)⤷
     (deep-expand (read f)))⤶
-’
-
-ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛
-(get-main-args)
 ’
 
 ExternalPhrase_freshQueue [_octothorpe _83 _84 _85] =‛ (make-instance 'Queue)’
 ExternalPhrase_freshStack [_octothorpe _83 _84 _85] =‛ nil’
 ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ (make-instance '«ident»)’
-ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ (nthcdr «n» (argv))’
-ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ (nth «n» (argv))’
 ExternalPhrase_stringshrink [_octothorpe _83 _84 e _85 ] =‛ «e»’
 ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ (char «e» 0)’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ (subseq «e» 1)’

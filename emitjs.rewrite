@@ -72,12 +72,9 @@ console.log («fname»);
     }
 ’
 
-ExternalPhrase_getargv [_octothorpe _getrv lp rp] = ‛ command_line_argv’
 ExternalPhrase_freshQueue [_octothorpe _ lp rp] = ‛ []’
 ExternalPhrase_freshStack [_octothorpe _ lp rp] = ‛ []’
 ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ new «ident» ();’
-ExternalPhrase_nthargvcdr [_octothorpe _83 lb n rb ] =‛ command_line_argv.splice («n») ’
-ExternalPhrase_nthargv [_octothorpe _83 _84 n _85 ] =‛ command_line_argv[«n»] ’
 ExternalPhrase_stringshrink [_octothorpe _83 _84 e _85 ] =‛ «e»’
 ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ «e»[0] ’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ «e».substring (1) ’
@@ -88,7 +85,6 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 ‛
 import * as fs from 'fs';
 import path from 'path';
-const command_line_argv = process.argv.slice(1);
 import execSync from 'child_process';
 ’
 

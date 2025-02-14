@@ -1,66 +1,3 @@
-# this needs to be rewritten to use the low_level "shell_out“ component, this can be done solely as a diagram without using python code here#line 1
-def shell_out_instantiate (reg,owner,name,template_data):#line 2
-    name_with_id = gensymbol ( "shell_out")            #line 3
-    cmd = shlex.split ( template_data)                 #line 4
-    return make_leaf ( name_with_id, owner, cmd, shell_out_handler)#line 5#line 6#line 7
-
-def shell_out_handler (eh,msg):                        #line 8
-    cmd =  eh.instance_data                            #line 9
-    s =  msg.datum.v                                   #line 10
-    ret =  None                                        #line 11
-    rc =  None                                         #line 12
-    stdout =  None                                     #line 13
-    stderr =  None                                     #line 14
-
-    try:
-        ret = subprocess.run ( cmd, input= s, text=True, capture_output=True)
-        rc = ret.returncode
-        stdout = ret.stdout.strip ()
-        stderr = ret.stderr.strip ()
-    except Exception as e:
-        ret = None
-        rc = 1
-        stdout = ''
-        stderr = str(e)
-                                                       #line 15
-    if  rc ==  0:                                      #line 16
-        send_string ( eh, "", str( stdout) +  stderr , msg)#line 17
-    else:                                              #line 18
-        send_string ( eh, "✗", str( stdout) +  stderr , msg)#line 19#line 20#line 21#line 22
-
-def generate_shell_components (reg,container_list):    #line 23
-    # [                                                #line 24
-    #     {;file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 25
-    #     {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []}#line 26
-    # ]                                                #line 27
-    if  None!= container_list:                         #line 28
-        for diagram in  container_list:                #line 29
-            # loop through every component in the diagram and look for names that start with “$“ or “'“ #line 30
-            # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 31
-            for child_descriptor in  diagram [ "children"]:#line 32
-                if first_char_is ( child_descriptor [ "name"], "$"):#line 33
-                    name =  child_descriptor [ "name"] #line 34
-                    cmd =   name[1:] .strip ()         #line 35
-                    generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)#line 36
-                    register_component ( reg, generated_leaf)#line 37
-                elif first_char_is ( child_descriptor [ "name"], "'"):#line 38
-                    name =  child_descriptor [ "name"] #line 39
-                    s =   name[1:]                     #line 40
-                    generated_leaf = mkTemplate ( name, s, string_constant_instantiate)#line 41
-                    register_component_allow_overwriting ( reg, generated_leaf)#line 42#line 43#line 44#line 45#line 46
-    return  reg                                        #line 47#line 48#line 49
-
-def first_char (s):                                    #line 50
-    return   s[0]                                      #line 51#line 52#line 53
-
-def first_char_is (s,c):                               #line 54
-    return  c == first_char ( s)                       #line 55#line 56#line 57
-                                                       #line 58
-# TODO: #run_command needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here#line 59
-# I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped#line 60#line 61
-
-
-
 #
 import sys
 import re
@@ -516,176 +453,223 @@ def get_component_instance (reg,full_name,owner):      #line 480
         load_error ( str( "Registry Error (B): Can't find component /") +  str( template_name) +  "/"  )#line 500
         return  None                                   #line 501#line 502#line 503#line 504
 
-def dump_registry (reg):                               #line 505
-    nl ()                                              #line 506
-    print ( "*** PALETTE ***")                         #line 507
-    for c in  reg.templates:                           #line 508
-        print ( c.name)                                #line 509
-    print ( "***************")                         #line 510
-    nl ()                                              #line 511#line 512#line 513
-
-def print_stats (reg):                                 #line 514
-    print ( str( "registry statistics: ") +  reg.stats )#line 515#line 516#line 517
-
-def mangle_name (s):                                   #line 518
-    # trim name to remove code from Container component names _ deferred until later (or never)#line 519
-    return  s                                          #line 520#line 521#line 522
-                                                       #line 523
-# Data for an asyncronous component _ effectively, a function with input#line 524
-# and output queues of mevents.                        #line 525
-#                                                      #line 526
-# Components can either be a user_supplied function (“lea“), or a “container“#line 527
-# that routes mevents to child components according to a list of connections#line 528
-# that serve as a mevent routing table.                #line 529
-#                                                      #line 530
-# Child components themselves can be leaves or other containers.#line 531
-#                                                      #line 532
-# `handler` invokes the code that is attached to this component.#line 533
-#                                                      #line 534
-# `instance_data` is a pointer to instance data that the `leaf_handler`#line 535
-# function may want whenever it is invoked again.      #line 536
-#                                                      #line 537#line 538
-# Eh_States :: enum { idle, active }                   #line 539
+def mangle_name (s):                                   #line 505
+    # trim name to remove code from Container component names _ deferred until later (or never)#line 506
+    return  s                                          #line 507#line 508#line 509
+                                                       #line 510
+# Data for an asyncronous component _ effectively, a function with input#line 511
+# and output queues of mevents.                        #line 512
+#                                                      #line 513
+# Components can either be a user_supplied function (“lea“), or a “container“#line 514
+# that routes mevents to child components according to a list of connections#line 515
+# that serve as a mevent routing table.                #line 516
+#                                                      #line 517
+# Child components themselves can be leaves or other containers.#line 518
+#                                                      #line 519
+# `handler` invokes the code that is attached to this component.#line 520
+#                                                      #line 521
+# `instance_data` is a pointer to instance data that the `leaf_handler`#line 522
+# function may want whenever it is invoked again.      #line 523
+#                                                      #line 524#line 525
+# Eh_States :: enum { idle, active }                   #line 526
 class Eh:
-    def __init__ (self,):                              #line 540
-        self.name =  ""                                #line 541
-        self.inq =  deque ([])                         #line 542
-        self.outq =  deque ([])                        #line 543
-        self.owner =  None                             #line 544
-        self.children = []                             #line 545
-        self.visit_ordering =  deque ([])              #line 546
-        self.connections = []                          #line 547
-        self.routings =  deque ([])                    #line 548
-        self.handler =  None                           #line 549
-        self.finject =  None                           #line 550
-        self.instance_data =  None                     #line 551
-        self.state =  "idle"                           #line 552# bootstrap debugging#line 553
-        self.kind =  None # enum { container, leaf, }  #line 554#line 555
-                                                       #line 556
-# Creates a component that acts as a container. It is the same as a `Eh` instance#line 557
-# whose handler function is `container_handler`.       #line 558
-def make_container (name,owner):                       #line 559
-    eh =  Eh ()                                        #line 560
-    eh.name =  name                                    #line 561
-    eh.owner =  owner                                  #line 562
-    eh.handler =  container_handler                    #line 563
-    eh.finject =  container_injector                   #line 564
-    eh.state =  "idle"                                 #line 565
-    eh.kind =  "container"                             #line 566
-    return  eh                                         #line 567#line 568#line 569
+    def __init__ (self,):                              #line 527
+        self.name =  ""                                #line 528
+        self.inq =  deque ([])                         #line 529
+        self.outq =  deque ([])                        #line 530
+        self.owner =  None                             #line 531
+        self.children = []                             #line 532
+        self.visit_ordering =  deque ([])              #line 533
+        self.connections = []                          #line 534
+        self.routings =  deque ([])                    #line 535
+        self.handler =  None                           #line 536
+        self.finject =  None                           #line 537
+        self.instance_data =  None                     #line 538
+        self.state =  "idle"                           #line 539# bootstrap debugging#line 540
+        self.kind =  None # enum { container, leaf, }  #line 541#line 542
+                                                       #line 543
+# Creates a component that acts as a container. It is the same as a `Eh` instance#line 544
+# whose handler function is `container_handler`.       #line 545
+def make_container (name,owner):                       #line 546
+    eh =  Eh ()                                        #line 547
+    eh.name =  name                                    #line 548
+    eh.owner =  owner                                  #line 549
+    eh.handler =  container_handler                    #line 550
+    eh.finject =  container_injector                   #line 551
+    eh.state =  "idle"                                 #line 552
+    eh.kind =  "container"                             #line 553
+    return  eh                                         #line 554#line 555#line 556
 
-# Creates a new leaf component out of a handler function, and a data parameter#line 570
-# that will be passed back to your handler when called.#line 571#line 572
-def make_leaf (name,owner,instance_data,handler):      #line 573
-    eh =  Eh ()                                        #line 574
-    eh.name =  str( owner.name) +  str( "▹") +  name   #line 575
-    eh.owner =  owner                                  #line 576
-    eh.handler =  handler                              #line 577
-    eh.instance_data =  instance_data                  #line 578
-    eh.state =  "idle"                                 #line 579
-    eh.kind =  "leaf"                                  #line 580
-    return  eh                                         #line 581#line 582#line 583
+# Creates a new leaf component out of a handler function, and a data parameter#line 557
+# that will be passed back to your handler when called.#line 558#line 559
+def make_leaf (name,owner,instance_data,handler):      #line 560
+    eh =  Eh ()                                        #line 561
+    eh.name =  str( owner.name) +  str( "▹") +  name   #line 562
+    eh.owner =  owner                                  #line 563
+    eh.handler =  handler                              #line 564
+    eh.instance_data =  instance_data                  #line 565
+    eh.state =  "idle"                                 #line 566
+    eh.kind =  "leaf"                                  #line 567
+    return  eh                                         #line 568#line 569#line 570
 
-# Sends a mevent on the given `port` with `data`, placing it on the output#line 584
-# of the given component.                              #line 585#line 586
-def send (eh,port,datum,causingMevent):                #line 587
-    mev = make_mevent ( port, datum)                   #line 588
-    put_output ( eh, mev)                              #line 589#line 590#line 591
+# Sends a mevent on the given `port` with `data`, placing it on the output#line 571
+# of the given component.                              #line 572#line 573
+def send (eh,port,datum,causingMevent):                #line 574
+    mev = make_mevent ( port, datum)                   #line 575
+    put_output ( eh, mev)                              #line 576#line 577#line 578
 
-def send_string (eh,port,s,causingMevent):             #line 592
-    datum = new_datum_string ( s)                      #line 593
-    mev = make_mevent ( port, datum)                   #line 594
-    put_output ( eh, mev)                              #line 595#line 596#line 597
+def send_string (eh,port,s,causingMevent):             #line 579
+    datum = new_datum_string ( s)                      #line 580
+    mev = make_mevent ( port, datum)                   #line 581
+    put_output ( eh, mev)                              #line 582#line 583#line 584
 
-def forward (eh,port,mev):                             #line 598
-    fwdmev = make_mevent ( port, mev.datum)            #line 599
-    put_output ( eh, fwdmev)                           #line 600#line 601#line 602
+def forward (eh,port,mev):                             #line 585
+    fwdmev = make_mevent ( port, mev.datum)            #line 586
+    put_output ( eh, fwdmev)                           #line 587#line 588#line 589
 
-def inject (eh,mev):                                   #line 603
-    eh.finject ( eh, mev)                              #line 604#line 605#line 606
+def inject (eh,mev):                                   #line 590
+    eh.finject ( eh, mev)                              #line 591#line 592#line 593
 
-def set_active (eh):                                   #line 607
-    eh.state =  "active"                               #line 608#line 609#line 610
+def set_active (eh):                                   #line 594
+    eh.state =  "active"                               #line 595#line 596#line 597
 
-def set_idle (eh):                                     #line 611
-    eh.state =  "idle"                                 #line 612#line 613#line 614
+def set_idle (eh):                                     #line 598
+    eh.state =  "idle"                                 #line 599#line 600#line 601
 
-def put_output (eh,mev):                               #line 615
-    eh.outq.append ( mev)                              #line 616#line 617#line 618
+def put_output (eh,mev):                               #line 602
+    eh.outq.append ( mev)                              #line 603#line 604#line 605
 
-projectRoot =  ""                                      #line 619#line 620
-def set_environment (project_root):                    #line 621
-    global projectRoot                                 #line 622
-    projectRoot =  project_root                        #line 623#line 624#line 625
-                                                       #line 626
-def string_make_persistent (s):                        #line 627
-    # this is here for non_GC languages like Odin, it is a no_op for GC languages like Python#line 628
-    return  s                                          #line 629#line 630#line 631
+projectRoot =  ""                                      #line 606#line 607
+def set_environment (project_root):                    #line 608
+    global projectRoot                                 #line 609
+    projectRoot =  project_root                        #line 610#line 611#line 612
+                                                       #line 613
+def string_make_persistent (s):                        #line 614
+    # this is here for non_GC languages like Odin, it is a no_op for GC languages like Python#line 615
+    return  s                                          #line 616#line 617#line 618
 
-def string_clone (s):                                  #line 632
-    return  s                                          #line 633#line 634#line 635
+def string_clone (s):                                  #line 619
+    return  s                                          #line 620#line 621#line 622
 
-# usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ...#line 636
-# where ${_00_} is the root directory for the project  #line 637
-# where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python)#line 638#line 639
-def initialize_component_palette (project_root,diagram_source_files):#line 640
-    reg = make_component_registry ()                   #line 641
-    for diagram_source in  diagram_source_files:       #line 642
-        all_containers_within_single_file = json2internal ( project_root, diagram_source)#line 643
-        reg = generate_shell_components ( reg, all_containers_within_single_file)#line 644
-        for container in  all_containers_within_single_file:#line 645
-            register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))#line 646#line 647#line 648
-    initialize_stock_components ( reg)                 #line 649
-    return  reg                                        #line 650#line 651#line 652
-                                                       #line 653
-def clone_string (s):                                  #line 654
-    return  s                                          #line 655#line 656#line 657
+# usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ...#line 623
+# where ${_00_} is the root directory for the project  #line 624
+# where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python)#line 625#line 626
+def initialize_component_palette (project_root,diagram_source_files):#line 627
+    reg = make_component_registry ()                   #line 628
+    for diagram_source in  diagram_source_files:       #line 629
+        all_containers_within_single_file = json2internal ( project_root, diagram_source)#line 630
+        reg = generate_shell_components ( reg, all_containers_within_single_file)#line 631
+        for container in  all_containers_within_single_file:#line 632
+            register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))#line 633#line 634#line 635
+    initialize_stock_components ( reg)                 #line 636
+    return  reg                                        #line 637#line 638#line 639
+                                                       #line 640
+def clone_string (s):                                  #line 641
+    return  s                                          #line 642#line 643#line 644
 
-load_errors =  False                                   #line 658
-runtime_errors =  False                                #line 659#line 660
-def load_error (s):                                    #line 661
-    global load_errors                                 #line 662
-    print ( s, file=sys.stderr)                        #line 663
-                                                       #line 664
-    load_errors =  True                                #line 665#line 666#line 667
+load_errors =  False                                   #line 645
+runtime_errors =  False                                #line 646#line 647
+def load_error (s):                                    #line 648
+    global load_errors                                 #line 649
+    print ( s, file=sys.stderr)                        #line 650
+                                                       #line 651
+    load_errors =  True                                #line 652#line 653#line 654
 
-def runtime_error (s):                                 #line 668
-    global runtime_errors                              #line 669
-    print ( s, file=sys.stderr)                        #line 670
-    runtime_errors =  True                             #line 671#line 672#line 673
-                                                       #line 674
-def argv ():                                           #line 675
-    return  sys.argv                                   #line 676#line 677#line 678
+def runtime_error (s):                                 #line 655
+    global runtime_errors                              #line 656
+    print ( s, file=sys.stderr)                        #line 657
+    runtime_errors =  True                             #line 658#line 659#line 660
+                                                       #line 661
+def initialize (project_root,diagram_names):           #line 662
+    arg =  None                                        #line 663
+    palette = initialize_component_palette ( project_root, diagram_names)#line 664
+    return [ palette,[ project_root, diagram_names, arg]]#line 665#line 666#line 667
 
-def initialize (project_root,diagram_names):           #line 679
-    arg =  None                                        #line 680
-    palette = initialize_component_palette ( project_root, diagram_names)#line 681
-    return [ palette,[ project_root, diagram_names, arg]]#line 682#line 683#line 684
+def start (arg,main_container_name,palette,env):       #line 668
+    live_update ( "",  "reset")                        #line 669
+    live_update ( "Info",  "begin...")                 #line 670
+    project_root =  env [ 0]                           #line 671
+    diagram_names =  env [ 1]                          #line 672
+    set_environment ( project_root)                    #line 673
+    # get entrypoint container                         #line 674
+    main_container = get_component_instance ( palette, main_container_name, None)#line 675
+    if  None ==  main_container:                       #line 676
+        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 680#line 681
+    if not  load_errors:                               #line 682
+        marg = new_datum_string ( arg)                 #line 683
+        mev = make_mevent ( "", marg)                  #line 684
+        inject ( main_container, mev)                  #line 685#line 686
+    live_update ( "Info",  "...end")                   #line 687#line 688#line 689
+                                                       #line 690
+# utility functions                                    #line 691
+def send_int (eh,port,i,causing_mevent):               #line 692
+    datum = new_datum_string (str ( i))                #line 693
+    send ( eh, port, datum, causing_mevent)            #line 694#line 695#line 696
 
-def start (arg,main_container_name,palette,env):       #line 685
-    live_update ( "",  "reset")                        #line 686
-    live_update ( "Info",  "begin...")                 #line 687
-    project_root =  env [ 0]                           #line 688
-    diagram_names =  env [ 1]                          #line 689
-    set_environment ( project_root)                    #line 690
-    # get entrypoint container                         #line 691
-    main_container = get_component_instance ( palette, main_container_name, None)#line 692
-    if  None ==  main_container:                       #line 693
-        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 697#line 698
-    if not  load_errors:                               #line 699
-        marg = new_datum_string ( arg)                 #line 700
-        mev = make_mevent ( "", marg)                  #line 701
-        inject ( main_container, mev)                  #line 702#line 703
-    live_update ( "Info",  "...end")                   #line 704#line 705#line 706
-                                                       #line 707
-# utility functions                                    #line 708
-def send_int (eh,port,i,causing_mevent):               #line 709
-    datum = new_datum_string (str ( i))                #line 710
-    send ( eh, port, datum, causing_mevent)            #line 711#line 712#line 713
+def send_bang (eh,port,causing_mevent):                #line 697
+    datum = new_datum_bang ()                          #line 698
+    send ( eh, port, datum, causing_mevent)            #line 699#line 700
 
-def send_bang (eh,port,causing_mevent):                #line 714
-    datum = new_datum_bang ()                          #line 715
-    send ( eh, port, datum, causing_mevent)            #line 716#line 717
+# this needs to be rewritten to use the low_level "shell_out“ component, this can be done solely as a diagram without using python code here#line 1
+def shell_out_instantiate (reg,owner,name,template_data):#line 2
+    name_with_id = gensymbol ( "shell_out")            #line 3
+    cmd = shlex.split ( template_data)                 #line 4
+    return make_leaf ( name_with_id, owner, cmd, shell_out_handler)#line 5#line 6#line 7
+
+def shell_out_handler (eh,msg):                        #line 8
+    cmd =  eh.instance_data                            #line 9
+    s =  msg.datum.v                                   #line 10
+    ret =  None                                        #line 11
+    rc =  None                                         #line 12
+    stdout =  None                                     #line 13
+    stderr =  None                                     #line 14
+
+    try:
+        ret = subprocess.run ( cmd, input= s, text=True, capture_output=True)
+        rc = ret.returncode
+        stdout = ret.stdout.strip ()
+        stderr = ret.stderr.strip ()
+    except Exception as e:
+        ret = None
+        rc = 1
+        stdout = ''
+        stderr = str(e)
+                                                       #line 15
+    if  rc ==  0:                                      #line 16
+        send_string ( eh, "", str( stdout) +  stderr , msg)#line 17
+    else:                                              #line 18
+        send_string ( eh, "✗", str( stdout) +  stderr , msg)#line 19#line 20#line 21#line 22
+
+def generate_shell_components (reg,container_list):    #line 23
+    # [                                                #line 24
+    #     {;file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 25
+    #     {'file': 'simple0d.drawio', 'name': '...', 'children': [], 'connections': []}#line 26
+    # ]                                                #line 27
+    if  None!= container_list:                         #line 28
+        for diagram in  container_list:                #line 29
+            # loop through every component in the diagram and look for names that start with “$“ or “'“ #line 30
+            # {'file': 'simple0d.drawio', 'name': 'main', 'children': [{'name': 'Echo', 'id': 5}], 'connections': [...]},#line 31
+            for child_descriptor in  diagram [ "children"]:#line 32
+                if first_char_is ( child_descriptor [ "name"], "$"):#line 33
+                    name =  child_descriptor [ "name"] #line 34
+                    cmd =   name[1:] .strip ()         #line 35
+                    generated_leaf = mkTemplate ( name, cmd, shell_out_instantiate)#line 36
+                    register_component ( reg, generated_leaf)#line 37
+                elif first_char_is ( child_descriptor [ "name"], "'"):#line 38
+                    name =  child_descriptor [ "name"] #line 39
+                    s =   name[1:]                     #line 40
+                    generated_leaf = mkTemplate ( name, s, string_constant_instantiate)#line 41
+                    register_component_allow_overwriting ( reg, generated_leaf)#line 42#line 43#line 44#line 45#line 46
+    return  reg                                        #line 47#line 48#line 49
+
+def first_char (s):                                    #line 50
+    return   s[0]                                      #line 51#line 52#line 53
+
+def first_char_is (s,c):                               #line 54
+    return  c == first_char ( s)                       #line 55#line 56#line 57
+                                                       #line 58
+# TODO: #run_command needs to be rewritten to use the low_level “shell_out“ component, this can be done solely as a diagram without using python code here#line 59
+# I'll keep it for now, during bootstrapping, since it mimics what is done in the Odin prototype _ both need to be revamped#line 60#line 61
 
 def probeA_instantiate (reg,owner,name,template_data): #line 1
     name_with_id = gensymbol ( "?A")                   #line 2
@@ -863,96 +847,93 @@ def maybe_stringconcat (eh,inst,mev):                  #line 180
 
 #                                                      #line 196#line 197
 def string_constant_instantiate (reg,owner,name,template_data):#line 198
-    global root_project                                #line 199
-    global root_0D                                     #line 200
-    name_with_id = gensymbol ( "strconst")             #line 201
-    s =  template_data                                 #line 202
-    if  root_project!= "":                             #line 203
-        s = re.sub ( "_00_",  root_project,  s)        #line 204#line 205
-    if  root_0D!= "":                                  #line 206
-        s = re.sub ( "_0D_",  root_0D,  s)             #line 207#line 208
-    return make_leaf ( name_with_id, owner, s, string_constant_handler)#line 209#line 210#line 211
+    global projectRoot                                 #line 199
+    name_with_id = gensymbol ( "strconst")             #line 200
+    s =  template_data                                 #line 201
+    if  projectRoot!= "":                              #line 202
+        s = re.sub ( "_00_",  projectRoot,  s)         #line 203#line 204
+    return make_leaf ( name_with_id, owner, s, string_constant_handler)#line 205#line 206#line 207
 
-def string_constant_handler (eh,mev):                  #line 212
-    s =  eh.instance_data                              #line 213
-    send_string ( eh, "", s, mev)                      #line 214#line 215#line 216
+def string_constant_handler (eh,mev):                  #line 208
+    s =  eh.instance_data                              #line 209
+    send_string ( eh, "", s, mev)                      #line 210#line 211#line 212
 
-def fakepipename_instantiate (reg,owner,name,template_data):#line 217
-    instance_name = gensymbol ( "fakepipe")            #line 218
-    return make_leaf ( instance_name, owner, None, fakepipename_handler)#line 219#line 220#line 221
+def fakepipename_instantiate (reg,owner,name,template_data):#line 213
+    instance_name = gensymbol ( "fakepipe")            #line 214
+    return make_leaf ( instance_name, owner, None, fakepipename_handler)#line 215#line 216#line 217
 
-rand =  0                                              #line 222#line 223
-def fakepipename_handler (eh,mev):                     #line 224
-    global rand                                        #line 225
+rand =  0                                              #line 218#line 219
+def fakepipename_handler (eh,mev):                     #line 220
+    global rand                                        #line 221
     rand =  rand+ 1
-    # not very random, but good enough _ ;rand' must be unique within a single run#line 226
-    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , mev)#line 227#line 228#line 229
-                                                       #line 230
+    # not very random, but good enough _ ;rand' must be unique within a single run#line 222
+    send_string ( eh, "", str( "/tmp/fakepipe") +  rand , mev)#line 223#line 224#line 225
+                                                       #line 226
 class Switch1star_Instance_Data:
-    def __init__ (self,):                              #line 231
-        self.state =  "1"                              #line 232#line 233
-                                                       #line 234
-def switch1star_instantiate (reg,owner,name,template_data):#line 235
-    name_with_id = gensymbol ( "switch1*")             #line 236
-    instp =  Switch1star_Instance_Data ()              #line 237
-    return make_leaf ( name_with_id, owner, instp, switch1star_handler)#line 238#line 239#line 240
+    def __init__ (self,):                              #line 227
+        self.state =  "1"                              #line 228#line 229
+                                                       #line 230
+def switch1star_instantiate (reg,owner,name,template_data):#line 231
+    name_with_id = gensymbol ( "switch1*")             #line 232
+    instp =  Switch1star_Instance_Data ()              #line 233
+    return make_leaf ( name_with_id, owner, instp, switch1star_handler)#line 234#line 235#line 236
 
-def switch1star_handler (eh,mev):                      #line 241
-    inst =  eh.instance_data                           #line 242
-    whichOutput =  inst.state                          #line 243
-    if  "" ==  mev.port:                               #line 244
-        if  "1" ==  whichOutput:                       #line 245
-            forward ( eh, "1", mev)                    #line 246
-            inst.state =  "*"                          #line 247
-        elif  "*" ==  whichOutput:                     #line 248
-            forward ( eh, "*", mev)                    #line 249
-        else:                                          #line 250
-            send ( eh, "✗", "internal error bad state in switch1*", mev)#line 251#line 252
-    elif  "reset" ==  mev.port:                        #line 253
-        inst.state =  "1"                              #line 254
-    else:                                              #line 255
-        send ( eh, "✗", "internal error bad mevent for switch1*", mev)#line 256#line 257#line 258#line 259
+def switch1star_handler (eh,mev):                      #line 237
+    inst =  eh.instance_data                           #line 238
+    whichOutput =  inst.state                          #line 239
+    if  "" ==  mev.port:                               #line 240
+        if  "1" ==  whichOutput:                       #line 241
+            forward ( eh, "1", mev)                    #line 242
+            inst.state =  "*"                          #line 243
+        elif  "*" ==  whichOutput:                     #line 244
+            forward ( eh, "*", mev)                    #line 245
+        else:                                          #line 246
+            send ( eh, "✗", "internal error bad state in switch1*", mev)#line 247#line 248
+    elif  "reset" ==  mev.port:                        #line 249
+        inst.state =  "1"                              #line 250
+    else:                                              #line 251
+        send ( eh, "✗", "internal error bad mevent for switch1*", mev)#line 252#line 253#line 254#line 255
 
 class Latch_Instance_Data:
-    def __init__ (self,):                              #line 260
-        self.datum =  None                             #line 261#line 262
-                                                       #line 263
-def latch_instantiate (reg,owner,name,template_data):  #line 264
-    name_with_id = gensymbol ( "latch")                #line 265
-    instp =  Latch_Instance_Data ()                    #line 266
-    return make_leaf ( name_with_id, owner, instp, latch_handler)#line 267#line 268#line 269
+    def __init__ (self,):                              #line 256
+        self.datum =  None                             #line 257#line 258
+                                                       #line 259
+def latch_instantiate (reg,owner,name,template_data):  #line 260
+    name_with_id = gensymbol ( "latch")                #line 261
+    instp =  Latch_Instance_Data ()                    #line 262
+    return make_leaf ( name_with_id, owner, instp, latch_handler)#line 263#line 264#line 265
 
-def latch_handler (eh,mev):                            #line 270
-    inst =  eh.instance_data                           #line 271
-    if  "" ==  mev.port:                               #line 272
-        inst.datum =  mev.datum                        #line 273
-    elif  "release" ==  mev.port:                      #line 274
-        d =  inst.datum                                #line 275
-        if  d ==  None:                                #line 276
-            send_string ( eh, "", "", mev)             #line 277
-            print ( " *** latch sending empty string ***", file=sys.stderr)#line 278
-        else:                                          #line 279
-            send ( eh, "", d, mev)                     #line 280#line 281
-        inst.datum =  None                             #line 282
-    else:                                              #line 283
-        send ( eh, "✗", "internal error bad mevent for latch", mev)#line 284#line 285#line 286#line 287
+def latch_handler (eh,mev):                            #line 266
+    inst =  eh.instance_data                           #line 267
+    if  "" ==  mev.port:                               #line 268
+        inst.datum =  mev.datum                        #line 269
+    elif  "release" ==  mev.port:                      #line 270
+        d =  inst.datum                                #line 271
+        if  d ==  None:                                #line 272
+            send_string ( eh, "", "", mev)             #line 273
+            print ( " *** latch sending empty string ***", file=sys.stderr)#line 274
+        else:                                          #line 275
+            send ( eh, "", d, mev)                     #line 276#line 277
+        inst.datum =  None                             #line 278
+    else:                                              #line 279
+        send ( eh, "✗", "internal error bad mevent for latch", mev)#line 280#line 281#line 282#line 283
 
-# all of the the built_in leaves are listed here       #line 288
-# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 289#line 290
-def initialize_stock_components (reg):                 #line 291
-    register_component ( reg,mkTemplate ( "1then2", None, deracer_instantiate))#line 292
-    register_component ( reg,mkTemplate ( "?A", None, probeA_instantiate))#line 293
-    register_component ( reg,mkTemplate ( "?B", None, probeB_instantiate))#line 294
-    register_component ( reg,mkTemplate ( "?C", None, probeC_instantiate))#line 295
-    register_component ( reg,mkTemplate ( "trash", None, trash_instantiate))#line 296#line 297
-    register_component ( reg,mkTemplate ( "Read Text File", None, low_level_read_text_file_instantiate))#line 298
-    register_component ( reg,mkTemplate ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 299#line 300
-    register_component ( reg,mkTemplate ( "syncfilewrite", None, syncfilewrite_instantiate))#line 301
-    register_component ( reg,mkTemplate ( "stringconcat", None, stringconcat_instantiate))#line 302
-    register_component ( reg,mkTemplate ( "switch1*", None, switch1star_instantiate))#line 303
-    register_component ( reg,mkTemplate ( "latch", None, latch_instantiate))#line 304
-    # for fakepipe                                     #line 305
-    register_component ( reg,mkTemplate ( "fakepipename", None, fakepipename_instantiate))#line 306#line 307#line 308
+# all of the the built_in leaves are listed here       #line 284
+# future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 285#line 286
+def initialize_stock_components (reg):                 #line 287
+    register_component ( reg,mkTemplate ( "1then2", None, deracer_instantiate))#line 288
+    register_component ( reg,mkTemplate ( "?A", None, probeA_instantiate))#line 289
+    register_component ( reg,mkTemplate ( "?B", None, probeB_instantiate))#line 290
+    register_component ( reg,mkTemplate ( "?C", None, probeC_instantiate))#line 291
+    register_component ( reg,mkTemplate ( "trash", None, trash_instantiate))#line 292#line 293
+    register_component ( reg,mkTemplate ( "Read Text File", None, low_level_read_text_file_instantiate))#line 294
+    register_component ( reg,mkTemplate ( "Ensure String Datum", None, ensure_string_datum_instantiate))#line 295#line 296
+    register_component ( reg,mkTemplate ( "syncfilewrite", None, syncfilewrite_instantiate))#line 297
+    register_component ( reg,mkTemplate ( "stringconcat", None, stringconcat_instantiate))#line 298
+    register_component ( reg,mkTemplate ( "switch1*", None, switch1star_instantiate))#line 299
+    register_component ( reg,mkTemplate ( "latch", None, latch_instantiate))#line 300
+    # for fakepipe                                     #line 301
+    register_component ( reg,mkTemplate ( "fakepipename", None, fakepipename_instantiate))#line 302#line 303#line 304
 
 
 

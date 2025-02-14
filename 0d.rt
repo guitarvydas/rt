@@ -502,19 +502,6 @@ defn get_component_instance (reg, full_name, owner) {
     }
 }
 
-defn dump_registry (reg) {
-    nl ()
-    #print_stdout (“*** PALETTE ***”)
-    for c in reg.templates{
-        print (c.name)}
-    #print_stdout (“***************”)
-    nl ()
-}
-
-defn print_stats (reg) {
-    #print_stdout (#strcons (“registry statistics: ”, reg.stats))
-}
-
 defn mangle_name (s) {
     ⌈ trim name to remove code from Container component names _ deferred until later (or never)⌉
     return s
@@ -671,10 +658,6 @@ defn runtime_error (s) {
     runtime_errors ⇐ ⊤
 }
 
-
-defn argv () {
-    return #get_argv ()
-}
 
 defn initialize (project_root, diagram_names) {
     arg ≡ ϕ

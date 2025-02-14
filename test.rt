@@ -1,7 +1,3 @@
 defn TEST () {
-  if (x) {
-    y
-  } else {
-    return "z"
-  }
+  [palette, env] ⇐ initialize (“.”, [“scanner.drawio.json”])
 }
