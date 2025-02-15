@@ -1,7 +1,0 @@
-defn TEST () {
-  if (x) {
-    y
-  } else {
-    z
-  }
-}

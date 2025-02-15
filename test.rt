@@ -1,3 +1,4 @@
 defn TEST () {
-  [palette, env] ⇐ initialize (“.”, [“scanner.drawio.json”])
+     #live_update (“✗”, #strcons (“A”, #strcons (“B”, “C”)))
+
 }

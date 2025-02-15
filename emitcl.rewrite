@@ -54,15 +54,14 @@ ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 o
 
 ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
   ;; read json from a named file and convert it into internal form (a list of Container alists)
-  (with-open-file (f (format nil "~a~a" «pathname» «fname») :direction :input)⤷
-    (deep-expand (read f)))⤶
+  (json2dict (merge-pathnames «pathname» «fname»))
 ’
 
 ExternalPhrase_freshQueue [_octothorpe _83 _84 _85] =‛ (make-instance 'Queue)’
 ExternalPhrase_freshStack [_octothorpe _83 _84 _85] =‛ nil’
 ExternalPhrase_fresh [_octothorpe _83 _84 ident _85] =‛ (make-instance '«ident»)’
 ExternalPhrase_stringshrink [_octothorpe _83 _84 e _85 ] =‛ «e»’
-ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ (char «e» 0)’
+ExternalPhrase_stringcar [_octothorpe _83 _84 e _85 ] =‛ (string (char «e» 0))’
 ExternalPhrase_stringcdr [_octothorpe _83 _84 e _85 ] =‛ (subseq «e» 1)’
 ExternalPhrase_strcons [_octothorpe _strcons lp e1 _comma e2 rp] =‛ (concatenate 'string «e1» «e2»)’
 ExternalPhrase_append [_octothorpe _append lp lis _comma e2 rp] =‛ (setf «lis» (append «lis» (list «e2»)))’
@@ -72,75 +71,7 @@ ExternalPhrase_preamble [_octothorpe _preamble lb rp] =
 ‛(load "~/quicklisp/setup.lisp")
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
 
-(defun dict (lis)
-  ;; make a dict, given a list of pairs
-  (let ((ht (make-hash-table :test 'equal)))
-    (mapc #'(lambda (pair)
-	      (let ((name (car pair))
-                    (v (deep-expand (cdr pair))))
-		(setf (gethash name ht) v)))
-          lis)
-    ht))
-
-(defun jarray (lis)
-  ;; convert a JSON array into a lisp list (straight-forward, almost nothing to do)
-  (mapcar #'deep-expand lis))
-
-
-(defun deep-expand (x)
-  (cond
-   ((null x) nil)
-   ((listp x) (cond
-               ((eq 'dict (car x)) (dict (cdr x)))
-               ((eq 'jarray (car x)) (jarray (cdr x)))
-               (t (error "unknown list in deep-expand"))))
-   (t x)))
-
-
-(defun dict-fresh () (make-hash-table :test 'equal))
-
-(defun dict-in? (name table)
-  (when (and table name)
-    (multiple-value-bind (dont-care found)
-       (gethash name table)
-      dont-care ;; quell warnings that dont-care is unused
-      found)))
-
-(defun key-mangle (s) s)
-
-
-(defun is-pair? (x)
-  (and
-    (listp x)
-    (symbolp (car x))))
-
-(defun is-json-object? (x)
-  (and
-    (listp x)
-    (not (atom (cdr x)))
-    (= 1 (length x))
-    (is-pair? x)))
-
-(defun is-json-array? (x)
-  (and
-    (listp x)
-    (listp (car x))))
-
-(defun rewrite-pair (pair)
-  (let ((k (if (symbolp (car pair)) 
-               (symbol-name (car pair))
-             (car pair))))
-    (let ((x (cdr pair)))
-      (let ((v (if (or (is-json-object? x) (is-json-array? x))
-                   (rewrite-json x)
-                 x)))
-        (cons k v)))))
-                         
-(defun rewrite-json (x)
-  (cond 
-    ((is-pair? x) (rewrite-pair x))
-    ((is-json-object? x) (mapcar #'rewrite-json x))
-    ((is-json-array? x) (mapcar #'rewrite-json x))))
+(load "jparse")
 
 (defclass Queue ()
   ((contents :accessor contents :initform nil)))

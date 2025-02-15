@@ -96,7 +96,7 @@
     "file": "rt2all.drawio"
   },
   {
-    "name": "List Filenames",
+    "name": "TEST List Filenames",
     "children": [
       {
         "name": "'empty.rt",
@@ -208,7 +208,7 @@
     "file": "rt2all.drawio"
   },
   {
-    "name": "main List Filenames",
+    "name": "List Filenames",
     "children": [
       {
         "name": "'DONE",

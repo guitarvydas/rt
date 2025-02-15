@@ -620,9 +620,8 @@ defn string_clone (s) {
     return s
 }
 
-⌈ usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ...⌉
+⌈ usage: app ${_00_} diagram_filename1 diagram_filename2 ...⌉
 ⌈ where ${_00_} is the root directory for the project⌉
-⌈ where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python)⌉
 
 defn initialize_component_palette (project_root, diagram_source_files) {
     deftemp reg ⇐ make_component_registry ()
