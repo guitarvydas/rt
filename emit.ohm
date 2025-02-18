@@ -68,6 +68,8 @@ emit {
      | "#" xkw<"negate"> "(" Exp ")" -- negate
      | "#" xkw<"live_update"> "(" Exp Comma Exp ")" -- liveUpdate
      | "#" xkw<"queue_as_json_to_stdout"> "(" Exp ")" -- queueAsJsonToStdout
+     | "#" xkw<"dir"> "(" Exp ")" -- dir
+     
      
      | "#" ident "(" StuffInsideParentheses* ")" -- unrecognized
 

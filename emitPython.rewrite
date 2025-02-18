@@ -141,6 +141,7 @@ ExternalPhrase_negate [_octothorpe _ lp x rp] = ‛-«x»’
 
 ExternalPhrase_liveUpdate [_octothorpe _ lp s1 _comma s2 rp] = ‛live_update («s1», «s2»)’
 ExternalPhrase_queueAsJsonToStdout [_octothorpe _ lp x rp] = ‛print (deque_to_json («x»))’
+ExternalPhrase_dir [_octothorpe _ lp x rp] = ‛ «x» ’
 
 ExternalPhrase_unrecognized [_octothorpe ident lp stuff* rp] = ‛«_octothorpe» «ident» ⎝ error - unrecognized external (with given arguments) ⎠ «lp»«stuff»«rp» ’
 

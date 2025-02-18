@@ -390,7 +390,8 @@ def mkTemplate (name,template_data,instantiator):      #line 440
     templ.instantiator =  instantiator                 #line 444
     return  templ                                      #line 445#line 446#line 447
 
-def read_and_convert_json_file (pathname,filename):    #line 448
+def read_and_convert_json_file (pathname,container_xml):#line 448
+    filename =  os.path.basename ( container_xml)      #line 449
 
     try:
         fil = open(filename, "r")
@@ -404,11 +405,10 @@ def read_and_convert_json_file (pathname,filename):    #line 448
     except json.JSONDecodeError as e:
         print ("Error decoding JSON in file: '{e}'")
         return None
-                                                       #line 449#line 450#line 451
+                                                       #line 450#line 451#line 452
 
-def json2internal (pathname,container_xml):            #line 452
-    fname =  os.path.basename ( container_xml)         #line 453
-    routings = read_and_convert_json_file ( pathname, fname)#line 454
+def json2internal (pathname,container_xml):            #line 453
+    routings = read_and_convert_json_file ( pathname, container_xml)#line 454
     return  routings                                   #line 455#line 456#line 457
 
 def delete_decls (d):                                  #line 458
@@ -551,64 +551,63 @@ def string_make_persistent (s):                        #line 614
 def string_clone (s):                                  #line 619
     return  s                                          #line 620#line 621#line 622
 
-# usage: app ${_00_} ${_0D_} arg main diagram_filename1 diagram_filename2 ...#line 623
-# where ${_00_} is the root directory for the project  #line 624
-# where ${_0D_} is the root directory for 0D (e.g. 0D/odin or 0D/python)#line 625#line 626
-def initialize_component_palette (project_root,diagram_source_files):#line 627
-    reg = make_component_registry ()                   #line 628
-    for diagram_source in  diagram_source_files:       #line 629
-        all_containers_within_single_file = json2internal ( project_root, diagram_source)#line 630
-        reg = generate_shell_components ( reg, all_containers_within_single_file)#line 631
-        for container in  all_containers_within_single_file:#line 632
-            register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))#line 633#line 634#line 635
-    initialize_stock_components ( reg)                 #line 636
-    return  reg                                        #line 637#line 638#line 639
-                                                       #line 640
-def clone_string (s):                                  #line 641
-    return  s                                          #line 642#line 643#line 644
+# usage: app ${_00_} diagram_filename1 diagram_filename2 ...#line 623
+# where ${_00_} is the root directory for the project  #line 624#line 625
+def initialize_component_palette_from_files (project_root,diagram_source_files):#line 626
+    reg = make_component_registry ()                   #line 627
+    for diagram_source in  diagram_source_files:       #line 628
+        all_containers_within_single_file = json2internal ( project_root, diagram_source)#line 629
+        reg = generate_shell_components ( reg, all_containers_within_single_file)#line 630
+        for container in  all_containers_within_single_file:#line 631
+            register_component ( reg,mkTemplate ( container [ "name"], container, container_instantiator))#line 632#line 633#line 634
+    initialize_stock_components ( reg)                 #line 635
+    return  reg                                        #line 636#line 637#line 638
+                                                       #line 639
+def clone_string (s):                                  #line 640
+    return  s                                          #line 641#line 642#line 643
 
-load_errors =  False                                   #line 645
-runtime_errors =  False                                #line 646#line 647
-def load_error (s):                                    #line 648
-    global load_errors                                 #line 649
-    print ( s, file=sys.stderr)                        #line 650
-                                                       #line 651
-    load_errors =  True                                #line 652#line 653#line 654
+load_errors =  False                                   #line 644
+runtime_errors =  False                                #line 645#line 646
+def load_error (s):                                    #line 647
+    global load_errors                                 #line 648
+    print ( s, file=sys.stderr)                        #line 649
+                                                       #line 650
+    load_errors =  True                                #line 651#line 652#line 653
 
-def runtime_error (s):                                 #line 655
-    global runtime_errors                              #line 656
-    print ( s, file=sys.stderr)                        #line 657
-    runtime_errors =  True                             #line 658#line 659#line 660
-                                                       #line 661
-def initialize (project_root,diagram_names):           #line 662
-    arg =  None                                        #line 663
-    palette = initialize_component_palette ( project_root, diagram_names)#line 664
-    return [ palette,[ project_root, diagram_names, arg]]#line 665#line 666#line 667
+def runtime_error (s):                                 #line 654
+    global runtime_errors                              #line 655
+    print ( s, file=sys.stderr)                        #line 656
+    runtime_errors =  True                             #line 657#line 658#line 659
+                                                       #line 660
+def initialize_from_files (project_root,diagram_names):#line 661
+    arg =  None                                        #line 662
+    palette = initialize_component_palette_from_files ( project_root, diagram_names)#line 663
+    return [ palette,[ project_root, diagram_names, arg]]#line 664#line 665#line 666
 
-def start (arg,main_container_name,palette,env):       #line 668
-    live_update ( "",  "reset")                        #line 669
-    live_update ( "Info",  "begin...")                 #line 670
-    project_root =  env [ 0]                           #line 671
-    diagram_names =  env [ 1]                          #line 672
-    set_environment ( project_root)                    #line 673
-    # get entrypoint container                         #line 674
-    main_container = get_component_instance ( palette, main_container_name, None)#line 675
-    if  None ==  main_container:                       #line 676
-        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 680#line 681
-    if not  load_errors:                               #line 682
-        marg = new_datum_string ( arg)                 #line 683
-        mev = make_mevent ( "", marg)                  #line 684
-        inject ( main_container, mev)                  #line 685#line 686
-    live_update ( "Info",  "...end")                   #line 687#line 688#line 689
-                                                       #line 690
-# utility functions                                    #line 691
-def send_int (eh,port,i,causing_mevent):               #line 692
-    datum = new_datum_string (str ( i))                #line 693
-    send ( eh, port, datum, causing_mevent)            #line 694#line 695#line 696
+def start (arg,main_container_name,palette,env):       #line 667
+    live_update ( "",  "reset")                        #line 668
+    live_update ( "Info",  "begin...")                 #line 669
+    project_root =  env [ 0]                           #line 670
+    diagram_names =  env [ 1]                          #line 671
+    set_environment ( project_root)                    #line 672
+    # get entrypoint container                         #line 673
+    main_container = get_component_instance ( palette, main_container_name, None)#line 674
+    if  None ==  main_container:                       #line 675
+        load_error ( str( "Couldn't find container with page name /") +  str( main_container_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 679#line 680
+    if not  load_errors:                               #line 681
+        marg = new_datum_string ( arg)                 #line 682
+        mev = make_mevent ( "", marg)                  #line 683
+        inject ( main_container, mev)                  #line 684#line 685
+    live_update ( "Info",  "...end")                   #line 686#line 687#line 688
+                                                       #line 689
+# utility functions                                    #line 690
+def send_int (eh,port,i,causing_mevent):               #line 691
+    datum = new_datum_string (str ( i))                #line 692
+    send ( eh, port, datum, causing_mevent)            #line 693#line 694#line 695
 
-def send_bang (eh,port,causing_mevent):                #line 697
-    datum = new_datum_bang ()                          #line 698
-    send ( eh, port, datum, causing_mevent)            #line 699#line 700
+def send_bang (eh,port,causing_mevent):                #line 696
+    datum = new_datum_bang ()                          #line 697
+    send ( eh, port, datum, causing_mevent)            #line 698#line 699
 
 # this needs to be rewritten to use the low_level "shell_out“ component, this can be done solely as a diagram without using python code here#line 1
 def shell_out_instantiate (reg,owner,name,template_data):#line 2

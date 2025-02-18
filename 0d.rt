@@ -445,13 +445,13 @@ defn mkTemplate (name, template_data, instantiator) {
      return templ
 }
 
-defn read_and_convert_json_file (pathname, filename) {
+defn read_and_convert_json_file (pathname, container_xml) {
+    filename ≡ #basename (container_xml)
     # read_and_convert_json_file (pathname, filename)
 }
 
 defn json2internal (pathname, container_xml) {
-    fname ≡ #basename (container_xml)
-    routings ≡ read_and_convert_json_file (pathname, fname)
+    routings ≡ read_and_convert_json_file (pathname, container_xml)
     return routings
 }
 
@@ -623,7 +623,7 @@ defn string_clone (s) {
 ⌈ usage: app ${_00_} diagram_filename1 diagram_filename2 ...⌉
 ⌈ where ${_00_} is the root directory for the project⌉
 
-defn initialize_component_palette (project_root, diagram_source_files) {
+defn initialize_component_palette_from_files (project_root, diagram_source_files) {
     deftemp reg ⇐ make_component_registry ()
     for diagram_source in diagram_source_files {
         all_containers_within_single_file ≡ json2internal (project_root, diagram_source)
@@ -658,9 +658,9 @@ defn runtime_error (s) {
 }
 
 
-defn initialize (project_root, diagram_names) {
+defn initialize_from_files (project_root, diagram_names) {
     arg ≡ ϕ
-    palette ≡ initialize_component_palette (project_root, diagram_names)
+    palette ≡ initialize_component_palette_from_files (project_root, diagram_names)
     return [palette, [project_root, diagram_names, arg]]
 }
 

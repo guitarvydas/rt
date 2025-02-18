@@ -1,7 +1,89 @@
 (load "~/quicklisp/setup.lisp")
 (proclaim '(optimize (debug 3) (safety 3) (speed 0)))
+(ql:quickload :uiop)
+(ql:quickload :cl-json)
 
-(load "jparse")
+(defun getwd (s)
+#+lispworks (merge-pathnames s (get-working-directory))
+#-lispworks s
+)
+
+(defun dict-fresh () (make-hash-table :test 'equal))
+
+(defun dict-in? (name table)
+(when (and table name)
+(multiple-value-bind (dont-care found)
+(gethash name table)
+dont-care ;; quell warnings that dont-care is unused
+found)))
+
+(defun jparse (filename)
+(let ((s (uiop:read-file-string filename)))
+(let ((cl-json:*json-identifier-name-to-lisp* 'identity)) ;; preserves case
+(with-input-from-string (strm s)
+(cl-json:decode-json strm)))))
+
+(defun json2dict (filename)
+(let ((j (jparse filename)))
+(make-dict nil j)))
+
+
+(defun make-dict (dict x)
+(assert (or (not (null dict)) (not (null x))))
+(cond
+
+;; done
+((null x) dict)
+
+;; bottom
+((atom x) x)
+
+;; key/value pair - put it in dict
+((kv? x)
+(let ((v (make-dict dict (val x))))
+(setf (gethash (key x) dict) v)
+dict))
+
+;; begin new dict
+((kv? (car x))
+(let ((new-dict (make-hash-table :test 'equal)))
+(mapc #'(lambda (y)
+(make-dict new-dict y))
+x)
+new-dict))
+
+;; list of dicts (json array)
+((not (kv? (car x)))
+;; list of kvs (json array)
+(mapcar #'(lambda (y)
+(make-dict nil y))
+x))))
+
+(defun key (kv)
+(symbol-name (car kv)))
+
+(defun val (kv)
+(cdr kv))
+
+(defun kv? (x)
+(and (listp x)
+(atom (car x))))
+
+;;;;
+;(load "~/quicklisp/setup.lisp")
+(ql:quickload '(:websocket-driver-client :cl-json :uiop))
+
+(defun live_update (key value)
+(let* ((client (wsd:make-client "ws://localhost:8966"))
+(json-data (json:encode-json-to-string
+(list (cons key value)))))
+(wsd:start-connection client)
+(wsd:send client json-data)
+(sleep 0.1)  ; Add small delay to ensure message is sent
+(wsd:close-connection client)))
+
+
+;;;;
 
 (defclass Queue ()
 ((contents :accessor contents :initform nil)))
@@ -520,20 +602,20 @@
     (setf (slot-value  templ 'instantiator)  instantiator)  #|line 444|#
     (return-from mkTemplate  templ)                         #|line 445|#) #|line 446|#
   )
-(defun read_and_convert_json_file (&optional  pathname  filename)
-  (declare (ignorable  pathname  filename))                 #|line 448|#
+(defun read_and_convert_json_file (&optional  pathname  container_xml)
+  (declare (ignorable  pathname  container_xml))            #|line 448|#
+  (let ((filename  container_xml                            #|line 449|#))
+    (declare (ignorable filename))
 
-  ;; read json from a named file and convert it into internal form (a list of Container alists)
-  (json2dict (merge-pathnames pathname filename))
-                                                            #|line 449|# #|line 450|#
+    ;; read json from a named file and convert it into internal form (a list of Container alists)
+    (json2dict (merge-pathnames pathname filename))
+                                                            #|line 450|#) #|line 451|#
   )
 (defun json2internal (&optional  pathname  container_xml)
-  (declare (ignorable  pathname  container_xml))            #|line 452|#
-  (let ((fname  container_xml                               #|line 453|#))
-    (declare (ignorable fname))
-    (let ((routings (funcall (quote read_and_convert_json_file)   pathname  fname  #|line 454|#)))
-      (declare (ignorable routings))
-      (return-from json2internal  routings)                 #|line 455|#)) #|line 456|#
+  (declare (ignorable  pathname  container_xml))            #|line 453|#
+  (let ((routings (funcall (quote read_and_convert_json_file)   pathname  container_xml  #|line 454|#)))
+    (declare (ignorable routings))
+    (return-from json2internal  routings)                   #|line 455|#) #|line 456|#
   )
 (defun delete_decls (&optional  d)
   (declare (ignorable  d))                                  #|line 458|#
@@ -697,7 +779,7 @@
   (declare (ignorable  s))                                  #|line 619|#
   (return-from string_clone  s)                             #|line 620|# #|line 621|#
   ) #|  usage: app ${_00_} diagram_filename1 diagram_filename2 ... |# #|line 623|# #|  where ${_00_} is the root directory for the project |# #|line 624|# #|line 625|#
-(defun initialize_component_palette (&optional  project_root  diagram_source_files)
+(defun initialize_component_palette_from_files (&optional  project_root  diagram_source_files)
   (declare (ignorable  project_root  diagram_source_files)) #|line 626|#
   (let (( reg (funcall (quote make_component_registry) )))
     (declare (ignorable  reg))                              #|line 627|#
@@ -716,7 +798,7 @@
                   )))                                       #|line 634|#
           ))
     (funcall (quote initialize_stock_components)   reg      #|line 635|#)
-    (return-from initialize_component_palette  reg)         #|line 636|#) #|line 637|#
+    (return-from initialize_component_palette_from_files  reg) #|line 636|#) #|line 637|#
   )                                                         #|line 639|#
 (defun clone_string (&optional  s)
   (declare (ignorable  s))                                  #|line 640|#
@@ -736,13 +818,13 @@
   (format *error-output* "~a~%"  s)                         #|line 656|#
   (setf  runtime_errors  t)                                 #|line 657|# #|line 658|#
   )                                                         #|line 660|#
-(defun initialize (&optional  project_root  diagram_names)
+(defun initialize_from_files (&optional  project_root  diagram_names)
   (declare (ignorable  project_root  diagram_names))        #|line 661|#
   (let ((arg  nil))
     (declare (ignorable arg))                               #|line 662|#
-    (let ((palette (funcall (quote initialize_component_palette)   project_root  diagram_names  #|line 663|#)))
+    (let ((palette (funcall (quote initialize_component_palette_from_files)   project_root  diagram_names  #|line 663|#)))
       (declare (ignorable palette))
-      (return-from initialize (values  palette (list   project_root  diagram_names  arg ))) #|line 664|#)) #|line 665|#
+      (return-from initialize_from_files (values  palette (list   project_root  diagram_names  arg ))) #|line 664|#)) #|line 665|#
   )
 (defun start (&optional  arg  main_container_name  palette  env)
   (declare (ignorable  arg  main_container_name  palette  env)) #|line 667|#

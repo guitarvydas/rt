@@ -448,7 +448,8 @@ async function mkTemplate (name,template_data,instantiator) {/* line 440 */
     return  templ;                                     /* line 445 *//* line 446 *//* line 447 */
 }
 
-async function read_and_convert_json_file (pathname,filename) {/* line 448 */
+async function read_and_convert_json_file (pathname,container_xml) {/* line 448 */
+    let filename =   container_xml                     /* line 449 */;
 
     console.log (filename);
     let jstr = undefined;
@@ -464,12 +465,11 @@ async function read_and_convert_json_file (pathname,filename) {/* line 448 */
     } else {
     return undefined;
     }
-                                                       /* line 449 *//* line 450 *//* line 451 */
+                                                       /* line 450 *//* line 451 *//* line 452 */
 }
 
-async function json2internal (pathname,container_xml) {/* line 452 */
-    let fname =   container_xml                        /* line 453 */;
-    let routings = read_and_convert_json_file ( pathname, fname)/* line 454 */;
+async function json2internal (pathname,container_xml) {/* line 453 */
+    let routings = read_and_convert_json_file ( pathname, container_xml)/* line 454 */;
     return  routings;                                  /* line 455 *//* line 456 *//* line 457 */
 }
 
@@ -643,7 +643,7 @@ async function string_clone (s) {                      /* line 619 */
 
 /*  usage: app ${_00_} diagram_filename1 diagram_filename2 ... *//* line 623 */
 /*  where ${_00_} is the root directory for the project *//* line 624 *//* line 625 */
-async function initialize_component_palette (project_root,diagram_source_files) {/* line 626 */
+async function initialize_component_palette_from_files (project_root,diagram_source_files) {/* line 626 */
     let  reg = make_component_registry ();             /* line 627 */
     for (let diagram_source of  diagram_source_files) {/* line 628 */
       let all_containers_within_single_file = json2internal ( project_root, diagram_source)/* line 629 */;
@@ -673,9 +673,9 @@ async function runtime_error (s) {                     /* line 654 *//* line 655
     runtime_errors =  true;                            /* line 657 *//* line 658 *//* line 659 */
 }
                                                        /* line 660 */
-async function initialize (project_root,diagram_names) {/* line 661 */
+async function initialize_from_files (project_root,diagram_names) {/* line 661 */
     let arg =  null;                                   /* line 662 */
-    let palette = initialize_component_palette ( project_root, diagram_names)/* line 663 */;
+    let palette = initialize_component_palette_from_files ( project_root, diagram_names)/* line 663 */;
     return [ palette,[ project_root, diagram_names, arg]];/* line 664 *//* line 665 *//* line 666 */
 }
 
