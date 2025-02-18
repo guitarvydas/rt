@@ -14,7 +14,7 @@ TopLevel_line [line] =‛«line»’
 kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e line?] = ‛\nlet «lval» = «e»;«line»’
 Defconst [ __ lval _eq e line?] = ‛\nconst «lval» = «e»«line»;’
-Defn [ _4 ident Formals StatementBlock line?] = ‛\nasync function «ident» «Formals» {⤷«StatementBlock»«line»⤶\n}\n’
+Defn [ _4 ident Formals StatementBlock line?] = ‛\nafunction «ident» «Formals» {⤷«StatementBlock»«line»⤶\n}\n’
 
 Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛
 class «ident» {⤷
@@ -44,9 +44,9 @@ CommaIdent [_comma ident] = ‛, «ident»’
 External [x line?] = ‛«x»«line»’
 ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 ok _comma4 err rp] = ‛
     if (fname == "0") {
-	data = fs.readFileSync (0);
+	data = fs.readFileSync (0, { encoding: 'utf8'});
     } else {
-        data = fs.readFileSync («fname»);
+        data = fs.readFileSync («fname», { encoding: 'utf8'});
     }
     if (data) {⤷
         send_string (eh, «ok», data, «msg»);⤶
@@ -59,11 +59,11 @@ ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
 console.log («fname»);
     let jstr = undefined;
     if (filename == "0") {
-	jstr = fs.readFileSync (0);
+	jstr = fs.readFileSync (0, { encoding: 'utf8'});
     } else if (pathname) {
-	jstr = fs.readFileSync (\`\${pathname}/\${filename}\`);
+	jstr = fs.readFileSync (\`\${pathname}/\${filename}\`, { encoding: 'utf8'});
     } else {
-	jstr = fs.readFileSync (\`\${filename}\`);
+	jstr = fs.readFileSync (\`\${filename}\`, { encoding: 'utf8'});
     }
     if (jstr) {
         return JSON.parse (jstr);
