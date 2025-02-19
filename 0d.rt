@@ -445,14 +445,14 @@ defn mkTemplate (name, template_data, instantiator) {
      return templ
 }
 
-defn read_and_convert_json_file (pathname, container_xml) {
+
+defn lnet2internal_from_file (pathname, container_xml) {
     filename ≡ #basename (container_xml)
-    # read_and_convert_json_file (pathname, filename)
+    #read_and_convert_lnet_file (pathname, filename)
 }
 
-defn json2internal (pathname, container_xml) {
-    routings ≡ read_and_convert_json_file (pathname, container_xml)
-    return routings
+defn lnet2internal_from_string () {
+    #internalize_lnet_from_string ()
 }
 
 defn delete_decls (d) {
@@ -626,12 +626,24 @@ defn string_clone (s) {
 defn initialize_component_palette_from_files (project_root, diagram_source_files) {
     deftemp reg ⇐ make_component_registry ()
     for diagram_source in diagram_source_files {
-        all_containers_within_single_file ≡ json2internal (project_root, diagram_source)
+        all_containers_within_single_file ≡ lnet2internal_from_file (project_root, diagram_source)
         reg ⇐ generate_shell_components (reg, all_containers_within_single_file)
         for container in all_containers_within_single_file {
             register_component (reg, mkTemplate (container@“name” , ⌈ template_data=⌉ container, ⌈ instantiator=⌉ ↪︎container_instantiator))
 	}
     }
+    initialize_stock_components (reg)
+    return reg
+}
+
+defn initialize_component_palette_from_string (project_root) {
+    ⌈ this version ignores project_root ⌉
+    deftemp reg ⇐ make_component_registry ()
+    all_containers ≡ lnet2internal_from_string ()
+    reg ⇐ generate_shell_components (reg, all_containers)
+    for container in all_containers {
+        register_component (reg, mkTemplate (container@“name” , ⌈ template_data=⌉ container, ⌈ instantiator=⌉ ↪︎container_instantiator))
+	}
     initialize_stock_components (reg)
     return reg
 }
@@ -664,9 +676,13 @@ defn initialize_from_files (project_root, diagram_names) {
     return [palette, [project_root, diagram_names, arg]]
 }
 
+defn initialize_from_string (project_root) {
+    arg ≡ ϕ
+    palette ≡ initialize_component_palette_from_string (project_root)
+    return [palette, [project_root, ϕ, arg]]
+}
+
 defn start (arg, main_container_name, palette, env) {
-    #live_update (“”, “reset”)
-    #live_update (“Info”, “begin...”)
     project_root ≡ env [0]
     diagram_names ≡ env [1]
     set_environment (project_root)
@@ -683,7 +699,6 @@ defn start (arg, main_container_name, palette, env) {
         deftemp mev ⇐ make_mevent(“”, marg)
         inject (main_container, mev)
 	}
-    #live_update (“Info”, “...end”)
 }
 
 

@@ -19,6 +19,10 @@ found)))
 
 (defun jparse (filename)
 (let ((s (uiop:read-file-string filename)))
+(internalize-lnet-from-JSON s)))
+
+(defun internalize-lnet-from-JSON (s)
+(let ((s (uiop:read-file-string filename)))
 (let ((cl-json:*json-identifier-name-to-lisp* 'identity)) ;; preserves case
 (with-input-from-string (strm s)
 (cl-json:decode-json strm)))))
@@ -601,21 +605,21 @@ x))))
     (setf (slot-value  templ 'template_data)  template_data) #|line 443|#
     (setf (slot-value  templ 'instantiator)  instantiator)  #|line 444|#
     (return-from mkTemplate  templ)                         #|line 445|#) #|line 446|#
-  )
-(defun read_and_convert_json_file (&optional  pathname  container_xml)
-  (declare (ignorable  pathname  container_xml))            #|line 448|#
-  (let ((filename  container_xml                            #|line 449|#))
+  )                                                         #|line 448|#
+(defun lnet2internal_from_file (&optional  pathname  container_xml)
+  (declare (ignorable  pathname  container_xml))            #|line 449|#
+  (let ((filename  container_xml                            #|line 450|#))
     (declare (ignorable filename))
 
     ;; read json from a named file and convert it into internal form (a list of Container alists)
     (json2dict (merge-pathnames pathname filename))
-                                                            #|line 450|#) #|line 451|#
+                                                            #|line 451|#) #|line 452|#
   )
-(defun json2internal (&optional  pathname  container_xml)
-  (declare (ignorable  pathname  container_xml))            #|line 453|#
-  (let ((routings (funcall (quote read_and_convert_json_file)   pathname  container_xml  #|line 454|#)))
-    (declare (ignorable routings))
-    (return-from json2internal  routings)                   #|line 455|#) #|line 456|#
+(defun lnet2internal_from_string (&optional )
+  (declare (ignorable ))                                    #|line 454|#
+
+  (internalize-lnet-from-JSON *lnet*)
+                                                            #|line 455|# #|line 456|#
   )
 (defun delete_decls (&optional  d)
   (declare (ignorable  d))                                  #|line 458|#
@@ -787,7 +791,7 @@ x))))
       do
         (progn
           diagram_source                                    #|line 628|#
-          (let ((all_containers_within_single_file (funcall (quote json2internal)   project_root  diagram_source  #|line 629|#)))
+          (let ((all_containers_within_single_file (funcall (quote lnet2internal_from_file)   project_root  diagram_source  #|line 629|#)))
             (declare (ignorable all_containers_within_single_file))
             (setf  reg (funcall (quote generate_shell_components)   reg  all_containers_within_single_file  #|line 630|#))
             (loop for container in  all_containers_within_single_file
@@ -799,70 +803,92 @@ x))))
           ))
     (funcall (quote initialize_stock_components)   reg      #|line 635|#)
     (return-from initialize_component_palette_from_files  reg) #|line 636|#) #|line 637|#
-  )                                                         #|line 639|#
-(defun clone_string (&optional  s)
-  (declare (ignorable  s))                                  #|line 640|#
-  (return-from clone_string  s                              #|line 641|# #|line 642|#) #|line 643|#
   )
-(defparameter  load_errors  nil)                            #|line 644|#
-(defparameter  runtime_errors  nil)                         #|line 645|# #|line 646|#
+(defun initialize_component_palette_from_string (&optional  project_root)
+  (declare (ignorable  project_root))                       #|line 639|#
+  #|  this version ignores project_root  |#                 #|line 640|#
+  (let (( reg (funcall (quote make_component_registry) )))
+    (declare (ignorable  reg))                              #|line 641|#
+    (let ((all_containers (funcall (quote lnet2internal_from_string) )))
+      (declare (ignorable all_containers))                  #|line 642|#
+      (setf  reg (funcall (quote generate_shell_components)   reg  all_containers  #|line 643|#))
+      (loop for container in  all_containers
+        do
+          (progn
+            container                                       #|line 644|#
+            (funcall (quote register_component)   reg (funcall (quote mkTemplate)  (gethash  "name"  container)  #|  template_data= |# container  #|  instantiator= |# #'container_instantiator )  #|line 645|#) #|line 646|#
+            ))
+      (funcall (quote initialize_stock_components)   reg    #|line 647|#)
+      (return-from initialize_component_palette_from_string  reg) #|line 648|#)) #|line 649|#
+  )                                                         #|line 651|#
+(defun clone_string (&optional  s)
+  (declare (ignorable  s))                                  #|line 652|#
+  (return-from clone_string  s                              #|line 653|# #|line 654|#) #|line 655|#
+  )
+(defparameter  load_errors  nil)                            #|line 656|#
+(defparameter  runtime_errors  nil)                         #|line 657|# #|line 658|#
 (defun load_error (&optional  s)
-  (declare (ignorable  s))                                  #|line 647|# #|line 648|#
-  (format *error-output* "~a~%"  s)                         #|line 649|#
+  (declare (ignorable  s))                                  #|line 659|# #|line 660|#
+  (format *error-output* "~a~%"  s)                         #|line 661|#
   (format *error-output* "
-  ")                                                        #|line 650|#
-  (setf  load_errors  t)                                    #|line 651|# #|line 652|#
+  ")                                                        #|line 662|#
+  (setf  load_errors  t)                                    #|line 663|# #|line 664|#
   )
 (defun runtime_error (&optional  s)
-  (declare (ignorable  s))                                  #|line 654|# #|line 655|#
-  (format *error-output* "~a~%"  s)                         #|line 656|#
-  (setf  runtime_errors  t)                                 #|line 657|# #|line 658|#
-  )                                                         #|line 660|#
+  (declare (ignorable  s))                                  #|line 666|# #|line 667|#
+  (format *error-output* "~a~%"  s)                         #|line 668|#
+  (setf  runtime_errors  t)                                 #|line 669|# #|line 670|#
+  )                                                         #|line 672|#
 (defun initialize_from_files (&optional  project_root  diagram_names)
-  (declare (ignorable  project_root  diagram_names))        #|line 661|#
+  (declare (ignorable  project_root  diagram_names))        #|line 673|#
   (let ((arg  nil))
-    (declare (ignorable arg))                               #|line 662|#
-    (let ((palette (funcall (quote initialize_component_palette_from_files)   project_root  diagram_names  #|line 663|#)))
+    (declare (ignorable arg))                               #|line 674|#
+    (let ((palette (funcall (quote initialize_component_palette_from_files)   project_root  diagram_names  #|line 675|#)))
       (declare (ignorable palette))
-      (return-from initialize_from_files (values  palette (list   project_root  diagram_names  arg ))) #|line 664|#)) #|line 665|#
+      (return-from initialize_from_files (values  palette (list   project_root  diagram_names  arg ))) #|line 676|#)) #|line 677|#
+  )
+(defun initialize_from_string (&optional  project_root)
+  (declare (ignorable  project_root))                       #|line 679|#
+  (let ((arg  nil))
+    (declare (ignorable arg))                               #|line 680|#
+    (let ((palette (funcall (quote initialize_component_palette_from_string)   project_root  #|line 681|#)))
+      (declare (ignorable palette))
+      (return-from initialize_from_string (values  palette (list   project_root  nil  arg ))) #|line 682|#)) #|line 683|#
   )
 (defun start (&optional  arg  main_container_name  palette  env)
-  (declare (ignorable  arg  main_container_name  palette  env)) #|line 667|#
-  (live_update  ""  "reset")                                #|line 668|#
-  (live_update  "Info"  "begin...")                         #|line 669|#
+  (declare (ignorable  arg  main_container_name  palette  env)) #|line 685|#
   (let ((project_root (nth  0  env)))
-    (declare (ignorable project_root))                      #|line 670|#
+    (declare (ignorable project_root))                      #|line 686|#
     (let ((diagram_names (nth  1  env)))
-      (declare (ignorable diagram_names))                   #|line 671|#
-      (funcall (quote set_environment)   project_root       #|line 672|#)
-      #|  get entrypoint container |#                       #|line 673|#
-      (let (( main_container (funcall (quote get_component_instance)   palette  main_container_name  nil  #|line 674|#)))
+      (declare (ignorable diagram_names))                   #|line 687|#
+      (funcall (quote set_environment)   project_root       #|line 688|#)
+      #|  get entrypoint container |#                       #|line 689|#
+      (let (( main_container (funcall (quote get_component_instance)   palette  main_container_name  nil  #|line 690|#)))
         (declare (ignorable  main_container))
         (cond
-          (( equal    nil  main_container)                  #|line 675|#
-            (funcall (quote load_error)   (concatenate 'string  "Couldn't find container with page name /"  (concatenate 'string  main_container_name  (concatenate 'string  "/ in files "  (concatenate 'string (format nil "~a"  diagram_names)  " (check tab names, or disable compression?)"))))  #|line 679|#) #|line 680|#
+          (( equal    nil  main_container)                  #|line 691|#
+            (funcall (quote load_error)   (concatenate 'string  "Couldn't find container with page name /"  (concatenate 'string  main_container_name  (concatenate 'string  "/ in files "  (concatenate 'string (format nil "~a"  diagram_names)  " (check tab names, or disable compression?)"))))  #|line 695|#) #|line 696|#
             ))
         (cond
-          ((not  load_errors)                               #|line 681|#
-            (let (( marg (funcall (quote new_datum_string)   arg  #|line 682|#)))
+          ((not  load_errors)                               #|line 697|#
+            (let (( marg (funcall (quote new_datum_string)   arg  #|line 698|#)))
               (declare (ignorable  marg))
-              (let (( mev (funcall (quote make_mevent)   ""  marg  #|line 683|#)))
+              (let (( mev (funcall (quote make_mevent)   ""  marg  #|line 699|#)))
                 (declare (ignorable  mev))
-                (funcall (quote inject)   main_container  mev  #|line 684|#))) #|line 685|#
-            ))
-        (live_update  "Info"  "...end")                     #|line 686|#))) #|line 687|#
-  )                                                         #|line 689|# #|  utility functions  |# #|line 690|#
+                (funcall (quote inject)   main_container  mev  #|line 700|#))) #|line 701|#
+            )))))                                           #|line 702|#
+  )                                                         #|line 704|# #|  utility functions  |# #|line 705|#
 (defun send_int (&optional  eh  port  i  causing_mevent)
-  (declare (ignorable  eh  port  i  causing_mevent))        #|line 691|#
-  (let ((datum (funcall (quote new_datum_string)  (format nil "~a"  i)  #|line 692|#)))
+  (declare (ignorable  eh  port  i  causing_mevent))        #|line 706|#
+  (let ((datum (funcall (quote new_datum_string)  (format nil "~a"  i)  #|line 707|#)))
     (declare (ignorable datum))
-    (funcall (quote send)   eh  port  datum  causing_mevent  #|line 693|#)) #|line 694|#
+    (funcall (quote send)   eh  port  datum  causing_mevent  #|line 708|#)) #|line 709|#
   )
 (defun send_bang (&optional  eh  port  causing_mevent)
-  (declare (ignorable  eh  port  causing_mevent))           #|line 696|#
+  (declare (ignorable  eh  port  causing_mevent))           #|line 711|#
   (let ((datum (funcall (quote new_datum_bang) )))
-    (declare (ignorable datum))                             #|line 697|#
-    (funcall (quote send)   eh  port  datum  causing_mevent  #|line 698|#)) #|line 699|#
+    (declare (ignorable datum))                             #|line 712|#
+    (funcall (quote send)   eh  port  datum  causing_mevent  #|line 713|#)) #|line 714|#
   )
  #|  this needs to be rewritten to use the low_level "shell_out“ component, this can be done solely as a diagram without using python code here |# #|line 1|#
 (defun shell_out_instantiate (&optional  reg  owner  name  template_data)

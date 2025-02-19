@@ -39,7 +39,8 @@ emit {
    External = ExternalPhrase line?
    ExternalPhrase =
      | "#" xkw<"low_level_read_text_file_handler"> "(" eh Comma msg Comma fname Comma ok Comma err ")" -- read
-     | "#" xkw<"read_and_convert_json_file"> "(" pathname Comma fname ")" -- racjf
+     | "#" xkw<"read_and_convert_lnet_file"> "(" pathname Comma fname ")" -- raclnetf
+     | "#" xkw<"internalize_lnet_from_string"> "(" ")" -- internalizeLnetFromString
      | "#" xkw<"freshQueue"> "(" ")" -- freshQueue
      | "#" xkw<"freshStack"> "(" ")" -- freshStack
      | "#" xkw<"fresh"> "(" ident ")" -- fresh

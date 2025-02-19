@@ -14,7 +14,7 @@ TopLevel_line [line] =‛«line»’
 kw [ s] = ‛«s»’
 Defvar [ __ lval _eq e line?] = ‛\nlet «lval» = «e»;«line»’
 Defconst [ __ lval _eq e line?] = ‛\nconst «lval» = «e»«line»;’
-Defn [ _4 ident Formals StatementBlock line?] = ‛\nafunction «ident» «Formals» {⤷«StatementBlock»«line»⤶\n}\n’
+Defn [ _4 ident Formals StatementBlock line?] = ‛\nfunction «ident» «Formals» {⤷«StatementBlock»«line»⤶\n}\n’
 
 Defobj [ _defobj ident Formals line1? lb line2? init+ rb line3?] = ‛
 class «ident» {⤷
@@ -55,8 +55,7 @@ ExternalPhrase_read [_octothorpe _read lp eh _comma1 msg _comma2 fname _comma3 o
     }
 ’
 
-ExternalPhrase_racjf [_octothorpe _racjf lp pathname _comma fname rp] = ‛
-console.log («fname»);
+ExternalPhrase_raclnetf [_octothorpe _ lp pathname _comma fname rp] = ‛
     let jstr = undefined;
     if (filename == "0") {
 	jstr = fs.readFileSync (0, { encoding: 'utf8'});
@@ -70,6 +69,10 @@ console.log («fname»);
     } else {
         return undefined;
     }
+’
+
+ExternalPhrase_internalizeLnetFromString [_octothorpe _ lp rp] = ‛
+    return JSON.parse (lnet);
 ’
 
 ExternalPhrase_freshQueue [_octothorpe _ lp rp] = ‛ []’
@@ -111,7 +114,7 @@ ExternalPhrase_empty [_octothorpe _ lp q rp] = ‛(0===«q».length)’
 ExternalPhrase_queue2list [_octothorpe _ lp q rp] = ‛ «q»’
 ExternalPhrase_negate [_octothorpe _ lp x rp] = ‛(-«x»)’
 
-ExternalPhrase_liveUpdate [_octothorpe _ lp s1 _comma s2 rp] = ‛await live_update («s1», «s2»)’
+ExternalPhrase_liveUpdate [_octothorpe _ lp s1 _comma s2 rp] = ‛live_update («s1», «s2»)’
 ExternalPhrase_queueAsJsonToStdout [_octothorpe _ lp x rp] = ‛JSON.stringify («x»)’
 ExternalPhrase_dir [_octothorpe _ lp x rp] = ‛ «x» ’
 
