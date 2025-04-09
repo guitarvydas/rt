@@ -8,6 +8,8 @@ SRC=reverser.rt
 #SRC=0d.rt
 
 
+out.py: 0d.rt
+	./build.bash
 
 all:
 	cp rebuild-all.bash rebuild.bash

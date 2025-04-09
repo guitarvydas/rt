@@ -420,8 +420,8 @@ defn append_routing_descriptor (container, desc) {
     #enqueue (container.routings, desc)
 }
 
-defn container_injector (container, mevent) {
-    container_handler (container, mevent)
+defn injector (eh, mevent) {
+    eh.handler (eh, mevent)
 }
 
 
@@ -548,7 +548,7 @@ defn make_container (name, owner) {
     eh.name ⇐ name
     eh.owner ⇐ owner
     eh.handler ⇐ ↪︎container_handler
-    eh.finject ⇐ ↪︎container_injector
+    eh.finject ⇐ ↪︎injector
     eh.state ⇐ “idle”
     eh.kind ⇐ “container”
     return eh
@@ -566,15 +566,11 @@ defn make_leaf (name, owner, instance_data, handler) {
     eh.name ⇐ #strcons (nm, #strcons (“▹”, name))
     eh.owner ⇐ owner
     eh.handler ⇐ handler
-    eh.finject ⇐ ↪︎leaf_injector
+    eh.finject ⇐ ↪︎injector
     eh.instance_data ⇐ instance_data
     eh.state ⇐ “idle”
     eh.kind ⇐ “leaf”
     return eh
-}
-
-defn leaf_injector (leaf, mevent) {
-    leaf.handler (leaf, mevent)
 }
 
 ⌈ Sends a mevent on the given `port` with `data`, placing it on the output⌉
