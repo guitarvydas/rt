@@ -1,2 +1,3 @@
+import sys
 def live_update(key, value):
-    pass
+    print (f'"{key}" : "{value}"', file=sys.stderr)

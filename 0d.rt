@@ -559,7 +559,11 @@ defn make_container (name, owner) {
 
 defn make_leaf (name, owner, instance_data, handler) {
     deftemp eh ⇐ #fresh (Eh)
-    eh.name ⇐ #strcons (owner.name, #strcons (“▹”, name))
+    deftemp nm ⇐ “”
+    if ϕ != owner {
+        nm ⇐ owner.name
+    }
+    eh.name ⇐ #strcons (nm, #strcons (“▹”, name))
     eh.owner ⇐ owner
     eh.handler ⇐ handler
     eh.instance_data ⇐ instance_data
@@ -682,22 +686,22 @@ defn initialize_from_string (project_root) {
     return [palette, [project_root, ϕ, arg]]
 }
 
-defn start (arg, main_container_name, palette, env) {
+defn start (arg, Part_name, palette, env) {
     project_root ≡ env [0]
     diagram_names ≡ env [1]
     set_environment (project_root)
     ⌈ get entrypoint container⌉
-    deftemp main_container ⇐ get_component_instance(palette, main_container_name, ϕ)
-    if ϕ = main_container {
+    deftemp Part ⇐ get_component_instance(palette, Part_name, ϕ)
+    if ϕ = Part {
         load_error (#strcons (“Couldn't find container with page name /”,
-	              #strcons (main_container_name,
+	              #strcons (Part_name,
 		        #strcons (“/ in files ”,
 			  #strcons (#asstr (diagram_names), “ (check tab names, or disable compression?)”)))))
     }
     if not load_errors {
         deftemp marg ⇐ new_datum_string (arg)
         deftemp mev ⇐ make_mevent(“”, marg)
-        inject (main_container, mev)
+        inject (Part, mev)
 	}
 }
 
