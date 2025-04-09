@@ -566,10 +566,15 @@ defn make_leaf (name, owner, instance_data, handler) {
     eh.name ⇐ #strcons (nm, #strcons (“▹”, name))
     eh.owner ⇐ owner
     eh.handler ⇐ handler
+    eh.finject ⇐ ↪︎leaf_injector
     eh.instance_data ⇐ instance_data
     eh.state ⇐ “idle”
     eh.kind ⇐ “leaf”
     return eh
+}
+
+defn leaf_injector (leaf, mevent) {
+    leaf.handler (leaf, mevent)
 }
 
 ⌈ Sends a mevent on the given `port` with `data`, placing it on the output⌉
