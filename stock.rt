@@ -118,7 +118,7 @@ defn ensure_string_datum_handler (eh, mev) {
         forward (eh, “”, mev)
     } else {
         emev ≡ #strcons (“*** ensure: type error (expected a string datum) but got ”, mev.datum)
-        send_string (eh, “✗”, emev, mev)
+        send (eh, “✗”, emev, mev)
     }
 }
 
@@ -145,7 +145,7 @@ defn syncfilewrite_handler (eh, mev) {
             f.close ()
             send (eh, “done”, new_datum_bang (), mev)
         } else {
-            send_string (eh, “✗”, #strcons (“open error on file ”, inst.filename), mev)
+            send (eh, “✗”, #strcons (“open error on file ”, inst.filename), mev)
 	}
     }
 }
@@ -187,7 +187,7 @@ defn maybe_stringconcat (eh, inst, mev) {
 	} else {
 	    concatenated_string ⇐ inst.buffer1 + inst.buffer2
 	}    
-	send_string (eh, “”, concatenated_string, mev)
+	send (eh, “”, concatenated_string, mev)
 	inst.buffer1 ⇐ ϕ
 	inst.buffer2 ⇐ ϕ
     }
@@ -207,7 +207,7 @@ defn string_constant_instantiate (reg, owner, name, template_data) {
 
 defn string_constant_handler (eh, mev) {
     s ≡ eh.instance_data
-    send_string (eh, “”, s, mev)
+    send (eh, “”, s, mev)
 }
 
 defn fakepipename_instantiate (reg, owner, name, template_data) {
@@ -220,7 +220,7 @@ defvar rand ⇐ 0
 defn fakepipename_handler (eh, mev) {
     global rand
     rand ⇐ rand + 1 ⌈ not very random, but good enough _ 'rand' must be unique within a single run⌉
-    send_string (eh, “”, #strcons (“/tmp/fakepipe”, rand), mev)
+    send (eh, “”, #strcons (“/tmp/fakepipe”, rand), mev)
 }
 
 
@@ -253,31 +253,24 @@ defn switch1star_handler (eh, mev) {
     }
 }
 
-defobj Latch_Instance_Data () {
-        • datum ⇐ ϕ
+defobj StringAccumulator () {
+        • s ⇐ “”
 }
 
-defn latch_instantiate (reg, owner, name, template_data) {
-    name_with_id ≡ gensymbol (“latch”)
-    instp ≡ #fresh (Latch_Instance_Data)
-    return make_leaf (name_with_id, owner, instp, ↪︎latch_handler)
+defn strcatstar_instantiate (reg, owner, name, template_data) {
+    name_with_id ≡ gensymbol (“String Concat *”)
+    instp ≡ #fresh (StringAccumulator)
+    return make_leaf (name_with_id, owner, instp, ↪︎strcatstar_handler)
 }
 
-defn latch_handler (eh, mev) {
-    deftemp inst ⇐ eh.instance_data
+defn strcatstar_handler (eh, mev) {
+    deftemp accum ⇐ eh.instance_data
     if “” = mev.port {
-        inst.datum ⇐ mev.datum
-    } elif “release” = mev.port {
-        deftemp d ⇐ inst.datum
-	if d = ϕ {
-	    send_string (eh, “”, “”, mev)
-	    #print_stderr (“ *** latch sending empty string ***”)
-	} else {
-            send (eh, “”, d, mev)
-        }
-        inst.datum ⇐ ϕ
+        accum.s ⇐ #strcons (accum.s, mev.datum.v)
+    } elif “fini” = mev.port {
+        send (eh, “”, accum.s, mev)
     } else {
-        send (eh, “✗”, “internal error bad mevent for latch”, mev)
+        send (eh, “✗”, “internal error bad mevent for String Concat *”, mev)
     }
 }
 
@@ -291,13 +284,14 @@ defn initialize_stock_components (reg) {
     register_component (reg, mkTemplate ( “?C”, ϕ, ↪︎probeC_instantiate))
     register_component (reg, mkTemplate ( “trash”, ϕ, ↪︎trash_instantiate))
 
+
     register_component (reg, mkTemplate ( “Read Text File”, ϕ, ↪︎low_level_read_text_file_instantiate))
     register_component (reg, mkTemplate ( “Ensure String Datum”, ϕ, ↪︎ensure_string_datum_instantiate))
 
     register_component (reg, mkTemplate ( “syncfilewrite”, ϕ, ↪︎syncfilewrite_instantiate))
     register_component (reg, mkTemplate ( “stringconcat”, ϕ, ↪︎stringconcat_instantiate))
     register_component (reg, mkTemplate ( “switch1*”, ϕ, ↪︎switch1star_instantiate))
-    register_component (reg, mkTemplate ( “latch”, ϕ, ↪︎latch_instantiate))
+    register_component (reg, mkTemplate ( “String Concat *”, ϕ, ↪︎strcatstar_instantiate))
        ⌈ for fakepipe⌉
     register_component (reg, mkTemplate ( “fakepipename”, ϕ, ↪︎fakepipename_instantiate))
 }

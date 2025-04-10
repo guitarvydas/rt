@@ -35,38 +35,6 @@ defobj Datum () {
       • other ⇐ ϕ ⌈ reserved for use on per-project basis ⌉
 }
 
-defn new_datum_string (s) {
-    d ≡ #fresh (Datum)
-    d.v ⇐ s
-    d.clone ⇐ λ: clone_datum_string (d)
-    d.reclaim ⇐ λ: reclaim_datum_string (d)    
-    return d
-}
-
-defn clone_datum_string (d) {
-  newd ≡ new_datum_string (d.v)
-  return newd
-}
-
-defn reclaim_datum_string (src) {
-  pass
-}
-
-defn new_datum_bang () {
-    p ≡ #fresh (Datum)
-    p.v ⇐ “”
-    p.clone ⇐ λ: clone_datum_bang (p)
-    p.reclaim ⇐ λ: reclaim_datum_bang (p)
-    return p
-}
-
-defn clone_datum_bang (d) {
-    return new_datum_bang ()
-}
-
-defn reclaim_datum_bang (d) {
-    pass
-}
 
 ⌈ Mevent passed to a leaf component.⌉
 ⌈⌉
@@ -576,13 +544,11 @@ defn make_leaf (name, owner, instance_data, handler) {
 ⌈ Sends a mevent on the given `port` with `data`, placing it on the output⌉
 ⌈ of the given component.⌉
 
-defn send (eh,port,datum,causingMevent) {
-    mev ≡ make_mevent(port, datum)
-    put_output (eh, mev)
-}
-
-defn send_string (eh, port, s, causingMevent) {
-    datum ≡ new_datum_string (s)
+defn send (eh,port,obj,causingMevent) {
+    datum = Datum ()
+    datum.v = obj
+    d.clone ⇐ λ: obj_clone (obj)
+    d.reclaim ⇐ None
     mev ≡ make_mevent(port, datum)
     put_output (eh, mev)
 }
@@ -615,14 +581,8 @@ defn set_environment (project_root) {
     projectRoot ⇐ project_root
 }
 
-
-defn string_make_persistent (s) {
-    ⌈ this is here for non_GC languages like Odin, it is a no_op for GC languages like Python⌉
-    return s
-}
-
-defn string_clone (s) {
-    return s
+defn obj_clone (obj) {
+    return obj
 }
 
 ⌈ usage: app ${_00_} diagram_filename1 diagram_filename2 ...⌉
@@ -700,20 +660,13 @@ defn start (arg, Part_name, palette, env) {
 			  #strcons (#asstr (diagram_names), “ (check tab names, or disable compression?)”)))))
     }
     if not load_errors {
-        deftemp marg ⇐ new_datum_string (arg)
-        deftemp mev ⇐ make_mevent(“”, marg)
+        deftemp d ⇐ Datum ()
+    	d.v = arg
+	d.clone ⇐ λ: obj_clone (d)
+	d.reclaim ⇐ None
+        deftemp mev ⇐ make_mevent(“”, d)
         inject (Part, mev)
 	}
 }
 
 
-⌈ utility functions ⌉
-defn send_int (eh, port, i, causing_mevent) {
-    datum ≡ new_datum_string (#asstr (i))
-    send (eh, port, datum, causing_mevent)
-}
-
-defn send_bang (eh, port, causing_mevent) {
-    datum ≡ new_datum_bang ()
-    send (eh, port, datum, causing_mevent)            
-}

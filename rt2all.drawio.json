@@ -688,6 +688,14 @@
       {
         "name": "Back End",
         "id": 12
+      },
+      {
+        "name": "?A",
+        "id": 19
+      },
+      {
+        "name": "?B",
+        "id": 21
       }
     ],
     "connections": [
@@ -707,6 +715,24 @@
         "target": {
           "name": "Back End",
           "id": 12
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "fini",
+        "target_port": "",
+        "target": {
+          "name": "?B",
+          "id": 21
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "",
+        "target": {
+          "name": "?A",
+          "id": 19
         }
       },
       {
@@ -2093,214 +2119,6 @@
         "source": {
           "name": "Javascript Indenter",
           "id": 13
-        }
-      }
-    ],
-    "file": "rt2all.drawio"
-  },
-  {
-    "name": "String Concat *",
-    "children": [
-      {
-        "name": "switch1*",
-        "id": 6
-      },
-      {
-        "name": "stringconcat",
-        "id": 12
-      },
-      {
-        "name": "latch",
-        "id": 18
-      },
-      {
-        "name": "'",
-        "id": 23
-      },
-      {
-        "name": "seq12",
-        "id": 26
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "switch1*",
-          "id": 6
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "fini",
-        "target_port": "1",
-        "target": {
-          "name": "seq12",
-          "id": 26
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "fini",
-        "target_port": "2",
-        "target": {
-          "name": "seq12",
-          "id": 26
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "1",
-        "source": {
-          "name": "stringconcat",
-          "id": 12
-        },
-        "target": {
-          "name": "stringconcat",
-          "id": 12
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "1",
-        "target_port": "",
-        "source": {
-          "name": "switch1*",
-          "id": 6
-        },
-        "target": {
-          "name": "'",
-          "id": 23
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "1",
-        "source": {
-          "name": "'",
-          "id": 23
-        },
-        "target": {
-          "name": "stringconcat",
-          "id": 12
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "1",
-        "target_port": "2",
-        "source": {
-          "name": "switch1*",
-          "id": 6
-        },
-        "target": {
-          "name": "stringconcat",
-          "id": 12
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "*",
-        "target_port": "2",
-        "source": {
-          "name": "switch1*",
-          "id": 6
-        },
-        "target": {
-          "name": "stringconcat",
-          "id": 12
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "2",
-        "target_port": "reset",
-        "source": {
-          "name": "seq12",
-          "id": 26
-        },
-        "target": {
-          "name": "switch1*",
-          "id": 6
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "stringconcat",
-          "id": 12
-        },
-        "target": {
-          "name": "latch",
-          "id": 18
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "2",
-        "target_port": "reset",
-        "source": {
-          "name": "seq12",
-          "id": 26
-        },
-        "target": {
-          "name": "stringconcat",
-          "id": 12
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "1",
-        "target_port": "release",
-        "source": {
-          "name": "seq12",
-          "id": 26
-        },
-        "target": {
-          "name": "latch",
-          "id": 18
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "latch",
-          "id": 18
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "✗",
-        "target_port": "✗",
-        "source": {
-          "name": "latch",
-          "id": 18
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "✗",
-        "target_port": "✗",
-        "source": {
-          "name": "stringconcat",
-          "id": 12
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "✗",
-        "target_port": "✗",
-        "source": {
-          "name": "switch1*",
-          "id": 6
         }
       }
     ],

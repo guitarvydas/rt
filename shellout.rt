@@ -14,9 +14,9 @@ defn shell_out_handler (eh, msg) {
     deftemp stderr ⇐ ϕ
     #run_command (cmd, s, ret, rc, stdout, stderr)
     if rc = 0 {
-        send_string (eh, “”, #strcons (stdout, stderr) , msg)
+        send (eh, “”, #strcons (stdout, stderr) , msg)
     } else {
-        send_string (eh, “✗”, #strcons (stdout, stderr), msg)
+        send (eh, “✗”, #strcons (stdout, stderr), msg)
     }
 }
 

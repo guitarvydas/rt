@@ -304,29 +304,24 @@ def switch1star_handler (eh,mev):                      #line 235
     else:                                              #line 249
         send ( eh, "✗", "internal error bad mevent for switch1*", mev)#line 250#line 251#line 252#line 253
 
-class Latch_Instance_Data:
-    def __init__ (self,):                              #line 254
-        self.datum =  None                             #line 255#line 256
-                                                       #line 257
-def latch_instantiate (reg,owner,name,template_data):  #line 258
-    name_with_id = gensymbol ( "latch")                #line 259
-    instp =  Latch_Instance_Data ()                    #line 260
-    return make_leaf ( name_with_id, owner, instp, latch_handler)#line 261#line 262#line 263
+class StringAccumulator:
+    def __init__ (self):
+        self.s = ""
 
-def latch_handler (eh,mev):                            #line 264
-    inst =  eh.instance_data                           #line 265
-    if  "" ==  mev.port:                               #line 266
-        inst.datum =  mev.datum                        #line 267
-    elif  "release" ==  mev.port:                      #line 268
-        d =  inst.datum                                #line 269
-        if  d ==  None:                                #line 270
-            send_string ( eh, "", "", mev)             #line 271
-            live_update ("Info", " >>> latch sending empty string")
-        else:                                          #line 273
-            send ( eh, "", d, mev)                     #line 274#line 275
-        inst.datum =  None                             #line 276
-    else:                                              #line 277
-        send ( eh, "✗", "internal error bad mevent for latch", mev)#line 278#line 279#line 280#line 281
+def strcatstar_instantiate (reg, owner, name, template_data):
+    name_with_id = gensymbol ("String Concat *")
+    instp = StringAccumulator ()
+    return make_leaf ( name_with_id, owner, instp, strcatstar_handler)
+
+def strcatstar_handler (eh, mev):
+    accum = eh.instance_data
+    if "" == mev.port:
+        accum.s = accum.s + mev.datum.v
+    elif "fini" == mev.port:
+        send_string (eh, "", accum.s, mev)
+    else:
+        send_string ( eh, "✗", "internal error bad mevent for String Concat *", mev)
+        
 
 # all of the the built_in leaves are listed here       #line 282
 # future: refactor this such that programmers can pick and choose which (lumps of) builtins are used in a specific project#line 283#line 284
@@ -341,7 +336,7 @@ def initialize_stock_components (reg):                 #line 285
     register_component ( reg,mkTemplate ( "syncfilewrite", None, syncfilewrite_instantiate))#line 295
     register_component ( reg,mkTemplate ( "stringconcat", None, stringconcat_instantiate))#line 296
     register_component ( reg,mkTemplate ( "switch1*", None, switch1star_instantiate))#line 297
-    register_component ( reg,mkTemplate ( "latch", None, latch_instantiate))#line 298
+    register_component ( reg,mkTemplate ( "String Concat *", None, strcatstar_instantiate))
     # for fakepipe                                     #line 299
     register_component ( reg,mkTemplate ( "fakepipename", None, fakepipename_instantiate))#line 300#line 301#line 302
 
