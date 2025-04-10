@@ -591,8 +591,9 @@ def start (arg,Part_name,palette,env):                 #line 650
         d.clone =  lambda : obj_clone ( d)             #line 665
         d.reclaim =  None                              #line 666
         mev = make_mevent ( "", d)                     #line 667
-        inject ( Part, mev)                            #line 668#line 669#line 670#line 671
-                                                       #line 672
+        inject ( Part, mev)                            #line 668#line 669
+    print (deque_to_json ( Part.outq), file=sys.stderr)#line 670#line 671#line 672
+                                                       #line 673
 
 # this needs to be rewritten to use the low_level "shell_out“ component, this can be done solely as a diagram without using python code here#line 1
 def shell_out_instantiate (reg,owner,name,template_data):#line 2
@@ -1504,8 +1505,9 @@ def start (arg,Part_name,palette,env):                 #line 650
         d.clone =  lambda : obj_clone ( d)             #line 665
         d.reclaim =  None                              #line 666
         mev = make_mevent ( "", d)                     #line 667
-        inject ( Part, mev)                            #line 668#line 669#line 670#line 671
-                                                       #line 672
+        inject ( Part, mev)                            #line 668#line 669
+    print (deque_to_json ( Part.outq), file=sys.stderr)#line 670#line 671#line 672
+                                                       #line 673
 
 # this needs to be rewritten to use the low_level "shell_out“ component, this can be done solely as a diagram without using python code here#line 1
 def shell_out_instantiate (reg,owner,name,template_data):#line 2
@@ -2417,8 +2419,9 @@ def start (arg,Part_name,palette,env):                 #line 650
         d.clone =  lambda : obj_clone ( d)             #line 665
         d.reclaim =  None                              #line 666
         mev = make_mevent ( "", d)                     #line 667
-        inject ( Part, mev)                            #line 668#line 669#line 670#line 671
-                                                       #line 672
+        inject ( Part, mev)                            #line 668#line 669
+    print (deque_to_json ( Part.outq), file=sys.stderr)#line 670#line 671#line 672
+                                                       #line 673
 
 # this needs to be rewritten to use the low_level "shell_out“ component, this can be done solely as a diagram without using python code here#line 1
 def shell_out_instantiate (reg,owner,name,template_data):#line 2

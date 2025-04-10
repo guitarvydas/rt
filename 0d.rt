@@ -667,6 +667,7 @@ defn start (arg, Part_name, palette, env) {
         deftemp mev ⇐ make_mevent(“”, d)
         inject (Part, mev)
 	}
+    #display_queue_as_json (Part.outq)
 }
 
 
