@@ -706,13 +706,14 @@ x))))
   ) #|  Sends a mevent on the given `port` with `data`, placing it on the output |# #|line 544|# #|  of the given component. |# #|line 545|# #|line 546|#
 (defun send (&optional  eh  port  obj  causingMevent)
   (declare (ignorable  eh  port  obj  causingMevent))       #|line 547|#
-  ( equal    datum (funcall (quote Datum) ))                #|line 548|#
-  ( equal   (slot-value  datum 'v)  obj)                    #|line 549|#
-  (setf (slot-value  d 'clone)  #'(lambda (&optional )(funcall (quote obj_clone)   obj  #|line 550|#)))
-  (setf (slot-value  d 'reclaim)  None)                     #|line 551|#
-  (let ((mev (funcall (quote make_mevent)   port  datum     #|line 552|#)))
-    (declare (ignorable mev))
-    (funcall (quote put_output)   eh  mev                   #|line 553|#)) #|line 554|#
+  (let (( d (funcall (quote Datum) )))
+    (declare (ignorable  d))                                #|line 548|#
+    (setf (slot-value  d 'v)  obj)                          #|line 549|#
+    (setf (slot-value  d 'clone)  #'(lambda (&optional )(funcall (quote obj_clone)   d  #|line 550|#)))
+    (setf (slot-value  d 'reclaim)  None)                   #|line 551|#
+    (let ((mev (funcall (quote make_mevent)   port  d       #|line 552|#)))
+      (declare (ignorable mev))
+      (funcall (quote put_output)   eh  mev                 #|line 553|#))) #|line 554|#
   )
 (defun forward (&optional  eh  port  mev)
   (declare (ignorable  eh  port  mev))                      #|line 556|#
@@ -835,7 +836,7 @@ x))))
           ((not  load_errors)                               #|line 662|#
             (let (( d (funcall (quote Datum) )))
               (declare (ignorable  d))                      #|line 663|#
-              ( equal   (slot-value  d 'v)  arg)            #|line 664|#
+              (setf (slot-value  d 'v)  arg)                #|line 664|#
               (setf (slot-value  d 'clone)  #'(lambda (&optional )(funcall (quote obj_clone)   d  #|line 665|#)))
               (setf (slot-value  d 'reclaim)  None)         #|line 666|#
               (let (( mev (funcall (quote make_mevent)   ""  d  #|line 667|#)))
@@ -1993,13 +1994,14 @@ x))))
   ) #|  Sends a mevent on the given `port` with `data`, placing it on the output |# #|line 544|# #|  of the given component. |# #|line 545|# #|line 546|#
 (defun send (&optional  eh  port  obj  causingMevent)
   (declare (ignorable  eh  port  obj  causingMevent))       #|line 547|#
-  ( equal    datum (funcall (quote Datum) ))                #|line 548|#
-  ( equal   (slot-value  datum 'v)  obj)                    #|line 549|#
-  (setf (slot-value  d 'clone)  #'(lambda (&optional )(funcall (quote obj_clone)   obj  #|line 550|#)))
-  (setf (slot-value  d 'reclaim)  None)                     #|line 551|#
-  (let ((mev (funcall (quote make_mevent)   port  datum     #|line 552|#)))
-    (declare (ignorable mev))
-    (funcall (quote put_output)   eh  mev                   #|line 553|#)) #|line 554|#
+  (let (( d (funcall (quote Datum) )))
+    (declare (ignorable  d))                                #|line 548|#
+    (setf (slot-value  d 'v)  obj)                          #|line 549|#
+    (setf (slot-value  d 'clone)  #'(lambda (&optional )(funcall (quote obj_clone)   d  #|line 550|#)))
+    (setf (slot-value  d 'reclaim)  None)                   #|line 551|#
+    (let ((mev (funcall (quote make_mevent)   port  d       #|line 552|#)))
+      (declare (ignorable mev))
+      (funcall (quote put_output)   eh  mev                 #|line 553|#))) #|line 554|#
   )
 (defun forward (&optional  eh  port  mev)
   (declare (ignorable  eh  port  mev))                      #|line 556|#
@@ -2122,7 +2124,7 @@ x))))
           ((not  load_errors)                               #|line 662|#
             (let (( d (funcall (quote Datum) )))
               (declare (ignorable  d))                      #|line 663|#
-              ( equal   (slot-value  d 'v)  arg)            #|line 664|#
+              (setf (slot-value  d 'v)  arg)                #|line 664|#
               (setf (slot-value  d 'clone)  #'(lambda (&optional )(funcall (quote obj_clone)   d  #|line 665|#)))
               (setf (slot-value  d 'reclaim)  None)         #|line 666|#
               (let (( mev (funcall (quote make_mevent)   ""  d  #|line 667|#)))
@@ -3280,13 +3282,14 @@ x))))
   ) #|  Sends a mevent on the given `port` with `data`, placing it on the output |# #|line 544|# #|  of the given component. |# #|line 545|# #|line 546|#
 (defun send (&optional  eh  port  obj  causingMevent)
   (declare (ignorable  eh  port  obj  causingMevent))       #|line 547|#
-  ( equal    datum (funcall (quote Datum) ))                #|line 548|#
-  ( equal   (slot-value  datum 'v)  obj)                    #|line 549|#
-  (setf (slot-value  d 'clone)  #'(lambda (&optional )(funcall (quote obj_clone)   obj  #|line 550|#)))
-  (setf (slot-value  d 'reclaim)  None)                     #|line 551|#
-  (let ((mev (funcall (quote make_mevent)   port  datum     #|line 552|#)))
-    (declare (ignorable mev))
-    (funcall (quote put_output)   eh  mev                   #|line 553|#)) #|line 554|#
+  (let (( d (funcall (quote Datum) )))
+    (declare (ignorable  d))                                #|line 548|#
+    (setf (slot-value  d 'v)  obj)                          #|line 549|#
+    (setf (slot-value  d 'clone)  #'(lambda (&optional )(funcall (quote obj_clone)   d  #|line 550|#)))
+    (setf (slot-value  d 'reclaim)  None)                   #|line 551|#
+    (let ((mev (funcall (quote make_mevent)   port  d       #|line 552|#)))
+      (declare (ignorable mev))
+      (funcall (quote put_output)   eh  mev                 #|line 553|#))) #|line 554|#
   )
 (defun forward (&optional  eh  port  mev)
   (declare (ignorable  eh  port  mev))                      #|line 556|#
@@ -3409,7 +3412,7 @@ x))))
           ((not  load_errors)                               #|line 662|#
             (let (( d (funcall (quote Datum) )))
               (declare (ignorable  d))                      #|line 663|#
-              ( equal   (slot-value  d 'v)  arg)            #|line 664|#
+              (setf (slot-value  d 'v)  arg)                #|line 664|#
               (setf (slot-value  d 'clone)  #'(lambda (&optional )(funcall (quote obj_clone)   d  #|line 665|#)))
               (setf (slot-value  d 'reclaim)  None)         #|line 666|#
               (let (( mev (funcall (quote make_mevent)   ""  d  #|line 667|#)))

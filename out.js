@@ -570,11 +570,11 @@ function make_leaf (name,owner,instance_data,handler) {/* line 528 */
 /*  Sends a mevent on the given `port` with `data`, placing it on the output *//* line 544 */
 /*  of the given component. */                         /* line 545 *//* line 546 */
 function send (eh,port,obj,causingMevent) {            /* line 547 */
-    datum == Datum ()                                  /* line 548 */
-    datum.v ==  obj                                    /* line 549 */
-    d.clone =  function () {return obj_clone ( obj)    /* line 550 */;};
+    let  d = Datum ();                                 /* line 548 */
+    d.v =  obj;                                        /* line 549 */
+    d.clone =  function () {return obj_clone ( d)      /* line 550 */;};
     d.reclaim =  None;                                 /* line 551 */
-    let mev = make_mevent ( port, datum)               /* line 552 */;
+    let mev = make_mevent ( port, d)                   /* line 552 */;
     put_output ( eh, mev)                              /* line 553 *//* line 554 *//* line 555 */
 }
 
@@ -675,7 +675,7 @@ function start (arg,Part_name,palette,env) {           /* line 650 */
     }
     if ((!  load_errors)) {                            /* line 662 */
       let  d = Datum ();                               /* line 663 */
-      d.v ==  arg                                      /* line 664 */
+      d.v =  arg;                                      /* line 664 */
       d.clone =  function () {return obj_clone ( d)    /* line 665 */;};
       d.reclaim =  None;                               /* line 666 */
       let  mev = make_mevent ( "", d)                  /* line 667 */;
@@ -1650,11 +1650,11 @@ function make_leaf (name,owner,instance_data,handler) {/* line 528 */
 /*  Sends a mevent on the given `port` with `data`, placing it on the output *//* line 544 */
 /*  of the given component. */                         /* line 545 *//* line 546 */
 function send (eh,port,obj,causingMevent) {            /* line 547 */
-    datum == Datum ()                                  /* line 548 */
-    datum.v ==  obj                                    /* line 549 */
-    d.clone =  function () {return obj_clone ( obj)    /* line 550 */;};
+    let  d = Datum ();                                 /* line 548 */
+    d.v =  obj;                                        /* line 549 */
+    d.clone =  function () {return obj_clone ( d)      /* line 550 */;};
     d.reclaim =  None;                                 /* line 551 */
-    let mev = make_mevent ( port, datum)               /* line 552 */;
+    let mev = make_mevent ( port, d)                   /* line 552 */;
     put_output ( eh, mev)                              /* line 553 *//* line 554 *//* line 555 */
 }
 
@@ -1755,7 +1755,7 @@ function start (arg,Part_name,palette,env) {           /* line 650 */
     }
     if ((!  load_errors)) {                            /* line 662 */
       let  d = Datum ();                               /* line 663 */
-      d.v ==  arg                                      /* line 664 */
+      d.v =  arg;                                      /* line 664 */
       d.clone =  function () {return obj_clone ( d)    /* line 665 */;};
       d.reclaim =  None;                               /* line 666 */
       let  mev = make_mevent ( "", d)                  /* line 667 */;
@@ -2730,11 +2730,11 @@ function make_leaf (name,owner,instance_data,handler) {/* line 528 */
 /*  Sends a mevent on the given `port` with `data`, placing it on the output *//* line 544 */
 /*  of the given component. */                         /* line 545 *//* line 546 */
 function send (eh,port,obj,causingMevent) {            /* line 547 */
-    datum == Datum ()                                  /* line 548 */
-    datum.v ==  obj                                    /* line 549 */
-    d.clone =  function () {return obj_clone ( obj)    /* line 550 */;};
+    let  d = Datum ();                                 /* line 548 */
+    d.v =  obj;                                        /* line 549 */
+    d.clone =  function () {return obj_clone ( d)      /* line 550 */;};
     d.reclaim =  None;                                 /* line 551 */
-    let mev = make_mevent ( port, datum)               /* line 552 */;
+    let mev = make_mevent ( port, d)                   /* line 552 */;
     put_output ( eh, mev)                              /* line 553 *//* line 554 *//* line 555 */
 }
 
@@ -2835,7 +2835,7 @@ function start (arg,Part_name,palette,env) {           /* line 650 */
     }
     if ((!  load_errors)) {                            /* line 662 */
       let  d = Datum ();                               /* line 663 */
-      d.v ==  arg                                      /* line 664 */
+      d.v =  arg;                                      /* line 664 */
       d.clone =  function () {return obj_clone ( d)    /* line 665 */;};
       d.reclaim =  None;                               /* line 666 */
       let  mev = make_mevent ( "", d)                  /* line 667 */;

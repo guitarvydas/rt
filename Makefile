@@ -8,7 +8,7 @@ SRC=reverser.rt
 #SRC=0d.rt
 
 
-out.py: 0d.rt stock.rt shellout.rt
+out.py: 0d.rt stock.rt shellout.rt emit.ohm emitPython.rewrite
 	./build.bash
 
 all:

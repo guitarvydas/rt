@@ -498,11 +498,11 @@ def make_leaf (name,owner,instance_data,handler):      #line 528
 # Sends a mevent on the given `port` with `data`, placing it on the output#line 544
 # of the given component.                              #line 545#line 546
 def send (eh,port,obj,causingMevent):                  #line 547
-    datum == Datum ()                                  #line 548
-    datum.v ==  obj                                    #line 549
-    d.clone =  lambda : obj_clone ( obj)               #line 550
+    d = Datum ()                                       #line 548
+    d.v =  obj                                         #line 549
+    d.clone =  lambda : obj_clone ( d)                 #line 550
     d.reclaim =  None                                  #line 551
-    mev = make_mevent ( port, datum)                   #line 552
+    mev = make_mevent ( port, d)                       #line 552
     put_output ( eh, mev)                              #line 553#line 554#line 555
 
 def forward (eh,port,mev):                             #line 556
@@ -587,7 +587,7 @@ def start (arg,Part_name,palette,env):                 #line 650
         load_error ( str( "Couldn't find container with page name /") +  str( Part_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 660#line 661
     if not  load_errors:                               #line 662
         d = Datum ()                                   #line 663
-        d.v ==  arg                                    #line 664
+        d.v =  arg                                     #line 664
         d.clone =  lambda : obj_clone ( d)             #line 665
         d.reclaim =  None                              #line 666
         mev = make_mevent ( "", d)                     #line 667
@@ -670,7 +670,7 @@ def probeC_instantiate (reg,owner,name,template_data): #line 11
 def probe_handler (eh,mev):                            #line 16
     global ticktime                                    #line 17
     s =  mev.datum.v                                   #line 18
-    live_update ( "Info",  str( "  @") +  str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +   s[:30].replace ('\r','⦙').replace ('\n', '⧚')       )#line 26#line 27#line 28
+    live_update ( "Info",  str( "  @") +  str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +  str( s)[:30].replace ('\r','⦙').replace ('\n', '⧚')       )#line 26#line 27#line 28
 
 def trash_instantiate (reg,owner,name,template_data):  #line 29
     name_with_id = gensymbol ( "trash")                #line 30
@@ -1411,11 +1411,11 @@ def make_leaf (name,owner,instance_data,handler):      #line 528
 # Sends a mevent on the given `port` with `data`, placing it on the output#line 544
 # of the given component.                              #line 545#line 546
 def send (eh,port,obj,causingMevent):                  #line 547
-    datum == Datum ()                                  #line 548
-    datum.v ==  obj                                    #line 549
-    d.clone =  lambda : obj_clone ( obj)               #line 550
+    d = Datum ()                                       #line 548
+    d.v =  obj                                         #line 549
+    d.clone =  lambda : obj_clone ( d)                 #line 550
     d.reclaim =  None                                  #line 551
-    mev = make_mevent ( port, datum)                   #line 552
+    mev = make_mevent ( port, d)                       #line 552
     put_output ( eh, mev)                              #line 553#line 554#line 555
 
 def forward (eh,port,mev):                             #line 556
@@ -1500,7 +1500,7 @@ def start (arg,Part_name,palette,env):                 #line 650
         load_error ( str( "Couldn't find container with page name /") +  str( Part_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 660#line 661
     if not  load_errors:                               #line 662
         d = Datum ()                                   #line 663
-        d.v ==  arg                                    #line 664
+        d.v =  arg                                     #line 664
         d.clone =  lambda : obj_clone ( d)             #line 665
         d.reclaim =  None                              #line 666
         mev = make_mevent ( "", d)                     #line 667
@@ -1583,7 +1583,7 @@ def probeC_instantiate (reg,owner,name,template_data): #line 11
 def probe_handler (eh,mev):                            #line 16
     global ticktime                                    #line 17
     s =  mev.datum.v                                   #line 18
-    live_update ( "Info",  str( "  @") +  str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +   s[:30].replace ('\r','⦙').replace ('\n', '⧚')       )#line 26#line 27#line 28
+    live_update ( "Info",  str( "  @") +  str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +  str( s)[:30].replace ('\r','⦙').replace ('\n', '⧚')       )#line 26#line 27#line 28
 
 def trash_instantiate (reg,owner,name,template_data):  #line 29
     name_with_id = gensymbol ( "trash")                #line 30
@@ -2324,11 +2324,11 @@ def make_leaf (name,owner,instance_data,handler):      #line 528
 # Sends a mevent on the given `port` with `data`, placing it on the output#line 544
 # of the given component.                              #line 545#line 546
 def send (eh,port,obj,causingMevent):                  #line 547
-    datum == Datum ()                                  #line 548
-    datum.v ==  obj                                    #line 549
-    d.clone =  lambda : obj_clone ( obj)               #line 550
+    d = Datum ()                                       #line 548
+    d.v =  obj                                         #line 549
+    d.clone =  lambda : obj_clone ( d)                 #line 550
     d.reclaim =  None                                  #line 551
-    mev = make_mevent ( port, datum)                   #line 552
+    mev = make_mevent ( port, d)                       #line 552
     put_output ( eh, mev)                              #line 553#line 554#line 555
 
 def forward (eh,port,mev):                             #line 556
@@ -2413,7 +2413,7 @@ def start (arg,Part_name,palette,env):                 #line 650
         load_error ( str( "Couldn't find container with page name /") +  str( Part_name) +  str( "/ in files ") +  str(str ( diagram_names)) +  " (check tab names, or disable compression?)"    )#line 660#line 661
     if not  load_errors:                               #line 662
         d = Datum ()                                   #line 663
-        d.v ==  arg                                    #line 664
+        d.v =  arg                                     #line 664
         d.clone =  lambda : obj_clone ( d)             #line 665
         d.reclaim =  None                              #line 666
         mev = make_mevent ( "", d)                     #line 667
@@ -2496,7 +2496,7 @@ def probeC_instantiate (reg,owner,name,template_data): #line 11
 def probe_handler (eh,mev):                            #line 16
     global ticktime                                    #line 17
     s =  mev.datum.v                                   #line 18
-    live_update ( "Info",  str( "  @") +  str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +   s[:30].replace ('\r','⦙').replace ('\n', '⧚')       )#line 26#line 27#line 28
+    live_update ( "Info",  str( "  @") +  str(str ( ticktime)) +  str( "  ") +  str( "probe ") +  str( eh.name) +  str( ": ") +  str( s)[:30].replace ('\r','⦙').replace ('\n', '⧚')       )#line 26#line 27#line 28
 
 def trash_instantiate (reg,owner,name,template_data):  #line 29
     name_with_id = gensymbol ( "trash")                #line 30

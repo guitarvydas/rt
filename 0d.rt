@@ -545,11 +545,11 @@ defn make_leaf (name, owner, instance_data, handler) {
 ⌈ of the given component.⌉
 
 defn send (eh,port,obj,causingMevent) {
-    datum = Datum ()
-    datum.v = obj
-    d.clone ⇐ λ: obj_clone (obj)
+    deftemp d ⇐ Datum ()
+    d.v ⇐ obj
+    d.clone ⇐ λ: obj_clone (d)
     d.reclaim ⇐ None
-    mev ≡ make_mevent(port, datum)
+    mev ≡ make_mevent(port, d)
     put_output (eh, mev)
 }
 
@@ -661,7 +661,7 @@ defn start (arg, Part_name, palette, env) {
     }
     if not load_errors {
         deftemp d ⇐ Datum ()
-    	d.v = arg
+    	d.v ⇐ arg
 	d.clone ⇐ λ: obj_clone (d)
 	d.reclaim ⇐ None
         deftemp mev ⇐ make_mevent(“”, d)
