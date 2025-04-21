@@ -667,7 +667,13 @@ defn start (arg, Part_name, palette, env) {
         deftemp mev ⇐ make_mevent(“”, d)
         inject (Part, mev)
 	}
-    #display_queue_as_json (Part.outq)
+    #queue_as_json_to_stdout (Part.outq)
 }
 
-
+defn new_datum_bang () {
+    deftemp d ⇐ Datum ()
+    d.v ⇐ “!”
+    d.clone ⇐ λ: obj_clone (d)
+    d.reclaim ⇐ None
+    return d
+    }

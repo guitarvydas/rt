@@ -22,8 +22,7 @@ defn probe_handler (eh, mev) {
 		            #strcons (“  ”,
 			              #strcons (“probe ”,
                                                #strcons (eh.name,
-					                 #strcons (“: ”,
-							           #stringshrink (s))))))))
+					                 #strcons (“: ”, #asstr (s))))))))
 }
 
 defn trash_instantiate (reg, owner, name, template_data) {

@@ -96,118 +96,6 @@
     "file": "rt2all.drawio"
   },
   {
-    "name": "TEST List Filenames",
-    "children": [
-      {
-        "name": "'empty.rt",
-        "id": 7
-      },
-      {
-        "name": "'DONE",
-        "id": 10
-      },
-      {
-        "name": "1then2",
-        "id": 13
-      },
-      {
-        "name": "'test.rt",
-        "id": 19
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "'test.rt",
-          "id": 19
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "1",
-        "source": {
-          "name": "'empty.rt",
-          "id": 7
-        },
-        "target": {
-          "name": "1then2",
-          "id": 13
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "2",
-        "source": {
-          "name": "'empty.rt",
-          "id": 7
-        },
-        "target": {
-          "name": "1then2",
-          "id": 13
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "2",
-        "target_port": "",
-        "source": {
-          "name": "1then2",
-          "id": 13
-        },
-        "target": {
-          "name": "'DONE",
-          "id": 10
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'test.rt",
-          "id": 19
-        },
-        "target": {
-          "name": "'empty.rt",
-          "id": 7
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "fini",
-        "source": {
-          "name": "'DONE",
-          "id": 10
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "1",
-        "target_port": "",
-        "source": {
-          "name": "1then2",
-          "id": 13
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'test.rt",
-          "id": 19
-        }
-      }
-    ],
-    "file": "rt2all.drawio"
-  },
-  {
     "name": "List Filenames",
     "children": [
       {
@@ -219,8 +107,20 @@
         "id": 8
       },
       {
-        "name": "Wrapped Filenames",
+        "name": "'shellout.rt",
         "id": 14
+      },
+      {
+        "name": "'stock.rt",
+        "id": 17
+      },
+      {
+        "name": "'empty.rt",
+        "id": 20
+      },
+      {
+        "name": "'0d.rt",
+        "id": 23
       }
     ],
     "connections": [
@@ -229,34 +129,8 @@
         "source_port": "",
         "target_port": "",
         "target": {
-          "name": "Wrapped Filenames",
-          "id": 14
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "1",
-        "source": {
-          "name": "Wrapped Filenames",
-          "id": 14
-        },
-        "target": {
-          "name": "1then2",
-          "id": 8
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "2",
-        "source": {
-          "name": "Wrapped Filenames",
-          "id": 14
-        },
-        "target": {
-          "name": "1then2",
-          "id": 8
+          "name": "'0d.rt",
+          "id": 23
         }
       },
       {
@@ -273,6 +147,71 @@
         }
       },
       {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "'shellout.rt",
+          "id": 14
+        },
+        "target": {
+          "name": "'stock.rt",
+          "id": 17
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "1",
+        "source": {
+          "name": "'empty.rt",
+          "id": 20
+        },
+        "target": {
+          "name": "1then2",
+          "id": 8
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "2",
+        "source": {
+          "name": "'empty.rt",
+          "id": 20
+        },
+        "target": {
+          "name": "1then2",
+          "id": 8
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "'stock.rt",
+          "id": 17
+        },
+        "target": {
+          "name": "'empty.rt",
+          "id": 20
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "'0d.rt",
+          "id": 23
+        },
+        "target": {
+          "name": "'shellout.rt",
+          "id": 14
+        }
+      },
+      {
         "dir": 2,
         "source_port": "",
         "target_port": "fini",
@@ -283,85 +222,21 @@
       },
       {
         "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "'shellout.rt",
+          "id": 14
+        }
+      },
+      {
+        "dir": 2,
         "source_port": "1",
         "target_port": "",
         "source": {
           "name": "1then2",
           "id": 8
         }
-      }
-    ],
-    "file": "rt2all.drawio"
-  },
-  {
-    "name": "Wrapped Filenames",
-    "children": [
-      {
-        "name": "'0d.rt",
-        "id": 4
-      },
-      {
-        "name": "'shellout.rt",
-        "id": 7
-      },
-      {
-        "name": "'stock.rt",
-        "id": 11
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "'0d.rt",
-          "id": 4
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'shellout.rt",
-          "id": 7
-        },
-        "target": {
-          "name": "'stock.rt",
-          "id": 11
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'0d.rt",
-          "id": 4
-        },
-        "target": {
-          "name": "'shellout.rt",
-          "id": 7
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'0d.rt",
-          "id": 4
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'shellout.rt",
-          "id": 7
-        }
       },
       {
         "dir": 2,
@@ -369,7 +244,16 @@
         "target_port": "",
         "source": {
           "name": "'stock.rt",
-          "id": 11
+          "id": 17
+        }
+      },
+      {
+        "dir": 2,
+        "source_port": "",
+        "target_port": "",
+        "source": {
+          "name": "'0d.rt",
+          "id": 23
         }
       }
     ],
