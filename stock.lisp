@@ -1,3 +1,4 @@
+
 (defun probeA_instantiate (&optional  reg  owner  name  template_data)
   (declare (ignorable  reg  owner  name  template_data))    #|line 1|#
   (let ((name_with_id (funcall (quote gensymbol)   "?A"     #|line 2|#)))

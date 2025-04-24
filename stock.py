@@ -1,3 +1,4 @@
+
 def probeA_instantiate (reg,owner,name,template_data): #line 1
     name_with_id = gensymbol ( "?A")                   #line 2
     return make_leaf ( name_with_id, owner, None, probe_handler)#line 3#line 4#line 5
