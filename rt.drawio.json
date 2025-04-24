@@ -3,56 +3,73 @@
     "name": "main",
     "children": [
       {
-        "name": "List Filenames",
+        "name": "Generate",
         "id": 7
       },
       {
-        "name": "Generate",
-        "id": 12
+        "name": "'DONE",
+        "id": 14
+      },
+      {
+        "name": "1then2",
+        "id": 17
       }
     ],
     "connections": [
       {
         "dir": 0,
         "source_port": "",
-        "target_port": "",
+        "target_port": "1",
         "target": {
-          "name": "List Filenames",
+          "name": "1then2",
+          "id": 17
+        }
+      },
+      {
+        "dir": 0,
+        "source_port": "",
+        "target_port": "2",
+        "target": {
+          "name": "1then2",
+          "id": 17
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "2",
+        "target_port": "",
+        "source": {
+          "name": "1then2",
+          "id": 17
+        },
+        "target": {
+          "name": "'DONE",
+          "id": 14
+        }
+      },
+      {
+        "dir": 1,
+        "source_port": "1",
+        "target_port": "",
+        "source": {
+          "name": "1then2",
+          "id": 17
+        },
+        "target": {
+          "name": "Generate",
           "id": 7
         }
       },
       {
         "dir": 1,
         "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "List Filenames",
-          "id": 7
-        },
-        "target": {
-          "name": "Generate",
-          "id": 12
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "fini",
         "target_port": "fini",
         "source": {
-          "name": "List Filenames",
-          "id": 7
+          "name": "'DONE",
+          "id": 14
         },
         "target": {
           "name": "Generate",
-          "id": 12
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "✗",
-        "target_port": "✗",
-        "source": {
-          "name": "List Filenames",
           "id": 7
         }
       },
@@ -62,7 +79,7 @@
         "target_port": "Python",
         "source": {
           "name": "Generate",
-          "id": 12
+          "id": 7
         }
       },
       {
@@ -71,7 +88,7 @@
         "target_port": "✗",
         "source": {
           "name": "Generate",
-          "id": 12
+          "id": 7
         }
       },
       {
@@ -80,7 +97,7 @@
         "target_port": "Javascript",
         "source": {
           "name": "Generate",
-          "id": 12
+          "id": 7
         }
       },
       {
@@ -89,392 +106,11 @@
         "target_port": "CommonLisp",
         "source": {
           "name": "Generate",
-          "id": 12
+          "id": 7
         }
       }
     ],
-    "file": "rt2all.drawio"
-  },
-  {
-    "name": "List Filenames",
-    "children": [
-      {
-        "name": "'DONE",
-        "id": 5
-      },
-      {
-        "name": "1then2",
-        "id": 8
-      },
-      {
-        "name": "?A",
-        "id": 14
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "1",
-        "target": {
-          "name": "1then2",
-          "id": 8
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "2",
-        "target": {
-          "name": "1then2",
-          "id": 8
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "?A",
-          "id": 14
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "2",
-        "target_port": "",
-        "source": {
-          "name": "1then2",
-          "id": 8
-        },
-        "target": {
-          "name": "'DONE",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "fini",
-        "source": {
-          "name": "'DONE",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "1",
-        "target_port": "",
-        "source": {
-          "name": "1then2",
-          "id": 8
-        }
-      }
-    ],
-    "file": "rt2all.drawio"
-  },
-  {
-    "name": "ALL List Filenames",
-    "children": [
-      {
-        "name": "'count.rt",
-        "id": 5
-      },
-      {
-        "name": "'monitor.rt",
-        "id": 8
-      },
-      {
-        "name": "'decode.rt",
-        "id": 11
-      },
-      {
-        "name": "'reverser.rt",
-        "id": 14
-      },
-      {
-        "name": "'delay.rt",
-        "id": 17
-      },
-      {
-        "name": "'empty.rt",
-        "id": 20
-      },
-      {
-        "name": "'DONE",
-        "id": 23
-      },
-      {
-        "name": "'shellout.rt",
-        "id": 26
-      },
-      {
-        "name": "1then2",
-        "id": 29
-      },
-      {
-        "name": "'0d.rt",
-        "id": 34
-      },
-      {
-        "name": "'stock.rt",
-        "id": 38
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "'count.rt",
-          "id": 5
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "'shellout.rt",
-          "id": 26
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'count.rt",
-          "id": 5
-        },
-        "target": {
-          "name": "'monitor.rt",
-          "id": 8
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'delay.rt",
-          "id": 17
-        },
-        "target": {
-          "name": "'shellout.rt",
-          "id": 26
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'reverser.rt",
-          "id": 14
-        },
-        "target": {
-          "name": "'delay.rt",
-          "id": 17
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'decode.rt",
-          "id": 11
-        },
-        "target": {
-          "name": "'reverser.rt",
-          "id": 14
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'monitor.rt",
-          "id": 8
-        },
-        "target": {
-          "name": "'decode.rt",
-          "id": 11
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "1",
-        "source": {
-          "name": "'empty.rt",
-          "id": 20
-        },
-        "target": {
-          "name": "1then2",
-          "id": 29
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "2",
-        "source": {
-          "name": "'empty.rt",
-          "id": 20
-        },
-        "target": {
-          "name": "1then2",
-          "id": 29
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "2",
-        "target_port": "",
-        "source": {
-          "name": "1then2",
-          "id": 29
-        },
-        "target": {
-          "name": "'DONE",
-          "id": 23
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'0d.rt",
-          "id": 34
-        },
-        "target": {
-          "name": "'stock.rt",
-          "id": 38
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'shellout.rt",
-          "id": 26
-        },
-        "target": {
-          "name": "'0d.rt",
-          "id": 34
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'stock.rt",
-          "id": 38
-        },
-        "target": {
-          "name": "'empty.rt",
-          "id": 20
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "fini",
-        "source": {
-          "name": "'DONE",
-          "id": 23
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'count.rt",
-          "id": 5
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'monitor.rt",
-          "id": 8
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'decode.rt",
-          "id": 11
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'reverser.rt",
-          "id": 14
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'delay.rt",
-          "id": 17
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'shellout.rt",
-          "id": 26
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "1",
-        "target_port": "",
-        "source": {
-          "name": "1then2",
-          "id": 29
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'0d.rt",
-          "id": 34
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "",
-        "target_port": "",
-        "source": {
-          "name": "'stock.rt",
-          "id": 38
-        }
-      }
-    ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Generate",
@@ -486,14 +122,6 @@
       {
         "name": "Back End",
         "id": 12
-      },
-      {
-        "name": "?A",
-        "id": 19
-      },
-      {
-        "name": "?B",
-        "id": 21
       }
     ],
     "connections": [
@@ -513,24 +141,6 @@
         "target": {
           "name": "Back End",
           "id": 12
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "fini",
-        "target_port": "",
-        "target": {
-          "name": "?B",
-          "id": 21
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "?A",
-          "id": 19
         }
       },
       {
@@ -592,7 +202,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Front End",
@@ -683,7 +293,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Back End",
@@ -889,7 +499,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Generate Javascript",
@@ -1041,7 +651,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Generate Python",
@@ -1065,30 +675,6 @@
       {
         "name": "String Concat *",
         "id": 22
-      },
-      {
-        "name": "?A",
-        "id": 27
-      },
-      {
-        "name": "'/tmp/xxx.xxx",
-        "id": 29
-      },
-      {
-        "name": "1then2",
-        "id": 32
-      },
-      {
-        "name": "syncfilewrite",
-        "id": 37
-      },
-      {
-        "name": "?B",
-        "id": 42
-      },
-      {
-        "name": "?C",
-        "id": 44
       }
     ],
     "connections": [
@@ -1111,24 +697,6 @@
         }
       },
       {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "'/tmp/xxx.xxx",
-          "id": 29
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "2",
-        "target": {
-          "name": "1then2",
-          "id": 32
-        }
-      },
-      {
         "dir": 1,
         "source_port": "",
         "target_port": "",
@@ -1178,71 +746,6 @@
         "target": {
           "name": "Grep for Errors",
           "id": 18
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "done",
-        "target_port": "",
-        "source": {
-          "name": "syncfilewrite",
-          "id": 37
-        },
-        "target": {
-          "name": "?B",
-          "id": 42
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "✗",
-        "target_port": "",
-        "source": {
-          "name": "syncfilewrite",
-          "id": 37
-        },
-        "target": {
-          "name": "?C",
-          "id": 44
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "",
-        "target_port": "1",
-        "source": {
-          "name": "'/tmp/xxx.xxx",
-          "id": 29
-        },
-        "target": {
-          "name": "1then2",
-          "id": 32
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "1",
-        "target_port": "filename",
-        "source": {
-          "name": "1then2",
-          "id": 32
-        },
-        "target": {
-          "name": "syncfilewrite",
-          "id": 37
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "2",
-        "target_port": "input",
-        "source": {
-          "name": "1then2",
-          "id": 32
-        },
-        "target": {
-          "name": "syncfilewrite",
-          "id": 37
         }
       },
       {
@@ -1300,7 +803,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Generate Common Lisp",
@@ -1452,7 +955,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Inhale",
@@ -1517,7 +1020,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Syntax Check",
@@ -1556,7 +1059,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Semantics Check",
@@ -1595,7 +1098,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "RT to Javascript",
@@ -1634,7 +1137,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "RT to Python",
@@ -1673,7 +1176,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "RT to Common Lisp",
@@ -1712,7 +1215,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Uninternalize",
@@ -1751,7 +1254,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Decode For Javascript",
@@ -1790,7 +1293,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Javascript Indenter",
@@ -1829,7 +1332,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Exhale Javascript",
@@ -1920,138 +1423,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
-  },
-  {
-    "name": "seq12",
-    "children": [
-      {
-        "name": "1then2",
-        "id": 6
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "1",
-        "target_port": "1",
-        "target": {
-          "name": "1then2",
-          "id": 6
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "2",
-        "target_port": "2",
-        "target": {
-          "name": "1then2",
-          "id": 6
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "2",
-        "target_port": "2",
-        "source": {
-          "name": "1then2",
-          "id": 6
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "1",
-        "target_port": "1",
-        "source": {
-          "name": "1then2",
-          "id": 6
-        }
-      }
-    ],
-    "file": "rt2all.drawio"
-  },
-  {
-    "name": "seq123",
-    "children": [
-      {
-        "name": "1then2",
-        "id": 8
-      },
-      {
-        "name": "1then2",
-        "id": 13
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "1",
-        "target_port": "1",
-        "target": {
-          "name": "1then2",
-          "id": 8
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "2",
-        "target_port": "2",
-        "target": {
-          "name": "1then2",
-          "id": 8
-        }
-      },
-      {
-        "dir": 0,
-        "source_port": "3",
-        "target_port": "2",
-        "target": {
-          "name": "1then2",
-          "id": 13
-        }
-      },
-      {
-        "dir": 1,
-        "source_port": "2",
-        "target_port": "1",
-        "source": {
-          "name": "1then2",
-          "id": 8
-        },
-        "target": {
-          "name": "1then2",
-          "id": 13
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "1",
-        "target_port": "1",
-        "source": {
-          "name": "1then2",
-          "id": 8
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "1",
-        "target_port": "2",
-        "source": {
-          "name": "1then2",
-          "id": 13
-        }
-      },
-      {
-        "dir": 2,
-        "source_port": "2",
-        "target_port": "3",
-        "source": {
-          "name": "1then2",
-          "id": 13
-        }
-      }
-    ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Encode",
@@ -2090,7 +1462,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Exhale Python",
@@ -2181,7 +1553,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Decode for Python",
@@ -2220,7 +1592,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Python Indenter",
@@ -2259,7 +1631,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Grep for Errors",
@@ -2298,85 +1670,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
-  },
-  {
-    "name": "?inlineA",
-    "children": [
-      {
-        "name": "?A",
-        "id": 4
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "?A",
-          "id": 4
-        }
-      },
-      {
-        "dir": 3,
-        "source_port": "",
-        "target_port": ""
-      }
-    ],
-    "file": "rt2all.drawio"
-  },
-  {
-    "name": "?inlineB",
-    "children": [
-      {
-        "name": "?B",
-        "id": 4
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "?B",
-          "id": 4
-        }
-      },
-      {
-        "dir": 3,
-        "source_port": "",
-        "target_port": ""
-      }
-    ],
-    "file": "rt2all.drawio"
-  },
-  {
-    "name": "?inlineC",
-    "children": [
-      {
-        "name": "?C",
-        "id": 4
-      }
-    ],
-    "connections": [
-      {
-        "dir": 0,
-        "source_port": "",
-        "target_port": "",
-        "target": {
-          "name": "?C",
-          "id": 4
-        }
-      },
-      {
-        "dir": 3,
-        "source_port": "",
-        "target_port": ""
-      }
-    ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "palette",
@@ -2387,7 +1681,7 @@
       }
     ],
     "connections": [],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Exhale Common Lisp",
@@ -2478,7 +1772,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Decode For Common Lisp",
@@ -2517,7 +1811,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Common Lisp Indenter",
@@ -2556,7 +1850,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Cleanup",
@@ -2595,7 +1889,7 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   },
   {
     "name": "Write To Python File",
@@ -2706,6 +2000,6 @@
         }
       }
     ],
-    "file": "rt2all.drawio"
+    "file": "rt.drawio"
   }
 ]

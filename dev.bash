@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
+cp ../zd/1.kernel0d.py ../zd/kernel0d.py
 node das2json.js rt2all.drawio
-./rt '0d'
-./rt 'shellout'
 ./rt 'stock'
 NOW=$(date)
 FRESHDIR="before-${NOW}"

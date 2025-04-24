@@ -64,7 +64,7 @@ process.stdin.on('end', () => {
       }
     });
     
-    console.log('Processing complete. Files created: out.lisp, out.py, out.js, out.md');
+      //console.log('Processing complete. Files created: out.lisp, out.py, out.js, out.md');
   } catch (error) {
     console.error('Error processing input:', error.message);
     process.exit(1);
