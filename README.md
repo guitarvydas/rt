@@ -7,6 +7,11 @@
 - Parts can have multiple inputs, multiple outputs and feedback loops
 
 # Usage:
+
+# command line
+./make.bash
+
+# REPL
 (see REPL.drawio for a sketch of how this is set up)
 
 - clone this `rt` repo
