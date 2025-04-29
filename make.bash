@@ -8,5 +8,5 @@ NOW=$(date)
 FRESHDIR="before-${NOW}"
 mkdir ../zd/"${FRESHDIR}"
 mv ../zd/kernel0d.py ../zd/"${FRESHDIR}"
-cat 0d.py shellout.py stock.py >../zd/kernel0d.py
+cat 0d.py shellout.py stock.py >kernel0d.py
 
